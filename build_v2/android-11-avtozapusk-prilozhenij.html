@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Автозапуск приложений на Android 11: Полное руководство по настройке — ТехПодсказка</title>
+    <meta name="description" content="Как настроить автозапуск приложений на Android 11. Пошаговая инструкция, методы обхода ограничений безопасности, ADB команды и советы для умного дома.">
+    <link rel="canonical" href="https://tehpodskazka.ru/android-11-avtozapusk-prilozhenij.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Автозапуск приложений на Android 11: Полное руководство по настройке">
+    <meta property="og:description" content="Как настроить автозапуск приложений на Android 11. Пошаговая инструкция, методы обхода ограничений безопасности, ADB команды и советы для умного дома.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/televizory/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/category/android/" class="nav-link">📱 Android-устройства</a>
+<a href="/category/prilozheniya/" class="nav-link">📲 Приложения</a>
+<a href="/category/windows/" class="nav-link">💻 Windows и ПК</a>
+<a href="/category/pristavki/" class="nav-link">🔌 Приставки</a>
+<a href="/category/internet/" class="nav-link">🌐 WiFi и Интернет</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/android/">Android-устройства</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Автозапуск приложений на Android 11: Полное руководство по настройке</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    <h1>Настройка и управление автозапуском приложений в Android 11</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#архитектура-ограничений-безопасности-в-android-11">Архитектура ограничений безопасности в Android 11</a></li><li><a href="#использование-системных-настроек-и-разрешений">Использование системных настроек и разрешений</a></li><li><a href="#настройка-через-режим-разработчика-и-adb">Настройка через режим разработчика и ADB</a></li><li><a href="#роль-root-прав-в-обходе-ограничений">Роль Root-прав в обходе ограничений</a></li><li><a href="#сравнительная-таблица-методов-автозапуска">Сравнительная таблица методов автозапуска</a></li><li><a href="#решение-проблем-с-перезагрузкой-и-зависанием">Решение проблем с перезагрузкой и зависанием</a></li><li><a href="#оптимизация-работы-фоновых-процессов">Оптимизация работы фоновых процессов</a></li><li><a href="#будущее-автозапуска-в-новых-версиях-android">Будущее автозапуска в новых версиях Android</a></li></ul></details></nav>
+                    <div class="article-body"><p>С выходом версии <strong>Android 11</strong> Google ужесточила правила безопасности, что существенно повлияло на поведение фоновых процессов. Для обычных пользователей это означает повышенную приватность, но для владельцев <em>Android TV</em> или специализированных устройств это создает трудности при попытке настроить автоматический старт сервисов после включения питания.</p>
+
+<p>Система теперь активно блокирует попытки приложений запускать друг друга без явного взаимодействия пользователя. Это особенно актуально для медиацентров, где требуется мгновенная загрузка плеера или браузера сразу после подачи напряжения. Понимание архитектуры ограничений необходимо для грамотной конфигурации системы.</p>
+
+<p>В данной статье мы разберем, почему стандартные методы перестали работать, и рассмотрим проверенные способы обхода этих ограничений. Вы узнаете, как использовать системные утилиты и команды <code>adb</code> для восстановления функционала автозапуска на устройствах с актуальной прошивкой.</p>
+
+<h2 id="архитектура-ограничений-безопасности-в-android-11">Архитектура ограничений безопасности в Android 11</h2>
+
+<p>Основной причиной проблем с автозапуском стало внедрение новых политик <strong>Background Start Restrictions</strong>. Система больше не позволяет приложениям, запущенным в фоне, инициировать запуск других процессов без явного запроса от пользователя или специального разрешения.</p>
+
+<p>Это изменение затронуло даже системные службы, которые ранее могли свободно взаимодействовать друг с другом. Теперь, если приложение пытается запустить сервис или активность в фоновом режиме, система выдает ошибку или просто игнорирует команду, сохраняя стабильность работы устройства.</p>
+
+<p>Для разработчиков и продвинутых пользователей это означает необходимость пересмотра логики взаимодействия приложений. Стандартные методы, такие как использование <em>BOOT_COMPLETED</em> бродкастов, теперь требуют дополнительных разрешений, которые часто скрыты или недоступны без root-прав.</p>
+
+<blockquote>⚠️ Внимание: Попытки принудительного запуска приложений через сторонние менеджеры без понимания ограничений могут привести к циклическим перезагрузкам устройства или полной потере функциональности интерфейса.</blockquote>
+
+<p>Однако, несмотря на жесткость политики, Google оставила лазейки для системных приложений и устройств с особым назначением. Понимание этих механизмов позволяет настроить автоматизацию даже на строгих версиях ОС.</p>
+
+<h2 id="использование-системных-настроек-и-разрешений">Использование системных настроек и разрешений</h2>
+
+<p>Первым шагом в настройке автозапуска является проверка стандартных разрешений. В некоторых оболочках, например на устройствах <em>Xiaomi</em> или <em>Samsung</em>, настройки автозапуска интегрированы в меню безопасности.</p>
+
+<p>Вам нужно зайти в <code>Настройки → Приложения → Специальный доступ → Автозапуск</code>. Здесь должен отображаться список приложений, которые могут стартовать при включении питания. Если нужный сервис отсутствует в списке, это значит, что он не поддерживает стандартный API запуска.</p>
+
+<p>Для приложений, которые не отображаются, иногда помогает ручное добавление через меню разработчика. Попробуйте включить опцию <code>Неограниченная работа в фоне</code> в разделе настроек конкретного приложения.</p>
+
+<ul>
+<li>🚀 Проверьте наличие разрешения <strong>Запуск в фоне</strong> в настройках батареи</li>
+<li>🔒 Убедитесь, что приложение не добавлено в список оптимизации энергопотребления</li>
+<li>🛠️ Попробуйте использовать режим <code>App Standby Buckets</code> для исключения из ограничений</li>
+</ul>
+
+<p>Если стандартные методы не сработали, придется прибегнуть к более глубоким настройкам системы, используя инструменты для разработчиков.</p>
+
+<h2 id="настройка-через-режим-разработчика-и-adb">Настройка через режим разработчика и ADB</h2>
+
+<p>Самый эффективный способ управления автозапуском на <strong>Android 11</strong> — использование отладочной утилиты <code>adb</code>. Это позволяет отправлять команды непосредственно на системный уровень, обходя ограничения пользовательского интерфейса.</p>
+
+<p>Для начала необходимо активировать режим разработчика, зайдя в <code>Настройки → О телефоне</code> и многократно нажав на номер сборки. После этого в меню появится пункт <code>Для разработчиков</code>, где нужно включить отладку по USB или по сети.</p>
+
+<p>Подключив компьютер к устройству, вы сможете использовать специальные команды для разрешения автозапуска. Это особенно полезно для <em>TV-приставок</em>, где управление клавиатурой и мышью может быть ограничено.</p>
+
+<div class="checklist-block"><h4>☑️ Подготовка к настройке ADB</h4><label class="check-item"><input type="checkbox"><span>Включить отладку по USB</span></label><label class="check-item"><input type="checkbox"><span>Установить драйверы ADB на ПК</span></label><label class="check-item"><input type="checkbox"><span>Подключить устройство кабелем</span></label><label class="check-item"><input type="checkbox"><span>Проверить подключение командой adb devices</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>Используйте следующую команду, чтобы разрешить приложению запускаться без ограничений:</p>
+
+<pre><code>adb shell pm grant com.example.autostart android.permission.RECEIVE_BOOT_COMPLETED</code></pre>
+
+<p>В некоторых случаях требуется принудительно указать системе, что приложение должно быть запущено при загрузке. Это делается через изменение флагов пакета.</p>
+
+<details class="faq-item"><summary>Команды для принудительного запуска</summary><div class="faq-answer"><p>Для принудительного старта можно использовать команду: adb shell am broadcast -a android.intent.action.BOOT_COMPLETED -n com.package.name/.BootReceiver. Это имитирует сигнал о загрузке системы, заставляя приложение запуститься немедленно, даже если система заблокировала его фоновый запуск.</p></div></details>
+
+<blockquote>⚠️ Внимание: Ошибки в команде ADB могут привести к сбросу настроек или неработоспособности интерфейса. Тщательно проверяйте имя пакета перед вводом команды.</blockquote>
+
+<p>После выполнения команд обязательно перезагрузите устройство, чтобы убедиться, что изменения вступили в силу и приложение запускается корректно.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой метод настройки автозапуска вы используете?</strong><ul><li>Стандартные настройки</li><li>ADB команды</li><li>Root-доступ</li><li>Сторонние лаунчеры</li></ul></div></div>
+
+<h2 id="роль-root-прав-в-обходе-ограничений">Роль Root-прав в обходе ограничений</h2>
+
+<p>Получение <strong>Root-прав</strong> открывает доступ к системным файлам и позволяет полностью контролировать процесс запуска приложений. Это наиболее радикальный, но и самый действенный метод для Android 11.</p>
+
+<p>С Root-доступом вы можете редактировать системные скрипты запуска, добавлять свои приложения в очередь инициализации и отключать механизмы защиты от фоновых процессов. Однако это требует осторожности и понимания работы Linux-ядра.</p>
+
+<p>Существуют специальные модули для Magisk, которые добавляют функции автозапуска без необходимости писать собственные скрипты. Они подменяют системные вызовы и позволяют приложениям работать в режиме, аналогичном версиям Android 9 и ниже.</p>
+
+<ul>
+<li>🔓 Модуль <strong>Boot Manager</strong> для управления очередью запуска</li>
+<li>⚙️ Утилита <code>Service Manager</code> для настройки фоновых служб</li>
+<li>🛡️ Отключение <em>Doze mode</em> через системные настройки</li>
+</ul>
+
+
+
+<p>Если вы не готовы к сложным манипуляциям, рассмотрите использование специализированных лаунчеров, которые имеют встроенные механизмы автозапуска.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Root-права дают полный контроль над автозапуском, но делают устройство уязвимым для вредоносного ПО и блокируют работу защищенных приложений.</p></div>
+
+<h2 id="сравнительная-таблица-методов-автозапуска">Сравнительная таблица методов автозапуска</h2>
+
+<p>Чтобы выбрать оптимальный способ настройки, сравним доступные методы по эффективности и сложности реализации. Таблица ниже поможет оценить риски и преимущества каждого подхода.</p>
+
+<table>
+<thead>
+<tr>
+<th>Метод</th>
+<th>Сложность</th>
+<th>Эффективность</th>
+<th>Риски</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Стандартные настройки</td>
+<td>Низкая</td>
+<td>Средняя</td>
+<td>Минимальные</td>
+</tr>
+<tr>
+<td>Команды ADB</td>
+<td>Средняя</td>
+<td>Высокая</td>
+<td>Средние</td>
+</tr>
+<tr>
+<td>Root-доступ</td>
+<td>Высокая</td>
+<td>Максимальная</td>
+<td>Высокие</td>
+</tr>
+<tr>
+<td>Сторонние лаунчеры</td>
+<td>Низкая</td>
+<td>Средняя</td>
+<td>Низкие</td>
+</tr>
+</tbody>
+</table>
+
+<p>Выбор метода зависит от ваших технических навыков и требований к стабильности работы устройства. Для простых задач часто достаточно стандартных настроек, а для профессиональных решений незаменим ADB или Root.</p>
+
+<h2 id="решение-проблем-с-перезагрузкой-и-зависанием">Решение проблем с перезагрузкой и зависанием</h2>
+
+<p>Частой проблемой при настройке автозапуска является бесконечный цикл перезагрузки или зависание интерфейса. Это происходит, когда приложение пытается запуститься до завершения инициализации системных служб.</p>
+
+<p>Чтобы избежать этого, необходимо настроить задержку запуска. В скриптах или настройках приложения можно указать таймаут, например, 30 секунд после получения сигнала о загрузке системы.</p>
+
+<p>Также проверьте, не конфликтуют ли между собой несколько приложений, пытающихся захватить управление интерфейсом. На <em>Android TV</em> это часто случается при установке нескольких лаунчеров.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Перед настройкой автозапуска удалите или отключите все лишние лаунчеры и приложения, которые могут конфликтовать с основным интерфейсом системы.</p></div>
+
+<p>Если устройство все равно перезагружается, попробуйте загрузиться в безопасный режим и отключить недавно установленные приложения. Это поможет выявить виновника нестабильной работы.</p>
+
+<h2 id="оптимизация-работы-фоновых-процессов">Оптимизация работы фоновых процессов</h2>
+
+<p>После настройки автозапуска важно убедиться, что приложение не потребляет слишком много ресурсов в фоновом режиме. Android 11 активно ограничивает фоновые процессы для экономии энергии, что может привести к остановке сервиса.</p>
+
+<p>В настройках приложения установите ограничение фоновой активности на "Нет ограничений". Это позволит сервису работать стабильно даже при отсутствии активного взаимодействия с пользователем.</p>
+
+<p>Также рекомендуется использовать <strong>Foreground Service</strong> для критически важных задач. Это создает постоянную уведомление, которое сигнализирует системе о важности процесса и предотвращает его принудительную остановку.</p>
+
+<ul>
+<li>🔋 Настройте <code>WakeLock</code> для предотвращения сна процессора</li>
+<li>📡 Используйте <strong>WorkManager</strong> для отложенных задач</li>
+<li>🛠️ Отключите оптимизацию батареи для конкретных сервисов</li>
+</ul>
+
+<p>Соблюдение этих правил обеспечит стабильную работу автозапуска и предотвратит потерю данных или сбой сервисов.</p>
+
+<h2 id="будущее-автозапуска-в-новых-версиях-android">Будущее автозапуска в новых версиях Android</h2>
+
+<p>С выходом <strong>Android 12</strong> и последующих версий Google планирует еще больше ужесточить правила фоновой активности. Это означает, что существующие методы обхода ограничений могут перестать работать в будущем.</p>
+
+<p>Разработчикам рекомендуется пересмотреть архитектуру приложений и использовать официальные API для запуска сервисов. Использование скрытых методов и эксплойтов становится все более рискованным и неэффективным.</p>
+
+<p>Для пользователей это означает необходимость перехода на более современные и оптимизированные решения, которые поддерживают новые стандарты безопасности и энергоэффективности.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Будущие версии Android будут блокировать все неавторизованные методы автозапуска, поэтому стоит полагаться на официальные API и системные настройки.</p></div>
+
+<p>Постоянное обновление прошивок и приложений поможет избежать проблем с совместимостью и обеспечит стабильную работу устройства на долгие годы.</p>
+
+<details>
+<summary>Как включить автозапуск для конкретного приложения?</summary>
+<p>Перейдите в <code>Настройки → Приложения → [Имя приложения] → Специальный доступ</code>. Найдите пункт <strong>Автозапуск</strong> и включите его. Если пункта нет, попробуйте использовать команду ADB для принудительного добавления разрешения.</p>
+</details>
+
+<details>
+<summary>Почему приложение не запускается после перезагрузки?</summary>
+<p>Вероятно, система заблокировала фоновый запуск из-за ограничений безопасности. Проверьте настройки батареи, отключите оптимизацию для этого приложения или используйте ADB для разрешения запуска.</p>
+</details>
+
+<details>
+<summary>Можно ли настроить автозапуск без Root-прав?</summary>
+<p>Да, это возможно через стандартные настройки, если приложение поддерживает их, или с помощью команд ADB. Root-права нужны только для полного контроля и обхода всех ограничений.</p>
+</details>
+
+<details>
+<summary>Как проверить, работает ли автозапуск?</summary>
+<p>Перезагрузите устройство и посмотрите, запустилось ли приложение автоматически. Если нет, проверьте логи через <code>adb logcat</code> или включите отладку в режиме разработчика.</p>
+</details>
+
+<details>
+<summary>Влияет ли автозапуск на скорость работы устройства?</summary>
+<p>Да, слишком много приложений в автозапуске могут замедлить загрузку системы и увеличить расход энергии. Рекомендуется добавлять только критически важные сервисы.</p>
+</details></div>
+
+                </article>
+                <aside class="article-sidebar"><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#архитектура-ограничений-безопасности-в-android-11">Архитектура ограничений безопасности в Android 11</a></li><li><a href="#использование-системных-настроек-и-разрешений">Использование системных настроек и разрешений</a></li><li><a href="#настройка-через-режим-разработчика-и-adb">Настройка через режим разработчика и ADB</a></li><li><a href="#роль-root-прав-в-обходе-ограничений">Роль Root-прав в обходе ограничений</a></li><li><a href="#сравнительная-таблица-методов-автозапуска">Сравнительная таблица методов автозапуска</a></li><li><a href="#решение-проблем-с-перезагрузкой-и-зависанием">Решение проблем с перезагрузкой и зависанием</a></li><li><a href="#оптимизация-работы-фоновых-процессов">Оптимизация работы фоновых процессов</a></li><li><a href="#будущее-автозапуска-в-новых-версиях-android">Будущее автозапуска в новых версиях Android</a></li></ul></nav><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/kak-zaschitit-telefon-ot-peregreva-na-solnce-v-avtomobile-na-torpede.html" class="related-card">Как защитить телефон от перегрева на солнце в машине</a></li><li><a href="/vyklyuchaetsya-fonarik-android.html" class="related-card">Фонарик на Android выключается сам: причины и как починить</a></li><li><a href="/kak-ubrat-datu-s-pogodoj-s-glavnogo-ekrana-na-telefone.html" class="related-card">Как убрать дату и погоду с главного экрана на телефоне</a></li><li><a href="/kak-obnovit-sber-investor-na-android.html" class="related-card">Как обновить приложение Сбер Инвестор на Android: полное руководство</a></li><li><a href="/kak-najti-polnoe-video-po-otryvku-cherez-telefon.html" class="related-card">Как найти полное видео по отрывку с телефона: 5 рабочих методов</a></li></ul></nav></aside>
+            </div>
+        </div>
+    </main>
+
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/kak-zaschitit-telefon-ot-peregreva-na-solnce-v-avtomobile-na-torpede.html" class="related-bottom-card"><span class="related-bottom-title">Как защитить телефон от перегрева на солнце в машине</span><span class="related-bottom-desc">Полное руководство: почему телефон греется на торпеде, как избежать повреждения батареи и какие сред</span></a><a href="/vyklyuchaetsya-fonarik-android.html" class="related-bottom-card"><span class="related-bottom-title">Фонарик на Android выключается сам: причины и как починить</span><span class="related-bottom-desc">Фонарик на телефоне Android самопроизвольно гаснет? Разбираем причины: от сбоев камеры до вирусов. П</span></a><a href="/kak-ubrat-datu-s-pogodoj-s-glavnogo-ekrana-na-telefone.html" class="related-bottom-card"><span class="related-bottom-title">Как убрать дату и погоду с главного экрана на телефоне</span><span class="related-bottom-desc">Полное руководство: отключение виджета погоды и даты на Android и iOS. Пошаговые инструкции для разн</span></a><a href="/kak-obnovit-sber-investor-na-android.html" class="related-bottom-card"><span class="related-bottom-title">Как обновить приложение Сбер Инвестор на Android: полное руководство</span><span class="related-bottom-desc">Пошаговая инструкция по обновлению приложения Сбер Инвестор на Android. Решаем проблемы с загрузкой,</span></a><a href="/kak-najti-polnoe-video-po-otryvku-cherez-telefon.html" class="related-bottom-card"><span class="related-bottom-title">Как найти полное видео по отрывку с телефона: 5 рабочих методов</span><span class="related-bottom-desc">Научим искать полное видео по короткому фрагменту с телефона. Разбор Google Lens, Shazam, YouTube и </span></a><a href="/kak-podklyuchit-k-kitajskoj-magnitole-na-androide-sim-kartu.html" class="related-bottom-card"><span class="related-bottom-title">Как подключить SIM-карту к китайской магнитоле на Android: Полная инструкция</span><span class="related-bottom-desc">Подробный гайд по установке и активации сим-карты в китайских Android-магнитолах. Решаем проблемы с </span></a></div>
+        </div>
+    </section>
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about">Быстрые решения технических проблем: ТВ, Android, Windows, приложения</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/televizory/">📺 Настройка ТВ</a></li>
+<li><a href="/category/android/">📱 Android-устройства</a></li>
+<li><a href="/category/prilozheniya/">📲 Приложения</a></li>
+<li><a href="/category/windows/">💻 Windows и ПК</a></li>
+<li><a href="/category/pristavki/">🔌 Приставки</a></li>
+<li><a href="/category/internet/">🌐 WiFi и Интернет</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+        (function() {
+            const popup = document.getElementById('cookie-consent');
+            const btn = document.getElementById('cookie-accept');
+            if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+                popup.classList.add('visible');
+                btn.onclick = () => {
+                    localStorage.setItem('cookie-accepted', 'true');
+                    popup.classList.remove('visible');
+                };
+            }
+        })();
+    </script>
+</body>
+</html>

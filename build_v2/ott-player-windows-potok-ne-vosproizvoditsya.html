@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTT player Windows: поток не воспроизводится — решение проблем — ТехПодсказка</title>
+    <meta name="description" content="Полное руководство по устранению ошибок воспроизведения в OTT player на Windows. Исправление кодеков, сетевых настроек и сбоев приложения.">
+    <link rel="canonical" href="https://tehpodskazka.ru/ott-player-windows-potok-ne-vosproizvoditsya.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OTT player Windows: поток не воспроизводится — решение проблем">
+    <meta property="og:description" content="Полное руководство по устранению ошибок воспроизведения в OTT player на Windows. Исправление кодеков, сетевых настроек и сбоев приложения.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/televizory/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/category/android/" class="nav-link">📱 Android-устройства</a>
+<a href="/category/prilozheniya/" class="nav-link">📲 Приложения</a>
+<a href="/category/windows/" class="nav-link">💻 Windows и ПК</a>
+<a href="/category/pristavki/" class="nav-link">🔌 Приставки</a>
+<a href="/category/internet/" class="nav-link">🌐 WiFi и Интернет</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/windows/">Windows и ПК</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">OTT player Windows: поток не воспроизводится — решение проблем</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    <h1>Почему OTT player на Windows не воспроизводит поток и как это исправить</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#первичная-диагностика-и-проверка-сети">Первичная диагностика и проверка сети</a></li><li><a href="#конфликт-кодеков-и-аппаратное-ускорение">Конфликт кодеков и аппаратное ускорение</a></li><li><a href="#настройка-dns-и-блокировка-контента">Настройка DNS и блокировка контента</a></li><li><a href="#очистка-кэша-и-переустановка-приложения">Очистка кэша и переустановка приложения</a></li><li><a href="#анализ-логов-и-системных-конфликтов">Анализ логов и системных конфликтов</a></li><li><a href="#дополнительные-настройки-реестра-и-системных-политик">Дополнительные настройки реестра и системных политик</a></li><li><a href="#таблица-типичных-ошибок-и-их-решений">Таблица типичных ошибок и их решений</a></li><li><a href="#faq-частые-вопросы-пользователей">FAQ: Частые вопросы пользователей</a></li></ul></details></nav>
+                    <div class="article-body">
+
+<p>Ситуация, когда вы пытаетесь запустить любимое телевидение на компьютере, но вместо картинки видите черный экран или бесконечный буфер, знакома многим пользователям <em>OTT player</em>. Проблема воспроизведения потока на платформе <em>Windows</em> часто возникает из-за конфликта программного обеспечения, устаревших драйверов или нестабильного интернет-соединения. В отличие от телевизоров со встроенной системой, ПК требует более глубокой настройки для корректной работы с видеопотоками высокого качества.</p>
+
+<p>Не стоит сразу паниковать и искать альтернативные плееры, так как большинство ошибок устраняется стандартными средствами системы или простой перенастройкой приложения. Ключ к успеху лежит в системном подходе: от проверки сетевых параметров до анализа установленных кодеков. В этой статье мы разберем основные причины сбоев и предоставим пошаговые алгоритмы восстановления работоспособности вашего <em>OTT player</em>.</p>
+
+<h2 id="первичная-диагностика-и-проверка-сети">Первичная диагностика и проверка сети</h2>
+
+<p>Первым шагом при возникновении проблем с воспроизведением должна стать тщательная проверка стабильности интернет-соединения. Даже если другие сайты загружаются быстро, специфические потоки могут требовать высокой пропускной способности и низкого уровня потерь пакетов. Часто проблема кроется не в самом приложении, а в качестве канала передачи данных.</p>
+
+<p>Проверьте скорость соединения через специализированные сервисы, обращая внимание на параметр джиттера и пинг. Если значения превышают допустимые нормы, попробуйте переключиться с Wi-Fi на проводное соединение или наоборот, если проводной канал перегружен другими устройствами.</p>
+
+<ul>
+<li>📡 Проверьте уровень сигнала Wi-Fi: он должен быть не ниже -60 дБм для стабильной работы.</li>
+<li>🚀 Протестируйте скорость загрузки: для HD-качества необходимо минимум <code>10 Мбит/с</code>.</li>
+<li>🔄 Перезагрузите роутер: отключите питание на 30 секунд и включите снова.</li>
+</ul>
+
+<p>Если базовые проверки не дали результата, необходимо проверить, не блокирует ли ваш антивирус или фаервол входящие соединения для <em>OTT player</em>. Многие защитные программы по умолчанию запрещают приложениям доступ к портам, используемым для стриминга.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Убедитесь, что в настройках брандмауэра Windows добавлено исключение для исполняемого файла <code>ottplayer.exe</code>. Без этого приложение не сможет получить доступ к потоку данных.</p>
+</blockquote>
+
+<h2 id="конфликт-кодеков-и-аппаратное-ускорение">Конфликт кодеков и аппаратное ускорение</h2>
+
+<p>Одной из самых частых причин черного экрана является некорректная работа аппаратного ускорения или отсутствие необходимых кодеков в системе. <em>Windows</em> по умолчанию имеет ограниченный набор кодеков, и если приложение пытается использовать аппаратное декодирование через устаревший драйвер видеокарты, воспроизведение может просто не запуститься.</p>
+
+<p>Вам нужно зайти в настройки приложения и найти раздел, отвечающий за видеодекодер. Попробуйте переключить режим с <code>Hardware (GPU)</code> на <code>Software (CPU)</code>. Если после этого поток заработает, значит проблема точно в драйверах или настройках видеокарты.</p>
+
+<ul>
+<li>🎮 Обновите драйверы видеокарты: скачайте свежую версию с сайта NVIDIA, AMD или Intel.</li>
+<li>⚙️ Отключите аппаратное ускорение: в настройках плеера выберите программный режим.</li>
+<li>📼 Установите пакет кодеков: например, K-Lite Codec Pack Basic для поддержки всех форматов.</li>
+</ul>
+
+<p>Иногда проблема заключается в том, что видеокарта не поддерживает нужный профиль кодека, например, <code>H.265</code> или <code>HEVC</code> в высокой битрейте. В таком случае программное декодирование создаст нагрузку на процессор, но позволит получить изображение.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой метод ускорения у вас сейчас включен?</strong><ul><li>Аппаратное (GPU)</li><li>Программное (CPU)</li><li>Не знаю/Не проверял</li><li>Отключено</li></ul></div></div>
+
+<h2 id="настройка-dns-и-блокировка-контента">Настройка DNS и блокировка контента</h2>
+
+<p>Если у вас воспроизводится только часть каналов или определенные потоки не загружаются, возможно, проблема кроется в DNS-запросах. Провайдеры иногда ограничивают доступ к серверам доставки контента, или DNS-серверы провайдера работают некорректно, не находя правильный IP-адрес для потока.</p>
+
+<p>Решением может стать смена DNS-серверов на более надежные публичные аналоги, такие как Google DNS или Cloudflare. Это часто помогает обойти локальные блокировки и ускорить поиск серверов для стриминга.</p>
+
+<ul>
+<li>🌐 Google DNS: используйте адреса <code>8.8.8.8</code> и <code>8.8.4.4</code>.</li>
+<li>☁️ Cloudflare DNS: настройте серверы <code>1.1.1.1</code> и <code>1.0.0.1</code>.</li>
+<li>🔒 Проверьте настройки прокси: убедитесь, что в системе не включен прокси-сервер, который мешает работе.</li>
+</ul>
+
+<p>Для смены DNS перейдите в <code>Панель управления → Сеть и Интернет → Центр управления сетями и общим доступом → Изменение параметров адаптера</code>. Нажмите правой кнопкой на ваше подключение, выберите <code>Свойства</code>, затем <code>IP версии 4 (TCP/IPv4)</code> и введите новые адреса вручную.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Если вы используете корпоративную сеть, изменение DNS может нарушить правила безопасности организации. Используйте этот метод только на домашнем компьютере.</p>
+</blockquote>
+
+<h2 id="очистка-кэша-и-переустановка-приложения">Очистка кэша и переустановка приложения</h2>
+
+<p>Со временем в папках приложения накапливается временные файлы, которые могут повредиться и вызвать сбои в работе. Кэш <em>OTT player</em> хранит данные о загрузке потоков, и если эти файлы содержат ошибки, приложение может не запустить новый поток или зависнуть на этапе буферизации.</p>
+
+<p>Полная переустановка часто решает проблему, если файлы конфигурации повреждены. Однако перед удалением рекомендуется сохранить список ваших каналов или аккаунты, если они привязаны к облачному профилю.</p>
+
+<div class="checklist-block"><h4>☑️ Подготовка к переустановке</h4><label class="check-item"><input type="checkbox"><span>Скачать список каналов</span></label><label class="check-item"><input type="checkbox"><span>Запомнить логин и пароль</span></label><label class="check-item"><input type="checkbox"><span>Закрыть приложение</span></label><label class="check-item"><input type="checkbox"><span>Удалить папку AppData</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>Процесс очистки кэша на Windows обычно требует удаления папки с данными приложения. Перейдите по пути <code>%AppData%</code> и найдите папку с названием <em>OTT Player</em> или <em>OttPlayer</em>. Удалите её содержимое, но не саму папку, если вы хотите сохранить настройки.</p>
+
+<ul>
+<li>🗑️ Очистите временные файлы: нажмите <code>Win + R</code>, введите <code>%temp%</code> и удалите всё содержимое.</li>
+<li>🔄 Переустановите приложение: скачайте последнюю версию с официального сайта.</li>
+<li>🔧 Сбросьте настройки: в меню приложения найдите опцию "Сброс до заводских настроек".</li>
+</ul>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Перед удалением папки AppData создайте её резервную копию на рабочем столе. Если после очистки что-то пойдет не так, вы сможете вернуть настройки обратно.</p></div>
+
+<h2 id="анализ-логов-и-системных-конфликтов">Анализ логов и системных конфликтов</h2>
+
+<p>Если простые методы не помогли, необходимо углубиться в анализ логов приложения. <em>OTT player</em> создает файлы журналов, в которых записываются все ошибки, возникающие при попытке подключения к потоку. Эти данные помогут понять, на каком именно этапе происходит сбой: при подключении, декодировании или рендеринге.</p>
+
+<p>Логи обычно находятся в той же папке, где хранятся настройки, или в разделе <code>Помощь → Журнал событий</code> внутри самого приложения. Ищите строки с пометками <code>Error</code>, <code>Failed</code> или <code>Timeout</code>.</p>
+
+<blockquote>
+<p>⚠️ Внимание: <mark>В логах часто указывается конкретный URL потока, который не может быть загружен. Проверьте его актуальность в списке каналов, возможно, провайдер изменил ссылку.</mark></p>
+</blockquote>
+
+<p>Иногда конфликт возникает с другими приложениями, которые захватывают видео-драйвер или порты. Попробуйте закрыть все фоновые программы, особенно те, что связаны с видеоплеерами, стримингом или записью экрана.</p>
+
+<details class="faq-item"><summary>Как найти логи вручную?
+<p>Зайдите в папку <code>C</summary><div class="faq-answer"><p>\Users\ИмяПользователя\AppData\Roaming\OttPlayer\logs</code>. Откройте самый свежий файл с расширением .log в Блокноте и поищите красные строки с описанием ошибок.</p></div></details></p>
+
+<h2 id="дополнительные-настройки-реестра-и-системных-политик">Дополнительные настройки реестра и системных политик</h2>
+
+<p>В редких случаях проблема может быть связана с системными политиками Windows, которые ограничивают работу сетевых приложений или использование определенных протоколов. Например, устаревшие настройки протоколов TLS могут мешать безопасному подключению к серверам вещания.</p>
+
+<p>Убедитесь, что в системе включены современные протоколы безопасности. Зайдите в <code>Настройки → Система → Дополнительно → Параметры безопасности</code> и проверьте галочки напротив <code>TLS 1.2</code> и <code>TLS 1.3</code>.</p>
+
+<ul>
+<li>🔐 Проверьте протоколы: включите TLS 1.2 и TLS 1.3 в настройках Интернета.</li>
+<li>📉 Уменьшите нагрузку: закройте тяжелые приложения, такие как игры или видеоредакторы.</li>
+<li>⚡ Проверьте питание: в настройках электропитания выберите режим <code>Высокая производительность</code>.</li>
+</ul>
+
+<p>Если проблема сохраняется, попробуйте запустить приложение от имени администратора. Это может помочь обойти некоторые ограничения прав доступа к сетевым ресурсам. Нажмите правой кнопкой мыши на ярлык <em>OTT player</em> и выберите <code>Запуск от имени администратора</code>.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Регулярное обновление системы и драйверов — лучший способ избежать проблем с совместимостью кодеков и сетевых протоколов в будущем.</p></div>
+
+<h2 id="таблица-типичных-ошибок-и-их-решений">Таблица типичных ошибок и их решений</h2>
+
+<p>Для быстрого поиска решения удобно использовать сводную таблицу распространенных проблем. Ниже приведены основные симптомы и соответствующие методы их устранения.</p>
+
+<table>
+<thead>
+<tr>
+<th>Симптом</th>
+<th>Вероятная причина</th>
+<th>Решение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Черный экран, звук есть</td>
+<td>Ошибка кодека или драйвера</td>
+<td>Сменить декодер на программный</td>
+</tr>
+<tr>
+<td>Бесконечная загрузка</td>
+<td>Проблемы с DNS или сетью</td>
+<td>Сменить DNS на 8.8.8.8</td>
+</tr>
+<tr>
+<td>Замедление картинки</td>
+<td>Нехватка ресурсов CPU/GPU</td>
+<td>Закрыть фоновые приложения</td>
+</tr>
+<tr>
+<td>Ошибка "Нет соединения"</td>
+<td>Блокировка фаерволом</td>
+<td>Добавить исключение в брандмауэр</td>
+</tr>
+<tr>
+<td>Артефакты на экране</td>
+<td>Перегрев видеокарты</td>
+<td>Очистить ПК от пыли, проверить вентиляцию</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="faq-частые-вопросы-пользователей">FAQ: Частые вопросы пользователей</h2>
+
+<details>
+<summary>Почему OTT player работает на телефоне, но не на Windows?</summary>
+<p>Это может быть связано с различиями в кодеках и сетевых настройках. На мобильных устройствах используются специфические драйверы, отличные от тех, что стоят на ПК. Попробуйте обновить драйверы видеокарты на компьютере или отключить аппаратное ускорение в настройках приложения.</p>
+</details>
+
+<details>
+<summary>Можно ли использовать OTT player без интернета?</summary>
+<p>Нет, OTT player — это приложение для просмотра потокового контента через интернет. Без активного сетевого подключения воспроизвести каналы невозможно, так как данные не поступают на устройство.</p>
+</details>
+
+<details>
+<summary>Что делать, если приложение вылетает при запуске?</summary>
+<p>Попробуйте удалить папку с настройками в <code>%AppData%</code> и переустановить приложение. Также проверьте, нет ли конфликтов с другими медиаплеерами, и обновите .NET Framework до последней версии.</p>
+</details>
+
+<details>
+<summary>Почему звук отстает от видео?</summary>
+<p>Синхронизация звука и видео может нарушаться из-за буферизации или проблем с драйверами звуковой карты. Попробуйте изменить настройки аудио в плеере или обновить драйверы звукового адаптера.</p>
+</details>
+
+<details>
+<summary>Нужно ли покупать лицензию для работы на Windows?</summary>
+<p>Базовый функционал OTT player на Windows бесплатен, но некоторые премиум-каналы или дополнительные функции могут требовать подписки. Проверьте условия использования на официальном сайте разработчика.</p>
+</details></div>
+
+                </article>
+                <aside class="article-sidebar"><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#первичная-диагностика-и-проверка-сети">Первичная диагностика и проверка сети</a></li><li><a href="#конфликт-кодеков-и-аппаратное-ускорение">Конфликт кодеков и аппаратное ускорение</a></li><li><a href="#настройка-dns-и-блокировка-контента">Настройка DNS и блокировка контента</a></li><li><a href="#очистка-кэша-и-переустановка-приложения">Очистка кэша и переустановка приложения</a></li><li><a href="#анализ-логов-и-системных-конфликтов">Анализ логов и системных конфликтов</a></li><li><a href="#дополнительные-настройки-реестра-и-системных-политик">Дополнительные настройки реестра и системных политик</a></li><li><a href="#таблица-типичных-ошибок-и-их-решений">Таблица типичных ошибок и их решений</a></li><li><a href="#faq-частые-вопросы-пользователей">FAQ: Частые вопросы пользователей</a></li></ul></nav><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/syndicate-ne-zapuskaetsya-na-windows-10.html" class="related-card">Syndicate не запускается на Windows 10: полное решение проблемы</a></li><li><a href="/kak-otklyuchit-naushniki-ot-kompyutera-i-vklyuchit-zvuk-v-kompyutere.html" class="related-card">Как отключить наушники и включить звук на ПК: Полная инструкция</a></li><li><a href="/acer-aspire-7740g-kak-zajti-v-bezopasnyj-rezhim-pri-zapuske-noutbuka-poshagovo.html" class="related-card">Как зайти в безопасный режим на Acer Aspire 7740G: пошаговая инструкция</a></li><li><a href="/kak-v-mx-player-smotret-filmy-s-kompyutera.html" class="related-card">Как смотреть фильмы с компьютера на MX Player: Полное руководство</a></li><li><a href="/boot-manager-pri-zagruzke-noutbuka-chto-delat-acer-aspire.html" class="related-card">Boot Manager на ноутбуке Acer Aspire: Исправление ошибок загрузки</a></li></ul></nav></aside>
+            </div>
+        </div>
+    </main>
+
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/syndicate-ne-zapuskaetsya-na-windows-10.html" class="related-bottom-card"><span class="related-bottom-title">Syndicate не запускается на Windows 10: полное решение проблемы</span><span class="related-bottom-desc">Syndicate не запускается на Windows 10? Узнайте, как исправить ошибки совместимости, обновить драйве</span></a><a href="/kak-otklyuchit-naushniki-ot-kompyutera-i-vklyuchit-zvuk-v-kompyutere.html" class="related-bottom-card"><span class="related-bottom-title">Как отключить наушники и включить звук на ПК: Полная инструкция</span><span class="related-bottom-desc">Пошаговое руководство: как переключить аудиоустройство с наушников на колонки в Windows 10/11. Устра</span></a><a href="/acer-aspire-7740g-kak-zajti-v-bezopasnyj-rezhim-pri-zapuske-noutbuka-poshagovo.html" class="related-bottom-card"><span class="related-bottom-title">Как зайти в безопасный режим на Acer Aspire 7740G: пошаговая инструкция</span><span class="related-bottom-desc">Подробное руководство по запуску ноутбука Acer Aspire 7740G в безопасном режиме. Решаем проблемы с д</span></a><a href="/kak-v-mx-player-smotret-filmy-s-kompyutera.html" class="related-bottom-card"><span class="related-bottom-title">Как смотреть фильмы с компьютера на MX Player: Полное руководство</span><span class="related-bottom-desc">Узнайте, как транслировать видео с ПК на MX Player. Подробная инструкция по DLNA, локальной сети и б</span></a><a href="/boot-manager-pri-zagruzke-noutbuka-chto-delat-acer-aspire.html" class="related-bottom-card"><span class="related-bottom-title">Boot Manager на ноутбуке Acer Aspire: Исправление ошибок загрузки</span><span class="related-bottom-desc">Полное руководство по устранению проблем с Boot Manager на ноутбуках Acer Aspire. Инструкция по наст</span></a><a href="/pc-card-kupit.html" class="related-bottom-card"><span class="related-bottom-title">PC Card купить: полное руководство по выбору и установке</span><span class="related-bottom-desc">Ищете, где купить PC Card? Узнайте все о типах карт, совместимости, проверке перед покупкой и лучших</span></a></div>
+        </div>
+    </section>
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about">Быстрые решения технических проблем: ТВ, Android, Windows, приложения</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/televizory/">📺 Настройка ТВ</a></li>
+<li><a href="/category/android/">📱 Android-устройства</a></li>
+<li><a href="/category/prilozheniya/">📲 Приложения</a></li>
+<li><a href="/category/windows/">💻 Windows и ПК</a></li>
+<li><a href="/category/pristavki/">🔌 Приставки</a></li>
+<li><a href="/category/internet/">🌐 WiFi и Интернет</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+        (function() {
+            const popup = document.getElementById('cookie-consent');
+            const btn = document.getElementById('cookie-accept');
+            if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+                popup.classList.add('visible');
+                btn.onclick = () => {
+                    localStorage.setItem('cookie-accepted', 'true');
+                    popup.classList.remove('visible');
+                };
+            }
+        })();
+    </script>
+</body>
+</html>

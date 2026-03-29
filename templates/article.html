@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="article-layout">
+    <article class="article-main">
+        <h1>{{ page.title }}</h1>
+
+        {% if page.summary %}
+        <div class="summary-box">
+            <div class="summary-header">💡 Коротко</div>
+            <p>{{ page.summary | safe }}</p>
+        </div>
+        {% endif %}
+
+        {% if toc %}
+        <nav class="mobile-toc">
+            <details>
+                <summary>📋 Содержание</summary>
+                <ul>
+                {% for item in toc %}
+                    <li><a href="#{{ item.id }}">{{ item.text }}</a></li>
+                {% endfor %}
+                </ul>
+            </details>
+        </nav>
+        {% endif %}
+
+        {% for block in page.content %}
+            {% if block.type == 'heading' %}
+                <h{{ block.level | default(2) }} id="{{ block.id }}">{{ block.text }}</h{{ block.level | default(2) }}>
+
+            {% elif block.type == 'paragraph' %}
+                <p>{{ block.text | safe }}</p>
+
+            {% elif block.type == 'list' %}
+                <ul>
+                {% for li in block.items %}
+                    <li>{{ li | safe }}</li>
+                {% endfor %}
+                </ul>
+
+            {% elif block.type == 'steps' %}
+                <ol class="steps-list">
+                {% for step in block.items %}
+                    <li>{{ step | safe }}</li>
+                {% endfor %}
+                </ol>
+
+            {% elif block.type == 'attention' %}
+                <div class="attention-box attention-{{ block.kind | default('info') }}">
+                    <span class="attention-icon">{% if block.kind == 'warning' %}⚠️{% elif block.kind == 'tip' %}💡{% else %}ℹ️{% endif %}</span>
+                    <p>{{ block.text | safe }}</p>
+                </div>
+
+            {% elif block.type == 'table' %}
+                <div class="table-wrap">
+                <table>
+                    <thead><tr>
+                        {% for h in block.headers %}<th>{{ h }}</th>{% endfor %}
+                    </tr></thead>
+                    <tbody>
+                        {% for row in block.rows %}
+                        <tr>{% for cell in row %}<td>{{ cell | safe }}</td>{% endfor %}</tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+
+            {% elif block.type == 'code' %}
+                <pre class="code-block"><code>{{ block.text }}</code></pre>
+
+            {% elif block.type == 'path' %}
+                <div class="path-block">📁 <code>{{ block.text }}</code></div>
+
+            {% endif %}
+        {% endfor %}
+
+        {% if page.faq %}
+        <section class="faq-block" itemscope itemtype="https://schema.org/FAQPage">
+            <h2>Частые вопросы</h2>
+            <div class="faq-list">
+                {% for item in page.faq %}
+                <details class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                    <summary itemprop="name">{{ item.q }}</summary>
+                    <div class="faq-answer" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                        <div itemprop="text">{{ item.a | safe }}</div>
+                    </div>
+                </details>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        <div class="article-updated">Проверено: {{ build_date_human }}</div>
+    </article>
+
+    <aside class="article-sidebar">
+        {% if toc %}
+        <nav class="sidebar-toc" id="sidebarToc">
+            <h3>Содержание</h3>
+            <ul>
+                {% for item in toc %}
+                <li><a href="#{{ item.id }}">{{ item.text }}</a></li>
+                {% endfor %}
+            </ul>
+        </nav>
+        {% endif %}
+
+        {% if related %}
+        <div class="sidebar-related">
+            <h3>Похожие статьи</h3>
+            <ul>
+                {% for r in related %}
+                <li><a href="{{ r.url }}">{{ r.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </aside>
+</div>
+{% endblock %}

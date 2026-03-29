@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Онлайн-кинотеатры — ТехПодсказка</title>
+    <meta name="description" content="IVI, Okko, Кинопоиск, Wink и другие сервисы">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .cat-hero {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #1e3a5f 100%);
+            border-bottom: none;
+            padding: 48px 0 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .cat-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 40%, rgba(37,99,235,0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 60%, rgba(139,92,246,0.1) 0%, transparent 50%);
+            animation: heroShimmer 8s ease-in-out infinite alternate;
+        }
+        @keyframes heroShimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(3deg); }
+        }
+        .cat-hero .container { position: relative; z-index: 1; }
+        .cat-hero-icon {
+            font-size: 3.5rem; display: block; margin-bottom: 16px;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+        }
+        .cat-hero h1 {
+            font-size: 2rem; font-weight: 800; color: #f1f5f9;
+            margin-bottom: 10px; letter-spacing: -0.02em;
+        }
+        .cat-hero p {
+            color: #94a3b8; font-size: 1.05rem; max-width: 600px;
+            margin: 0 auto; line-height: 1.6;
+        }
+        .cat-benefits {
+            display: flex; justify-content: center; gap: 12px;
+            margin-top: 24px; flex-wrap: wrap;
+        }
+        .cat-benefit {
+            display: flex; align-items: center; gap: 8px;
+            background: rgba(255,255,255,0.08); backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 10px; padding: 8px 18px;
+            font-size: 0.88rem; color: #e2e8f0; font-weight: 500;
+            transition: all 0.25s;
+        }
+        .cat-benefit:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+        }
+        .benefit-icon { font-size: 1.15em; }
+
+        .cat-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 16px; padding: 32px 0 24px;
+        }
+        .article-home-card {
+            background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
+            padding: 0; text-decoration: none; color: #1e293b;
+            transition: all 0.25s ease; display: flex; flex-direction: column;
+            overflow: hidden; position: relative;
+        }
+        .article-home-card:hover {
+            border-color: #bfdbfe;
+            box-shadow: 0 8px 24px rgba(37,99,235,0.1);
+            transform: translateY(-4px);
+        }
+        .card-top {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 20px 0;
+        }
+        .card-icon {
+            font-size: 1.4em;
+            background: linear-gradient(135deg, #eff6ff, #e0f2fe);
+            width: 36px; height: 36px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 6px rgba(37,99,235,0.1);
+        }
+        .card-read-time {
+            font-size: 0.78rem; color: #94a3b8; font-weight: 500;
+        }
+        .article-home-title {
+            font-weight: 600; font-size: 0.97rem; line-height: 1.4;
+            padding: 12px 20px 0; transition: color 0.2s;
+        }
+        .article-home-card:hover .article-home-title { color: #2563eb; }
+        .article-home-desc {
+            font-size: 0.84rem; color: #64748b; line-height: 1.5;
+            padding: 6px 20px 0; flex: 1;
+        }
+        .card-footer {
+            display: flex; justify-content: flex-end; align-items: center;
+            padding: 12px 20px; margin-top: auto;
+            border-top: 1px solid #f1f5f9;
+        }
+        .card-read-more {
+            font-size: 0.82rem; font-weight: 600; color: #94a3b8;
+            transition: all 0.2s;
+        }
+        .article-home-card:hover .card-read-more {
+            color: #2563eb; letter-spacing: 0.02em;
+        }
+
+        .pagination {
+            display: flex; justify-content: center; gap: 6px;
+            padding: 8px 0 48px; flex-wrap: wrap; align-items: center;
+        }
+        .pag-link {
+            padding: 10px 16px; border-radius: 10px; border: 1px solid #e2e8f0;
+            color: #64748b; font-size: 0.9rem; text-decoration: none;
+            transition: all 0.2s; font-weight: 500;
+        }
+        .pag-link:hover { border-color: #2563eb; color: #2563eb; background: #eff6ff; }
+        .pag-active {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: #fff !important; border-color: #2563eb;
+            box-shadow: 0 3px 10px rgba(37,99,235,0.3);
+        }
+        .pag-edge { font-size: 1rem; font-weight: 700; }
+        .pag-dots { color: #94a3b8; padding: 0 4px; }
+
+        
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+
+        @media (max-width: 640px) {
+            .cat-grid { grid-template-columns: 1fr; }
+            .cat-hero h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/televizory/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/category/android/" class="nav-link">📱 Android-устройства</a>
+<a href="/category/prilozheniya/" class="nav-link">📲 Приложения</a>
+<a href="/category/windows/" class="nav-link">💻 Windows и ПК</a>
+<a href="/category/pristavki/" class="nav-link">🔌 Приставки</a>
+<a href="/category/internet/" class="nav-link">🌐 WiFi и Интернет</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container">
+            <a href="/">Главная</a>
+            <span class="breadcrumb-sep">›</span>
+            <span class="breadcrumb-current">Онлайн-кинотеатры</span>
+        </div>
+    </nav>
+
+    <section class="cat-hero">
+        <div class="container">
+            <span class="cat-hero-icon">🎬</span>
+            <h1>Онлайн-кинотеатры</h1>
+            <p>IVI, Okko, Кинопоиск, Wink и другие сервисы</p>
+            <div class="cat-benefits"><div class="cat-benefit"><span class="benefit-icon">🎥</span><span>Все сервисы</span></div><div class="cat-benefit"><span class="benefit-icon">💰</span><span>Бесплатные способы</span></div><div class="cat-benefit"><span class="benefit-icon">📱</span><span>Для всех устройств</span></div></div>
+        </div>
+    </section>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="cat-grid">
+            <a href="/ajpitivi-televidenie-dlya-tsl.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 13 мин</span>
+                </div>
+                <div class="article-home-title">IP-TV для ТСЖ: настройка, тарифы и оборудование 2026</div>
+                <div class="article-home-desc">Полное руководство по внедрению IP-телевидения в ТСЖ. Сравнение тарифов, выбор оборудования, настройка сети и защита от </div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/asus-fancystart-disable.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 10 мин</span>
+                </div>
+                <div class="article-home-title">Как отключить ASUS Fast Boot: полное руководство</div>
+                <div class="article-home-desc">Пошаговая инструкция по отключению функции ASUS Fast Start. Решаем проблемы с загрузкой, BIOS и доступом к системе на но</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/esli-ne-poluchaetsya-sinhronizirovat-okko-na-dvuh-ustrojstvah.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 11 мин</span>
+                </div>
+                <div class="article-home-title">Синхронизация Okko на двух устройствах: полное руководство по устранению сбоев</div>
+                <div class="article-home-desc">Почему не получается синхронизировать Okko на двух устройствах? Разбор ошибок, настройка аккаунта, проверка сети и пошаг</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/est-li-funkciya-peremotki-v-okko.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 10 мин</span>
+                </div>
+                <div class="article-home-title">Есть ли перемотка в Okko: полный обзор функций</div>
+                <div class="article-home-desc">Узнайте, как работает перемотка в Okko на ТВ и приставках. Инструкция по управлению, решение проблем с буфером и особенн</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/est-li-ivi-kanaly-dlya-vzroslyh.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 15 мин</span>
+                </div>
+                <div class="article-home-title">Есть ли на Иви каналы для взрослых: правда о доступности 18+</div>
+                <div class="article-home-desc">Разбираем, доступны ли порно-каналы на Иви. Официальная позиция сервиса, возрастная цензура и законные способы просмотра</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/est-li-kanaly-dlya-vzroslyh-na-ivi-ili-kinopoiske.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 9 мин</span>
+                </div>
+                <div class="article-home-title">Есть ли каналы для взрослых на Иви и Кинопоиске: разбор контента</div>
+                <div class="article-home-desc">Узнайте, доступны ли порно-каналы на Иви и Кинопоиске. Полный обзор рейтинга 18+, возрастных ограничений и легальных аль</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/est-li-na-ivi-18-kanaly.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 16 мин</span>
+                </div>
+                <div class="article-home-title">Есть ли на Иви 18+ каналы: правда о контенте и ограничениях</div>
+                <div class="article-home-desc">Разбираем наличие каналов 18+ на платформе Иви. Узнайте о возрастных фильтрах, платных подписках и том, как работает сис</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/est-li-na-ivi-eroticheskie-kanaly-sejchas.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 9 мин</span>
+                </div>
+                <div class="article-home-title">Есть ли на Иви эротические каналы в 2026 году? Полный разбор</div>
+                <div class="article-home-desc">Ищете эротические каналы на Иви? Узнайте актуальную информацию о контенте, возрастных ограничениях и почему вы не найдет</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/est-li-u-ivi-kanaly-dlya-vzroslyh.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 11 мин</span>
+                </div>
+                <div class="article-home-title">Есть ли у Иви каналы для взрослых: Полный разбор контента</div>
+                <div class="article-home-desc">Узнайте, доступны ли каналы 18+ на платформе Иви. Разбор политик цензуры, возрастных ограничений и легальных способов пр</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/est-liina-ivi-18-kanaly.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 11 мин</span>
+                </div>
+                <div class="article-home-title">Есть ли на Иви каналы 18+: Обзор контента и настройки</div>
+                <div class="article-home-desc">Разбираем наличие контента 18+ на платформе Иви. Узнайте, как работают возрастные фильтры, parental control и что доступ</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/gde-na-ivi-18.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 10 мин</span>
+                </div>
+                <div class="article-home-title">Где на иви найти 18+: Полный гайд по настройке контента</div>
+                <div class="article-home-desc">Ищете, где на иви 18+ контент? Узнайте, как включить возрастной фильтр, найти фильмы для взрослых и настроить родительск</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/gde-na-ivi-nahoditsya-kontent-18.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 10 мин</span>
+                </div>
+                <div class="article-home-title">Где на Иви найти контент 18+: подробная инструкция и настройки</div>
+                <div class="article-home-desc">Узнайте, как найти и включить контент 18+ на платформе Иви. Полная инструкция по настройке родительского контроля и филь</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/gde-v-ivi-istoriya-prosmotrov.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 10 мин</span>
+                </div>
+                <div class="article-home-title">Где в Иви история просмотров: полный гайд по управлению списком</div>
+                <div class="article-home-desc">Узнайте, как найти и удалить историю просмотров в приложении Иви на ТВ и смартфоне. Пошаговая инструкция, настройки прив</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/gde-v-menyu-na-ivi-razdel-eroticheskih-filmov.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 8 мин</span>
+                </div>
+                <div class="article-home-title">Где найти эротические фильмы на Иви: полное руководство по разделу</div>
+                <div class="article-home-desc">Ищете раздел с эротикой на Иви? Узнайте, как найти скрытые жанры, фильтровать контент и настроить родительский контроль </div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/gde-v-okko-vybrat-yazyk-filma.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 12 мин</span>
+                </div>
+                <div class="article-home-title">Как выбрать язык фильма в ОККО: Полное руководство по настройкам</div>
+                <div class="article-home-desc">Узнайте, как быстро сменить язык озвучки или субтитров в ОККО на ТВ, смартфоне и компьютере. Подробная инструкция по нас</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/h96-max-kinopoisk.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 14 мин</span>
+                </div>
+                <div class="article-home-title">H96 Max и Кинопоиск: Как установить, настроить и смотреть фильмы</div>
+                <div class="article-home-desc">Полная инструкция по установке приложения Кинопоиск на приставку H96 Max. Решаем проблемы совместимости, настройка звука</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/h96max-kak-smotret-besplatno-kinopoisk.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 13 мин</span>
+                </div>
+                <div class="article-home-title">Как смотреть Кинопоиск бесплатно на H96 Max: Полное руководство 2026</div>
+                <div class="article-home-desc">Узнайте, как установить и настроить приложение Кинопоиск на ТВ-приставке H96 Max. Проверенные способы доступа к контенту</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/hdrezka-app-registraciya.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 13 мин</span>
+                </div>
+                <div class="article-home-title">Регистрация в приложении HDRezka: пошаговая инструкция и вход</div>
+                <div class="article-home-desc">Как пройти регистрацию в HDRezka App? Полная инструкция по созданию аккаунта, вход в личный кабинет и настройка профиля </div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/hdrezka-dlya-lg.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 10 мин</span>
+                </div>
+                <div class="article-home-title">Как смотреть HDRezka на телевизорах LG: Полная инструкция 2026</div>
+                <div class="article-home-desc">Пошаговое руководство по установке HDRezka на LG WebOS. Обход ограничений, установка приложений, настройка качества и ре</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/hdrezka-dlya-webos.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 9 мин</span>
+                </div>
+                <div class="article-home-title">Как установить hdrezka на WebOS: полное руководство</div>
+                <div class="article-home-desc">Пошаговая инструкция по установке сервиса hdrezka на телевизоры LG с WebOS. Разбор методов, обход ограничений, настройка</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/hdrezka-dostup-zapreschen-k-serialam.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 10 мин</span>
+                </div>
+                <div class="article-home-title">Доступ запрещен к HDRezka: Как обойти блокировку и смотреть сериалы</div>
+                <div class="article-home-desc">Почему возникла ошибка доступа к HDRezka? Полный гайд по обходу блокировок, выбору прокси, браузеров и безопасному просм</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/hdrezka-kak-zaregistrirovatsya.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 12 мин</span>
+                </div>
+                <div class="article-home-title">Как зарегистрироваться на HDRezka: Полная инструкция 2026</div>
+                <div class="article-home-desc">Подробный гайд по регистрации на HDRezka. Узнайте, как создать аккаунт, войти через соцсети и настроить профиль для комф</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/hdrezka-material-nedostupen-dlya-prosmotra.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 10 мин</span>
+                </div>
+                <div class="article-home-title">Ошибка «Материал недоступен»: почему не работает HDRezka и как исправить</div>
+                <div class="article-home-desc">Разбираем причины ошибки на HDRezka: блокировка провайдером, перегрузка серверов и проблемы с браузером. Пошаговая инстр</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/hdrezka-ne-pokazyvaet-serialy-pochemu.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 13 мин</span>
+                </div>
+                <div class="article-home-title">Почему hdrezka не показывает сериалы: причины и решения</div>
+                <div class="article-home-desc">Полный разбор причин, почему сайт hdrezka не грузит сериалы. Инструкция по устранению ошибок, блокировок и сбоев плеера.</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/hdrezka-ne-vse-serialy-prosmatrivayutsya.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 10 мин</span>
+                </div>
+                <div class="article-home-title">Почему на HDrezka не все сериалы просматриваются: причины и решения</div>
+                <div class="article-home-desc">Сериалы на HDrezka не работают? Разбираем технические причины, ошибки плеера и блокировки. Узнайте, как вернуть доступ к</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/hdrezka-nekotorye-mediafajly-ne-mogut-byt-proigrany-pri-zapuske-video.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 9 мин</span>
+                </div>
+                <div class="article-home-title">Ошибка Hdrezka: некоторые медиафайлы не могут быть проиграны</div>
+                <div class="article-home-desc">Почему на Hdrezka не работает видео? Разбираем причины ошибки проигрывания, форматы кодеков и способы решения проблемы с</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/hdrezka-oshibka-pri-poluchenii-videofajla.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 12 мин</span>
+                </div>
+                <div class="article-home-title">Ошибка при получении видеофайла на HDRezka: Как исправить</div>
+                <div class="article-home-desc">Что делать, если HDRezka выдает ошибку при получении видеофайла? Полный гайд по устранению проблем с плеером, кэшем и бл</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/hdrezka-registraciya-vremenno.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 11 мин</span>
+                </div>
+                <div class="article-home-title">HDRezka регистрация временно недоступна: причины и решения</div>
+                <div class="article-home-desc">Почему закрыта регистрация на HDRezka? Разбираем причины блокировок, временные простои и альтернативные способы доступа </div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/hdrezka-sozdat-novyj-akkaunt.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 10 мин</span>
+                </div>
+                <div class="article-home-title">Как создать новый аккаунт на HDRezka: пошаговая инструкция 2026</div>
+                <div class="article-home-desc">Пошаговое руководство по регистрации нового аккаунта на HDRezka. Узнайте, как войти, восстановить доступ и избежать блок</div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a>
+            <a href="/hdrezka-vremenno-otklyuchena-registraciya.html" class="article-home-card">
+                <div class="card-top">
+                    <span class="card-icon">🎬</span>
+                    <span class="card-read-time">⏱ 11 мин</span>
+                </div>
+                <div class="article-home-title">HDrezka временно отключена регистрация: причины и решение</div>
+                <div class="article-home-desc">Почему сайт HDrezka отключил регистрацию? Разбираем причины блокировок, способы восстановления доступа и альтернативные </div>
+                <div class="card-footer">
+                    <span class="card-read-more">Читать →</span>
+                </div>
+            </a></div>
+            <nav class="pagination" aria-label="Страницы"><a href="/category/kinoteatry/" class="pag-link pag-active">1</a><a href="/category/kinoteatry/page/2/" class="pag-link">2</a><a href="/category/kinoteatry/page/3/" class="pag-link">3</a><a href="/category/kinoteatry/page/4/" class="pag-link">4</a><a href="/category/kinoteatry/page/5/" class="pag-link">5</a><a href="/category/kinoteatry/page/2/" class="pag-link">Далее →</a><a href="/category/kinoteatry/page/5/" class="pag-link pag-edge" title="В конец">»</a></nav>
+        </div>
+    </main>
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about">Быстрые решения технических проблем: ТВ, Android, Windows, приложения</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/televizory/">📺 Настройка ТВ</a></li>
+<li><a href="/category/android/">📱 Android-устройства</a></li>
+<li><a href="/category/prilozheniya/">📲 Приложения</a></li>
+<li><a href="/category/windows/">💻 Windows и ПК</a></li>
+<li><a href="/category/pristavki/">🔌 Приставки</a></li>
+<li><a href="/category/internet/">🌐 WiFi и Интернет</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script>
+    (function() {
+        document.getElementById('menuBtn')?.addEventListener('click', () => {
+            document.getElementById('mainNav')?.classList.toggle('open');
+        });
+        
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+</body>
+</html>

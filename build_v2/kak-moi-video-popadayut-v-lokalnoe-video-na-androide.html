@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Как мои видео попадают в локальное видео на Android: Секреты — ТехПодсказка</title>
+    <meta name="description" content="Почему видеоролики появляются в галерее Android автоматически? Разбираем работу сканеров медиа, папки .nomedia и настройки приложений для управления контентом.">
+    <link rel="canonical" href="https://tehpodskazka.ru/kak-moi-video-popadayut-v-lokalnoe-video-na-androide.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как мои видео попадают в локальное видео на Android: Секреты">
+    <meta property="og:description" content="Почему видеоролики появляются в галерее Android автоматически? Разбираем работу сканеров медиа, папки .nomedia и настройки приложений для управления контентом.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/televizory/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/category/android/" class="nav-link">📱 Android-устройства</a>
+<a href="/category/prilozheniya/" class="nav-link">📲 Приложения</a>
+<a href="/category/windows/" class="nav-link">💻 Windows и ПК</a>
+<a href="/category/pristavki/" class="nav-link">🔌 Приставки</a>
+<a href="/category/internet/" class="nav-link">🌐 WiFi и Интернет</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/android/">Android-устройства</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как мои видео попадают в локальное видео на Android: Секреты</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    <h1>Почему и как ваши видео появляются в разделе «Локальное видео» на Android</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#механизм-работы-системного-сканера-медиа">Механизм работы системного сканера медиа</a></li><li><a href="#роль-папки-nomedia-в-управлении-видимостью">Роль папки .nomedia в управлении видимостью</a></li><li><a href="#настройки-приложений-и-их-влияние-на-индексацию">Настройки приложений и их влияние на индексацию</a></li><li><a href="#синхронизация-с-облачными-сервисами-и-кэширование">Синхронизация с облачными сервисами и кэширование</a></li><li><a href="#специфика-работы-с-внутренним-хранилищем-и-sd-картами">Специфика работы с внутренним хранилищем и SD-картами</a></li><li><a href="#принудительное-обновление-базы-данных-медиа">Принудительное обновление базы данных медиа</a></li><li><a href="#возможные-сбои-и-способы-их-устранения">Возможные сбои и способы их устранения</a></li><li><a href="#заключение-и-рекомендации-по-управлению-контентом">Заключение и рекомендации по управлению контентом</a></li></ul></details></nav>
+                    <div class="article-body">
+<p>Многие пользователи смартфонов на базе <strong>операционной системы</strong> Android сталкиваются с неожиданным явлением: стоит лишь загрузить файл или скопировать его на карту памяти, как он мгновенно появляется в стандартном приложении «Галерея» или «Видео». Этот процесс происходит незаметно для человека, но за ним стоит сложная работа системных служб, которые постоянно сканируют файловую систему устройства.</p>
+<p>Понимание того, как именно <em>Android Media Scanner</em> индексирует содержимое памяти, поможет вам контролировать свой контент. Вы сможете скрыть ненужные файлы от общего доступа или, наоборот, гарантировать, что важные записи будут мгновенно доступны для просмотра в интерфейсе системы.</p>
+<p>В этой статье мы детально разберем алгоритмы работы сканера, роль скрытых системных папок и способы управления видимостью медиафайлов без использования стороннего программного обеспечения.</p>
+
+<h2 id="механизм-работы-системного-сканера-медиа">Механизм работы системного сканера медиа</h2>
+<p>Основой процесса индексации является фоновый сервис, называемый <strong>MediaScanner</strong>. Эта служба запускается при загрузке устройства и при каждом изменении в файловой системе, например, при подключении USB-кабеля или копировании файла. Сервис обходит все доступные тома памяти, проверяя расширения файлов и их метаданные.</p>
+<p>Когда <em>MediaScanner</em> находит файл с поддержанным форматом (например, <code>.mp4</code>, <code>.mkv</code> или <code>.mov</code>), он не просто добавляет его в список, а извлекает техническую информацию: разрешение, длительность, битрейт и даже создает миниатюру для быстрого отображения в интерфейсе. Именно эти данные формируют базу данных, которую затем используют ваши приложения.</p>
+<p>Процесс может занять время, если вы перенесли гигабайты данных, но система оптимизирована так, чтобы не замедлять работу основного интерфейса. Однако в старых версиях ОС или на устройствах с медленной памятью вы могли замечать, как иконка загрузки появляется в статус-баре во время сканирования.</p>
+
+<h2 id="роль-папки-nomedia-в-управлении-видимостью">Роль папки .nomedia в управлении видимостью</h2>
+<p>Самый эффективный способ предотвратить попадание видео в общий список — это использование специального системного маркера. Если в любой папке создать файл с именем <code>.nomedia</code> (обратите внимание на точку в начале), сканер полностью проигнорирует все содержимое этой директории и её подпапок.</p>
+<p>Это критически важно для пользователей, которые хранят в памяти устройства приватные файлы, рабочие материалы или кэш приложений, которые не должны отображаться в стандартной галерее. Файл <code>.nomedia</code> действует как «стена», которую системный индексатор не может преодолеть.</p>
+<p>Важно отметить, что создание этого файла не удаляет видео, оно просто становится невидимым для стандартных приложений. Чтобы вернуть файлы в общий доступ, достаточно удалить файл-маркер и инициировать повторное сканирование системы.</p>
+<blockquote>⚠️ Внимание: Файл <code>.nomedia</code> скрывает не только видео, но и музыку, и изображения. Если вы поместите его в папку с фотоальбомами, они также исчезнут из галереи.</blockquote>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте файловые менеджеры с функцией показа скрытых файлов, чтобы увидеть и управлять файлами .nomedia, так как стандартные обозреватели часто их игнорируют по умолчанию.</p></div>
+
+<h2 id="настройки-приложений-и-их-влияние-на-индексацию">Настройки приложений и их влияние на индексацию</h2>
+<p>Не все приложения на вашем смартфоне ведут себя одинаково. Некоторые сторонние видеоплееры, такие как <em>VLC</em> или <em>MX Player</em>, имеют собственные настройки сканирования, которые могут перекрывать системные правила. В настройках таких приложений часто можно найти опцию «Искать видео в» или «Папки сканирования».</p>
+<p>Если вы хотите, чтобы видео появлялось только в конкретном плеере, но не в системной галереи, вы можете настроить исключение папок именно в этом приложении. Это дает дополнительный уровень контроля, особенно когда системный сканер работает слишком агрессивно.</p>
+<p>С другой стороны, некоторые «клинеры» или оптимизаторы памяти могут по ошибке удалять метаданные или блокировать работу <strong>MediaStore</strong>, из-за чего новые видео не будут появляться в списке, даже если файл физически присутствует на диске.</p>
+<div class="attention-box attention-info"><div><strong>📊 Как часто вы замечаете новые видео в галерее?</strong><ul><li>Мгновенно</li><li>С задержкой в несколько минут</li><li>Только после перезагрузки</li><li>Никогда не замечал</li></ul></div></div>
+
+<h2 id="синхронизация-с-облачными-сервисами-и-кэширование">Синхронизация с облачными сервисами и кэширование</h2>
+<p>Современная экосистема Android тесно связана с облачными хранилищами, такими как Google Фото или Яндекс.Диск. Часто видео, которое вы видите в разделе «Локальное видео», на самом деле является кэшированной копией, загруженной из облака для экономии трафика.</p>
+<p>Приложения синхронизации создают локальные копии файлов в специальных системных каталогах, которые затем сканируются <em>MediaScanner</em>. Это объясняет, почему видео может появиться в галерее, даже если вы не скачивали его вручную, а просто открыли его в облачном приложении.</p>
+<p>Управление этим процессом требует внимательного отношения к настройкам синхронизации. Отключение опции «Загружать оригиналы» или «Кэшировать видео» может предотвратить появление облачных файлов в локальном списке, если вам это необходимо.</p>
+<table>
+<thead>
+<tr>
+<th>Тип файла</th>
+<th>Расширение</th>
+<th>Видимость в стандартной галерее</th>
+<th>Действие для скрытия</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Видео</td>
+<td><code>.mp4</code>, <code>.mov</code></td>
+<td>Автоматически</td>
+<td>Создать <code>.nomedia</code></td>
+</tr>
+<tr>
+<td>Музыка</td>
+<td><code>.mp3</code>, <code>.flac</code></td>
+<td>Автоматически</td>
+<td>Создать <code>.nomedia</code></td>
+</tr>
+<tr>
+<td>Временные файлы</td>
+<td><code>.tmp</code>, <code>.cache</code></td>
+<td>Не отображаются</td>
+<td>Удалить вручную</td>
+</tr>
+<tr>
+<td>Приватные фото</td>
+<td><code>.jpg</code>, <code>.png</code></td>
+<td>Автоматически</td>
+<td>Папка «Секрет»</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="специфика-работы-с-внутренним-хранилищем-и-sd-картами">Специфика работы с внутренним хранилищем и SD-картами</h2>
+<p>Производительность сканирования сильно зависит от типа носителя. <strong>Внутренняя память</strong> современных смартфонов работает быстро, и индексация происходит практически мгновенно. Однако при использовании карт памяти microSD скорость процесса может снизиться в разы из-за медленного интерфейса чтения.</p>
+<p>Иногда система может застрять на этапе сканирования внешней карты, если на ней много мелких файлов или файловая система повреждена. В таких случаях видео не появляется в галерее, пока не будет выполнено форматирование карты или восстановление файловой системы.</p>
+<p>Также стоит учитывать, что при извлечении карты памяти и повторном подключении система может не сразу распознать изменения, если не сработает триггер события «Смена носителя». В таких случаях требуется принудительный перезапуск службы сканирования.</p>
+<details class="faq-item"><summary>Что делать, если видео не исчезает после создания .nomedia?</summary><div class="faq-answer"><p>Иногда системный кэш галереи не обновляется сразу. Попробуйте очистить данные приложения «Галерея» в настройках или перезагрузить устройство.</p></div></details>
+
+<h2 id="принудительное-обновление-базы-данных-медиа">Принудительное обновление базы данных медиа</h2>
+<p>Если автоматическое сканирование не сработало, или вы хотите ускорить процесс появления новых видео, можно инициировать его вручную. Для этого не обязательно перезагружать телефон, достаточно использовать специальные команды или приложения.</p>
+<p>Существуют утилиты из магазина Play Market, которые выполняют функцию принудительного запуска <strong>MediaScanner</strong>. Они отправляют системный сигнал на проверку всех папок, что заставляет галерею обновить свой список в течение нескольких секунд.</p>
+<p>Для продвинутых пользователей, имеющих права root или доступ через ADB, существует команда, которая мгновенно обновляет базу данных: <pre><code>adb shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d "file:///sdcard/DCIM/Camera"</code></pre> Эта команда заставляет систему просканировать конкретный путь.</p>
+<blockquote>⚠️ Внимание: Чрезмерное использование принудительного сканирования может привести к повышенному расходу заряда батареи и нагреву процессора, так как система активно читает диск.</blockquote>
+<div class="checklist-block"><h4>☑️ Проверка видимости видео</h4><label class="check-item"><input type="checkbox"><span>Файл имеет правильное расширение</span></label><label class="check-item"><input type="checkbox"><span>Папка не содержит .nomedia</span></label><label class="check-item"><input type="checkbox"><span>Приложение имеет разрешение на доступ</span></label><label class="check-item"><input type="checkbox"><span>Кэш галереи очищен</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Принудительное сканирование — это эффективный инструмент, но использовать его стоит только в крайних случаях, когда автоматический механизм дал сбой.</p></div>
+
+<h2 id="возможные-сбои-и-способы-их-устранения">Возможные сбои и способы их устранения</h2>
+<p>Иногда видеофайлы появляются в галерее, даже если вы уверены, что папка скрыта. Это может происходить из-за ошибок в именовании файла <code>.nomedia</code> (например, если вы случайно добавили пробел или расширение <code>.txt</code>), либо из-за того, что файл был создан в подпапке, а сканер проверил только родительскую директорию.</p>
+<p>Другой распространенной проблемой является конфликт версий Android. При обновлении системы иногда сбрасываются настройки видимости или меняется логика работы <em>MediaStore</em>, что приводит к появлению «призрачных» файлов или, наоборот, исчезновению реальных.</p>
+<p>Если проблема не решается стандартными методами, стоит проверить, не установлено ли приложение, которое блокирует доступ к файлам. Антивирусы и менеджеры приватности могут перенаправлять запросы к файлам в изолированную зону, делая их невидимыми для остальных программ.</p>
+<blockquote>⚠️ Внимание: Никогда не удаляйте системные файлы с именем <code>media.db</code> или <code>media.db-wal</code> вручную, так как это может привести к полной потере базы данных медиа и необходимости полного сброса настроек устройства.</blockquote>
+<details class="faq-item"><summary>Почему видео дублируется в галерее?</summary><div class="faq-answer"><p>Часто это происходит из-за того, что файл находится одновременно на внутреннем хранилище и на SD-карте, или если приложение создало резервную копию в другой папке.</p></div></details>
+
+<h2 id="заключение-и-рекомендации-по-управлению-контентом">Заключение и рекомендации по управлению контентом</h2>
+<p>Понимание того, как ваши видео попадают в локальное хранилище, дает вам полный контроль над цифровой средой вашего смартфона. Вы больше не будете зависеть от случайных обновлений списка галереи и сможете четко определять, какие файлы доступны для общего просмотра, а какие остаются приватными.</p>
+<p>Использование файла <code>.nomedia</code> остается самым надежным способом изоляции данных, но не забывайте о регулярной проверке настроек приложений и обновлении прошивки устройства, чтобы избежать программных багов.</p>
+<p>Помните, что <mark>системный сканер работает в фоновом режиме и не требует вмешательства пользователя, если его логика работы вас полностью устраивает</mark>. Однако знание механизмов его работы позволит вам решать сложные задачи по организации медиафайлов быстро и эффективно.</p>
+
+<details>
+<summary>Почему видео появляется в галерее сразу после копирования?</summary>
+<p>Это происходит благодаря фоновому сервису MediaScanner, который мгновенно реагирует на изменения файловой системы и добавляет новые файлы в базу данных приложений.</p>
+</details>
+<details>
+<summary>Как скрыть видео из стандартной галереи Android?</summary>
+<p>Создайте в папке с видео файл с именем <code>.nomedia</code>. Это заставит сканер проигнорировать содержимое этой директории.</p>
+</details>
+<details>
+<summary>Можно ли заставить галерею обновиться вручную?</summary>
+<p>Да, можно использовать приложения-сканеры медиа или перезагрузить устройство, что принудительно запустит процесс индексации всех файлов.</p>
+</details>
+<details>
+<summary>Влияет ли формат файла на его появление в списке?</summary>
+<p>Да, система сканирует только поддерживаемые форматы (MP4, MKV, AVI). Файлы с экзотическими расширениями могут быть проигнорированы.</p>
+</details></div>
+
+                </article>
+                <aside class="article-sidebar"><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#механизм-работы-системного-сканера-медиа">Механизм работы системного сканера медиа</a></li><li><a href="#роль-папки-nomedia-в-управлении-видимостью">Роль папки .nomedia в управлении видимостью</a></li><li><a href="#настройки-приложений-и-их-влияние-на-индексацию">Настройки приложений и их влияние на индексацию</a></li><li><a href="#синхронизация-с-облачными-сервисами-и-кэширование">Синхронизация с облачными сервисами и кэширование</a></li><li><a href="#специфика-работы-с-внутренним-хранилищем-и-sd-картами">Специфика работы с внутренним хранилищем и SD-картами</a></li><li><a href="#принудительное-обновление-базы-данных-медиа">Принудительное обновление базы данных медиа</a></li><li><a href="#возможные-сбои-и-способы-их-устранения">Возможные сбои и способы их устранения</a></li><li><a href="#заключение-и-рекомендации-по-управлению-контентом">Заключение и рекомендации по управлению контентом</a></li></ul></nav><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/chto-takoe-vcard-v-telefone-android.html" class="related-card">Что такое vCard в Android: формат, обмен и решение проблем</a></li><li><a href="/kak-uznat-na-androide-chto-tebya-udalili-iz-spiska-kontaktov.html" class="related-card">Как узнать, что удалили из контактов на Android: 5 работающих методов</a></li><li><a href="/est-li-v-magazine-prilozhenij-soni-braviya-beziandroida-video-servis-wink.html" class="related-card">Wink на Sony Bravia без Android: есть ли приложение?</a></li><li><a href="/phone-clone-net-vybora-novyj-telefon.html" class="related-card">Phone Clone не видит новый телефон: причины и решения</a></li><li><a href="/gde-na-honor-x8-hranyatsya-zametki.html" class="related-card">Где хранятся заметки на Honor X8: полное руководство по поиску и синхронизации</a></li></ul></nav></aside>
+            </div>
+        </div>
+    </main>
+
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/chto-takoe-vcard-v-telefone-android.html" class="related-bottom-card"><span class="related-bottom-title">Что такое vCard в Android: формат, обмен и решение проблем</span><span class="related-bottom-desc">Разбираем формат vCard в смартфонах на Android. Узнайте, как импортировать контакты, открывать файлы</span></a><a href="/kak-uznat-na-androide-chto-tebya-udalili-iz-spiska-kontaktov.html" class="related-bottom-card"><span class="related-bottom-title">Как узнать, что удалили из контактов на Android: 5 работающих методов</span><span class="related-bottom-desc">Узнайте, как проверить, удалили ли вас из контактов на Android. Пошаговые инструкции, анализ звонков</span></a><a href="/est-li-v-magazine-prilozhenij-soni-braviya-beziandroida-video-servis-wink.html" class="related-bottom-card"><span class="related-bottom-title">Wink на Sony Bravia без Android: есть ли приложение?</span><span class="related-bottom-desc">Узнайте, как установить сервис Wink на телевизоры Sony Bravia без Android. Полная инструкция, обходн</span></a><a href="/phone-clone-net-vybora-novyj-telefon.html" class="related-bottom-card"><span class="related-bottom-title">Phone Clone не видит новый телефон: причины и решения</span><span class="related-bottom-desc">Устраняем проблему, когда приложение Phone Clone не определяет новое устройство. Пошаговая инструкци</span></a><a href="/gde-na-honor-x8-hranyatsya-zametki.html" class="related-bottom-card"><span class="related-bottom-title">Где хранятся заметки на Honor X8: полное руководство по поиску и синхронизации</span><span class="related-bottom-desc">Узнайте точный путь к приложению Заметки на Honor X8. Инструкция по синхронизации, восстановлению да</span></a><a href="/kak-ochistit-kesh-na-androide-nokiya.html" class="related-bottom-card"><span class="related-bottom-title">Как очистить кэш на Android Nokia: полное руководство по ускорению</span><span class="related-bottom-desc">Пошаговая инструкция, как удалить кэш приложений и системный кэш на смартфонах Nokia с Android. Уско</span></a></div>
+        </div>
+    </section>
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about">Быстрые решения технических проблем: ТВ, Android, Windows, приложения</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/televizory/">📺 Настройка ТВ</a></li>
+<li><a href="/category/android/">📱 Android-устройства</a></li>
+<li><a href="/category/prilozheniya/">📲 Приложения</a></li>
+<li><a href="/category/windows/">💻 Windows и ПК</a></li>
+<li><a href="/category/pristavki/">🔌 Приставки</a></li>
+<li><a href="/category/internet/">🌐 WiFi и Интернет</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+        (function() {
+            const popup = document.getElementById('cookie-consent');
+            const btn = document.getElementById('cookie-accept');
+            if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+                popup.classList.add('visible');
+                btn.onclick = () => {
+                    localStorage.setItem('cookie-accepted', 'true');
+                    popup.classList.remove('visible');
+                };
+            }
+        })();
+    </script>
+</body>
+</html>

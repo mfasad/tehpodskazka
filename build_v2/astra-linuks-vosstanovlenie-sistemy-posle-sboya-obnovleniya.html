@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Восстановление Astra Linux после сбоя обновления: Полное руководство — ТехПодсказка</title>
+    <meta name="description" content="Пошаговая инструкция по восстановлению системы Astra Linux после неудачного обновления. Методы от простого отката до использования LiveCD и chroot.">
+    <link rel="canonical" href="https://tehpodskazka.ru/astra-linuks-vosstanovlenie-sistemy-posle-sboya-obnovleniya.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Восстановление Astra Linux после сбоя обновления: Полное руководство">
+    <meta property="og:description" content="Пошаговая инструкция по восстановлению системы Astra Linux после неудачного обновления. Методы от простого отката до использования LiveCD и chroot.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/televizory/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/category/android/" class="nav-link">📱 Android-устройства</a>
+<a href="/category/prilozheniya/" class="nav-link">📲 Приложения</a>
+<a href="/category/windows/" class="nav-link">💻 Windows и ПК</a>
+<a href="/category/pristavki/" class="nav-link">🔌 Приставки</a>
+<a href="/category/internet/" class="nav-link">🌐 WiFi и Интернет</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Восстановление Astra Linux после сбоя обновления: Полное руководство</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    <h1>Восстановление системы Astra Linux после сбоя обновления: Полное руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#первичная-диагностика-и-оценка-масштаба-бедствия">Первичная диагностика и оценка масштаба бедствия</a></li><li><a href="#использование-режима-восстановления-recovery-mode">Использование режима восстановления (Recovery Mode)</a></li><li><a href="#откат-изменений-через-утилиту-apt-и-временные-снапшоты">Откат изменений через утилиту apt и временные снапшоты</a></li><li><a href="#восстановление-через-livecd-и-chroot-окружение">Восстановление через LiveCD и chroot окружение</a></li><li><a href="#исправление-зависимостей-и-загрузчика-grub">Исправление зависимостей и загрузчика GRUB</a></li><li><a href="#анализ-логов-и-профилактика-будущих-сбоев">Анализ логов и профилактика будущих сбоев</a></li><li><a href="#faq-частые-вопросы-по-восстановлению-astra-linux">FAQ: Частые вопросы по восстановлению Astra Linux</a></li></ul></details></nav>
+                    <div class="article-body">
+<p>Сбой обновления в операционной системе <strong>Astra Linux</strong> — это одна из самых стрессовых ситуаций для системного администратора или опытного пользователя. Внезапный крах после установки критических пакетов может оставить сервер или рабочую станцию неработоспособной, блокируя доступ к корпоративным ресурсам и данным. Паника в такой момент только усугубляет ситуацию, поэтому важно сразу понять, что современные дистрибутивы Linux, включая <em>Astra Linux Special Edition</em>, обладают мощными механизмами самовосстановления.</p>
+<p>Независимо от того, произошла ли ошибка во время автоматического обновления через репозитории <code>apt</code> или из-за прерывания установки пакетов, существуют проверенные алгоритмы действий. Мы разберем методы откатывания изменений, восстановления загрузчика <strong>GRUB</strong> и исправления поврежденных зависимостей пакетов. Главное правило здесь — сохранять хладнокровие и действовать последовательно, используя резервные копии или штатные инструменты дистрибутива.</p>
+
+<h2 id="первичная-диагностика-и-оценка-масштаба-бедствия">Первичная диагностика и оценка масштаба бедствия</h2>
+<p>Прежде чем предпринимать какие-либо радикальные меры, необходимо точно определить причину и стадию сбоя. Система может не загружаться вовсе, уходить в бесконечный цикл перезагрузок или загружаться в консольный режим с ошибкой. Первым шагом всегда является проверка логов, если у вас есть доступ к консоли или возможность подключить систему в режиме восстановления.</p>
+<p>Часто проблема кроется в конфликте версий библиотек или неполной установке ядра. Вам нужно внимательно прочитать сообщения об ошибках, которые появляются на экране до зависания. Если система загружается в <strong>single-user mode</strong>, это значительно упрощает задачу, так как дает вам привилегии root без загрузки графического интерфейса.</p>
+<p>Обратите внимание на индикаторы жесткого диска и сетевые интерфейсы. Иногда сбой обновления сопровождается повреждением файловой системы, что требует проверки диска утилитой <code>fsck</code>. Не пытайтесь сразу перезагружать сервер многократно, это может усугубить повреждение метаданных.</p>
+
+
+<h2 id="использование-режима-восстановления-recovery-mode">Использование режима восстановления (Recovery Mode)</h2>
+<p>Самый безопасный способ исправить ошибки после неудачного обновления — это загрузка в специальный режим восстановления. В загрузочном меню <strong>GRUB</strong> обычно есть пункт с надписью "Advanced options for Astra Linux" или "Режим восстановления". Выберите его, чтобы загрузить ядро с минимальным набором модулей.</p>
+<p>В этом режиме система монтирует корневую файловую систему в режиме только для чтения, что позволяет вам безопасно выполнять диагностические операции. После входа в систему (вам потребуется пароль root) вы сможете смонтировать корень для записи и запустить утилиты ремонта. Это особенно полезно, если основной загрузчик поврежден, но ядро еще читается.</p>
+<p>Важно отметить, что в режиме восстановления сетевые интерфейсы часто отключены по умолчанию. Вам нужно будет вручную их поднять, если потребуется загрузка пакетов с репозиториев для исправления ситуации. Используйте команду <code>ip link set eth0 up</code> или аналогичную для вашего интерфейса, а затем <code>dhclient</code> для получения IP-адреса.</p>
+<blockquote>⚠️ Внимание: В режиме восстановления вы работаете с минимальной конфигурацией, поэтому некоторые сетевые сервисы или графические утилиты могут быть недоступны до полного восстановления системы.</blockquote>
+<div class="checklist-block"><h4>☑️ План действий в Recovery Mode</h4><label class="check-item"><input type="checkbox"><span>Загрузиться через GRUB</span></label><label class="check-item"><input type="checkbox"><span>Ввести пароль root</span></label><label class="check-item"><input type="checkbox"><span>Поднять сетевой интерфейс</span></label><label class="check-item"><input type="checkbox"><span>Запустить apt-get repair</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="откат-изменений-через-утилиту-apt-и-временные-снапшоты">Откат изменений через утилиту apt и временные снапшоты</h2>
+<p>Если система загружается, но работает нестабильно из-за обновленных пакетов, лучшим решением будет откат к предыдущей версии. В <strong>Astra Linux</strong> менеджер пакетов <code>apt</code> хранит историю изменений, что позволяет отменить последние действия. Вы можете использовать команду <code>apt-get install</code> с указанием конкретных версий пакетов, которые были установлены до сбоя.</p>
+<p>Для более глубокого анализа используйте команду <code>apt list --installed</code> и сравните списки с резервной копией, если таковая имеется. Если вы используете <em>Snapper</em> или аналогичные инструменты для создания снимков файловой системы, процесс восстановления сведется к выбору точки отката. Это самый быстрый способ вернуть систему в рабочее состояние.</p>
+<p>Не забудьте проверить конфигурационные файлы, которые могли быть перезаписаны обновлением. Утилиты пакетного менеджера часто сохраняют старые версии с расширением <code>.dpkg-old</code> или <code>.dpkg-dist</code>. Сравнивая их с текущими, вы сможете понять, какие настройки были изменены ошибочно.</p>
+<ul>
+<li>🔍 Используйте команду <code>dpkg --get-selections</code> для сохранения текущего списка пакетов.</li>
+<li>🔧 Проверьте логи в <code>/var/log/dpkg.log</code> для поиска последних успешных операций.</li>
+<li>📉 Откатывайте пакеты по одному, чтобы изолировать проблемный компонент.</li>
+</ul>
+<details class="faq-item"><summary>Как откатить конкретный пакет?</summary><div class="faq-answer"><p>Используйте команду apt-get install имя_пакета=версия, где версия — это номер пакета из истории apt. Например: apt-get install asterisk=1:13.25.1-1.</p></div></details>
+
+<h2 id="восстановление-через-livecd-и-chroot-окружение">Восстановление через LiveCD и chroot окружение</h2>
+<p>Если система не загружается вообще, вам потребуется внешний носитель с образом <em>Astra Linux LiveCD</em> или любой другой совместимый дистрибутив. Загрузитесь с флешки или диска, подключите жесткий диск с поврежденной системой и смонтируйте его в каталог, например, <code>/mnt/root</code>.</p>
+<p>Следующим шагом будет использование утилиты <code>chroot</code> для перехода в среду вашей основной системы прямо из Live-режима. Это позволяет выполнять команды так, будто вы загрузились в сломанную ОС. Вам нужно будет смонтировать системные виртуальные файловые системы, такие как <code>/proc</code>, <code>/sys</code> и <code>/dev</code>, чтобы утилиты внутри chroot работали корректно.</p>
+<p>После входа в chroot-окружение вы можете пересоздать инициализацию загрузчика, исправить зависимости пакетов или удалить проблемные обновления. Это мощный метод, требующий понимания структуры файловой системы Linux. Убедитесь, что вы монтируете разделы в правильном порядке, иначе команды могут не сработать.</p>
+<pre><code>mount /dev/sda1 /mnt/root
+<p>mount --bind /dev /mnt/root/dev</p>
+<p>mount --bind /proc /mnt/root/proc</p>
+<p>mount --bind /sys /mnt/root/sys</p>
+<p>chroot /mnt/root</code></pre></p>
+<blockquote>⚠️ Внимание: При работе с chroot очень важно правильно смонтировать виртуальные файловые системы <code>/proc</code> и <code>/sys</code>, иначе команды вроде <code>apt-get</code> или <code>grub-install</code> не смогут выполнить свои функции.</blockquote>
+
+<h2 id="исправление-зависимостей-и-загрузчика-grub">Исправление зависимостей и загрузчика GRUB</h2>
+<p>Частой причиной сбоя после обновления является нарушение зависимостей между пакетами. Система может не запускаться, потому что критическая библиотека была обновлена, а программы, которые её вызывают, остались старыми. Используйте команду <code>apt-get -f install</code> внутри вашей системы (или в chroot), чтобы автоматически попытаться исправить разорванные зависимости.</p>
+<p>Если проблема связана с загрузчиком, возможно, обновленное ядро не имеет корректной записи в конфигурации GRUB. Вам нужно выполнить команду <code>update-grub</code> или <code>grub-mkconfig</code>, чтобы пересоздать меню загрузки. Убедитесь, что все ядра, включая резервные, добавлены в список доступных для загрузки.</p>
+<p>В некоторых случаях требуется принудительная переустановка ядра или загрузчика. Для этого используйте команды <code>apt-get install --reinstall grub-pc</code> и <code>apt-get install --reinstall linux-image-generic</code>. Это вернет файлы загрузчика в исходное состояние и перезапишет конфигурационные файлы по умолчанию.</p>
+<ul>
+<li>🔄 Выполните <code>apt-get update</code> перед попыткой исправления зависимостей.</li>
+<li>🛠 Используйте <code>dpkg --configure -a</code> для завершения незавершенных установок.</li>
+<li>📝 Проверьте файл <code>/etc/default/grub</code> на наличие синтаксических ошибок.</li>
+</ul>
+<div class="attention-box attention-info"><div><strong>📊 Какой метод восстановления вы используете чаще всего?</strong><ul><li>Recovery Mode</li><li>LiveCD + chroot</li><li>Откат пакетов</li><li>Форматирование и переустановка</li></ul></div></div>
+
+<h2 id="анализ-логов-и-профилактика-будущих-сбоев">Анализ логов и профилактика будущих сбоев</h2>
+<p>После того как система восстановлена, крайне важно провести анализ причин сбоя, чтобы избежать повторения ситуации. Логи в <code>/var/log/syslog</code> и <code>/var/log/dpkg.log</code> содержат подробную информацию о том, какие пакеты были установлены и на каком этапе возникла ошибка. Изучение этих записей поможет выявить несовместимые версии ПО или проблемы с репозиториями.</p>
+<p>Для предотвращения подобных инцидентов в будущем рекомендуется внедрить практику тестирования обновлений. Никогда не обновляйте сразу все критические сервера. Сначала протестируйте пакеты на тестовой машине с идентичной конфигурацией. Это позволит выявить конфликты до того, как они попадут в промышленную эксплуатацию.</p>
+<p>Также необходимо настроить регулярное резервное копирование конфигурационных файлов и баз данных. Используйте инструменты вроде <code>rsync</code> или специализированные решения для бэкапа, чтобы иметь возможность быстро развернуть систему из образа. Наличие актуальной резервной копии — это ваша главная страховка от любых сбоев.</p>
+<ul>
+<li>📊 Настройте мониторинг целостности файлов с помощью <code>AIDE</code> или аналогов.</li>
+<li>📦 Используйте <code>apt-cache policy</code> для контроля версий пакетов перед обновлением.</li>
+<li>🛡 Настройте автоматическое создание снапшотов перед установкой обновлений.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Команда</th>
+<th>Описание</th>
+<th>Применение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>apt-get -f install</code></td>
+<td>Исправление зависимостей</td>
+<td>Восстановление сломанных пакетов</td>
+</tr>
+<tr>
+<td><code>dpkg --configure -a</code></td>
+<td>Конфигурация незавершенных пакетов</td>
+<td>Завершение прерванных установок</td>
+</tr>
+<tr>
+<td><code>update-grub</code></td>
+<td>Обновление конфигурации загрузчика</td>
+<td>Добавление новых ядер в меню</td>
+</tr>
+<tr>
+<td><code>journalctl -xb</code></td>
+<td>Просмотр логов текущего запуска</td>
+<td>Поиск причин отказа системы</td>
+</tr>
+</tbody>
+</table>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Регулярное тестирование обновлений на изолированных стендах и наличие актуальных бэкапов — единственные гарантированные способы минимизировать время простоя при сбоях.</p></div>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Перед массовым обновлением серверов создайте полный образ системы (например, с помощью Clonezilla или LVM snapshot), чтобы в случае критического сбоя можно было мгновенно откатиться к состоянию "до обновления".</p></div>
+
+<h2 id="faq-частые-вопросы-по-восстановлению-astra-linux">FAQ: Частые вопросы по восстановлению Astra Linux</h2>
+<details>
+<summary>Что делать, если система загрузилась в режиме emergency?</summary>
+<p>В режиме emergency система монтирует корневую файловую систему в режиме только для чтения. Вам нужно ввести пароль root, затем выполнить команду <code>mount -o remount,rw /</code> для предоставления прав на запись, после чего можно приступать к диагностике и исправлению ошибок с помощью <code>fsck</code> или <code>apt</code>.</p>
+</details>
+<details>
+<summary>Можно ли восстановить систему без LiveCD?</summary>
+<p>Да, если у вас есть доступ к меню GRUB и режиму восстановления. Однако, если поврежден сам загрузчик или ядро, использование LiveCD или внешнего носителя становится обязательным условием для успешного восстановления.</p>
+</details>
+<details>
+<summary>Как проверить, какие пакеты были обновлены перед сбоем?</summary>
+<p>Для этого можно посмотреть лог-файл <code>/var/log/dpkg.log</code> или использовать команду <code>grep " upgrade " /var/log/dpkg.log</code>. Также в файле <code>/var/log/apt/history.log</code> хранится история операций обновления, включая список пакетов.</p>
+</details>
+<details>
+<summary>Что делать, если команда apt зависла?</summary>
+<p>Если <code>apt</code> завис, не перезагружайте систему сразу. Попробуйте найти процесс с помощью <code>ps aux | grep apt</code> и завершить его командой <code>kill -9 PID</code>. После этого удалите блокировочные файлы, если они остались, например, <code>rm /var/lib/dpkg/lock</code> и <code>rm /var/lib/apt/lists/lock</code>, затем перезапустите <code>dpkg --configure -a</code>.</p>
+</details>
+<details>
+<summary>Нужно ли делать резервную копию перед обновлением?</summary>
+<p>Абсолютно да. Хотя Astra Linux считается стабильной системой, сбои в репозиториях или конфликты пакетов случаются. Наличие бэкапа конфигураций и данных — это стандартная практика безопасности, которая сэкономит вам часы работы в случае неудачи.</p>
+</details></div>
+
+                </article>
+                <aside class="article-sidebar"><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#первичная-диагностика-и-оценка-масштаба-бедствия">Первичная диагностика и оценка масштаба бедствия</a></li><li><a href="#использование-режима-восстановления-recovery-mode">Использование режима восстановления (Recovery Mode)</a></li><li><a href="#откат-изменений-через-утилиту-apt-и-временные-снапшоты">Откат изменений через утилиту apt и временные снапшоты</a></li><li><a href="#восстановление-через-livecd-и-chroot-окружение">Восстановление через LiveCD и chroot окружение</a></li><li><a href="#исправление-зависимостей-и-загрузчика-grub">Исправление зависимостей и загрузчика GRUB</a></li><li><a href="#анализ-логов-и-профилактика-будущих-сбоев">Анализ логов и профилактика будущих сбоев</a></li><li><a href="#faq-частые-вопросы-по-восстановлению-astra-linux">FAQ: Частые вопросы по восстановлению Astra Linux</a></li></ul></nav><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/bbc-agent-chto-eto-za-programma-i-nuzhna-li-ona.html" class="related-card">BBC Agent на телевизоре: что это и нужно ли удалять</a></li><li><a href="/kak-ubrat-nadpis-pod-ikonkami-esli-netu-funkcii-ne-pokazyvat-tekst.html" class="related-card">Убираем текст под иконками: когда нет функции скрытия в меню</a></li><li><a href="/golosovoj-pomoschnik-breeno-est-li-russkij-yazyk.html" class="related-card">Breeno и русский язык: поддержка, настройка и нюансы работы</a></li><li><a href="/hdvideobox-ne-pokazyvaet-v-razdele-video.html" class="related-card">HDVideoBox не показывает видео: полное руководство по исправлению</a></li><li><a href="/anidesk-po-lokalnoj-seti.html" class="related-card">Анидеск по локальной сети: Настройка и управление Android TV</a></li></ul></nav></aside>
+            </div>
+        </div>
+    </main>
+
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/bbc-agent-chto-eto-za-programma-i-nuzhna-li-ona.html" class="related-bottom-card"><span class="related-bottom-title">BBC Agent на телевизоре: что это и нужно ли удалять</span><span class="related-bottom-desc">Разбираемся, что такое BBC Agent на Android TV и Smart TV. Опасен ли этот процесс, как отключить слу</span></a><a href="/kak-ubrat-nadpis-pod-ikonkami-esli-netu-funkcii-ne-pokazyvat-tekst.html" class="related-bottom-card"><span class="related-bottom-title">Убираем текст под иконками: когда нет функции скрытия в меню</span><span class="related-bottom-desc">Не можете отключить подписи под пиктограммами? Узнайте, как скрыть текст под иконками через CSS, рее</span></a><a href="/golosovoj-pomoschnik-breeno-est-li-russkij-yazyk.html" class="related-bottom-card"><span class="related-bottom-title">Breeno и русский язык: поддержка, настройка и нюансы работы</span><span class="related-bottom-desc">Ищете голосового помощника Breeno на русском? Узнайте о полной поддержке языка, методах активации, о</span></a><a href="/hdvideobox-ne-pokazyvaet-v-razdele-video.html" class="related-bottom-card"><span class="related-bottom-title">HDVideoBox не показывает видео: полное руководство по исправлению</span><span class="related-bottom-desc">Видео не загружаются в приложении HDVideoBox? Узнайте основные причины сбоя, способы сброса настроек</span></a><a href="/anidesk-po-lokalnoj-seti.html" class="related-bottom-card"><span class="related-bottom-title">Анидеск по локальной сети: Настройка и управление Android TV</span><span class="related-bottom-desc">Полное руководство по подключению Anidesk через локальную сеть. Настройка, устранение ошибок, сравне</span></a><a href="/kak-postavit-alisu-na-pk-v-fonovom-rezhime.html" class="related-bottom-card"><span class="related-bottom-title">Как запустить Алису на ПК в фоне: полное руководство 2026</span><span class="related-bottom-desc">Узнайте, как установить и настроить голосового ассистента Яндекс Алиса на компьютере. Инструкция по </span></a></div>
+        </div>
+    </section>
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about">Быстрые решения технических проблем: ТВ, Android, Windows, приложения</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/televizory/">📺 Настройка ТВ</a></li>
+<li><a href="/category/android/">📱 Android-устройства</a></li>
+<li><a href="/category/prilozheniya/">📲 Приложения</a></li>
+<li><a href="/category/windows/">💻 Windows и ПК</a></li>
+<li><a href="/category/pristavki/">🔌 Приставки</a></li>
+<li><a href="/category/internet/">🌐 WiFi и Интернет</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+        (function() {
+            const popup = document.getElementById('cookie-consent');
+            const btn = document.getElementById('cookie-accept');
+            if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+                popup.classList.add('visible');
+                btn.onclick = () => {
+                    localStorage.setItem('cookie-accepted', 'true');
+                    popup.classList.remove('visible');
+                };
+            }
+        })();
+    </script>
+</body>
+</html>

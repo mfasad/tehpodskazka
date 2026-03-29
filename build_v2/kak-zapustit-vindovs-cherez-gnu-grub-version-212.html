@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Запуск Windows через GRUB 2.12: Полное руководство по настройке — ТехПодсказка</title>
+    <meta name="description" content="Инструкция по загрузке Windows через GNU GRUB версии 2.12. Настройка chroot, создание меню, исправление ошибок chainloading и работа с EFI/BIOS системами.">
+    <link rel="canonical" href="https://tehpodskazka.ru/kak-zapustit-vindovs-cherez-gnu-grub-version-212.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Запуск Windows через GRUB 2.12: Полное руководство по настройке">
+    <meta property="og:description" content="Инструкция по загрузке Windows через GNU GRUB версии 2.12. Настройка chroot, создание меню, исправление ошибок chainloading и работа с EFI/BIOS системами.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/televizory/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/category/android/" class="nav-link">📱 Android-устройства</a>
+<a href="/category/prilozheniya/" class="nav-link">📲 Приложения</a>
+<a href="/category/windows/" class="nav-link">💻 Windows и ПК</a>
+<a href="/category/pristavki/" class="nav-link">🔌 Приставки</a>
+<a href="/category/internet/" class="nav-link">🌐 WiFi и Интернет</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Запуск Windows через GRUB 2.12: Полное руководство по настройке</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    <h1>Как запустить Windows через GNU GRUB версии 2.12: Пошаговая настройка</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#анализ-текущей-конфигурации-и-подготовка-среды">Анализ текущей конфигурации и подготовка среды</a></li><li><a href="#установка-и-обновление-пакетов-gnu-grub-версии-212">Установка и обновление пакетов GNU GRUB версии 2.12</a></li><li><a href="#ручное-создание-записи-для-windows-в-конфигурации">Ручное создание записи для Windows в конфигурации</a></li><li><a href="#решение-проблем-совместимости-uefi-и-bios">Решение проблем совместимости UEFI и BIOS</a></li><li><a href="#исправление-ошибок-загрузки-и-диагностика">Исправление ошибок загрузки и диагностика</a></li><li><a href="#оптимизация-времени-загрузки-и-настройка-меню">Оптимизация времени загрузки и настройка меню</a></li><li><a href="#дополнительные-настройки-и-скрипты-автоматизации">Дополнительные настройки и скрипты автоматизации</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <div class="article-body">
+
+<p>Загрузка операционной системы Windows через загрузчик GNU GRUB версии 2.12 — это задача, требующая глубокого понимания структуры загрузочных записей и работы с многозагрузочными конфигурациями. В отличие от старых версий, <em>GRUB 2.12</em> предлагает улучшенную поддержку <strong>UEFI Secure Boot</strong> и более гибкие скрипты автоматизации, что делает процесс сложнее, но результат надежнее. Многие пользователи сталкиваются с необходимостью перехода на этот загрузчик после переустановки Linux-системы, где Windows была вторичной ОС.</p>
+
+<p>Вам предстоит разобраться с особенностями <strong>chainloading</strong> (цепной загрузки), так как GRUB не загружает ядро Windows напрямую, а передает управление загрузчику Microsoft. Ошибки в конфигурации могут привести к тому, что система просто не увидит Windows или выдаст ошибку <code>GRUB rescue</code>. Ключ к успеху лежит в правильном определении разделов и корректной генерации конфигурационного файла.</p>
+
+<h2 id="анализ-текущей-конфигурации-и-подготовка-среды">Анализ текущей конфигурации и подготовка среды</h2>
+
+<p>Прежде чем приступать к модификации загрузчика, необходимо точно определить, в каком режиме работает ваш компьютер: Legacy BIOS или современный UEFI. От этого зависит способ, которым <code>grub-install</code> будет записывать данные в <strong>EFI System Partition</strong> или MBR. Ошибка в выборе режима приведет к невозможности загрузки даже после успешной установки пакетов.</p>
+
+<p>Вам нужно запустить терминал с правами суперпользователя и выполнить команду проверки текущей загрузки. Обратите внимание на вывод утилиты <code>lsblk</code> или <code>fdisk -l</code>, где вы должны увидеть раздел с меткой <strong>boot</strong> или <code>esp</code>. Если система использует UEFI, этот раздел обычно имеет формат <strong>FAT32</strong> и монтируется в <code>/boot/efi</code>.</p>
+
+<ul>
+<li>🔍 Проверьте наличие раздела EFI: выполните <code>ls /boot/efi/EFI/Microsoft/Boot/bootmgfw.efi</code></li>
+<li>🔧 Убедитесь, что пакет <code>grub-common</code> установлен в актуальной версии 2.12</li>
+<li>💾 Создайте резервную копию файла <code>/etc/grub.d/40_custom</code> перед редактированием</li>
+</ul>
+
+<p>Если вы используете гибридную систему с несколькими дисками, важно убедиться, что загрузчик установлен именно на тот диск, который выбран первым в приоритетах BIOS. Неправильный выбор целевого устройства при установке может привести к конфликту загрузочных записей.</p>
+
+<h2 id="установка-и-обновление-пакетов-gnu-grub-версии-212">Установка и обновление пакетов GNU GRUB версии 2.12</h2>
+
+<p>Версия 2.12 является относительно новой и может требовать добавления специфических репозиториев в зависимости от вашего дистрибутива Linux. В стандартных репозиториях Ubuntu или Debian часто доступны только стабильные версии 2.0x, поэтому для получения <strong>GRUB 2.12</strong> иногда приходится использовать PPA или компилировать из исходного кода.</p>
+
+<p>Процесс обновления требует тщательного соблюдения последовательности действий, чтобы не нарушить работу существующей системы. Сначала необходимо обновить список пакетов, затем установить сам загрузчик и его модули. Не забудьте проверить, что модуль <strong>efi</strong> или <strong>pc</strong> загружается корректно в зависимости от архитектуры.</p>
+
+<pre><code>sudo apt update
+<p>sudo apt install grub-pc-bin grub-common grub-efi-amd64-bin</p>
+<p>sudo grub-install /dev/sda</p>
+<p>sudo update-grub</code></pre></p>
+
+<ul>
+<li>🚀 Используйте флаг <code>--target=x86_64-efi</code> для систем с UEFI</li>
+<li>⚙️ Проверьте наличие модулей в <code>/usr/lib/grub/x86_64-efi/</code></li>
+<li>🔄 Выполните <code>grub-mkconfig -o /boot/grub/grub.cfg</code> для пересоздания меню</li>
+</ul>
+
+<blockquote>
+<p>⚠️ Внимание: Установка новой версии GRUB поверх старой может привести к потере кастомных тем или скриптов, если они не были совместимы с API версии 2.12. Всегда делайте бэкап папки <code>/etc/grub.d/</code>.</p>
+</blockquote>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой дистрибутив вы используете?</strong><ul><li>Ubuntu</li><li>Debian</li><li>Arch Linux</li><li>Fedora</li><li>CentOS</li></ul></div></div>
+
+<h2 id="ручное-создание-записи-для-windows-в-конфигурации">Ручное создание записи для Windows в конфигурации</h2>
+
+<p>Иногда автоматический сканер <code>os-prober</code> не находит установленную Windows, особенно если она находится на другом физическом диске или имеет нестандартную разметку. В этом случае необходимо вручную прописать запись загрузки в файл <code>40_custom</code>. Это дает полный контроль над параметрами передачи управления загрузчику Microsoft.</p>
+
+<p>Вам нужно определить точный UUID или имя устройства, где находится загрузчик Windows. Для UEFI систем это часто файл <code>bootmgfw.efi</code> на разделе EFI. Для Legacy BIOS это загрузочный сектор раздела с Windows. Ошибка в указании пути сделает запись нерабочей, и GRUB будет пытаться загрузить несуществующий файл.</p>
+
+<pre><code>menuentry "Windows 10/11 (Manual)" {
+<p>insmod part_gpt</p>
+<p>insmod fat</p>
+<p>search --no-floppy --fs-uuid --set=root YOUR-UUID-HERE</p>
+<p>chainloader /EFI/Microsoft/Boot/bootmgfw.efi</p>
+<p>}</code></pre></p>
+
+<p>Если ваша система работает в режиме Legacy BIOS, команда будет отличаться и указывать на загрузочный сектор, а не на файл EFI. Используйте команду <code>chainloader +1</code> для запуска первого сектора раздела, где установлена Windows.</p>
+
+<ul>
+<li>📝 Замените <code>YOUR-UUID-HERE</code> на реальный UUID вашего раздела, полученный через <code>blkid</code></li>
+<li>🔗 Убедитесь, что модули <code>part_gpt</code> и <code>fat</code> загружены перед попыткой доступа к файлам</li>
+<li>🛡️ Проверьте, что Secure Boot не блокирует загрузку стороннего chainloader</li>
+</ul>
+
+<div class="checklist-block"><h4>☑️ Проверка ручного добавления</h4><label class="check-item"><input type="checkbox"><span>Найти UUID раздела Windows</span></label><label class="check-item"><input type="checkbox"><span>Написать запись в 40_custom</span></label><label class="check-item"><input type="checkbox"><span>Указать правильный путь к bootmgfw.efi</span></label><label class="check-item"><input type="checkbox"><span>Обновить конфиг grub</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="решение-проблем-совместимости-uefi-и-bios">Решение проблем совместимости UEFI и BIOS</h2>
+
+<p>Одной из самых частых проблем при работе с GRUB 2.12 является некорректная обработка <strong>UEFI Secure Boot</strong>. Если эта функция включена в BIOS, загрузчик Microsoft может отказать в загрузке, если подпись загрузчика GRUB не является доверенной. Это требует либо отключения Secure Boot, либо подписи ключей GRUB.</p>
+
+<p>Вам также стоит обратить внимание на режим <strong>CMS</strong> (Compatibility Support Module) в настройках BIOS. Если Windows была установлена в режиме UEFI, а GRUB пытается загрузиться в режиме Legacy (или наоборот), цепочка загрузки прервется с ошибкой. Проверьте настройки приоритета загрузки в BIOS.</p>
+
+<table>
+<thead>
+<tr>
+<th>Режим установки Windows</th>
+<th>Режим загрузки GRUB</th>
+<th>Требуемое действие</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UEFI (GPT)</td>
+<td>UEFI (GPT)</td>
+<td>Использовать <code>chainloader</code> к файлу .efi</td>
+</tr>
+<tr>
+<td>Legacy (MBR)</td>
+<td>Legacy (MBR)</td>
+<td>Использовать <code>chainloader +1</code></td>
+</tr>
+<tr>
+<td>UEFI (GPT)</td>
+<td>Legacy (MBR)</td>
+<td>Невозможно (нужна переустановка)</td>
+</tr>
+<tr>
+<td>Legacy (MBR)</td>
+<td>UEFI (GPT)</td>
+<td>Включить CSM в BIOS</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote>
+<p>⚠️ Внимание: Смешивание стилей разделов GPT и MBR на одном диске без включения CSM может привести к полной потере данных и невозможности загрузки любой ОС.</p>
+</blockquote>
+
+<details class="faq-item"><summary>Что делать, если Secure Boot блокирует GRUB?</summary><div class="faq-answer"><p>Вам необходимо сгенерировать собственную пару ключей MOK (Machine Owner Key), подписать ими загрузчик GRUB и загрузить ключи в прошивку UEFI через утилиту MOK Manager при загрузке. Это сложный процесс, требующий точного выполнения шагов.</p></div></details>
+
+<h2 id="исправление-ошибок-загрузки-и-диагностика">Исправление ошибок загрузки и диагностика</h2>
+
+<p>Если после обновления конфигурации Windows не появляется в меню или выдает ошибку <code>error: file not found</code>, необходимо провести глубокую диагностику. Часто проблема кроется в том, что <strong>os-prober</strong> не был запущен с правами суперпользователя или его работа была заблокирована в конфигурационном файле <code>30_os-prober</code>.</p>
+
+<p>Вам следует проверить логи загрузки, чтобы понять, на каком этапе происходит сбой. Используйте режим восстановления или загрузочную флешку с Linux, чтобы смонтировать корневой раздел и проверить целостность файлов. Ошибки в синтаксисе скриптов <code>.cfg</code> часто остаются незамеченными до момента перезагрузки.</p>
+
+<ul>
+<li>🔎 Запустите <code>sudo os-prober</code> вручную и посмотрите вывод в консоль</li>
+<li>📂 Проверьте существование файла <code>/boot/efi/EFI/Microsoft/Boot/bootmgfw.efi</code></li>
+<li>🐞 Используйте команду <code>grub-probe --target=fs /dev/sdX</code> для проверки типа файловой системы</li>
+</ul>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если Windows не находится автоматически, попробуйте временно отключить параметр <code>GRUB_DISABLE_OS_PROBER=false</code> в файле <code>/etc/default/grub</code>, чтобы принудительно включить поиск сторонних ОС.</p></div>
+
+<h2 id="оптимизация-времени-загрузки-и-настройка-меню">Оптимизация времени загрузки и настройка меню</h2>
+
+<p>После успешной настройки загрузки Windows стоит уделить внимание эргономике меню загрузчика. GRUB 2.12 позволяет настраивать время ожидания, тему оформления и порядок элементов. Вы можете сделать загрузку Windows приоритетной или, наоборот, скрыть её из основного списка, оставив только для экспертов.</p>
+
+<p>Вам нужно отредактировать файл <code>/etc/default/grub</code>, изменив параметры <code>GRUB_TIMEOUT</code> и <code>GRUB_DEFAULT</code>. Если вы хотите, чтобы по умолчанию загружалась именно Windows, укажите номер записи в меню или используйте <code>saved</code> для запоминания последнего выбора.</p>
+
+<pre><code>GRUB_TIMEOUT=5
+<p>GRUB_DEFAULT=saved</p>
+<p>GRUB_SAVEDEFAULT=true</p>
+<p>GRUB_DISABLE_OS_PROBER=false</code></pre></p>
+
+<blockquote>
+<p>⚠️ Внимание: Слишком короткое время ожидания (<code>GRUB_TIMEOUT=0</code>) может привести к тому, что вы не успеете выбрать Windows при необходимости, и система автоматически загрузит Linux.</p>
+</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Правильная настройка <code>GRUB_DEFAULT</code> позволяет не только выбрать ОС по умолчанию, но и запомнить ваш последний выбор, что удобно при периодической смене операционных систем.</p></div>
+
+<h2 id="дополнительные-настройки-и-скрипты-автоматизации">Дополнительные настройки и скрипты автоматизации</h2>
+
+<p>Для продвинутых пользователей GRUB 2.12 открывает возможности создания сложных сценариев загрузки. Вы можете добавить скрипты, которые будут проверять состояние диска перед загрузкой Windows или изменять параметры ядра Linux в зависимости от выбранной ОС. Это полезно для систем, где требуется специфическая конфигурация оборудования.</p>
+
+<p>Вам стоит изучить структуру папки <code>/etc/grub.d/</code> и понять, как нумерация файлов влияет на порядок их выполнения. Скрипты с меньшим номером выполняются первыми, что позволяет вам вставлять свои записи в начало или конец меню.</p>
+
+<ul>
+<li>🛠️ Создайте скрипт <code>50_custom</code> для уникальных записей, которые не должны обновляться автоматически</li>
+<li>🔗 Используйте переменные окружения для динамической подстановки путей к разделам</li>
+<li>📉 Оптимизируйте время загрузки, отключив ненужные модули в <code>grub.cfg</code></li>
+</ul>
+
+<details class="faq-item"><summary>Как скрыть Windows из меню?</summary><div class="faq-answer"><p>Создайте скрипт, который проверяет переменную окружения и, если она не установлена, пропускает добавление записи Windows. Это позволяет делать меню "чистым" для обычных пользователей, но доступным для администраторов.</p></div></details>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Почему Windows не отображается в меню GRUB 2.12?</summary>
+<p>Скорее всего, отключен <strong>os-prober</strong>. Проверьте файл <code>/etc/default/grub</code> и убедитесь, что там нет строки <code>GRUB_DISABLE_OS_PROBER=true</code>. Также запустите <code>sudo os-prober</code> вручную, чтобы проверить, видит ли система Windows.</p>
+</details>
+
+<details>
+<summary>Можно ли загрузить Windows в режиме UEFI через GRUB Legacy BIOS?</summary>
+<p>Нет, это технически невозможно. Если Windows установлена в режиме UEFI, GRUB также должен быть загружен в режиме UEFI. Попытка загрузить EFI-файл через BIOS-режим приведет к ошибке.</p>
+</details>
+
+<details>
+<summary>Как исправить ошибку "error: unknown filesystem"?</summary>
+<p>Эта ошибка возникает, если GRUB не имеет модуля для чтения файловой системы раздела, где лежит загрузчик. Убедитесь, что загружен модуль <code>insmod ntfs</code> (для Windows на NTFS) или <code>insmod fat</code> (для EFI раздела).</p>
+</details>
+
+<details>
+<summary>Что делать, если после обновления GRUB перестал видеть Windows?</summary>
+<p>Обычно это происходит из-за сбоя в обновлении пакета <code>grub-pc</code> или <code>grub-efi</code>. Перезапустите команду <code>sudo update-grub</code> и проверьте, не был ли случайно изменен файл <code>40_custom</code> или удален скрипт <code>30_os-prober</code>.</p>
+</details>
+
+<details>
+<summary>Нужно ли отключать Secure Boot для загрузки Windows через GRUB?</summary>
+<p>Не обязательно, если GRUB и все модули подписаны доверенными ключами. Однако, если вы используете кастомную сборку GRUB 2.12 без подписи, вам придется либо отключить Secure Boot, либо подписать загрузчик самостоятельно.</p>
+</details>
+
+<mark>Критически важно: При использовании команды <code>grub-install</code> всегда указывайте полный путь к диску (например, <code>/dev/sda</code>), а не к разделу (например, <code>/dev/sda1</code>), иначе загрузочная запись будет записана неверно.</mark></div>
+
+                </article>
+                <aside class="article-sidebar"><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#анализ-текущей-конфигурации-и-подготовка-среды">Анализ текущей конфигурации и подготовка среды</a></li><li><a href="#установка-и-обновление-пакетов-gnu-grub-версии-212">Установка и обновление пакетов GNU GRUB версии 2.12</a></li><li><a href="#ручное-создание-записи-для-windows-в-конфигурации">Ручное создание записи для Windows в конфигурации</a></li><li><a href="#решение-проблем-совместимости-uefi-и-bios">Решение проблем совместимости UEFI и BIOS</a></li><li><a href="#исправление-ошибок-загрузки-и-диагностика">Исправление ошибок загрузки и диагностика</a></li><li><a href="#оптимизация-времени-загрузки-и-настройка-меню">Оптимизация времени загрузки и настройка меню</a></li><li><a href="#дополнительные-настройки-и-скрипты-автоматизации">Дополнительные настройки и скрипты автоматизации</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/h96-max-8k-ultra-hd-instrukciya-na-russkom.html" class="related-card">H96 Max 8K Ultra HD инструкция на русском: настройка и прошивка</a></li><li><a href="/chto-takoe-video-po-zaprosu-mts.html" class="related-card">Видео по запросу МТС: что это и как включить на ТВ</a></li><li><a href="/haier-smotrkt-filmy-bksplatno.html" class="related-card">Как смотреть фильмы бесплатно на телевизоре Haier: Полное руководство</a></li><li><a href="/phone-master-na-itel-a70-kak-udalit.html" class="related-card">Как удалить Phone Master с Itel A70: полное руководство</a></li><li><a href="/samsung-music-sboj-vosproizvedeniya-kompozicii.html" class="related-card">Samsung Music сбой воспроизведения: полные решения</a></li></ul></nav></aside>
+            </div>
+        </div>
+    </main>
+
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/h96-max-8k-ultra-hd-instrukciya-na-russkom.html" class="related-bottom-card"><span class="related-bottom-title">H96 Max 8K Ultra HD инструкция на русском: настройка и прошивка</span><span class="related-bottom-desc">Полная русскоязычная инструкция для приставки H96 Max 8K. Настройка сети, установка приложений, прош</span></a><a href="/chto-takoe-video-po-zaprosu-mts.html" class="related-bottom-card"><span class="related-bottom-title">Видео по запросу МТС: что это и как включить на ТВ</span><span class="related-bottom-desc">Разбираем, что такое видео по запросу МТС. Инструкция по активации сервиса, настройки Smart TV, тари</span></a><a href="/haier-smotrkt-filmy-bksplatno.html" class="related-bottom-card"><span class="related-bottom-title">Как смотреть фильмы бесплатно на телевизоре Haier: Полное руководство</span><span class="related-bottom-desc">Узнайте, как настроить телевизор Haier для бесплатного просмотра фильмов. Обзоры приложений, методы </span></a><a href="/phone-master-na-itel-a70-kak-udalit.html" class="related-bottom-card"><span class="related-bottom-title">Как удалить Phone Master с Itel A70: полное руководство</span><span class="related-bottom-desc">Пошаговая инструкция по удалению системного приложения Phone Master на смартфоне Itel A70. Методы бе</span></a><a href="/samsung-music-sboj-vosproizvedeniya-kompozicii.html" class="related-bottom-card"><span class="related-bottom-title">Samsung Music сбой воспроизведения: полные решения</span><span class="related-bottom-desc">Устраняем ошибки плеера Samsung Music. Сбой воспроизведения, зависания и ошибки кодеков. Пошаговая и</span></a><a href="/odin-ne-vidit-samsung.html" class="related-bottom-card"><span class="related-bottom-title">Один не видит Samsung: полное руководство по диагностике и решению</span><span class="related-bottom-desc">Утилита Odin не распознает смартфон Samsung? Узнайте основные причины сбоя, проверьте драйверы, кабе</span></a></div>
+        </div>
+    </section>
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about">Быстрые решения технических проблем: ТВ, Android, Windows, приложения</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/televizory/">📺 Настройка ТВ</a></li>
+<li><a href="/category/android/">📱 Android-устройства</a></li>
+<li><a href="/category/prilozheniya/">📲 Приложения</a></li>
+<li><a href="/category/windows/">💻 Windows и ПК</a></li>
+<li><a href="/category/pristavki/">🔌 Приставки</a></li>
+<li><a href="/category/internet/">🌐 WiFi и Интернет</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+        (function() {
+            const popup = document.getElementById('cookie-consent');
+            const btn = document.getElementById('cookie-accept');
+            if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+                popup.classList.add('visible');
+                btn.onclick = () => {
+                    localStorage.setItem('cookie-accepted', 'true');
+                    popup.classList.remove('visible');
+                };
+            }
+        })();
+    </script>
+</body>
+</html>

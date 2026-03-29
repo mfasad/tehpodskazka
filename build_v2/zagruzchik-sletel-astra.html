@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Загрузчик слетел на Astra Linux: Как восстановить систему — ТехПодсказка</title>
+    <meta name="description" content="Загрузчик слетел в Astra Linux? Полное руководство по восстановлению GRUB, исправлению ошибок ядра и спасению данных на серверах и рабочих станциях.">
+    <link rel="canonical" href="https://tehpodskazka.ru/zagruzchik-sletel-astra.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Загрузчик слетел на Astra Linux: Как восстановить систему">
+    <meta property="og:description" content="Загрузчик слетел в Astra Linux? Полное руководство по восстановлению GRUB, исправлению ошибок ядра и спасению данных на серверах и рабочих станциях.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/televizory/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/category/android/" class="nav-link">📱 Android-устройства</a>
+<a href="/category/prilozheniya/" class="nav-link">📲 Приложения</a>
+<a href="/category/windows/" class="nav-link">💻 Windows и ПК</a>
+<a href="/category/pristavki/" class="nav-link">🔌 Приставки</a>
+<a href="/category/internet/" class="nav-link">🌐 WiFi и Интернет</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Загрузчик слетел на Astra Linux: Как восстановить систему</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    <h1>Восстановление загрузчика GRUB в операционной системе Astra Linux</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#диагностика-причин-сбоя-загрузчика-в-astra-linux">Диагностика причин сбоя загрузчика в Astra Linux</a></li><li><a href="#подготовка-среды-для-восстановления-системы">Подготовка среды для восстановления системы</a></li><li><a href="#процедура-восстановления-через-chroot">Процедура восстановления через chroot</a></li><li><a href="#исправление-ошибок-конфигурации-и-ядра">Исправление ошибок конфигурации и ядра</a></li><li><a href="#восстановление-на-системах-с-шифрованием-и-raid">Восстановление на системах с шифрованием и RAID</a></li><li><a href="#проверка-и-отладка-после-перезагрузки">Проверка и отладка после перезагрузки</a></li><li><a href="#faq-часто-задаваемые-вопросы-по-восстановлению">FAQ: Часто задаваемые вопросы по восстановлению</a></li></ul></details></nav>
+                    <div class="article-body">
+
+<p>Ситуация, когда после обновления системы или сбоя питания загрузчик слетел в среде <em>Astra Linux</em>, является одной из самых критичных проблем для системных администраторов. Пользователь видит черный экран с сообщением <code>GRUB rescue></code> или просто пустой дисплей, что делает невозможным вход в операционную систему и доступ к корпоративным данным. В отличие от Windows, где восстановление часто происходит автоматически, в <strong>Astra Linux</strong> требуется ручное вмешательство и понимание структуры загрузочных разделов.</p>
+
+<p>Многие администраторы впадают в панику, считая, что данные потеряны безвозвратно, однако в большинстве случаев система остается целой, и проблема кроется исключительно в повреждении секторов загрузчика или конфигурационных файлов. Правильный подход к диагностике позволяет восстановить работоспособность сервера или рабочей станции в течение 30-60 минут без потери информации.</p>
+
+<h2 id="диагностика-причин-сбоя-загрузчика-в-astra-linux">Диагностика причин сбоя загрузчика в Astra Linux</h2>
+
+<p>Прежде чем приступать к восстановлению, необходимо понять, почему именно <strong>GRUB</strong> перестал загружаться. Чаще всего причина кроется в некорректном обновлении ядра или изменении метки тома, что сбивает пути в конфигурационном файле. Также распространены случаи, когда физический сбой диска привел к потере загрузочного сектора.</p>
+
+<p>Если вы видите сообщение <code>error: no such partition</code> или <code>grub rescue</code>, это означает, что загрузчик не может найти свой конфигурационный файл <code>grub.cfg</code>. В среде <em>Astra Linux</em> это часто случается после расширения раздела или перенастройки RAID-массивов, где изменились UUID дисков. Необходимо проверить целостность файловой системы и наличие раздела <code>/boot</code>.</p>
+
+<p>Существует несколько основных сценариев, приводящих к такой ошибке:</p>
+
+<ul>
+<li>🚫 Неполное или прерванное обновление ядра через пакетный менеджер <code>apt</code></li>
+<li>🚫 Изменение UUID диска после клонирования или восстановления из образа</li>
+<li>🚫 Повреждение загрузочного сектора из-за сбоя питания или вируса</li>
+</ul>
+
+<blockquote>⚠️ Внимание: Если система использовала шифрование диска (LUKS), восстановление загрузчика потребует ввода ключей шифрования, иначе данные будут недоступны даже после исправления GRUB.</blockquote>
+
+<p>Важно отличать сбой загрузчика от полного выхода из строя оборудования. Если компьютер издает звуковые сигналы или не определяется BIOS/UEFI, проблема может быть аппаратной. Однако, если система определяется, но не загружается, с высокой долей вероятности требуется переустановка или восстановление загрузчика.</p>
+
+<h2 id="подготовка-среды-для-восстановления-системы">Подготовка среды для восстановления системы</h2>
+
+<p>Для исправления ситуации, когда загрузчик слетел, вам понадобится установочный носитель с <em>Astra Linux</em> (LiveCD или флешка), идентичный установленной версии системы. Использование дистрибутива другой версии может привести к несовместимости драйверов и модулей ядра. Загрузитесь с флешки, выбрав в меню режим <code>Live System</code> или <code>Try without installing</code>.</p>
+
+<p>После загрузки в режиме Live вам необходимо открыть терминал и определить, какие диски и разделы присутствуют в системе. Используйте команду <code>lsblk</code> или <code>fdisk -l</code>, чтобы увидеть структуру дисков. Обратите внимание на разделы, которые имеют файловые системы <code>ext4</code> или <code>btrfs</code>, так как именно они содержат вашу систему.</p>
+
+<p>Критически важно правильно смонтировать разделы. Вам нужно смонтировать корневой раздел системы в папку <code>/mnt</code>, а затем, при наличии, раздел <code>/boot</code> и <code>/boot/efi</code>. Если вы используете LVM или шифрование, процедура будет сложнее и потребует предварительной активации логических томов.</p>
+
+<ul>
+<li>✅ Убедитесь, что флешка с образом Astra Linux загружается в том же режиме (UEFI или Legacy), что и основной диск</li>
+<li>✅ Проверьте свободное место на диске: <code>df -h</code> покажет доступную емкость</li>
+<li>✅ Сделайте резервную копию важных данных на внешний носитель, если есть возможность</li>
+</ul>
+
+<div class="checklist-block"><h4>☑️ Подготовка к восстановлению</h4><label class="check-item"><input type="checkbox"><span>Загрузиться с LiveUSB</span></label><label class="check-item"><input type="checkbox"><span>Определить разделы командой lsblk</span></label><label class="check-item"><input type="checkbox"><span>Смонтировать корневой раздел</span></label><label class="check-item"><input type="checkbox"><span>Подключить интернет для обновления GRUB</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>Если у вас есть доступ в интернет на Live-сессии, это значительно упростит процесс, так как можно будет использовать официальные репозитории для установки необходимых утилит. В противном случае вам придется использовать локальные файлы с установочного носителя, что требует более глубокого понимания структуры пакетов.</p>
+
+<blockquote>⚠️ Внимание: Не пытайтесь восстанавливать загрузчик, не определив точно, какой диск является системным. Ошибка в выборе устройства может привести к перезаписи загрузочных данных на другом диске.</blockquote>
+
+<details class="faq-item"><summary>Что делать, если вы не помните пароль root?</summary><div class="faq-answer"><p>В режиме LiveCD доступ к файлам обычно открыт без пароля, но для выполнения команд восстановления (grub-install) потребуется права суперпользователя, которые вы получаете командой sudo su или sudo -i.</p></div></details>
+
+<h2 id="процедура-восстановления-через-chroot">Процедура восстановления через chroot</h2>
+
+<p>Основной метод восстановления загрузчика в <strong>Astra Linux</strong> — это использование команды <code>chroot</code>, которая позволяет войти в систему, как если бы вы были внутри нее, находясь при этом в Live-среде. Это стандартная процедура для большинства дистрибутивов на базе Debian, к которым относится Astra. Вам нужно смонтировать необходимые виртуальные файловые системы: <code>/proc</code>, <code>/sys</code> и <code>/dev</code>.</p>
+
+<p>После монтирования корня и системных директорий выполните команду <code>chroot /mnt</code>. Теперь ваш терминал работает внутри установленной системы. Проверьте, что пакетный менеджер работает, выполнив <code>apt update</code>. Если репозитории доступны, можно обновить сам <strong>GRUB</strong> и его конфигурацию.</p>
+
+<p>Для установки загрузчика на диск используйте команду <code>grub-install /dev/sdX</code>, где <code>sdX</code> — это имя диска (например, <code>sda</code>), а не раздела (не <code>sda1</code>). После этого обязательно сгенерируйте новый конфигурационный файл командой <code>update-grub</code> или <code>grub-mkconfig -o /boot/grub/grub.cfg</code>.</p>
+
+<pre><code>mount /dev/sda2 /mnt
+<p>mount /dev/sda1 /mnt/boot/efi</p>
+<p>mount --bind /dev /mnt/dev</p>
+<p>mount --bind /proc /mnt/proc</p>
+<p>mount --bind /sys /mnt/sys</p>
+<p>chroot /mnt</p>
+<p>grub-install /dev/sda</p>
+<p>update-grub</p>
+<p>exit</code></pre></p>
+
+<p>Если система использует UEFI, убедитесь, что раздел EFI смонтирован в правильную точку и имеет нужные права доступа. Отсутствие раздела <code>/boot/efi</code> часто является причиной сбоя на современных компьютерах. В таких случаях может потребоваться создание раздела с типом <code>EFI System</code> и форматирование его в <code>FAT32</code>.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой режим загрузки у вашего сервера?</strong><ul><li>Legacy BIOS</li><li>UEFI</li><li>UEFI с Secure Boot</li><li>Не знаю/Не проверял</li></ul></div></div>
+
+<h2 id="исправление-ошибок-конфигурации-и-ядра">Исправление ошибок конфигурации и ядра</h2>
+
+<p>Иногда загрузчик слетел не физически, а логически — файл <code>grub.cfg</code> содержит неверные параметры ядра или UUID. В этом случае установка загрузчика заново не поможет, нужно редактировать конфигурацию. В режиме chroot откройте файл <code>/etc/default/grub</code> и проверьте параметры <code>GRUB_CMDLINE_LINUX</code>.</p>
+
+<p>Если вы меняли параметры ядра (например, добавляли <code>nomodeset</code> для проблем с видео), убедитесь, что они актуальны. Также проверьте файл <code>/etc/fstab</code>, где прописаны точки монтирования. Если UUID дисков изменились, система не сможет загрузиться, даже если GRUB исправлен.</p>
+
+<p>Для автоматического поиска всех доступных операционных систем и ядров используйте команду <code>update-grub</code>. Она просканирует разделы и добавит все найденные конфигурации в меню загрузки. Если система не видит ядра, проверьте папку <code>/boot</code> на наличие файлов с расширением <code>.vmlinuz</code>.</p>
+
+<ul>
+<li>🔍 Проверьте наличие файлов ядра в папке <code>/boot</code> командой <code>ls /boot</code></li>
+<li>🔍 Убедитесь, что файл <code>grub.cfg</code> не поврежден (размер не должен быть нулевым)</li>
+<li>🔍 Проверьте синтаксис конфигурационного файла перед перезагрузкой</li>
+</ul>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Регулярное создание резервных копий файла grub.cfg позволяет быстро откатить изменения в случае ошибки конфигурации.</p></div>
+
+<p>В редких случаях, если поврежден сам образ ядра, может потребоваться переустановка пакета ядра. Используйте <code>apt install --reinstall linux-image-generic</code> (или конкретную версию ядра), чтобы восстановить файлы. После этого не забудьте снова запустить <code>update-grub</code>.</p>
+
+<h2 id="восстановление-на-системах-с-шифрованием-и-raid">Восстановление на системах с шифрованием и RAID</h2>
+
+<p>Сложности возникают, когда система <em>Astra Linux</em> использует шифрование диска LUKS или аппаратный/программный RAID. В режиме LiveCD модули шифрования могут не загрузиться автоматически. Вам нужно вручную активировать томы перед началом восстановления.</p>
+
+<p>Для шифрования выполните команду <code>cryptsetup luksOpen /dev/sdX cryptroot</code>, где <code>cryptroot</code> — имя открытого тома. После этого создайте логические тома LVM, если они использовались, и монтируйте их в <code>/mnt</code>. Только после этого можно запускать <code>chroot</code>.</p>
+
+<p>Если используется RAID, убедитесь, что массив собран. Используйте утилиту <code>mdadm --assemble --scan</code> для автоматического сбора массивов. В файле <code>/etc/mdadm/mdadm.conf</code> должны быть прописаны правильные конфигурации массивов.</p>
+
+<table>
+<thead>
+<tr>
+<th>Тип системы</th>
+<th>Команда для активации</th>
+<th>Особенности восстановления</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Обычный диск</td>
+<td>mount /dev/sda1 /mnt</td>
+<td>Стандартная процедура chroot</td>
+</tr>
+<tr>
+<td>LVM</td>
+<td>vgchange -ay</td>
+<td>Требуется активация томов перед монтированием</td>
+</tr>
+<tr>
+<td>LUKS (Шифрование)</td>
+<td>cryptsetup luksOpen /dev/sda2 cryptroot</td>
+<td>Необходим пароль для расшифровки</td>
+</tr>
+<tr>
+<td>RAID (mdadm)</td>
+<td>mdadm --assemble --scan</td>
+<td>Массив должен быть собран до монтирования</td>
+</tr>
+</tbody>
+</table>
+
+<p>После активации всех слоев абстракции (RAID, LVM, LUKS) вы можете выполнить стандартную процедуру восстановления загрузчика. </p>
+
+<blockquote>⚠️ Внимание: При работе с RAID-массивами убедитесь, что вы не перезаписываете метаданные RAID при установке загрузчика на неправильный диск.</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если вы работаете с шифрованием, запишите заголовки LUKS на внешний носитель: cryptsetup luksHeaderBackup /dev/sdX --header-backup-file backup.img</p></div>
+
+<h2 id="проверка-и-отладка-после-перезагрузки">Проверка и отладка после перезагрузки</h2>
+
+<p>После выполнения всех процедур извлеките Live-носитель и перезагрузите систему. Если все сделано правильно, вы увидите меню GRUB со списком доступных ядер. Выберите последнее ядро и нажмите Enter. Если система загружается, поздравляем — проблема решена.</p>
+
+<p>Если загрузка снова не удалась, обратите внимание на сообщения об ошибках. Ошибка <code>initramfs</code> часто указывает на проблемы с файловой системой или повреждение модулей. В этом случае потребуется загрузиться в режим восстановления или использовать LiveCD для проверки диска командой <code>fsck</code>.</p>
+
+<p>Для глубокой отладки можно использовать параметр <code>nomodeset</code> или загрузиться в режиме <code>single user mode</code>. Это позволит получить доступ к командной строке без полной загрузки графического интерфейса. В этом режиме можно исправить ошибки конфигурации без необходимости повторного chroot.</p>
+
+<ul>
+<li>🛠️ Используйте команду <code>dmesg | tail</code> для просмотра последних сообщений ядра</li>
+<li>🛠️ Проверьте логи загрузчика в <code>/var/log/boot.log</code></li>
+<li>🛠️ Убедитесь, что сетевой интерфейс поднят, если система требует сетевого входа</li>
+</ul>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если система загружается, но работает нестабильно, рекомендуется обновить все пакеты системы до последних версий, чтобы исключить баги ядра.</p></div>
+
+<p>В случае успешной загрузки сразу сделайте резервную копию образа системы, чтобы в будущем избежать подобных ситуаций. Настройте автоматическое обновление GRUB при установке новых ядер, проверив настройки в <code>/etc/default/grub</code>.</p>
+
+<h2 id="faq-часто-задаваемые-вопросы-по-восстановлению">FAQ: Часто задаваемые вопросы по восстановлению</h2>
+
+<details>
+<summary>Что делать, если команда grub-install выдает ошибку "no such disk"?</summary>
+<p>Это означает, что система не видит диск, на который вы пытаетесь установить загрузчик. Проверьте подключение дисков, убедитесь, что вы смонтировали все необходимые разделы в режиме chroot, и что имя диска (например, /dev/sda) указано правильно без номера раздела.</p>
+</details>
+
+<details>
+<summary>Можно ли восстановить загрузчик без LiveCD?</summary>
+<p>Теоретически да, если у вас есть доступ к консоли восстановления через GRUB (режим rescue), но это очень сложно и требует знания команд GRUB. Использование LiveCD — самый надежный и простой способ восстановления.</p>
+</details>
+
+<details>
+<summary>Как узнать версию установленной Astra Linux в режиме Live?</summary>
+<p>Вы можете посмотреть содержимое файла <code>/etc/os-release</code> или <code>/etc/astra_version</code> на смонтированном разделе. Также полезно посмотреть список установленных ядер в папке <code>/boot</code>.</p>
+</details>
+
+<details>
+<summary>Что делать, если загрузчик слетел после установки Windows рядом с Astra Linux?</summary>
+<p>Windows часто перезаписывает загрузчик. В этом случае необходимо загрузиться с LiveCD Astra Linux и выполнить процедуру восстановления GRUB заново, чтобы он снова увидел обе операционные системы.</p>
+</details>
+
+<details>
+<summary>Нужно ли переустанавливать систему, если загрузчик не восстанавливается?</summary>
+<p>Нет, данные обычно остаются целыми. Если восстановление загрузчика не удается, можно скопировать данные на внешний носитель и переустановить систему, но это крайняя мера. Чаще всего проблема решается пересозданием конфигурации GRUB.</p>
+</details></div>
+
+                </article>
+                <aside class="article-sidebar"><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#диагностика-причин-сбоя-загрузчика-в-astra-linux">Диагностика причин сбоя загрузчика в Astra Linux</a></li><li><a href="#подготовка-среды-для-восстановления-системы">Подготовка среды для восстановления системы</a></li><li><a href="#процедура-восстановления-через-chroot">Процедура восстановления через chroot</a></li><li><a href="#исправление-ошибок-конфигурации-и-ядра">Исправление ошибок конфигурации и ядра</a></li><li><a href="#восстановление-на-системах-с-шифрованием-и-raid">Восстановление на системах с шифрованием и RAID</a></li><li><a href="#проверка-и-отладка-после-перезагрузки">Проверка и отладка после перезагрузки</a></li><li><a href="#faq-часто-задаваемые-вопросы-по-восстановлению">FAQ: Часто задаваемые вопросы по восстановлению</a></li></ul></nav><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/glo-air-krasnyj-indikator-odin-raz-migaet-i-dolgo-vibriruet.html" class="related-card">Redmi AirDots: красный индикатор мигает и долго вибрирует — причины и решение</a></li><li><a href="/esli-provod-ot-vaj-faya-progryz-kot-chto-delat.html" class="related-card">Кот прогрыз провод от Wi-Fi: что делать и как починить роутер</a></li><li><a href="/84-batarejki-ajfon.html" class="related-card">84% батареи iPhone: стоит ли менять аккумулятор или ждать?</a></li><li><a href="/autifikator-binans-ne-prihodit-sms.html" class="related-card">Аутентификатор Binance не приходит СМС: полное руководство по решению</a></li><li><a href="/kak-v-ozone-bank-skryt-istoriyu.html" class="related-card">Как скрыть историю в Озон Банке: полная инструкция по удалению</a></li></ul></nav></aside>
+            </div>
+        </div>
+    </main>
+
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/glo-air-krasnyj-indikator-odin-raz-migaet-i-dolgo-vibriruet.html" class="related-bottom-card"><span class="related-bottom-title">Redmi AirDots: красный индикатор мигает и долго вибрирует — причины и решение</span><span class="related-bottom-desc">Что делать, если наушники Redmi AirDots вибрируют и мигают красным? Полная диагностика проблем с бат</span></a><a href="/esli-provod-ot-vaj-faya-progryz-kot-chto-delat.html" class="related-bottom-card"><span class="related-bottom-title">Кот прогрыз провод от Wi-Fi: что делать и как починить роутер</span><span class="related-bottom-desc">Кот перегрыз интернет-кабель? Узнайте, как безопасно восстановить соединение, починить провод или за</span></a><a href="/84-batarejki-ajfon.html" class="related-bottom-card"><span class="related-bottom-title">84% батареи iPhone: стоит ли менять аккумулятор или ждать?</span><span class="related-bottom-desc">Разбор состояния 84% емкости батареи iPhone. Влияние на производительность, пиковую мощность и реаль</span></a><a href="/autifikator-binans-ne-prihodit-sms.html" class="related-bottom-card"><span class="related-bottom-title">Аутентификатор Binance не приходит СМС: полное руководство по решению</span><span class="related-bottom-desc">СМС от Binance не приходит? Узнайте, как восстановить доступ, обойти проблемы с оператором и настрои</span></a><a href="/kak-v-ozone-bank-skryt-istoriyu.html" class="related-bottom-card"><span class="related-bottom-title">Как скрыть историю в Озон Банке: полная инструкция по удалению</span><span class="related-bottom-desc">Узнайте, как удалить историю операций и покупок в приложении Озон Банк. Пошаговая инструкция, нюансы</span></a><a href="/kak-vernut-izbrannye-soobscheniya-v-v.html" class="related-bottom-card"><span class="related-bottom-title">Как вернуть избранные сообщения в WhatsApp: Полное руководство</span><span class="related-bottom-desc">Узнайте, как восстановить удаленные или скрытые избранное в WhatsApp. Пошаговые инструкции для iOS и</span></a></div>
+        </div>
+    </section>
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about">Быстрые решения технических проблем: ТВ, Android, Windows, приложения</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/televizory/">📺 Настройка ТВ</a></li>
+<li><a href="/category/android/">📱 Android-устройства</a></li>
+<li><a href="/category/prilozheniya/">📲 Приложения</a></li>
+<li><a href="/category/windows/">💻 Windows и ПК</a></li>
+<li><a href="/category/pristavki/">🔌 Приставки</a></li>
+<li><a href="/category/internet/">🌐 WiFi и Интернет</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+        (function() {
+            const popup = document.getElementById('cookie-consent');
+            const btn = document.getElementById('cookie-accept');
+            if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+                popup.classList.add('visible');
+                btn.onclick = () => {
+                    localStorage.setItem('cookie-accepted', 'true');
+                    popup.classList.remove('visible');
+                };
+            }
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Установка VirtualBox на Windows Server 2022: пошаговое руководство — ТехПодсказка</title>
+    <meta name="description" content="Полная инструкция по развертыванию Oracle VM VirtualBox на сервере Windows Server 2022. Решаем проблему с драйверами, настраиваем сеть и устраняем ошибки совместимости.">
+    <link rel="canonical" href="https://tehpodskazka.ru/kak-ustanovit-virtualbox-na-windows-server-2022.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Установка VirtualBox на Windows Server 2022: пошаговое руководство">
+    <meta property="og:description" content="Полная инструкция по развертыванию Oracle VM VirtualBox на сервере Windows Server 2022. Решаем проблему с драйверами, настраиваем сеть и устраняем ошибки совместимости.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/televizory/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/category/android/" class="nav-link">📱 Android-устройства</a>
+<a href="/category/prilozheniya/" class="nav-link">📲 Приложения</a>
+<a href="/category/windows/" class="nav-link">💻 Windows и ПК</a>
+<a href="/category/pristavki/" class="nav-link">🔌 Приставки</a>
+<a href="/category/internet/" class="nav-link">🌐 WiFi и Интернет</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/prilozheniya/">Приложения</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Установка VirtualBox на Windows Server 2022: пошаговое руководство</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    <h1>Как установить VirtualBox на Windows Server 2022: Полное руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#подготовка-сервера-и-проверка-совместимости">Подготовка сервера и проверка совместимости</a></li><li><a href="#скачивание-и-выбор-версии-для-серверной-ос">Скачивание и выбор версии для серверной ОС</a></li><li><a href="#процесс-инсталляции-и-настройка-компонентов">Процесс инсталляции и настройка компонентов</a></li><li><a href="#устранение-ошибок-совместимости-с-hyper-v">Устранение ошибок совместимости с Hyper-V</a></li><li><a href="#настройка-сетевых-адаптеров-и-драйверов">Настройка сетевых адаптеров и драйверов</a></li><li><a href="#проверка-работоспособности-и-создание-первой-вм">Проверка работоспособности и создание первой ВМ</a></li><li><a href="#оптимизация-производительности-сервера">Оптимизация производительности сервера</a></li><li><a href="#решение-частых-проблем-и-ошибок">Решение частых проблем и ошибок</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></details></nav>
+                    <div class="article-body">
+
+<p>Развертывание виртуальной инфраструктуры на серверных операционных системах требует особого подхода, особенно когда речь идет о гибридных средах. <em>Windows Server 2022</em> предлагает мощные нативные возможности гипервизора, но администраторам часто необходим <em>VirtualBox</em> для тестирования специфических конфигураций или работы с легаси-системами. Процесс установки на серверную ОС имеет свои нюансы, отличающиеся от привычной работы в Windows 10 или 11.</p>
+
+<p>Ключевым моментом является корректная настройка прав доступа и подготовка ядра системы к работе с виртуализацией. Без предварительной подготовки стандартный инсталлятор может не запуститься или выдать критические ошибки при попытке инициализации драйверов. Вам предстоит выполнить несколько дополнительных шагов, чтобы обеспечить стабильную работу <strong>хост-системы</strong>.</p>
+
+<h2 id="подготовка-сервера-и-проверка-совместимости">Подготовка сервера и проверка совместимости</h2>
+
+<p>Прежде чем загружать установочный пакет, необходимо убедиться, что аппаратная часть сервера готова к виртуализации. Процессор должен поддерживать технологии <code>Intel VT-x</code> или <code>AMD-V</code>, и эти функции обязаны быть активированы в <code>BIOS/UEFI</code>. Если они отключены на уровне прошивки, <em>VirtualBox</em> не сможет создать виртуальную машину.</p>
+
+<p>Следующим критически важным этапом является проверка уровня доступа. Для успешной инсталляции драйверов сетевых адаптеров и USB-контроллеров требуется учетная запись с правами администратора. Обычного пользователя с ограниченными правами недостаточно для записи в системный реестр и создания служб.</p>
+
+<blockquote>⚠️ Внимание: Отключите антивирусное программное обеспечение или добавьте папку установки в исключения перед запуском инсталлятора. Защитное ПО может заблокировать работу драйверов виртуализации, посчитав их подозрительными.</blockquote>
+
+<p>Также стоит обратить внимание на текущую конфигурацию гипервизоров. Если на сервере уже запущены другие системы виртуализации, такие как <em>Hyper-V</em> или <em>VMware ESXi</em>, могут возникнуть конфликты на уровне доступа к железу. В большинстве случаев <em>VirtualBox</em> 6.0 и выше умеет работать вместе с <code>Hyper-V</code>, но производительность может снизиться.</p>
+
+<ul>
+<li>Проверьте включение виртуализации в <code>BIOS</code> через раздел <code>Advanced CPU Configuration</code></li>
+<li>Убедитесь, что у вас есть права локального администратора на сервере</li>
+<li>Скачайте последнюю версию инсталлятора с официального сайта Oracle</li>
+</ul>
+
+<h2 id="скачивание-и-выбор-версии-для-серверной-ос">Скачивание и выбор версии для серверной ОС</h2>
+
+<p>На официальном сайте Oracle представлены разные версии <em>VirtualBox</em>. Для <em>Windows Server 2022</em> критически важно выбрать правильный дистрибутив. Используйте версию, совместимую с Windows 10/11 и Windows Server 2016/2019/2022, так как ядро сервера базируется на схожих модулях.</p>
+
+<p>Обратите внимание на архитектуру процессора. Если ваш сервер построен на базе <code>x64</code>, загружайте только соответствующий установщик. Попытка запустить 32-битную версию на 64-битной серверной ОС приведет к ошибкам совместимости или невозможности создания 64-битных гостевых систем.</p>
+
+<pre><code>https://download.virtualbox.org/virtualbox/7.0.14/VirtualBox-7.0.14-161095-Win.exe</code></pre>
+
+<p>Перед запуском скачанного файла рекомендуется проверить его цифровую подпись. Это гарантирует, что файл не был изменен третьими лицами и не содержит вредоносного кода. В свойствах файла на вкладке "Цифровые подписи" должно быть указано имя "Oracle America, Inc.".</p>
+
+<ul>
+<li>Используйте только стабильные (Production) релизы, избегайте бета-версий</li>
+<li>Проверяйте подпись файла перед запуском</li>
+<li>Храните установочный файл в надежном месте для повторной инсталляции</li>
+</ul>
+
+<h2 id="процесс-инсталляции-и-настройка-компонентов">Процесс инсталляции и настройка компонентов</h2>
+
+<p>Запуск мастера установки инициирует стандартный процесс, который знаком многим пользователям, но имеет специфические шаги для серверов. На этапе выбора компонентов вам будет предложено установить драйверы для сетевых интерфейсов, USB и виртуальных приводов. Отключать их не рекомендуется, так как это ограничит функциональность будущих виртуальных машин.</p>
+
+<p>Важно правильно выбрать путь установки. По умолчанию программа предлагает папку <code>C:\Program Files\Oracle\VirtualBox</code>. Если у вас на сервере диск <code>C:</code> имеет малый объем или используется для критических системных файлов, лучше переназначить путь на другой том с достаточным пространством.</p>
+
+<div class="checklist-block"><h4>☑️ Шаги установки</h4><label class="check-item"><input type="checkbox"><span>Принять лицензионное соглашение</span></label><label class="check-item"><input type="checkbox"><span>Выбрать путь установки</span></label><label class="check-item"><input type="checkbox"><span>Установить драйверы сети и USB</span></label><label class="check-item"><input type="checkbox"><span>Настроить ярлык на рабочем столе</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>В процессе установки система может запросить разрешение на установку сетевых драйверов. Это нормальное поведение, так как <em>VirtualBox</em> создает виртуальные сетевые адаптеры типа <code>NAT</code> и <code>Bridged</code>. Если появится окно UAC (User Account Control), обязательно нажмите "Да", иначе драйверы не будут зарегистрированы.</p>
+
+<ul>
+<li>Согласитесь на установку драйверов сетевых адаптеров</li>
+<li>Разрешите установку USB-фильтров для работы периферии</li>
+<li>Не изменяйте настройки реестра вручную во время установки</li>
+</ul>
+
+<h2 id="устранение-ошибок-совместимости-с-hyper-v">Устранение ошибок совместимости с Hyper-V</h2>
+
+<p>Это самый сложный этап, с которым сталкиваются администраторы при работе на <em>Windows Server 2022</em>. Система по умолчанию активно использует <code>Hyper-V</code> и связанные с ним компоненты, такие как <em>Windows Hypervisor Platform</em>. Конфликт между API виртуализации <em>VirtualBox</em> и нативным гипервизором Microsoft может привести к краху приложения.</p>
+
+<p>Если вы видите ошибку с кодом <code>0x80004005</code> или сообщение о том, что виртуализация недоступна, необходимо либо отключить <code>Hyper-V</code>, либо настроить режим совместимости. Для серверов, где <code>Hyper-V</code> является частью инфраструктуры, отключение может быть недопустимым решением.</p>
+
+<blockquote>⚠️ Внимание: Отключение гипервизора Microsoft через утилиту <code>bcdedit</code> перезагрузит сервер и сделает недоступными все контейнеры, работающие на базе Hyper-V. Действуйте осторожно.</blockquote>
+
+<p>Для решения проблемы можно использовать команду отключения ядра гипервизора на время работы с <em>VirtualBox</em>. Выполните это действие в командной строке с правами администратора:</p>
+
+<pre><code>bcdedit /set hypervisorlaunchtype off</code></pre>
+
+<p>После выполнения команды обязательно перезагрузите сервер. Если же вам критично сохранять работу <code>Hyper-V</code>, убедитесь, что версия <em>VirtualBox</em> не ниже 6.0, так как она использует API совместимости.</p>
+
+<details class="faq-item"><summary>Как проверить статус Hyper-V?
+<p>Для проверки состояния гипервизора используйте команду</summary><div class="faq-answer"><p> systeminfo. В выводе найдите строку "Тип гипервизора". Если она отображается, значит, Hyper-V активен и может конфликтовать с VirtualBox.</p></div></details></p>
+
+<ul>
+<li>Выполните команду <code>bcdedit /set hypervisorlaunchtype off</code> для отключения</li>
+<li>Перезагрузите сервер после изменения настроек</li>
+<li>Используйте PowerShell для проверки статуса служб</li>
+</ul>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой гипервизор вы используете чаще всего?</strong><ul><li>VirtualBox</li><li>Hyper-V</li><li>VMware</li><li>KVM</li></ul></div></div>
+
+<h2 id="настройка-сетевых-адаптеров-и-драйверов">Настройка сетевых адаптеров и драйверов</h2>
+
+<p>После успешной установки и устранения конфликтов гипервизора, необходимо проверить работоспособность сетевых компонентов. <em>VirtualBox</em> создает несколько виртуальных адаптеров, которые должны появиться в списке сетевых подключений. Это критично для настройки сети виртуальных машин.</p>
+
+<p>Зайдите в <code>Панель управления → Сеть и Интернет → Центр управления сетями и общим доступом → Изменение параметров адаптера</code>. Вы должны увидеть адаптеры с названиями <code>VirtualBox Host-Only Ethernet Adapter</code> и <code>VirtualBox Host-Only Network</code>. Если они отсутствуют, значит, драйверы установлены некорректно.</p>
+
+<p>Для исправления ситуации можно переустановить драйверы вручную через <code>Диспетчер устройств</code>. Откройте его, найдите раздел "Сетевые адаптеры", удалите устройства с пометкой <em>VirtualBox</em> и выберите в меню "Действие → Обновить конфигурацию оборудования".</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если сетевой адаптер не появляется, попробуйте запустить установщик VirtualBox повторно, выбрав опцию "Repair" (Восстановление) в мастере установки.</p></div>
+
+<h2 id="проверка-работоспособности-и-создание-первой-вм">Проверка работоспособности и создание первой ВМ</h2>
+
+<p>Завершающий этап — проверка функциональности. Запустите <em>Oracle VM VirtualBox Manager</em> и попробуйте создать новую виртуальную машину. Выберите любой образ ОС, например, легкий дистрибутив Linux, чтобы проверить, корректно ли выделяется оперативная память и процессорное время.</p>
+
+<p>В настройках новой машины уделите внимание разделу "Система". Убедитесь, что галочка <code>Включить EFI</code> стоит, если вы планируете устанавливать современные ОС. Также проверьте, что виртуализация процессора (VT-x/AMD-V) активна в разделе "Процессор".</p>
+
+<blockquote>⚠️ Внимание: Не выделяйте более 50-70% доступной оперативной памяти сервера одной виртуальной машине, чтобы хост-система не зависла из-за нехватки ресурсов.</blockquote>
+
+<p>Запустите созданную машину. Если загрузка проходит успешно и вы видите экран установки операционной системы, значит, <em>VirtualBox</em> на <em>Windows Server 2022</em> работает корректно. Теперь вы можете переходить к тонкой настройке общих папок и портов.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Успешная установка VirtualBox на сервер требует решения конфликта с Hyper-V и правильной настройки сетевых драйверов.</p></div>
+
+<h2 id="оптимизация-производительности-сервера">Оптимизация производительности сервера</h2>
+
+<p>Для серверных задач производительность виртуальных машин может быть критическим фактором. <em>VirtualBox</em> имеет настройки, позволяющие увеличить скорость работы дисковой подсистемы и сети. Рекомендуется использовать режим <code>VirtIO</code> для дисков и сетевых карт, если гостевая ОС поддерживает эти драйверы.</p>
+
+<p>Также стоит настроить параметры хранения. Если у вас есть возможность, выделите виртуальным машинам отдельные физические диски или быстрые SSD-накопители. Это снизит нагрузку на основной системный диск и ускорит ввод-вывод данных.</p>
+
+<ul>
+<li>Включите аппаратное ускорение в настройках процессора</li>
+<li>Используйте формат диска <code>VMDK</code> или <code>VHD</code> для совместимости</li>
+<li>Настройте общие папки для удобного обмена данными</li>
+</ul>
+
+<h2 id="решение-частых-проблем-и-ошибок">Решение частых проблем и ошибок</h2>
+
+<p>Несмотря на тщательную подготовку, могут возникнуть непредвиденные ситуации. Одной из частых проблем является ошибка "Kernel driver not installed" при запуске машины. Это означает, что драйвер ядра не был загружен из-за проблем с правами доступа или блокировки антивирусом.</p>
+
+<p>Другая распространенная проблема — "Guru Meditation". Это критическая ошибка виртуализации, часто связанная с конфликтом ресурсов процессора или некорректными настройками памяти. В таких случаях поможет обновление версии <em>VirtualBox</em> или отключение функций <code>3D Acceleration</code> в настройках ВМ.</p>
+
+<!--WIDGET:spoiler:Что делать при ошибке 0x80004005?
+<p>Эта ошибка часто возникает при попытке запустить ВМ с включенной вложенной виртуализацией. Попробуйте отключить её в настройках процессора виртуальной машины и перезапустить систему.--></p>
+
+<h2 id="faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</h2>
+
+<details>
+<summary>Можно ли использовать VirtualBox на Windows Server 2022 Core?</summary>
+<p>Нет, графический интерфейс VirtualBox требует наличия графической оболочки (Desktop Experience). На версии Server Core установка невозможна без дополнительных сложностей с удаленным доступом.</p>
+</details>
+
+<details>
+<summary>Нужно ли отключать Hyper-V навсегда?</summary>
+<p>Не обязательно. Вы можете переключаться между режимами, используя команду <code>bcdedit</code> с параметрами <code>off</code> и <code>default</code>, однако это потребует перезагрузки сервера каждый раз.</p>
+</details>
+
+<details>
+<summary>Поддерживает ли VirtualBox Windows Server 2022 как гостевую ОС?</summary>
+<p>Да, современные версии VirtualBox (7.0 и выше) полностью поддерживают Windows Server 2022 в качестве гостевой операционной системы.</p>
+</details>
+
+<details>
+<summary>Как обновить VirtualBox без переустановки?</summary>
+<p>Вы можете запустить новый установщик поверх старой версии. Мастер установки предложит опцию "Upgrade", которая сохранит все настройки и виртуальные машины.</p>
+</details>
+
+<details>
+<summary>Можно ли запустить VirtualBox в режиме контейнера?</summary>
+<p>Нет, VirtualBox является полноценным гипервизором типа 2 и не предназначен для работы внутри контейнеров Windows или Docker.</p>
+</details></div>
+
+                </article>
+                <aside class="article-sidebar"><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#подготовка-сервера-и-проверка-совместимости">Подготовка сервера и проверка совместимости</a></li><li><a href="#скачивание-и-выбор-версии-для-серверной-ос">Скачивание и выбор версии для серверной ОС</a></li><li><a href="#процесс-инсталляции-и-настройка-компонентов">Процесс инсталляции и настройка компонентов</a></li><li><a href="#устранение-ошибок-совместимости-с-hyper-v">Устранение ошибок совместимости с Hyper-V</a></li><li><a href="#настройка-сетевых-адаптеров-и-драйверов">Настройка сетевых адаптеров и драйверов</a></li><li><a href="#проверка-работоспособности-и-создание-первой-вм">Проверка работоспособности и создание первой ВМ</a></li><li><a href="#оптимизация-производительности-сервера">Оптимизация производительности сервера</a></li><li><a href="#решение-частых-проблем-и-ошибок">Решение частых проблем и ошибок</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></nav><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/prilozheniya-dlya-zvonkov-s-magnitoly.html" class="related-card">Как звонить с магнитолы: лучшие приложения и настройка Android Auto</a></li><li><a href="/kak-obnovit-proshivku-na-naushnikah-jbl-wave-200.html" class="related-card">Как обновить прошивку на наушниках JBL Wave 200: пошаговая инструкция</a></li><li><a href="/m2-wear-prilozhenie-chasy-kak-nastroit.html" class="related-card">Как настроить приложение M2 Wear для умных часов: полная инструкция</a></li><li><a href="/prilozhenie-4pda-oshibka-pri-zaprose-adresa.html" class="related-card">Ошибка при запросе адреса на 4PDA: как исправить и обойти</a></li><li><a href="/kak-skachat-gugl-plej-na-ajfon-11.html" class="related-card">Как скачать Google Play на iPhone 11: Реальные способы и мифы</a></li></ul></nav></aside>
+            </div>
+        </div>
+    </main>
+
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/prilozheniya-dlya-zvonkov-s-magnitoly.html" class="related-bottom-card"><span class="related-bottom-title">Как звонить с магнитолы: лучшие приложения и настройка Android Auto</span><span class="related-bottom-desc">Полный гайд по установке приложений для звонков с магнитолы. Обзор Android Auto, CarPlay и нативных </span></a><a href="/kak-obnovit-proshivku-na-naushnikah-jbl-wave-200.html" class="related-bottom-card"><span class="related-bottom-title">Как обновить прошивку на наушниках JBL Wave 200: пошаговая инструкция</span><span class="related-bottom-desc">Полное руководство по обновлению ПО наушников JBL Wave 200 через приложение JBL Headphones. Решение </span></a><a href="/m2-wear-prilozhenie-chasy-kak-nastroit.html" class="related-bottom-card"><span class="related-bottom-title">Как настроить приложение M2 Wear для умных часов: полная инструкция</span><span class="related-bottom-desc">Пошаговая настройка приложения M2 Wear для синхронизации умных часов. Решение проблем с подключением</span></a><a href="/prilozhenie-4pda-oshibka-pri-zaprose-adresa.html" class="related-bottom-card"><span class="related-bottom-title">Ошибка при запросе адреса на 4PDA: как исправить и обойти</span><span class="related-bottom-desc">Подробный разбор ошибки &#x27;при запросе адреса&#x27; на форуме 4PDA. Инструкция по сбросу кэша, смене DNS и </span></a><a href="/kak-skachat-gugl-plej-na-ajfon-11.html" class="related-bottom-card"><span class="related-bottom-title">Как скачать Google Play на iPhone 11: Реальные способы и мифы</span><span class="related-bottom-desc">Узнайте, можно ли установить Google Play Store на iPhone 11. Разбор технических ограничений, альтерн</span></a><a href="/aha-gam-chto-eto-za-prilozhenie.html" class="related-bottom-card"><span class="related-bottom-title">Aha Gam что это за приложение: обзор, функции и отзывы пользователей</span><span class="related-bottom-desc">Подробный разбор приложения Aha Gam: назначение, функции, инструкция по установке и советы по устран</span></a></div>
+        </div>
+    </section>
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about">Быстрые решения технических проблем: ТВ, Android, Windows, приложения</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/televizory/">📺 Настройка ТВ</a></li>
+<li><a href="/category/android/">📱 Android-устройства</a></li>
+<li><a href="/category/prilozheniya/">📲 Приложения</a></li>
+<li><a href="/category/windows/">💻 Windows и ПК</a></li>
+<li><a href="/category/pristavki/">🔌 Приставки</a></li>
+<li><a href="/category/internet/">🌐 WiFi и Интернет</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+        (function() {
+            const popup = document.getElementById('cookie-consent');
+            const btn = document.getElementById('cookie-accept');
+            if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+                popup.classList.add('visible');
+                btn.onclick = () => {
+                    localStorage.setItem('cookie-accepted', 'true');
+                    popup.classList.remove('visible');
+                };
+            }
+        })();
+    </script>
+</body>
+</html>

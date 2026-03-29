@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ page.title }}{% endblock %} — {{ site.short_name }}</title>
+    <meta name="description" content="{{ page.meta_description }}">
+    <link rel="canonical" href="{{ site.base_url }}{{ url }}">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="{{ page.title }} — {{ site.short_name }}">
+    <meta property="og:description" content="{{ page.meta_description }}">
+    <meta property="og:url" content="{{ site.base_url }}{{ url }}">
+    <meta property="og:site_name" content="{{ site.name }}">
+    <meta property="og:locale" content="ru_RU">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+
+    {% if breadcrumbs and breadcrumbs|length > 1 %}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {% for crumb in breadcrumbs %}
+            {
+                "@type": "ListItem",
+                "position": {{ loop.index }},
+                "name": "{{ crumb.text }}"{% if crumb.url %},
+                "item": "{{ site.base_url }}{{ crumb.url }}"{% endif %}
+            }{% if not loop.last %},{% endif %}
+            {% endfor %}
+        ]
+    }
+    </script>
+    {% endif %}
+
+    {% if page.faq %}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {% for item in page.faq %}
+            {
+                "@type": "Question",
+                "name": "{{ item.q }}",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "{{ item.a }}"
+                }
+            }{% if not loop.last %},{% endif %}
+            {% endfor %}
+        ]
+    }
+    </script>
+    {% endif %}
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "{{ page.title }}",
+        "description": "{{ page.meta_description }}",
+        "url": "{{ site.base_url }}{{ url }}",
+        "author": {"@type": "Organization", "name": "{{ site.name }}"},
+        "publisher": {"@type": "Organization", "name": "{{ site.name }}"},
+        "datePublished": "{{ build_date }}",
+        "dateModified": "{{ build_date }}",
+        "mainEntityOfPage": {"@type": "WebPage", "@id": "{{ site.base_url }}{{ url }}"}
+    }
+    </script>
+
+    {% block head %}{% endblock %}
+</head>
+<body{% if is_home %} class="is-home"{% endif %}>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">{{ site.icon }}</span>
+                <span class="logo-text">{{ site.short_name }}</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                {% for section in site.sections %}
+                <a href="/{{ section.slug }}/" class="nav-link{% if active_section == section.slug %} active{% endif %}">
+                    <span class="nav-icon">{{ section.icon }}</span>
+                    {{ section.name }}
+                </a>
+                {% endfor %}
+            </nav>
+        </div>
+    </header>
+
+    {% if breadcrumbs and breadcrumbs|length > 1 and not is_home %}
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container">
+            {% for crumb in breadcrumbs %}
+                {% if not loop.last %}
+                    <a href="{{ crumb.url }}">{{ crumb.text }}</a>
+                    <span class="breadcrumb-sep">›</span>
+                {% else %}
+                    <span class="breadcrumb-current">{{ crumb.text }}</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </nav>
+    {% endif %}
+
+    <main class="site-main">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-inner">
+                <div class="footer-nav">
+                    {% for section in site.sections %}
+                    <a href="/{{ section.slug }}/">{{ section.icon }} {{ section.name }}</a>
+                    {% endfor %}
+                </div>
+                <p class="footer-copy">© {{ year }} {{ site.short_name }}. Быстрые решения для вашей техники.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

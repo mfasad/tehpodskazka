@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TorrServe Matrix засыпает: причины и решение проблемы — ТехПодсказка</title>
+    <meta name="description" content="Почему TorrServe Matrix засыпает и перестает буферизировать? Разбор причин: настройки Android, конфликты с сервисами, проблемы памяти. Пошаговое решение.">
+    <link rel="canonical" href="https://tehpodskazka.ru/torrserve-matrix-zasypaet.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="TorrServe Matrix засыпает: причины и решение проблемы">
+    <meta property="og:description" content="Почему TorrServe Matrix засыпает и перестает буферизировать? Разбор причин: настройки Android, конфликты с сервисами, проблемы памяти. Пошаговое решение.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/televizory/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/category/android/" class="nav-link">📱 Android-устройства</a>
+<a href="/category/prilozheniya/" class="nav-link">📲 Приложения</a>
+<a href="/category/windows/" class="nav-link">💻 Windows и ПК</a>
+<a href="/category/pristavki/" class="nav-link">🔌 Приставки</a>
+<a href="/category/internet/" class="nav-link">🌐 WiFi и Интернет</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">TorrServe Matrix засыпает: причины и решение проблемы</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    <h1>Почему TorrServe Matrix засыпает и перестает работать</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#механизм-работы-системы-управления-памятью">Механизм работы системы управления памятью</a></li><li><a href="#настройка-исключений-в-системе-android">Настройка исключений в системе Android</a></li><li><a href="#конфликты-с-другими-сервисами-и-приложениями">Конфликты с другими сервисами и приложениями</a></li><li><a href="#оптимизация-настроек-самого-torrserve">Оптимизация настроек самого TorrServe</a></li><li><a href="#проблемы-с-сетевым-подключением">Проблемы с сетевым подключением</a></li><li><a href="#аппаратные-ограничения-устройства-matrix">Аппаратные ограничения устройства Matrix</a></li><li><a href="#таблица-популярных-причин-и-решений">Таблица популярных причин и решений</a></li><li><a href="#дополнительные-советы-по-оптимизации">Дополнительные советы по оптимизации</a></li><li><a href="#заключение">Заключение</a></li></ul></details></nav>
+                    <div class="article-body">
+
+<p>Проблема, когда <strong>приложение TorrServe</strong> внезапно засыпает и прекращает обработку потока, является одной из самых распространенных жалоб пользователей медиацентров на базе <em>Android TV</em>. Ситуация особенно актуальна для пользователей приставок с ограниченными ресурсами, таких как модели <em>Matrix</em> или аналоги на чипсетах Amlogic, где система агрессивно управляет фоновыми процессами для экономии энергии.</p>
+<p>Вы замечаете, что видеоплеер показывает ошибку буферизации, хотя интернет работает исправно? Это верный признак того, что <strong>сервер TorrServe</strong> был приостановлен операционной системой. В таких случаях поток прерывается, и вам приходится перезапускать приложение, чтобы возобновить просмотр. Давайте разберемся, почему это происходит и как заставить систему работать стабильно.</p>
+<p>Основная причина кроется в механизме управления памятью <em>Android</em>. Когда активное приложение (например, видеоплеер) потребляет ресурсы, а фоновый процесс <strong>TorrServe</strong> не является приоритетным, система принудительно «убивает» его. На устройствах серии <em>Matrix</em> это усугубляется специфической прошивкой, которая не всегда корректно обрабатывает запросы на удержание в памяти.</p>
+
+<h2 id="механизм-работы-системы-управления-памятью">Механизм работы системы управления памятью</h2>
+<p>Чтобы понять, почему <strong>TorrServe</strong> засыпает, необходимо разобраться в том, как <em>Android</em> распределяет оперативную память. Операционная система постоянно мониторит использование ресурсов и при нехватке памяти начинает завершать фоновые службы, которые не считаются критически важными для текущей работы устройства.</p>
+<p>Приложение <em>TorrServe</em> работает как локальный веб-сервер, обрабатывая торрент-потоки в реальном времени. Это требует постоянного доступа к диску и сетевому интерфейсу. Однако, если вы переключаетесь на другой экран или открываете меню, система может интерпретировать это как момент для очистки памяти, если не заданы специальные исключения.</p>
+<p>На устройствах с <code>4 ГБ</code> оперативной памяти и менее, такие как многие бюджетные версии <em>Matrix</em>, этот процесс происходит мгновенно. Система не успевает сохранить кэш торрентов, и при попытке возобновить просмотр сервер запускается заново, что вызывает длительную паузу в воспроизведении.</p>
+
+<h2 id="настройка-исключений-в-системе-android">Настройка исключений в системе Android</h2>
+<p>Первым шагом к решению проблемы является настройка разрешений для <strong>TorrServe</strong> в системных параметрах вашего устройства. Вам нужно запретить системе автоматически закрывать приложение при простое. Это делается через меню «Приложения» или «Управление устройствами».</p>
+<p>Зайдите в <code>Настройки → Приложения → TorrServe</code>. Найдите пункт «Батарея» или «Энергосбережение». По умолчанию там стоит значение «Оптимизировать» или «Автоматически». Измените его на «Без ограничений» или «Разрешить фоновую работу».</p>
+<p>Если у вас стоит кастомная прошивка, ищите раздел <code>Автозагрузка</code> или <code>Защита от убийства</code>. Добавьте <strong>TorrServe</strong> в белый список. Это гарантирует, что даже при глубоком сне системы процесс будет активирован по требованию.</p>
+<p>Важно также проверить настройки самого приложения. В конфигурации <em>TorrServe</em> есть параметр, отвечающий за время ожидания перед остановкой. Увеличьте это значение, чтобы сервер не закрывался при коротких паузах в воспроизведении.</p>
+
+<h2 id="конфликты-с-другими-сервисами-и-приложениями">Конфликты с другими сервисами и приложениями</h2>
+<p>Часто причина засыпания кроется не в системе, а в конфликте с другими запущенными процессами. Если у вас одновременно работают <strong>торрент-клиенты</strong>, антивирусы или оптимизаторы памяти, они могут блокировать работу сервера. Особенно это актуально для приложений, которые агрессивно чистят память.</p>
+<p>Например, утилиты типа <em>Clean Master</em> или встроенные в телевизор «Ускорители» могут ошибочно считать <strong>TorrServe</strong> ненужным фоновым процессом. Они принудительно завершают его работу, считая, что это освобождает ресурсы для основного приложения.</p>
+<p>Также стоит обратить внимание на другие медиа-серверы. Если у вас запущены <em>Plex</em> или <em>Kodi</em> с плагинами, они могут конкурировать за порты или ресурсы процессора. Рекомендуется запускать <strong>TorrServe</strong> перед запуском основного видеоплеера.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой марки ваше устройство?</strong><ul><li>Samsung</li><li>LG</li><li>Xiaomi</li><li>Matrix</li><li>Другой</li></ul></div></div>
+
+<h2 id="оптимизация-настроек-самого-torrserve">Оптимизация настроек самого TorrServe</h2>
+<p>Параметры конфигурации самого <strong>TorrServe</strong> играют ключевую роль в его стабильности. Неправильно заданные лимиты памяти или буферизации могут привести к тому, что система принудительно остановит процесс из-за превышения допустимых ресурсов.</p>
+<p>Зайдите в веб-интерфейс сервера (обычно <code>http://127.0.0.1:8090</code>) и проверьте раздел настроек. Убедитесь, что размер буфера установлен адекватно вашим возможностям. Слишком большой буфер может вызвать переполнение памяти, что приведет к сбою.</p>
+<p>Также рекомендуется отключить ненужные функции, такие как запись логов в реальном времени, если они не нужны для отладки. Это снизит нагрузку на диск и процессор, уменьшая риск того, что <em>Android</em> решит «усыпить» процесс.</p>
+<p>Если вы используете <strong>TorrServe</strong> на устройстве с малым объемом памяти, попробуйте уменьшить количество одновременных подключений. Это снизит нагрузку на сеть и процессор, делая работу сервера более плавной и стабильной.</p>
+
+<h2 id="проблемы-с-сетевым-подключением">Проблемы с сетевым подключением</h2>
+<p>Иногда проблема засыпания связана не с памятью, а с сетью. Если соединение нестабильно, сервер может переходить в режим ожидания, ожидая ответа от трекеров. В этот момент система может посчитать процесс неактивным и завершить его.</p>
+<p>Проверьте настройки DNS. Использование публичных DNS, таких как <code>8.8.8.8</code> или <code>1.1.1.1</code>, может улучшить стабильность соединения и уменьшить время ожидания ответов от трекеров. Это особенно важно для устройств, подключенных через Wi-Fi.</p>
+<p>Также стоит проверить, не блокирует ли ваш роутер или провайдер определенные порты. <strong>TorrServe</strong> использует порты для обмена данными, и если они закрыты, сервер может работать некорректно. Убедитесь, что порты <code>8090</code> и <code>6881</code> открыты.</p>
+<p>Иногда помогает изменение режима работы сети в настройках приложения. Переключение между <code>TCP</code> и <code>UDP</code> может решить проблему, если один из протоколов работает нестабильно в вашей сети.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка стабильности</h4><label class="check-item"><input type="checkbox"><span>Отключить оптимизаторы памяти</span></label><label class="check-item"><input type="checkbox"><span>Настроить исключение в батарее</span></label><label class="check-item"><input type="checkbox"><span>Проверить настройки DNS</span></label><label class="check-item"><input type="checkbox"><span>Уменьшить размер буфера</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="аппаратные-ограничения-устройства-matrix">Аппаратные ограничения устройства Matrix</h2>
+<p>Устройства серии <em>Matrix</em> часто имеют ограниченные ресурсы, что делает их более уязвимыми к проблемам с фоновыми процессами. <strong>Процессор</strong> и <em>оперативная память</em> могут не справляться с нагрузкой, особенно при работе с тяжелыми торрент-файлами высокого разрешения.</p>
+<p>Если вы наблюдаете постоянные сбои, возможно, устройство просто перегревается. При перегреве система снижает производительность процессора, что может привести к зависанию или остановке <strong>TorrServe</strong>. Проверьте температуру устройства и обеспечьте ему хорошую вентиляцию.</p>
+<p>Также стоит рассмотреть возможность обновления прошивки. Производители часто выпускают обновления, которые улучшают управление памятью и исправляют ошибки, приводящие к нестабильной работе приложений. Однако будьте осторожны: некачественная прошивка может усугубить проблему.</p>
+<p>В крайнем случае, если аппаратные ограничения слишком велики, рассмотрите использование внешнего сервера. Вы можете запустить <strong>TorrServe</strong> на более мощном устройстве (например, ПК или NAS) и подключаться к нему с телевизора.</p>
+
+<details class="faq-item"><summary>Что делать, если ничего не помогает?</summary><div class="faq-answer"><p>Попробуйте установить альтернативную версию TorrServe или использовать другой торрент-клиент, например, Ace Stream. Иногда проблема кроется в несовместимости конкретной версии приложения с прошивкой устройства.</p></div></details>
+
+<blockquote>⚠️ Внимание: Не пытайтесь отключать системные службы Android, чтобы освободить память для TorrServe. Это может привести к нестабильной работе всего устройства и потере гарантии.</blockquote>
+
+<p>Помните, что <strong>стабильность</strong> работы зависит от баланса между настройками приложения и возможностями железа. Регулярно проверяйте обновления и следите за состоянием системы.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Перед изменением настроек системы сделайте резервную копию текущей конфигурации TorrServe, чтобы в случае ошибки быстро вернуть все как было.</p></div>
+
+<h2 id="таблица-популярных-причин-и-решений">Таблица популярных причин и решений</h2>
+<table>
+<thead>
+<tr>
+<th>Проблема</th>
+<th>Вероятная причина</th>
+<th>Решение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Торр-сервер закрывается при простое</td>
+<td>Агрессивная оптимизация батареи</td>
+<td>Добавить в исключения энергосбережения</td>
+</tr>
+<tr>
+<td>Поток прерывается каждые 5 минут</td>
+<td>Нехватка оперативной памяти</td>
+<td>Уменьшить размер буфера и лимит подключений</td>
+</tr>
+<tr>
+<td>Ошибки подключения к трекерам</td>
+<td>Блокировка портов роутером</td>
+<td>Открыть порты 8090 и 6881</td>
+</tr>
+<tr>
+<td>Перегрев устройства</td>
+<td>Отсутствие вентиляции</td>
+<td>Установить устройство на открытую поверхность</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote>⚠️ Внимание: Если вы используете сторонние прошивки, убедитесь, что они поддерживают работу фоновых сервисов. Некоторые кастомные сборки Android TV могут блокировать работу TorrServe по умолчанию.</blockquote>
+
+<h2 id="дополнительные-советы-по-оптимизации">Дополнительные советы по оптимизации</h2>
+<p>Для максимальной стабильности рекомендуется использовать <strong>проводное подключение</strong> к интернету вместо Wi-Fi. Это снизит задержки и уменьшит вероятность разрыва соединения, которое может спровоцировать остановку сервера.</p>
+<p>Также полезно периодически очищать кэш приложения. Накопленные временные файлы могут замедлять работу и вызывать сбои. Зайдите в <code>Настройки → Приложения → TorrServe → Память</code> и нажмите «Очистить кэш».</p>
+<p>Если вы используете <em>Kodi</em> или другой плеер, убедитесь, что плагин для TorrServe обновлен до последней версии. Старые версии могут иметь ошибки, приводящие к конфликтам с новой версией сервера.</p>
+<p>Не забывайте, что <strong>качество</strong> торрент-файла также влияет на работу. Если файл имеет мало сидов, сервер будет тратить больше ресурсов на поиск пиров, что может привести к его остановке при нехватке ресурсов.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Самый эффективный способ предотвратить засыпание TorrServe — это комбинация отключения оптимизации батареи и использования проводного интернет-соединения.</p></div>
+
+<blockquote>⚠️ Внимание: Избегайте использования приложений для «ускорения» интернета. Они часто конфликтуют с сетевыми настройками TorrServe и могут вызывать проблемы с буферизацией.</blockquote>
+
+<h2 id="заключение">Заключение</h2>
+<p>Проблема, когда <strong>TorrServe</strong> засыпает, решается комплексным подходом. Необходимо настроить как саму систему Android, так и параметры приложения. Регулярная проверка обновлений и мониторинг ресурсов устройства помогут избежать проблем в будущем.</p>
+<p>Помните, что каждый случай индивидуален. То, что работает на одном устройстве, может не подойти для другого. Экспериментируйте с настройками, но делайте это осторожно, чтобы не нарушить работу системы.</p>
+<p>Соблюдение этих рекомендаций позволит вам наслаждаться просмотром фильмов без постоянных перезагрузок и ошибок буферизации. <mark>Ключевым фактором стабильности является правильный баланс между настройками энергосбережения и производительностью устройства.</mark></p>
+
+<details>
+<summary>Почему TorrServe засыпает на моем устройстве?</summary>
+<p>Скорее всего, система Android принудительно закрывает фоновый процесс для экономии памяти. Проверьте настройки энергосбережения и добавьте TorrServe в исключения.</p>
+</details>
+<details>
+<summary>Можно ли предотвратить засыпание TorrServe?</summary>
+<p>Да, это можно сделать, отключив оптимизацию батареи для приложения и настроив его на работу в фоновом режиме без ограничений.</p>
+</details>
+<details>
+<summary>Влияет ли скорость интернета на работу TorrServe?</summary>
+<p>Да, нестабильное соединение может привести к тому, что сервер будет переходить в режим ожидания, что может спровоцировать его остановку системой.</p>
+</details>
+<details>
+<summary>Нужно ли обновлять TorrServe для решения проблемы?</summary>
+<p>Да, новые версии часто содержат исправления ошибок, которые могут вызывать проблемы с совместимостью и стабильностью работы.</p>
+</details>
+<details>
+<summary>Что делать, если ничего не помогает?</summary>
+<p>Попробуйте использовать альтернативные приложения или запустить сервер на другом устройстве, подключившись к нему через сеть.</p>
+</details></div>
+
+                </article>
+                <aside class="article-sidebar"><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#механизм-работы-системы-управления-памятью">Механизм работы системы управления памятью</a></li><li><a href="#настройка-исключений-в-системе-android">Настройка исключений в системе Android</a></li><li><a href="#конфликты-с-другими-сервисами-и-приложениями">Конфликты с другими сервисами и приложениями</a></li><li><a href="#оптимизация-настроек-самого-torrserve">Оптимизация настроек самого TorrServe</a></li><li><a href="#проблемы-с-сетевым-подключением">Проблемы с сетевым подключением</a></li><li><a href="#аппаратные-ограничения-устройства-matrix">Аппаратные ограничения устройства Matrix</a></li><li><a href="#таблица-популярных-причин-и-решений">Таблица популярных причин и решений</a></li><li><a href="#дополнительные-советы-по-оптимизации">Дополнительные советы по оптимизации</a></li><li><a href="#заключение">Заключение</a></li></ul></nav><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/kak-yocti-v-akkaunt-v-smarttube.html" class="related-card">Как войти в аккаунт SmartTube: Полная инструкция 2026</a></li><li><a href="/vosstanovlenie-zagruzchika-grub-dlya-astra-linux.html" class="related-card">Как восстановить загрузчик GRUB в Astra Linux: полное руководство</a></li><li><a href="/cube-arc-kakoj-rezhim-zapisi-stavit.html" class="related-card">Какой режим записи ставить на Cube Arc: Полное руководство</a></li><li><a href="/kak-podklyuchit-mysh-pc2-v-vindovs-10.html" class="related-card">Как подключить мышь PS/2 в Windows 10: Полное руководство</a></li><li><a href="/kak-vojti-v-smart-tube-akkaunt.html" class="related-card">Как войти в аккаунт Smart Tube: Полное руководство 2026</a></li></ul></nav></aside>
+            </div>
+        </div>
+    </main>
+
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/kak-yocti-v-akkaunt-v-smarttube.html" class="related-bottom-card"><span class="related-bottom-title">Как войти в аккаунт SmartTube: Полная инструкция 2026</span><span class="related-bottom-desc">Пошаговая инструкция по авторизации в SmartTube на Android TV. Решаем проблемы с входом, синхронизац</span></a><a href="/vosstanovlenie-zagruzchika-grub-dlya-astra-linux.html" class="related-bottom-card"><span class="related-bottom-title">Как восстановить загрузчик GRUB в Astra Linux: полное руководство</span><span class="related-bottom-desc">Пошаговая инструкция по восстановлению загрузчика GRUB2 в Astra Linux Special Edition. Устранение ош</span></a><a href="/cube-arc-kakoj-rezhim-zapisi-stavit.html" class="related-bottom-card"><span class="related-bottom-title">Какой режим записи ставить на Cube Arc: Полное руководство</span><span class="related-bottom-desc">Разбираем все режимы записи на Cube Arc: AVCHD, MP4, HLS. Какой выбрать для качества и экономии мест</span></a><a href="/kak-podklyuchit-mysh-pc2-v-vindovs-10.html" class="related-bottom-card"><span class="related-bottom-title">Как подключить мышь PS/2 в Windows 10: Полное руководство</span><span class="related-bottom-desc">Инструкция по подключению мыши с интерфейсом PS/2 к Windows 10. Решение проблем с драйверами, исполь</span></a><a href="/kak-vojti-v-smart-tube-akkaunt.html" class="related-bottom-card"><span class="related-bottom-title">Как войти в аккаунт Smart Tube: Полное руководство 2026</span><span class="related-bottom-desc">Пошаговая инструкция по авторизации в Smart Tube на Android TV. Решение проблем с синхронизацией, уп</span></a><a href="/pantum-scanning-ocr.html" class="related-bottom-card"><span class="related-bottom-title">Pantum Scanning OCR: Настройка, ошибки и инструкция по работе</span><span class="related-bottom-desc">Полный гайд по использованию OCR в МФУ Pantum. Узнайте, как настроить распознавание текста, исправит</span></a></div>
+        </div>
+    </section>
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about">Быстрые решения технических проблем: ТВ, Android, Windows, приложения</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/televizory/">📺 Настройка ТВ</a></li>
+<li><a href="/category/android/">📱 Android-устройства</a></li>
+<li><a href="/category/prilozheniya/">📲 Приложения</a></li>
+<li><a href="/category/windows/">💻 Windows и ПК</a></li>
+<li><a href="/category/pristavki/">🔌 Приставки</a></li>
+<li><a href="/category/internet/">🌐 WiFi и Интернет</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+        (function() {
+            const popup = document.getElementById('cookie-consent');
+            const btn = document.getElementById('cookie-accept');
+            if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+                popup.classList.add('visible');
+                btn.onclick = () => {
+                    localStorage.setItem('cookie-accepted', 'true');
+                    popup.classList.remove('visible');
+                };
+            }
+        })();
+    </script>
+</body>
+</html>
