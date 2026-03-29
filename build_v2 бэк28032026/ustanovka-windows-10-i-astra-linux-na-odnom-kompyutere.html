@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Установка Windows 10 и Astra Linux: Полный гайд по dual-boot — ТехПодсказка</title>
+    <meta name="description" content="Пошаговая инструкция по настройке двойной загрузки Windows 10 и Astra Linux. Безопасное разделение дисков, настройка загрузчика GRUB и решение типичных проблем.">
+    <link rel="canonical" href="https://tehpodskazka.ru/ustanovka-windows-10-i-astra-linux-na-odnom-kompyutere.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Установка Windows 10 и Astra Linux: Полный гайд по dual-boot">
+    <meta property="og:description" content="Пошаговая инструкция по настройке двойной загрузки Windows 10 и Astra Linux. Безопасное разделение дисков, настройка загрузчика GRUB и решение типичных проблем.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/" class="nav-link active">🏠 Главная</a>
+<a href="/category/televizory/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/category/android/" class="nav-link">📱 Android-устройства</a>
+<a href="/category/prilozheniya/" class="nav-link">📲 Приложения</a>
+<a href="/category/windows/" class="nav-link">💻 Windows и ПК</a>
+<a href="/category/pristavki/" class="nav-link">🔌 Приставки</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/windows/">Windows и ПК</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Установка Windows 10 и Astra Linux: Полный гайд по dual-boot</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    <h1>Установка Windows 10 и Astra Linux на одном компьютере: Гид по двойной загрузке</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#планирование-разметки-диска-и-выбор-места-для-систем">Планирование разметки диска и выбор места для систем</a></li><li><a href="#подготовка-загрузочных-носителей-и-настройка-bios">Подготовка загрузочных носителей и настройка BIOS</a></li><li><a href="#этап-установки-windows-10">Этап установки Windows 10</a></li><li><a href="#разметка-диска-для-astra-linux">Разметка диска для Astra Linux</a></li><li><a href="#настройка-загрузчика-grub-и-восстановление-доступа-к-windows">Настройка загрузчика GRUB и восстановление доступа к Windows</a></li><li><a href="#синхронизация-времени-и-настройка-часов">Синхронизация времени и настройка часов</a></li><li><a href="#решение-частых-проблем-и-рекомендации">Решение частых проблем и рекомендации</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></details></nav>
+                    <div class="article-body">
+
+<p>Создание среды, где сосуществуют привычная экосистема <em>Microsoft Windows</em> и защищённый российский дистрибутив <em>Astra Linux</em>, становится всё более востребованным сценарием для современных пользователей. Это решение позволяет не отказываться от специализированного софта для работы с офисными документами или играми, одновременно получая доступ к инструментам безопасности и администрирования, характерным для отечественных ОС. Однако процесс настройки требует тщательного планирования, так как некорректные действия могут привести к потере данных или невозможности загрузки системы.</p>
+
+<p>Ключевым аспектом здесь является порядок установки операционных систем и работа с разделами жесткого диска. Стандартный загрузчик <em>GRUB2</em>, используемый в Linux, способен корректно определить установленную ранее <em>Windows 10</em>, но обратное действие часто приводит к перезаписи загрузочной записи, что усложняет вход в Linux. Понимание структуры файловой системы и логики работы <em>UEFI</em> или <em>BIOS</em> станет залогом успеха вашей конфигурации.</p>
+
+<h2 id="планирование-разметки-диска-и-выбор-места-для-систем">Планирование разметки диска и выбор места для систем</h2>
+<p>Перед началом любых манипуляций необходимо чётко определить, как будет распределено пространство вашего накопителя. Жёсткий диск или SSD следует разделить минимум на три логические области: одна для <em>Windows 10</em>, вторая для <em>Astra Linux</em> и третья, общая для хранения пользовательских файлов. Это позволит избежать конфликтов при обновлении систем и обеспечит независимость данных друг от друга.</p>
+
+<p>Важно учитывать, что система <em>Windows</em> по умолчанию склонна занимать всё свободное пространство, если не предпринять специальных мер. Поэтому рекомендуется создать разделы под Linux вручную, используя сторонний инструмент, такой как <em>GParted</em>, ещё до начала установки. Это даст вам полный контроль над размерами разделов и типами файловых систем.</p>
+
+<ul>
+<li>🔹 Раздел под систему Windows: минимум <code>100 ГБ</code> для комфортной работы и обновлений.</li>
+<li>🔹 Корневой раздел Linux (<code>/</code>): оптимальный размер <code>40–60 ГБ</code> с файловой системой <code>ext4</code>.</li>
+<li>🔹 Раздел подкачки (<code>swap</code>): равен объёму оперативной памяти, если её менее <code>8 ГБ</code>.</li>
+</ul>
+
+<p>Если вы планируете хранить документы, фото и видео в общем доступе, создайте отдельный раздел с файловой системой <code>NTFS</code> или <code>exFAT</code>. Обе операционные системы будут иметь к нему доступ без дополнительных настроек драйверов. Это решение особенно актуально, если вам нужно быстро обмениваться большими файлами между средами.</p>
+
+<h2 id="подготовка-загрузочных-носителей-и-настройка-bios">Подготовка загрузочных носителей и настройка BIOS</h2>
+<p>Успех двойной загрузки на <90% зависит от правильной подготовки среды. Вам понадобится два загрузочных носителя: флешка с образом <em>Windows 10</em> и флешка с образом <em>Astra Linux Special Edition</em> или Common Edition. Убедитесь, что образы скачаны с официальных источников, чтобы исключить риск повреждения файлов или наличия вредоносного кода.</p>
+
+<p>В настройках <em>BIOS/UEFI</em> необходимо отключить функцию <code>Secure Boot</code> на этапе установки Linux, так как она может блокировать загрузку неподписанных драйверов. Позже, после настройки системы, вы сможете включить её обратно, но для начальной установки это требование критично. Также проверьте режим работы SATA: он должен быть установлен в <code>AHCI</code>, а не в <code>RAID</code> или <code>IDE</code>, иначе драйверы Linux не увидят диск.</p>
+
+<ul>
+<li>🔹 Отключите <code>Fast Boot</code> в настройках Windows и BIOS для корректного доступа к диску.</li>
+<li>🔹 Отключите <code>Secure Boot</code> перед установкой <em>Astra Linux</em>.</li>
+<li>🔹 Проверьте, что время в BIOS установлено в <code>UTC</code> или <code>Local Time</code> корректно.</li>
+</ul>
+
+<p>Особое внимание уделите настройкам загрузки. Убедитесь, что в приоритете загрузки стоит ваш USB-накопитель с установочным образом. Если у вас современный компьютер с <em>UEFI</em>, флешка должна быть отформатирована в <code>FAT32</code> и иметь загрузочный раздел <code>EFI</code>. Это гарантирует, что система распознает носитель как загрузочный.</p>
+
+<blockquote>⚠️ Внимание: Если вы включите режим совместимости (Legacy/CSM) на старом оборудовании, загрузчик Windows может не увидеть разделы Linux, созданные в режиме UEFI. Выберите один режим и придерживайтесь его.</blockquote>
+
+<h2 id="этап-установки-windows-10">Этап установки Windows 10</h2>
+<p>Первым этапом является чистая установка <em>Windows 10</em>. Это необходимо, так как её установщик имеет тенденцию игнорировать существующие разделы Linux, если они уже есть на диске, или, что хуже, перезаписывает загрузочный сектор. Начните загрузку с флешки и следуйте стандартному мастеру установки.</p>
+
+<p>На этапе выбора типа установки выберите «Выборочная: только установка Windows». Здесь вы увидите список доступных разделов. Создайте необходимый размер раздела под Windows, но не форматируйте всё пространство диска целиком. Оставьте неразмеченную область для будущей установки <em>Astra Linux</em>.</p>
+
+<ul>
+<li>🔹 Создайте раздел под Windows: нажмите «Новый», укажите размер и отформатируйте.</li>
+<li>🔹 Оставьте нераспределенное пространство: не трогайте его, оно понадобится позже.</li>
+<li>🔹 Установите драйверы: сразу после установки обновите драйверы через <em>Центр обновлений</em>.</li>
+</ul>
+
+<p>После завершения установки и входа в систему выполните несколько важных действий. Отключите функцию «Быстрый запуск» в настройках электропитания. Это предотвратит блокировку раздела Linux при выключении Windows, что часто вызывает ошибки монтирования файловых систем.</p>
+
+<blockquote>⚠️ Внимание: Функция быстрого запуска в Windows 10 переводит систему в состояние гибернации, а не полного выключения. Это делает разделы с файлами недоступными для Linux.</blockquote>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой тип загрузчика используется на вашем компьютере?</strong><ul><li>UEFI</li><li>Legacy BIOS (CSM)</li><li>Не знаю</li><li>Смешанный режим</li></ul></div></div>
+
+<h2 id="разметка-диска-для-astra-linux">Разметка диска для Astra Linux</h2>
+<p>Теперь пришло время установить <em>Astra Linux</em>. Загрузитесь с соответствующей флешки и выберите пункт «Установить систему». На этапе выбора типа установки выберите «Вручную» или «Ручное управление разделами». Это самый важный момент, требующий максимальной концентрации.</p>
+
+<p>Вам нужно создать разделы в ранее оставленном нераспределенном пространстве. Сначала создайте раздел под корневую файловую систему <code>/</code> с размером около <code>50 ГБ</code> и файловой системой <code>ext4</code>. Затем создайте раздел подкачки <code>swap</code>. Если у вас много оперативной памяти, размер подкачки может быть меньше или равен объему ОЗУ.</p>
+
+<ul>
+<li>🔹 Корневой раздел <code>/</code>: выберите <code>ext4</code> и укажите точку монтирования <code>/</code>.</li>
+<li>🔹 Раздел подкачки <code>swap</code>: выберите тип <code>swap area</code>.</li>
+<li>🔹 Домашний раздел <code>/home</code> (опционально): создайте отдельный раздел для личных данных.</li>
+</ul>
+
+<p>Крайне важно не задеть существующий раздел <em>Windows</em> и, самое главное, не перезаписать раздел загрузчика <em>EFI</em>, если он уже создан Windows. В режиме UEFI раздел загрузчика должен быть общим для обеих систем. Убедитесь, что в настройках установки <em>Astra Linux</em> путь к загрузчику указывает на тот же <code>EFI System Partition</code>, что и у Windows.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка перед записью разделов</h4><label class="check-item"><input type="checkbox"><span>Размер корня не менее 40 ГБ</span></label><label class="check-item"><input type="checkbox"><span>Файловая система ext4</span></label><label class="check-item"><input type="checkbox"><span>Раздел swap создан</span></label><label class="check-item"><input type="checkbox"><span>Не выбран раздел Windows</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<blockquote>⚠️ Внимание: Ошибка в выборе устройства для установки загрузчика (GRUB) — самая частая причина того, что после установки Linux компьютер загружается только в Windows. Убедитесь, что загрузчик ставится на EFI-раздел.</blockquote>
+
+<h2 id="настройка-загрузчика-grub-и-восстановление-доступа-к-windows">Настройка загрузчика GRUB и восстановление доступа к Windows</h2>
+<p>После завершения установки <em>Astra Linux</em> и перезагрузки вы должны увидеть меню загрузчика <em>GRUB</em>. Если Windows там отсутствует, не паникуйте. Это решается командой обновления конфигурации загрузчика. Откройте терминал в Linux и введите команду <code>sudo update-grub</code>.</p>
+
+<p>Система просканирует диски, найдет установленную <em>Windows Boot Manager</em> и добавит её в список загрузки. Теперь при старте компьютера вы сможете выбрать, какую операционную систему запустить. По умолчанию <em>GRUB</em> будет загружать <em>Astra Linux</em>, но время ожидания можно изменить в настройках.</p>
+
+<ul>
+<li>🔹 Запустите терминал и введите <code>sudo update-grub</code>.</li>
+<li>🔹 Проверьте вывод команды: вы должны увидеть строку «Found Windows Boot Manager».</li>
+<li>🔹 Если Windows не найдена, установите пакет <code>os-prober</code> и повторите команду.</li>
+</ul>
+
+<p>В некоторых случаях, особенно на новых ноутбуках, загрузчик может не отображаться сразу. В настройках BIOS/UEFI нужно изменить приоритет загрузки, поставив <em>GRUB</em> или имя дистрибутива <em>Astra Linux</em> на первое место. Это заставит компьютер сначала спрашивать выбор ОС, а не сразу загружать Windows.</p>
+
+<details class="faq-item"><summary>Как изменить время ожидания меню GRUB?</summary><div class="faq-answer"><p>Откройте файл <code>/etc/default/grub</code> в текстовом редакторе с правами администратора. Найдите строку <code>GRUB_TIMEOUT=5</code> и измените число на нужное вам значение (в секундах). Сохраните файл и выполните <code>sudo update-grub</code> для применения изменений.</p></div></details>
+
+<h2 id="синхронизация-времени-и-настройка-часов">Синхронизация времени и настройка часов</h2>
+<p>Одной из самых частых проблем при двойной загрузке является рассинхронизация системного времени. <em>Windows</em> хранит время в локальном формате, а <em>Linux</em> — в формате UTC. В результате при переключении между системами часы могут уходить вперед или назад на несколько часов.</p>
+
+<p>Чтобы решить эту проблему, нужно привести обе системы к единому стандарту. Рекомендуется заставить <em>Windows</em> работать в режиме UTC, так как это более правильный подход. Для этого откройте реестр Windows и добавьте параметр <code>RealTimeIsUniversal</code> в раздел <code>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\TimeZoneInformation</code>.</p>
+
+<p>В Linux настройка обычно корректна по умолчанию, но для уверенности можно проверить команду <code>timedatectl</code>. Убедитесь, что значение <code>RTC in local TZ</code> установлено в <code>no</code>. Это обеспечит точное отображение времени в обеих операционных системах.</p>
+
+<mark>Важно: Если вы не измените настройки реестра в Windows, время будет сбиваться при каждой перезагрузке, что нарушит работу сертификатов и планировщика задач.</mark>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Для быстрого исправления времени в Linux используйте команду <code>sudo timedatectl set-local-rtc 1 --adjust-system-clock</code>, если вы предпочитаете хранить время в локальном формате, как это делает Windows по умолчанию.</p></div>
+
+<h2 id="решение-частых-проблем-и-рекомендации">Решение частых проблем и рекомендации</h2>
+<p>В процессе эксплуатации двойной загрузки могут возникнуть различные нюансы. Например, если после обновления ядра Linux перестал загружаться, попробуйте выбрать предыдущую версию ядра в меню <em>GRUB</em> при запуске. Это временное решение, которое позволит вам загрузить систему и исправить проблему.</p>
+
+<p>Иногда драйверы проприетарного оборудования, такие как видеокарты <em>Nvidia</em> или Wi-Fi адаптеры, могут требовать ручной установки. В <em>Astra Linux</em> для этого предусмотрен графический интерфейс управления драйверами, но иногда требуется загрузка с параметрами <code>nomodeset</code>.</p>
+
+<ul>
+<li>🔹 Если экран черный при загрузке: добавьте параметр <code>nomodeset</code> в меню GRUB.</li>
+<li>🔹 Если не работает Wi-Fi: проверьте наличие драйверов в репозитории или скачайте их с сайта производителя.</li>
+<li>🔹 Если звук не работает: установите пакет <code>pulseaudio</code> или проверьте микшер звука.</li>
+</ul>
+
+<p>Регулярно обновляйте обе системы. В <em>Windows</em> это делается через Центр обновлений, а в <em>Astra Linux</em> используйте утилиту <code>apt update && apt upgrade</code>. Обновления часто содержат исправления безопасности и улучшения совместимости с оборудованием.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Правильная настройка времени и загрузчика — фундамент стабильной работы dual-boot системы. Не игнорируйте эти этапы ради экономии времени.</p></div>
+
+<h2 id="faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</h2>
+
+<details>
+<summary>Можно ли установить Astra Linux на SSD с Windows, не потеряв данные?</summary>
+<p>Да, это возможно, но только при условии, что вы предварительно освободите место на диске, сжав раздел Windows через «Управление дисками», и создадите разделы для Linux вручную. Никогда не выбирайте опцию «Удалить все» или «Форматировать весь диск» в установщике Linux.</p>
+</details>
+
+<details>
+<summary>Как удалить Windows, если я больше не хочу использовать двойную загрузку?</summary>
+<p>Сначала удалите разделы Windows через управление дисками в Linux или специализированную утилиту. Затем загрузитесь в Linux и выполните команду <code>sudo update-grub</code>, чтобы убрать запись о Windows из меню загрузчика. Финальный шаг — расширить разделы Linux на освободившееся пространство.</p>
+</details>
+
+<details>
+<summary>Что делать, если после обновления Windows меню GRUB исчезло?</summary>
+<p>Это означает, что Windows перезаписала загрузочную запись. Вам понадобится загрузочная флешка с Astra Linux. Загрузитесь с неё, выберите «Восстановление системы» или загрузитесь в Live-режим, затем выполните команду <code>sudo grub-install</code> и <code>sudo update-grub</code> на корневом разделе вашей установленной системы.</p>
+</details>
+
+<details>
+<summary>Можно ли запускать программы Windows в Astra Linux?</summary>
+<p>Да, для этого можно использовать эмуляторы или слои совместимости, такие как <em>Wine</em> или <em>PlayOnLinux</em>. Однако производительность и стабильность работы могут быть ниже, чем в нативной среде Windows, особенно для сложных приложений и игр.</p>
+</details></div>
+                    <div class="article-updated">Проверено: Март 2026</div>
+                </article>
+                <aside class="article-sidebar"><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#планирование-разметки-диска-и-выбор-места-для-систем">Планирование разметки диска и выбор места для систем</a></li><li><a href="#подготовка-загрузочных-носителей-и-настройка-bios">Подготовка загрузочных носителей и настройка BIOS</a></li><li><a href="#этап-установки-windows-10">Этап установки Windows 10</a></li><li><a href="#разметка-диска-для-astra-linux">Разметка диска для Astra Linux</a></li><li><a href="#настройка-загрузчика-grub-и-восстановление-доступа-к-windows">Настройка загрузчика GRUB и восстановление доступа к Windows</a></li><li><a href="#синхронизация-времени-и-настройка-часов">Синхронизация времени и настройка часов</a></li><li><a href="#решение-частых-проблем-и-рекомендации">Решение частых проблем и рекомендации</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></nav></aside>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about">Быстрые решения технических проблем: ТВ, Android, Windows, приложения</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/televizory/">📺 Настройка ТВ</a></li>
+<li><a href="/category/android/">📱 Android-устройства</a></li>
+<li><a href="/category/prilozheniya/">📲 Приложения</a></li>
+<li><a href="/category/windows/">💻 Windows и ПК</a></li>
+<li><a href="/category/pristavki/">🔌 Приставки</a></li>
+<li><a href="/category/internet/">🌐 WiFi и Интернет</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+        (function() {
+            const popup = document.getElementById('cookie-consent');
+            const btn = document.getElementById('cookie-accept');
+            if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+                popup.classList.add('visible');
+                btn.onclick = () => {
+                    localStorage.setItem('cookie-accepted', 'true');
+                    popup.classList.remove('visible');
+                };
+            }
+        })();
+    </script>
+</body>
+</html>

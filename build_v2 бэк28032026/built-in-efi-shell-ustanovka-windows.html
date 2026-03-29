@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Как установить Windows через встроенную EFI Shell: полное руководство — ТехПодсказка</title>
+    <meta name="description" content="Пошаговая инструкция по установке ОС Windows из EFI Shell. Разбор команд, создание загрузочных носителей и решение частых проблем UEFI.">
+    <link rel="canonical" href="https://tehpodskazka.ru/built-in-efi-shell-ustanovka-windows.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как установить Windows через встроенную EFI Shell: полное руководство">
+    <meta property="og:description" content="Пошаговая инструкция по установке ОС Windows из EFI Shell. Разбор команд, создание загрузочных носителей и решение частых проблем UEFI.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/" class="nav-link active">🏠 Главная</a>
+<a href="/category/televizory/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/category/android/" class="nav-link">📱 Android-устройства</a>
+<a href="/category/prilozheniya/" class="nav-link">📲 Приложения</a>
+<a href="/category/windows/" class="nav-link">💻 Windows и ПК</a>
+<a href="/category/pristavki/" class="nav-link">🔌 Приставки</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/windows/">Windows и ПК</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как установить Windows через встроенную EFI Shell: полное руководство</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    <h1>Установка Windows через встроенную EFI Shell: пошаговое руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#подготовка-загрузочного-носителя-для-работы-в-efi-shell">Подготовка загрузочного носителя для работы в EFI Shell</a></li><li><a href="#вход-в-консоль-efi-shell-и-навигация-по-системе">Вход в консоль EFI Shell и навигация по системе</a></li><li><a href="#запуск-установщика-windows-из-командной-строки">Запуск установщика Windows из командной строки</a></li><li><a href="#альтернативный-способ-запуск-setupefi-напрямую">Альтернативный способ: запуск setup.efi напрямую</a></li><li><a href="#решение-распространенных-ошибок-и-проблем-совместимости">Решение распространенных ошибок и проблем совместимости</a></li><li><a href="#завершение-установки-и-пост-инсталляционные-настройки">Завершение установки и пост-инсталляционные настройки</a></li><li><a href="#таблица-основных-команд-efi-shell">Таблица основных команд EFI Shell</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></details></nav>
+                    <div class="article-body">
+
+<p>Многие пользователи сталкиваются с ситуацией, когда стандартный загрузочный USB-накопитель не определяется материнской платой при попытке установки операционной системы. В таких случаях спасением становится использование <strong>встроенной EFI Shell</strong>, которая предоставляет прямой доступ к файловой системе UEFI без необходимости в графическом интерфейсе BIOS. Это мощный инструмент, позволяющий выполнить загрузку <em>Windows</em> даже в самых нестандартных конфигурациях оборудования.</p>
+
+<p>Процесс работы в консоли требует понимания базовых команд и структуры файлов, но он значительно надежнее автоматических меню загрузки. Вы получаете полный контроль над тем, какой именно файл загрузчика будет запущен и с каких физических носителей. Это особенно актуально для серверов, рабочих станций или старых материнских плат с кастомной прошивкой <em>UEFI</em>.</p>
+
+<h2 id="подготовка-загрузочного-носителя-для-работы-в-efi-shell">Подготовка загрузочного носителя для работы в EFI Shell</h2>
+<p>Прежде чем пытаться запустить установку, необходимо создать правильно отформатированный носитель. Стандартные инструменты записи ISO-образов часто игнорируют требования UEFI, поэтому лучше использовать специализированное ПО, такое как <em>Rufus</em> или <em>Ventoy</em>. Ключевым моментом является выбор файловой системы: для UEFI обязательным условием является использование <code>FAT32</code>, так как большинство реализаций <strong>UEFI BIOS</strong> не читают разделы <code>NTFS</code> или <code>exFAT</code> на этапе предварительной загрузки.</p>
+<p>Размер раздела также имеет значение. Если вы используете образ Windows 10 или 11, файл <code>install.wim</code> может превышать 4 ГБ, что невозможно записать на FAT32 без разделения. В таком случае необходимо либо разбить образ на части, либо использовать инструменты, поддерживающие загрузку с NTFS через дополнительные драйверы, хотя это менее надежно. Для большинства задач достаточно создать раздел под загрузчик, который будет содержать только файлы <code>bootx64.efi</code> и папку <code>EFI</code>.</p>
+<ul>
+<li>📁 Отформатируйте USB-флешку в файловую систему <code>FAT32</code> с размером кластера по умолчанию.</li>
+<li>🛠️ Используйте <em>Rufus</em> в режиме DD-образ или выберите стандартный режим GPT для UEFI.</li>
+<li>💾 Убедитесь, что на носителе есть папка <code>EFI/BOOT</code> с файлом <code>bootx64.efi</code>.</li>
+</ul>
+<p>После подготовки носителя его необходимо подключить к компьютеру. Рекомендуется использовать порты USB 2.0, так как они гарантируют лучшую совместимость с базовой прошивкой материнской платы, чем порты USB 3.0/3.1, которые иногда требуют дополнительных драйверов для инициализации на раннем этапе загрузки.</p>
+
+<h2 id="вход-в-консоль-efi-shell-и-навигация-по-системе">Вход в консоль EFI Shell и навигация по системе</h2>
+<p>При перезагрузке компьютера вам нужно войти в меню загрузки или настройки BIOS/UEFI. Найдите опцию, отвечающую за запуск консоли. На платах <em>ASUS</em> это часто пункт <code>Launch EFI Shell from filesystem device</code>, на платах <em>Gigabyte</em> — раздел <code>BIOs Setup</code> -> <code>Boot</code> -> <code>UEFI Shell</code>. Если такой опции нет в главном меню, попробуйте нажать <code>F11</code> или <code>F12</code> при старте и выбрать строку с названием вашей флешки, но с префиксом <code>UEFI:</code>.</p>
+<p>После запуска вы увидите приглашение командной строки, обычно обозначенное как <code>Shell> </code> или <code>fs0:\> </code>. Ваша первая задача — определить, какой символ соответствует вашему загрузочному USB-накопителю. Введите команду <code>map -r</code> и нажмите Enter. Эта команда отобразит список всех доступных файловых устройств, сопоставленных с буквами.</p>
+<p>Вы увидите список устройств, где <code>fs0</code>, <code>fs1</code> и так далее — это диски. Обычно загрузочная флешка имеет метку или объем, соответствующий вашей флешке. Переключайтесь между устройствами, вводя <code>fs0:</code>, <code>fs1:</code> и проверяя содержимое командой <code>ls</code> (или <code>dir</code>). Вам нужно найти папку <code>EFI</code>.</p>
+<ul>
+<li>🔍 Используйте команду <code>map</code> для просмотра списка доступных дисков и разделов.</li>
+<li>📂 Переходите между дисками, вводя название диска с двоеточием, например <code>fs1:</code>.</li>
+<li>📝 Команда <code>ls</code> или <code>dir</code> показывает файлы и папки в текущем каталоге.</li>
+</ul>
+<blockquote>⚠️ Внимание: Не путайте символы <code>fs0</code> (файловая система) с буквами дисков в Windows. В EFI Shell нет буквы C: до загрузки ОС. Ошибка в выборе диска может привести к попытке загрузить не тот образ или, в худшем случае, к запуску скриптов с жесткого диска.</blockquote>
+<p>Если вы видите папку <code>EFI</code> и внутри неё <code>BOOT</code>, значит, вы на правильном пути. Структура каталогов должна строго соответствовать стандарту UEFI. Отсутствие файла <code>bootx64.efi</code> в папке <code>EFI/BOOT</code> означает, что носитель не является загрузочным для вашего режима.</p>
+
+<h2 id="запуск-установщика-windows-из-командной-строки">Запуск установщика Windows из командной строки</h2>
+<p>Найдя правильный раздел, необходимо перейти в директорию с загрузчиком. Введите команду <code>cd EFI/BOOT</code>. Если папка не найдена, возможно, она имеет другое название или находится глубже в структуре. Используйте команду <code>cd.</code> для возврата на уровень вверх и <code>cd имя_папки</code> для спуска вниз. В UEFI чувствительность к регистру обычно отсутствует, но лучше придерживаться стандартного написания.</p>
+<p>Как только вы окажетесь в папке <code>EFI/BOOT</code>, введите команду <code>ls</code> еще раз, чтобы убедиться, что файл <code>bootx64.efi</code> присутствует. Это основной файл загрузчика для 64-битных систем. Запустите его, просто введя его имя: <code>bootx64.efi</code>. В некоторых случаях может потребоваться полный путь, например <code>fs0:\EFI\BOOT\bootx64.efi</code>.</p>
+<pre><code>bootx64.efi</code></pre>
+<p>После запуска файла начнется процесс загрузки графического интерфейса установщика Windows. Это означает, что консольный режим успешно выполнил свою функцию — инициировал загрузку ядра. Если вместо этого вы получаете ошибку <code>File not found</code> или <code>Unsupported</code>, проверьте целостность файла и совместимость архитектуры процессора (x64 vs ARM).</p>
+<ul>
+<li>🚀 Запустите загрузчик командой <code>bootx64.efi</code> в корневой папке EFI.</li>
+<li>🔗 Используйте <code>cd</code> для навигации, если файл находится в подпапке.</li>
+<li>✅ Убедитесь, что файл имеет расширение <code>.efi</code> и соответствует архитектуре вашего процессора.</li>
+</ul>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой метод загрузки вы используете чаще всего?</strong><ul><li>Через меню BIOS (Boot Menu)</li><li>Через настройки UEFI</li><li>Через EFI Shell</li><li>Никогда не использовал</li></ul></div></div>
+
+<h2 id="альтернативный-способ-запуск-setupefi-напрямую">Альтернативный способ: запуск setup.efi напрямую</h2>
+<p>Иногда стандартный путь через <code>bootx64.efi</code> не срабатывает, или вы хотите сразу перейти к установке без промежуточных меню. В этом случае можно попробовать запустить установщик напрямую, если он лежит в корневом каталоге или в папке <code>sources</code> на флешке. Однако чаще всего файл <code>setup.efi</code> находится внутри папки <code>EFI/BOOT</code> или <code>EFI/Microsoft/Boot</code>.</p>
+<p>Введите команду <code>cd EFI/Microsoft/Boot</code> и проверьте наличие файла <code>bootmgfw.efi</code> или <code>setup.efi</code>. Если файлы найдены, запустите их. Это может быть полезно, если основной загрузчик поврежден, но файлы установки на диске целы. Также можно использовать команду <code>bcfg</code> для добавления новой записи в NVRAM, но это требует глубоких знаний структуры данных.</p>
+<p>Если вы видите ошибку доступа, возможно, на диске стоит защита от записи или он отформатирован с правами, не позволяющими запуск исполняемых файлов. Попробуйте пересоздать загрузочный носитель с помощью утилиты <em>Media Creation Tool</em> от Microsoft, которая гарантирует правильную структуру файлов.</p>
+<blockquote>⚠️ Внимание: Прямой запуск файлов из папки <code>sources</code> (например, <code>install.wim</code>) невозможен без предварительной загрузки среды WinPE. Не пытайтесь запускать файлы образов напрямую, это приведет к ошибке формата.</blockquote>
+<p>Важно отметить, что при использовании <strong>EFI Shell</strong> вы не видите графических подсказок, поэтому каждый шаг должен быть осознанным. Ошибка в команде может привести к тому, что вы начнете записывать данные на системный диск, а не на флешку, хотя при загрузке это маловероятно, так как обычно запускается только чтение.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка перед запуском</h4><label class="check-item"><input type="checkbox"><span>Файловая система FAT32</span></label><label class="check-item"><input type="checkbox"><span>Папка EFI/BOOT существует</span></label><label class="check-item"><input type="checkbox"><span>Файл bootx64.efi найден</span></label><label class="check-item"><input type="checkbox"><span>Правильный диск выбран в map</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="решение-распространенных-ошибок-и-проблем-совместимости">Решение распространенных ошибок и проблем совместимости</h2>
+<p>Даже опытные пользователи могут столкнуться с проблемами. Самая частая ошибка — <code>Invalid Parameter</code> или <code>Access Denied</code>. Это часто случается, если Secure Boot включен в настройках BIOS, а загрузочный файл не подписан цифровым сертификатом, доверенным платформой. В таких случаях необходимо временно отключить <em>Secure Boot</em> в настройках UEFI.</p>
+<p>Другая проблема — невозможность найти диск. Если команда <code>map</code> не показывает вашу флешку, проверьте порт USB. Попробуйте переподключить устройство или использовать другой порт. Иногда помогает отключение других USB-устройств, чтобы снизить нагрузку на контроллер во время инициализации.</p>
+<ul>
+<li>🔒 Отключите <em>Secure Boot</em> в BIOS, если файл загрузчика не подписан.</li>
+<li>🔌 Попробуйте порт USB 2.0, если USB 3.0 не определяется.</li>
+<li>🔄 Перезагрузите систему и попробуйте снова, если флешка "исчезла" из списка.</li>
+</ul>
+<p>Также стоит обратить внимание на версию <strong>UEFI</strong>. Старые версии прошивок могут не поддерживать новые форматы файловых систем или методы загрузки, используемые в последних сборках Windows 11. В таких случаях может потребоваться обновление BIOS материнской платы до последней версии.</p>
+<p>Если вы видите сообщение <code>Not a FAT filesystem</code>, значит, вы выбрали раздел, отформатированный в NTFS. В EFI Shell нет встроенной поддержки NTFS для загрузки, поэтому вам придется использовать только разделы FAT32 или загрузить драйверы NTFS в память перед началом работы, что сложно для новичков.</p>
+
+<details class="faq-item"><summary>Что делать, если Secure Boot блокирует загрузку?</summary><div class="faq-answer"><p>Вам нужно войти в BIOS/UEFI, найти раздел Security или Boot, выбрать Secure Boot и установить значение Disabled. После этого сохраните настройки (F10) и перезагрузитесь. Помните, что после установки Windows рекомендуется включить Secure Boot обратно для безопасности системы.</p></div></details>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Сохраняйте лог работы в текстовый файл, если вы используете сложные скрипты. Введите команду <code>log -o shell.log</code> перед началом работы, чтобы записать все вводные и выводные данные в файл на флешке.</p></div>
+
+<h2 id="завершение-установки-и-пост-инсталляционные-настройки">Завершение установки и пост-инсталляционные настройки</h2>
+<p>После того как установщик Windows загрузился, дальнейшие действия ничем не отличаются от стандартного процесса. Вы выбираете язык, диск для установки и следуете инструкциям на экране. Если вы использовали кастомный путь, убедитесь, что запись в NVRAM создана корректно.</p>
+<p>Если после перезагрузки система не видит установленную Windows и снова пытается загрузиться в Shell, вам нужно вручную добавить запись загрузчика. Используйте команду <code>bcfg boot add 0 fs0:\EFI\Microsoft\Boot\bootmgfw.efi "Windows Boot Manager"</code>. Это создаст первую запись в списке загрузки, указывающую на правильный файл.</p>
+<p>После успешной установки удалите загрузочную флешку. Если система продолжает загружаться в Shell, проверьте приоритет загрузки в BIOS. Убедитесь, что <code>Windows Boot Manager</code> стоит выше, чем <code>UEFI Shell</code> или <code>Network Boot</code>.</p>
+<ul>
+<li>🔄 Перезагрузите систему после установки и проверьте приоритет загрузки.</li>
+<li>📝 Используйте <code>bcfg</code> для ручного добавления записи загрузчика при необходимости.</li>
+<li>🛡️ Включите <em>Secure Boot</em> обратно после успешной установки Windows для защиты.</li>
+</ul>
+<p>Иногда полезно проверить список загрузочных записей командой <code>bcfg boot dump</code>. Это покажет все текущие записи и их индексы, что поможет при отладке проблем с загрузкой. Если запись повреждена, её можно удалить командой <code>bcfg boot rm 0</code> (где 0 — индекс записи).</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Использование EFI Shell требует точности, но дает полный контроль над процессом загрузки, позволяя обойти ограничения стандартного BIOS и установить ОС на оборудование со сложной конфигурацией.</p></div>
+
+<h2 id="таблица-основных-команд-efi-shell">Таблица основных команд EFI Shell</h2>
+<p>Для быстрого доступа к необходимым функциям в консоли полезно иметь под рукой шпаргалку с основными командами. Ниже приведена таблица с наиболее часто используемыми инструкциями, которые помогут вам эффективно управлять процессом установки.</p>
+<table>
+<thead>
+<tr>
+<th>Команда</th>
+<th>Описание</th>
+<th>Пример использования</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>map</code></td>
+<td>Показывает список всех доступных устройств</td>
+<td><code>map -r</code> (показать с обновлениями)</td>
+</tr>
+<tr>
+<td><code>ls</code> / <code>dir</code></td>
+<td>Список файлов в текущей директории</td>
+<td><code>ls EFI/BOOT</code></td>
+</tr>
+<tr>
+<td><code>cd</code></td>
+<td>Смена текущей директории</td>
+<td><code>cd EFI/Microsoft</code></td>
+</tr>
+<tr>
+<td><code>bcfg</code></td>
+<td>Управление загрузочными записями</td>
+<td><code>bcfg boot dump</code></td>
+</tr>
+<tr>
+<td><code>reset</code></td>
+<td>Перезагрузка системы</td>
+<td><code>reset -c</code> (холодная перезагрузка)</td>
+</tr>
+</tbody>
+</table>
+<p>Знание этих команд позволит вам не только установить Windows, но и диагностировать проблемы с загрузкой в будущем. Например, если система перестает загружаться, вы можете снова зайти в Shell и проверить целостность загрузочных файлов без необходимости использования внешних носителей.</p>
+<p>Помните, что <mark>каждая команда в EFI Shell выполняется мгновенно, поэтому будьте предельно внимательны при вводе путей к системным файлам</mark>. Ошибка в одном символе может привести к запуску не того файла или попытке выполнения несуществующей операции.</p>
+
+<h2 id="faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</h2>
+<details>
+<summary>Что делать, если флешка не отображается в команде map?</summary>
+<p>Проверьте физическое подключение флешки. Попробуйте другой USB-порт, желательно USB 2.0. Убедитесь, что флешка отформатирована в FAT32. Если проблема не решается, пересоздайте загрузочный носитель с помощью другого инструмента, например, Rufus в режиме DD-Image.</p>
+</details>
+<details>
+<summary>Как узнать, какая версия EFI Shell у меня установлена?</summary>
+<p>Введите команду <code>version</code> в приглашении командной строки. Это покажет версию оболочки и информацию о прошивке UEFI, что может быть полезно для проверки совместимости с новыми версиями Windows.</p>
+</details>
+<details>
+<summary>Можно ли установить Windows 11 через EFI Shell?</summary>
+<p>Да, процесс идентичен установке Windows 10. Главное условие — наличие файла <code>bootx64.efi</code> и правильной структуры папок. Однако убедитесь, что ваш процессор поддерживает TPM 2.0 и Secure Boot, если вы не планируете использовать обходные пути.</p>
+</details>
+<details>
+<summary>Что означает ошибка "Access Denied" при запуске bootx64.efi?</summary>
+<p>Это часто указывает на включенный Secure Boot, который блокирует неподписанные загрузчики. Отключите Secure Boot в настройках BIOS/UEFI или используйте образ Windows, подписанный официальным сертификатом Microsoft.</p>
+</details>
+<details>
+<summary>Как выйти из EFI Shell без перезагрузки?</summary>
+<p>Введите команду <code>exit</code>. Это вернет вас в главное меню BIOS/UEFI, откуда вы сможете выбрать другой загрузочный вариант или выключить компьютер.</p>
+</details></div>
+                    <div class="article-updated">Проверено: Март 2026</div>
+                </article>
+                <aside class="article-sidebar"><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#подготовка-загрузочного-носителя-для-работы-в-efi-shell">Подготовка загрузочного носителя для работы в EFI Shell</a></li><li><a href="#вход-в-консоль-efi-shell-и-навигация-по-системе">Вход в консоль EFI Shell и навигация по системе</a></li><li><a href="#запуск-установщика-windows-из-командной-строки">Запуск установщика Windows из командной строки</a></li><li><a href="#альтернативный-способ-запуск-setupefi-напрямую">Альтернативный способ: запуск setup.efi напрямую</a></li><li><a href="#решение-распространенных-ошибок-и-проблем-совместимости">Решение распространенных ошибок и проблем совместимости</a></li><li><a href="#завершение-установки-и-пост-инсталляционные-настройки">Завершение установки и пост-инсталляционные настройки</a></li><li><a href="#таблица-основных-команд-efi-shell">Таблица основных команд EFI Shell</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></nav></aside>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about">Быстрые решения технических проблем: ТВ, Android, Windows, приложения</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/televizory/">📺 Настройка ТВ</a></li>
+<li><a href="/category/android/">📱 Android-устройства</a></li>
+<li><a href="/category/prilozheniya/">📲 Приложения</a></li>
+<li><a href="/category/windows/">💻 Windows и ПК</a></li>
+<li><a href="/category/pristavki/">🔌 Приставки</a></li>
+<li><a href="/category/internet/">🌐 WiFi и Интернет</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+        (function() {
+            const popup = document.getElementById('cookie-consent');
+            const btn = document.getElementById('cookie-accept');
+            if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+                popup.classList.add('visible');
+                btn.onclick = () => {
+                    localStorage.setItem('cookie-accepted', 'true');
+                    popup.classList.remove('visible');
+                };
+            }
+        })();
+    </script>
+</body>
+</html>
