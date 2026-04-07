@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Изменить настройки гаммы монитора с командной строки: полное руководство — ТехПодсказка</title>
+    <meta name="description" content="Узнайте, как изменить настройки гаммы монитора с командной строки в Windows, Linux и macOS. Точная калибровка, устранение засветов и работа с ICC-профилями.">
+    <link rel="canonical" href="/a/articles/i/iz/izmenit-nastrojki-gammy-monitora-s-komandnoj-stroki.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Изменить настройки гаммы монитора с командной строки: полное руководство">
+    <meta property="og:description" content="Узнайте, как изменить настройки гаммы монитора с командной строки в Windows, Linux и macOS. Точная калибровка, устранение засветов и работа с ICC-профилями.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775569404">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Изменить настройки гаммы монитора с командной строки: полное руководство</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Профессиональная калибровка: как изменить настройки гаммы монитора с командной строки</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#принципы-работы-гаммы-и-необходимость-консольной-настройки">Принципы работы гаммы и необходимость консольной настройки</a></li><li><a href="#калибровка-дисплея-в-windows-через-powershell-и-cmd">Калибровка дисплея в Windows через PowerShell и CMD</a></li><li><a href="#управление-гаммой-в-linux-xrandr-и-xgamma">Управление гаммой в Linux: xrandr и xgamma</a></li><li><a href="#настройки-цветопередачи-в-macos-через-терминал">Настройки цветопередачи в macOS через терминал</a></li><li><a href="#использование-ddccli-для-аппаратного-управления-монитором">Использование DDC/CLI для аппаратного управления монитором</a></li><li><a href="#автоматизация-и-создание-профилей-калибровки">Автоматизация и создание профилей калибровки</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Графические дизайнеры, фотографы и разработчики игр часто сталкиваются с необходимостью точной цветопередачи, однако стандартные методы настройки через операционную систему не всегда дают желаемый результат. Когда графический интерфейс зависает, драйверы ведут себя нестабильно или требуется массовая конфигурация нескольких дисплеев, единственным надежным решением становится <strong>командная строка</strong>. Этот подход позволяет обойти ограничения пользовательского интерфейса и внести изменения на более глубоком уровне.</p>
+
+<p>Изменение параметров <em>гамма-коррекции</em> через терминал или консоль требует понимания принципов работы видеоподсистемы, но открывает доступ к скрытым возможностям калибровки. В отличие от ползунков в меню Windows или macOS, консольные утилиты могут применять настройки мгновенно и без перезагрузки графической оболочки. Это особенно критично при удаленном администрировании или автоматизации рабочих мест.</p>
+
+<p>В данном руководстве мы рассмотрим проверенные методы для различных операционных систем, разберем синтаксис ключевых команд и обсудим нюансы, которые помогут избежать распространенных ошибок при работе с <strong>LUT (Look-Up Table)</strong> видеокарты. Вы научитесь управлять яркостью, контрастом и цветовой температурой напрямую, используя только клавиатуру и базовые знания синтаксиса.</p>
+
+<h2 id="принципы-работы-гаммы-и-необходимость-консольной-настройки">Принципы работы гаммы и необходимость консольной настройки</h2>
+
+<p>Гамма-коррекция определяет нелинейную зависимость между числовым значением пикселя и его яркостью на экране. Стандартным значением для большинства современных дисплеев является <strong>2.2</strong>, однако для профессиональной работы с цветом часто требуются более точные значения, такие как 2.4 или 1.8. Операционная система обычно применяет коррекцию программно, через драйвер видеокарты, что и позволяет изменять эти параметры без физического вмешательства в монитор.</p>
+
+<p>Использование командной строки оправдано в ситуациях, когда графический интерфейс не отвечает, или когда необходимо применить специфический профиль калибровки при загрузке системы до входа пользователя. Кроме того, скриптовая настройка гарантирует идентичность параметров на множестве компьютеров в корпоративной сети. <em>Ручная настройка</em> через меню монитора часто бывает неточной из-за шага регулировки, тогда как консольные утилиты оперируют тысячными долями значений.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Неправильная установка значений гаммы может привести к полной потере видимости изображения (черный или белый экран). Перед внесением изменений убедитесь, что у вас есть физический доступ к кнопкам сброса монитора или возможность удаленного доступа к системе.</p>
+</blockquote>
+
+<p>Важно понимать, что изменение гаммы через CLI (Command Line Interface) не меняет аппаратные настройки матрицы, а корректирует сигнал, подаваемый на нее. Это означает, что <strong>видеокарта</strong> пересчитывает цвета на лету. Если вы сбросите настройки драйвера или удалите профиль, изображение вернется к исходному состоянию, что является преимуществом перед "жесткой" калибровкой.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какая у вас основная операционная система?</strong><ul><li>Windows 10/11</li><li>macOS</li><li>Linux (Ubuntu/Debian)</li><li>Linux (Arch/Fedora)</li><li>Другая</li></ul></div></div>
+
+<h2 id="калибровка-дисплея-в-windows-через-powershell-и-cmd">Калибровка дисплея в Windows через PowerShell и CMD</h2>
+
+<p>В операционной системе Windows наиболее эффективным инструментом для работы с цветом является утилита <code>calib</code> (часть Windows Color System) или сторонние консольные программы вроде <em>MonitorControl</em> и <code>gammaCmd</code>. Однако встроенными средствами можно управлять загрузкой ICC-профилей, что косвенно влияет на гамму. Для прямой манипуляции часто используются скрипты PowerShell, взаимодействующие с WMI.</p>
+
+<p>Для начала работы откройте командную строку с правами администратора. Стандартная команда для управления цветом выглядит как запрос к системе о текущем профиле. Однако, чтобы реально <strong>изменить настройки гаммы</strong>, часто требуется использование PowerShell-скриптов, которые обращаются к API Windows Color System. Пример команды для просмотра ассоциированных профилей:</p>
+
+<pre><code>Get-ColorProfile -All</code></pre>
+
+<p>Если вам требуется сбросить гамму к заводским значениям (1.0, 1.0, 1.0), что иногда помогает при артефактах, можно использовать специализированные утилиты, вызываемые из консоли, например, <code>ResetGamma.exe</code> (входит в состав некоторых пакетов калибровки). Стандартными средствами CMD без стороннего ПО изменить конкретные значения R, G, B гаммы сложно, так как Microsoft не предоставляет прямой команды типа <code>set_gamma</code>. Поэтому профессионалы часто используют скрипт PowerShell для вызова функции <code>SetDeviceGammaRamp</code> из библиотеки <code>gdi32.dll</code>.</p>
+
+<ul>
+<li>🖥️ Откройте PowerShell от имени администратора для получения необходимых привилегий.</li>
+<li>📂 Убедитесь, что нужный ICC-профиль установлен в папку <code>C:\Windows\System32\spool\drivers\color</code>.</li>
+<li>🔗 Используйте команду <code>wcs</code> для управления профилями цветовой системы Windows.</li>
+<li>⚙️ Для сброса используйте сочетание клавиш <code>Win + Ctrl + Shift + B</code> для перезапуска видеодрайвера, если изображение пропало.</li>
+</ul>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Перед запуском любых скриптов калибровки создайте точку восстановления системы. Это позволит откатить изменения драйверов в случае критического сбоя отображения.</p></div>
+
+<h2 id="управление-гаммой-в-linux-xrandr-и-xgamma">Управление гаммой в Linux: xrandr и xgamma</h2>
+
+<p>В мире Linux управление параметрами дисплея через командную строку реализовано наиболее гибко и прозрачно. Основным инструментом для пользователей X11 является утилита <code>xgamma</code>, которая позволяет напрямую изменять значения гаммы для красного, зеленого и синего каналов. Это идеальный способ быстро <strong>изменить настройки гаммы монитора с командной строки</strong> без установки тяжеловесных пакетов.</p>
+
+<p>Синтаксис команды чрезвычайно прост. Чтобы увидеть текущие значения, введите <code>xgamma</code> без аргументов. Для изменения значений используется флаг <code>-gamma</code>. Например, команда <code>xgamma -gamma 0.8</code> установит единую гамму для всех каналов. Если требуется тонкая настройка, можно указать значения через двоеточие: <code>xgamma -gamma 0.9:1.0:1.1</code>, где значения соответствуют R:G:B соответственно.</p>
+
+<p>Для пользователей Wayland ситуация сложнее, так как <code>xgamma</code> работает только с X Server. В этом случае необходимо использовать специфичные для композитора инструменты, такие как <code>wlr-randr</code> для Sway или <code>kwin</code> для KDE. Однако, большинство дистрибутивов все еще позволяют запускать X11-приложения через XWayland, хотя прямое управление гаммой может быть заблокировано протоколом безопасности.</p>
+
+<table>
+<thead>
+<tr>
+<th>Команда</th>
+<th>Описание действия</th>
+<th>Пример использования</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>xgamma</code></td>
+<td>Отображение текущей гаммы</td>
+<td><code>xgamma</code></td>
+</tr>
+<tr>
+<td><code>xgamma -gamma</code></td>
+<td>Установка общей гаммы</td>
+<td><code>xgamma -gamma 1.2</code></td>
+</tr>
+<tr>
+<td><code>xgamma -rgamma</code></td>
+<td>Только красный канал</td>
+<td><code>xgamma -rgamma 0.9</code></td>
+</tr>
+<tr>
+<td><code>xrandr --gamma</code></td>
+<td>Гамма через xrandr (альтернатива)</td>
+<td><code>xrandr --output HDMI-1 --gamma 1:1:1</code></td>
+</tr>
+</tbody>
+</table>
+
+<p>Важно отметить, что изменения, сделанные через <code>xgamma</code>, носят временный характер и сбрасываются после перезагрузки или переподключения монитора. Чтобы сохранить настройки, необходимо добавить команду в файл автозагрузки, например, в <code>~/.xinitrc</code> или в параметры сеанса вашего оконного менеджера. Это гарантирует, что <strong>цветовой профиль</strong> будет применен автоматически при старте системы.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка перед калибровкой в Linux</h4><label class="check-item"><input type="checkbox"><span>Установлен пакет x11-xserver-utils</span></label><label class="check-item"><input type="checkbox"><span>Определен активный выход дисплея</span></label><label class="check-item"><input type="checkbox"><span>Есть права root или sudo</span></label><label class="check-item"><input type="checkbox"><span>Создан бэкап конфига Xorg</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="настройки-цветопередачи-в-macos-через-терминал">Настройки цветопередачи в macOS через терминал</h2>
+
+<p>Операционная система macOS от Apple известна своей строгой интеграцией цветового управления, но и она предоставляет инструменты для работы через терминал. Основным механизмом здесь является утилита <code>quartzdisplay</code> (в старых версиях) или управление через <code>defaults</code> и скрипты AppleScript, запускаемые из командной строки. Однако, для прямой манипуляции гаммой чаще всего используется скрытый калибровщик или сторонние CLI-утилиты.</p>
+
+<p>Один из самых надежных способов — использование встроенного калибратора через CLI. Вы можете запустить графический ассистент калибровки командой:</p>
+
+<pre><code>open /System/Library/ColorSync/Calibrators/Display\ Calibrator.app</code></pre>
+
+<p>Хотя это запускает GUI, процесс можно автоматизировать. Для более продвинутых пользователей существует возможность манипулировать ICC-профилями напрямую. Команда <code>colorsync</code> позволяет управлять профилями, но не меняет саму гамму "на лету" без применения профиля. Для мгновенного изменения значений R/G_B часто используют утилиту <em>Lunar</em> или <em>MonitorControl</em>, которые имеют CLI-интерфейс для управления яркостью и контрастом через DDC/CI.</p>
+
+<blockquote>
+<p>⚠️ Внимание: macOS агрессивно управляет энергосбережением дисплея. При попытке изменить гамму скриптом система может проигнорировать запрос, если не предоставлены полные права доступа в разделе "Универсальный доступ" (Accessibility).</p>
+</blockquote>
+
+<p>Если ваша цель — <strong>сбросить настройки</strong> цветопередачи к стандартным, проще всего удалить пользовательские профили калибровки. Это можно сделать, найдя файлы профилей в директории <code>/Library/ColorSync/Profiles</code> и удалив те, которые были созданы недавно. После этого требуется перезагрузка графического сервера WindowServer, что приведет к выходу из системы.</p>
+
+<h2 id="использование-ddccli-для-аппаратного-управления-монитором">Использование DDC/CLI для аппаратного управления монитором</h2>
+
+<p>Наиболее профессиональный подход, не зависящий от операционной системы, — это управление самим монитором через протокол DDC/CI (Display Data Channel / Command Interface). Этот метод позволяет отправлять команды непосредственно в <strong>OSD меню</strong> (On-Screen Display) монитора, изменяя яркость, контраст и иногда гамму на аппаратном уровне. Для этого используются утилиты вроде <code>ddcutil</code> (Linux), <code>ddcci</code> (Windows) или <code>monitorcontrol</code> (Python-библиотека).</p>
+
+<p>Утилита <code>ddcutil</code> является стандартом де-факто в Linux. Перед началом работы необходимо убедиться, что модуль ядра <code>i2c-dev</code> загружен. После установки программы (<code>sudo apt install ddcutil</code>), первым шагом всегда должно быть обнаружение мониторов:</p>
+
+<pre><code>sudo ddcutil detect</code></pre>
+
+<p>После обнаружения вы можете запросить текущие значения параметров. Гамма часто соответствует виртуальному контроллеру (VCP) с кодом, зависящим от производителя, но стандартные колы включают яркость (0x10) и контраст (0x12). Изменение этих параметров через DDC/CI является наиболее стабильным, так как настройки сохраняются в памяти монитора даже после выключения компьютера.</p>
+
+<ul>
+<li>🔌 Убедитесь, что кабель (HDMI/DisplayPort) поддерживает передачу данных DDC/CI.</li>
+<li>⚙️ В меню самого монитора должна быть включена опция "DDC/CI" (часто включена по умолчанию).</li>
+<li>🚫 Некоторые игровые мониторы блокируют изменение гаммы через программные команды в определенных режимах (например, HDR).</li>
+</ul>
+
+<details class="faq-item"><summary>Что делать если ddcutil не видит монитор?</summary><div class="faq-answer"><p>Если команда detect возвращает пустой результат, проверьте права доступа. Добавьте пользователя в группу i2c: sudo usermod -aG i2c $USER. Также попробуйте переподключить кабель или использовать другой порт, так как некоторые переходники (особенно VGA-DVI) не передают сигналы DDC.</p></div></details>
+
+<h2 id="автоматизация-и-создание-профилей-калибровки">Автоматизация и создание профилей калибровки</h2>
+
+<p>Ручной ввод команд каждый раз при включении компьютера неэффективен. Профессионалы создают скрипты автоматизации, которые применяются при старте системы. В Linux это может быть скрипт в <code>/etc/rc.local</code> или systemd-сервис. В Windows — задача в Планировщике заданий, запускающая PowerShell-скрипт при входе пользователя.</p>
+
+<p>Рассмотрим пример создания простого скрипта для Linux, который устанавливает оптимальную гамму для вечерней работы (уменьшает синий спектр):</p>
+
+<pre><code>#!/bin/bash
+<p># Установка теплой гаммы 0.9:1.0:1.2</p>
+<p>xgamma -gamma 0.9:1.0:1.2</p>
+<p>echo "Гамма успешно изменена на теплый спектр"</code></pre></p>
+
+<p>Этот скрипт можно сохранить как <code>set_evening_gamma.sh</code>, сделать исполняемым (<code>chmod +x</code>) и добавить в автозагрузку. Для Windows аналогом будет <code>.bat</code> файл, вызывающий PowerShell-скрипт с функцией установки гаммы. Такой подход гарантирует, что ваши глаза будут защищены, а цвета отображаться корректно независимо от сбросов системы.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Автоматизация через скрипты — единственный способ гарантировать постоянство цветопередачи на профессиональном оборудовании без участия пользователя.</p></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Можно ли изменить гамму на ноутбуке с интегрированной графикой через командную строку?</summary>
+<p>Да, можно. Интегрированные карты (Intel HD/UHD, AMD Radeon Graphics) полностью поддерживают стандартные команды ОС. В Windows используйте PowerShell, в Linux — <code>xgamma</code> или <code>ddcutil</code> (если подключено через цифровой интерфейс, поддерживающий DDC). Ограничений для интегрированной графики в этом плане нет.</p>
+</details>
+
+<details>
+<summary>Сбрасываются ли настройки гаммы после обновления драйверов?</summary>
+<p>Да, часто бывает, что установка новых драйверов видеокарты сбрасывает программные LUT-таблицы к заводским значениям. Именно поэтому рекомендуется прописывать команды калибровки в скрипты автозагрузки, чтобы они применялись автоматически после каждого обновления или перезагрузки.</p>
+</details>
+
+<details>
+<summary>Безопасно ли постоянно использовать нестандартные значения гаммы?</summary>
+<p>Для матрицы монитора это абсолютно безопасно, так как меняется только сигнал. Однако для глаз длительное использование некорректной гаммы (слишком темной или слишком яркой) может привести к утомляемости. Рекомендуется использовать значения, близкие к стандарту 2.2, если вы не занимаетесь специфической цветокоррекцией.</p>
+</details>
+
+<details>
+<summary>Почему команда xgamma не работает в Wayland?</summary>
+<p>Xgamma работает только с X Server. В Wayland архитектура безопасности запрещает приложениям прямой доступ к видеопамяти и таблицам гаммы. Для Wayland необходимо использовать инструменты, предоставляемые самим композитором (например, <code>wlr-randr</code> для wlroots-based систем) или настраивать гамму через профиль монитора.</p>
+</details>
+
+<details>
+<summary>Как вернуть стандартную гамму, если экран стал черным?</summary>
+<p>Если вы потеряли изображение из-за ошибочных настроек, попробуйте нажать сочетание клавиш для перезагрузки видеодрайвера (в Windows: <code>Win + Ctrl + Shift + B</code>). Если это не помогло, перезагрузите компьютер в безопасном режиме или используйте загрузочную флешку с LiveCD, чтобы удалить конфигурационные файлы калибровки.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#принципы-работы-гаммы-и-необходимость-консольной-настройки">Принципы работы гаммы и необходимость консольной настройки</a></li><li><a href="#калибровка-дисплея-в-windows-через-powershell-и-cmd">Калибровка дисплея в Windows через PowerShell и CMD</a></li><li><a href="#управление-гаммой-в-linux-xrandr-и-xgamma">Управление гаммой в Linux: xrandr и xgamma</a></li><li><a href="#настройки-цветопередачи-в-macos-через-терминал">Настройки цветопередачи в macOS через терминал</a></li><li><a href="#использование-ddccli-для-аппаратного-управления-монитором">Использование DDC/CLI для аппаратного управления монитором</a></li><li><a href="#автоматизация-и-создание-профилей-калибровки">Автоматизация и создание профилей калибровки</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/t/te/texet-tm-302-otklyuchit-aviarezhim.html" class="related-card">Как отключить авиарежим на Texet TM-302: полная инструкция</a></li><li><a href="/a/articles/h/hi/hik-connect-pochemu-ne-prihodyat-soobscheniya.html" class="related-card">Почему Hik Connect не присылает уведомления: причины и решения</a></li><li><a href="/a/articles/a/ad/adventure-quest-3d-rusifikator.html" class="related-card">Adventure Quest 3D русификатор: как сделать игру на русском</a></li><li><a href="/a/articles/z/zn/znak-razdelit-na-koaviature-ajfona.html" class="related-card">Знак разделить на клавиатуре айфона: где найти и как настроить</a></li><li><a href="/a/articles/s/sk/skydisco-um-100-manual.html" class="related-card">Skydisco UM-100: Инструкция, Обзор и Настройки</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/t/te/texet-tm-302-otklyuchit-aviarezhim.html" class="related-bottom-card"><span class="related-bottom-title">Как отключить авиарежим на Texet TM-302: полная инструкция</span><span class="related-bottom-desc">Подробное руководство по устранению авиарежима на телефоне Texet TM-302. Методы сброса, настройки се</span></a><a href="/a/articles/h/hi/hik-connect-pochemu-ne-prihodyat-soobscheniya.html" class="related-bottom-card"><span class="related-bottom-title">Почему Hik Connect не присылает уведомления: причины и решения</span><span class="related-bottom-desc">Не приходят сообщения от Hik Connect? Полный гид по настройке push-уведомлений, устранению ошибок се</span></a><a href="/a/articles/a/ad/adventure-quest-3d-rusifikator.html" class="related-bottom-card"><span class="related-bottom-title">Adventure Quest 3D русификатор: как сделать игру на русском</span><span class="related-bottom-desc">Полный гайд по русификации Adventure Quest 3D. Узнайте, нужен ли русификатор, как настроить язык в и</span></a><a href="/a/articles/z/zn/znak-razdelit-na-koaviature-ajfona.html" class="related-bottom-card"><span class="related-bottom-title">Знак разделить на клавиатуре айфона: где найти и как настроить</span><span class="related-bottom-desc">Где находится знак разделить на клавиатуре iPhone? Полная инструкция по поиску символа деления, наст</span></a><a href="/a/articles/s/sk/skydisco-um-100-manual.html" class="related-bottom-card"><span class="related-bottom-title">Skydisco UM-100: Инструкция, Обзор и Настройки</span><span class="related-bottom-desc">Полная инструкция Skydisco UM-100. Технические характеристики, настройка звука, подключение микрофон</span></a><a href="/a/articles/v/vy/vyvod-lcn-da-ili-net-v-nastrojke-poiskp.html" class="related-bottom-card"><span class="related-bottom-title">LCN в настройках ТВ: включать или нет? Полный разбор</span><span class="related-bottom-desc">Стоит ли активировать LCN на телевизоре? Разбор влияния сортировки каналов на поиск, работу антенны </span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

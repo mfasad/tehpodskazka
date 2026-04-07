@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Как на Линукс Астра установить Windows: пошаговая инструкция — ТехПодсказка</title>
+    <meta name="description" content="Узнайте, как на Линукс Астра установить Windows. Полное руководство по разметке диска, настройке UEFI и загрузке драйверов для двух систем.">
+    <link rel="canonical" href="/a/articles/k/ka/kak-na-linuks-astra-ustanovit-vindovs.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как на Линукс Астра установить Windows: пошаговая инструкция">
+    <meta property="og:description" content="Узнайте, как на Линукс Астра установить Windows. Полное руководство по разметке диска, настройке UEFI и загрузке драйверов для двух систем.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775569404">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/soft-i-prilozheniya/">Софт и Приложения</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как на Линукс Астра установить Windows: пошаговая инструкция</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Как на Линукс Астра установить Windows: полное руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#подготовка-загрузочного-носителя-и-проверка-системы">Подготовка загрузочного носителя и проверка системы</a></li><li><a href="#разметка-дискового-пространства-для-dual-boot">Разметка дискового пространства для dual-boot</a></li><li><a href="#процесс-установки-windows-поверх-linux">Процесс установки Windows поверх Linux</a></li><li><a href="#восстановление-загрузчика-grub-после-установки">Восстановление загрузчика GRUB после установки</a></li><li><a href="#настройка-драйверов-и-совместимости">Настройка драйверов и совместимости</a></li><li><a href="#частые-проблемы-и-методы-их-решения">Частые проблемы и методы их решения</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>Многие пользователи переходят на отечественные операционные системы, такие как <em>Astra Linux</em>, но сталкиваются с необходимостью использования специфического <strong>программного обеспечения</strong>, работающего только в среде Microsoft. Возникает закономерный вопрос: можно ли вернуть привычную среду или запустить её параллельно? Установка второй ОС требует внимательного подхода к структуре накопителя и настройкам BIOS, чтобы не потерять данные.</p>
+
+<p>Процесс инсталляции <strong>Windows</strong> поверх или рядом с <em>Linux</em> кардинально отличается от стандартной процедуры на чистом диске. Вам придется вручную управлять разделами, так как установщик Майкрософт по умолчанию может проигнорировать существующую файловую систему или, того хуже, затереть загрузчик <em>GRUB</em>. Понимание этих рисков — первый шаг к успеху.</p>
+
+<p>В этом руководстве мы подробно разберем все этапы: от подготовки установочного носителя до восстановления доступа к обоим системам. Мы рассмотрим нюансы работы с таблицами разделов <strong>GPT</strong> и <strong>MBR</strong>, а также объясним, почему порядок установки операционных систем имеет критическое значение для стабильной работы компьютера.</p>
+
+<h2 id="подготовка-загрузочного-носителя-и-проверка-системы">Подготовка загрузочного носителя и проверка системы</h2>
+<p>Перед началом любых манипуляций необходимо создать загрузочную флешку с дистрибутивом <em>Windows 10</em> или <em>Windows 11</em>. Для пользователей <em>Astra Linux</em> это можно сделать утилитой <code>WoeUSB</code> или через терминал, используя команду <code>dd</code>, если образ уже скачан. Важно убедиться, что версия системы совместима с вашим <strong>железом</strong> и типом прошивки материнской платы.</p>
+
+<p>Обязательно проверьте текущую разметку диска и режим работы BIOS. В современных компьютерах чаще всего используется <strong>UEFI</strong> с таблицей разделов GPT, что накладывает свои ограничения. Если ваша <em>Астра</em> установлена в режиме Legacy (BIOS), то и Windows нужно устанавливать в аналогичном режиме, иначе система просто не увидит диск или не загрузится.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Перед созданием разделов обязательно сделайте резервную копию важных данных на внешний носитель. Любая ошибка при работе с таблицей разделов может привести к полной потере информации без возможности восстановления.</p>
+</blockquote>
+
+<p>Для создания загрузочной флешки в терминале <em>Astra Linux</em> можно использовать следующую команду, предварительно узнав имя устройства флешки через <code>lsblk</code>:</p>
+<pre><code>sudo dd if=/path/to/windows.iso of=/dev/sdX bs=4M status=progress</code></pre>
+<p>После записи образа рекомендуется проверить целостность файлов и убедиться, что флешка определилась корректно.</p>
+
+<div class="checklist-block"><h4>☑️ Подготовка к установке</h4><label class="check-item"><input type="checkbox"><span>Скачать ISO образ Windows</span></label><label class="check-item"><input type="checkbox"><span>Проверить свободное место на диске</span></label><label class="check-item"><input type="checkbox"><span>Сделать бэкап данных</span></label><label class="check-item"><input type="checkbox"><span>Создать загрузочную флешку</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="разметка-дискового-пространства-для-dual-boot">Разметка дискового пространства для dual-boot</h2>
+<p>Самый сложный этап — это выделение места под новую систему, не повредив существующую <em>Astra Linux</em>. Вам потребуется запустить программу управления разделами, например <code>GParted</code>, или использовать терминальную утилиту <code>fdisk</code>. Цель — освободить непрерывное пространство объемом не менее 60-100 Гб, которое установщик Windows распознает как незанятое.</p>
+
+<p>Не пытайтесь просто удалить раздел с <em>Linux</em>, если планируете оставить его. Лучше уменьшить размер корневого раздела или раздела с данными. Файловая система <strong>ext4</strong>, используемая в Линукс, не читается нативно в Windows, поэтому выделение места должно происходить до начала установки.</p>
+
+<ul>
+<li>📀 Откройте <code>GParted</code> и выберите нужный диск из списка справа сверху.</li>
+<li>✂️ Нажмите правой кнопкой на раздел с данными и выберите "Resize/Move" для освобождения места.</li>
+<li>💾 Примените изменения и дождитесь завершения операции перемещения данных.</li>
+<li>🚫 Оставьте освобожденное пространство неразмеченным (unallocated).</li>
+</ul>
+
+<p>Важно понимать, что Windows предпочитает видеть собственную файловую систему <strong>NTFS</strong>. Не создавайте раздел NTFS заранее в Линуксе, так как установщик Майкрософт может повести себя некорректно. Лучше оставить место свободным (серым цветом в GParted), и установщик сам создаст нужные структуры.</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Astra Linux</th>
+<th>Windows 10/11</th>
+<th>Общий доступ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Файловая система</td>
+<td>ext4</td>
+<td>NTFS</td>
+<td>FAT32 / exFAT</td>
+</tr>
+<tr>
+<td>Загрузчик</td>
+<td>GRUB2</td>
+<td>Bootmgr / EFI</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Чувствительность к регистру</td>
+<td>Да</td>
+<td>Нет</td>
+<td>Зависит от ФС</td>
+</tr>
+<tr>
+<td>Макс. длина имени</td>
+<td>255 байт</td>
+<td>255 символов</td>
+<td>Зависит от ФС</td>
+</tr>
+</tbody>
+</table>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте файловую систему exFAT для создания общего раздела, если вам нужно часто передавать файлы между Astra Linux и Windows. Она поддерживается обеими системами "из коробки".</p></div>
+
+<h2 id="процесс-установки-windows-поверх-linux">Процесс установки Windows поверх Linux</h2>
+<p>После подготовки места необходимо перезагрузить компьютер и загрузиться с флешки. На этапе выбора типа установки выберите "Выборочная" (Custom). Вы увидите список разделов, где будет отображаться ваша <em>Astra Linux</em> (как неизвестный раздел) и помеченное как "Незанятое пространство".</p>
+
+<p>Выберите незанятое пространство и нажмите "Создать". Установщик автоматически создаст необходимые системные разделы, включая зарезервированное место. <strong>Критически важно</strong> не форматировать разделы, принадлежащие Линукс, иначе вы потеряете доступ к своим файлам и системе.</p>
+
+<blockquote>
+<p>⚠️ Внимание: После установки Windows загрузчик GRUB будет перезаписан. Компьютер будет загружаться сразу в Windows, и меню выбора Astra Linux исчезнет. Это штатное поведение, которое легко исправляется.</p>
+</blockquote>
+
+<p>Дождитесь завершения копирования файлов и первой настройки системы. В этот момент на диске будут две независимые системы, но загрузочная запись будет указывать только на одну из них. Не паникуйте, если <em>Astra</em> перестала загружаться — её файлы целы, нужно лишь восстановить меню.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой вариант установки вы предпочитаете?</strong><ul><li>Одна система вместо другой</li><li>Две системы на одном ПК</li><li>Виртуальная машина</li><li>Облачные решения</li></ul></div></div>
+
+<h2 id="восстановление-загрузчика-grub-после-установки">Восстановление загрузчика GRUB после установки</h2>
+<p>После того как <strong>Windows</strong> установлена, необходимо вернуть управление загрузкой <em>GRUB</em>. Для этого вам снова понадобится загрузочная флешка с <em>Astra Linux</em> (LiveUSB). Загрузитесь с неё и выберите режим "Live" или "Try without installing".</p>
+
+<p>Откройте терминал и выполните монтирование корневого раздела вашей основной системы. Допустим, это <code>/dev/sda2</code>. Команды будут выглядеть следующим образом:</p>
+<pre><code>sudo mount /dev/sda2 /mnt
+<p>sudo mount --bind /dev /mnt/dev</p>
+<p>sudo mount --bind /proc /mnt/proc</p>
+<p>sudo mount --bind /sys /mnt/sys</p>
+<p>sudo chroot /mnt</code></pre></p>
+<p>После входа в окружение (<code>chroot</code>) выполните команду <code>update-grub</code>. Скрипт автоматически найдет установленную Windows и добавит её в меню загрузки. Если автоматическое обнаружение не сработало, может потребоваться установка пакета <code>os-prober</code>.</p>
+
+<p>Финальным шагом будет переустановка загрузчика в EFI-раздел или MBR в зависимости от вашей конфигурации. Для UEFI систем команда выглядит как <code>grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Astra</code>. После этого перезагрузка должна вывести меню выбора системы.</p>
+
+<details class="faq-item"><summary>Что делать, если os-prober не видит Windows?</summary><div class="faq-answer"><p>Если утилита os-prober не находит Windows, убедитесь, что в файле /etc/default/grub добавлена строка GRUB_DISABLE_OS_PROBER=false. После изменения файла нужно снова запустить update-grub. В некоторых случаях требуется ручное добавление записи в файл 40_custom.</p></div></details>
+
+<h2 id="настройка-драйверов-и-совместимости">Настройка драйверов и совместимости</h2>
+<p>После успешного запуска обеих систем предстоит настроить оборудование. В <em>Windows</em> необходимо установить драйверы для видеокарты, звука и сетевого адаптера. Часто бывает так, что стандартные драйверы <em>Microsoft</em> работают некорректно, поэтому лучше скачать свежие версии с сайтов производителей.</p>
+
+<p>В <em>Astra Linux</em> также стоит проверить наличие проприетарных драйверов, особенно для видеокарт <em>NVIDIA</em> или <em>AMD</em>. Открытые драйверы <strong>Nouveau</strong> могут не обеспечивать должной производительности в 3D-приложениях. Используйте менеджер драйверов или репозитории для установки закрытых модулей.</p>
+
+<ul>
+<li>🖥️ Проверьте диспетчер устройств в Windows на наличие неизвестных устройств.</li>
+<li>📡 Убедитесь, что Wi-Fi модуль работает стабильно в обеих ОС.</li>
+<li>🎮 Протестируйте вывод звука через встроенные динамики и внешние устройства.</li>
+</ul>
+
+<p>Особое внимание уделите настройке времени. Поскольку Windows и Linux по-разному трактуют аппаратное время (локальное против UTC), при переключении между системами часы могут сбиваться. В Linux это решается командой <code>timedatectl set-local-rtc 1</code>, которая синхронизирует подход к времени.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Правильная установка драйверов в Windows критически важна, так как неправильные настройки ACPI могут блокировать корректное завершение работы Linux при следующем запуске.</p></div>
+
+<h2 id="частые-проблемы-и-методы-их-решения">Частые проблемы и методы их решения</h2>
+<p>При конфигурации <strong>dual-boot</strong> пользователи часто сталкиваются с невозможностью доступа к разделам Windows из-под Linux. Это связано с функцией "Быстрого запуска" (Fast Startup) в Windows, которая переводит диск в режим гибернации вместо полного выключения. Чтобы получить доступ к файлам NTFS, эту функцию нужно отключить.</p>
+
+<p>Еще одна распространенная проблема — исчезновение меню загрузки после обновления BIOS или самой Windows. Крупные обновления Майкрософт могут изменять порядок приоритета загрузки в UEFI, ставя <em>Windows Boot Manager</em> выше <em>GRUB</em>. Решается это входом в BIOS и изменением порядка загрузки (Boot Order).</p>
+
+<blockquote>
+<p>⚠️ Внимание: Никогда не используйте функцию "Гибернация" в Windows, если вы планируете работать с общим разделом NTFS из Linux. Это может привести к повреждению файловой системы и потере данных.</p>
+</blockquote>
+
+<p>Если система перестала загружаться, используйте LiveUSB для восстановления. Знание базовых команд терминала и понимание структуры загрузочных секторов позволит вам реанимировать доступ к данным даже в критических ситуациях. Регулярное обновление ядра и загрузчика снижает риски конфликтов.</p>
+
+<details class="faq-item"><summary>Секретная команда для восстановления доступа к NTFS</summary><div class="faq-answer"><p>Если Linux отказывается монтировать раздел Windows, написав "The disk contains an unclean file system", попробуйте запустить в терминале команду: sudo ntfsfix /dev/sdXn, где X - буква диска, n - номер раздела. Это сбросит флаг гибернации.</p></div></details>
+
+<details>
+<summary>Можно ли установить Windows на тот же раздел, где стоит Astra Linux?</summary>
+<p>Нет, это невозможно. Операционные системы должны быть установлены на разные разделы с разными файловыми системами. Попытка установки Windows поверх Linux уничтожит все данные и саму систему Linux.</p>
+</details>
+
+<details>
+<summary>Нужно ли отключать Secure Boot для установки Windows?</summary>
+<p>Обычно нет. И Windows, и современные дистрибутивы Linux, включая Astra, поддерживают Secure Boot. Однако, если вы используете нестандартные загрузчики или старые версии, возможно, потребуется временно отключить эту функцию в BIOS.</p>
+</details>
+
+<details>
+<summary>Сколько места нужно выделить под Windows 10/11?</summary>
+<p>Минимально требуется около 32 Гб, но для комфортной работы и установки обновлений <mark>рекомендуется выделять не менее 80-100 Гб</mark>. Это обеспечит стабильную работу системы и возможность установки необходимых программ.</p>
+</details>
+
+<details>
+<summary>Что делать, если пропал звук после установки второй системы?</summary>
+<p>Часто проблема решается полным выключением компьютера (не перезагрузкой) с отключением питания на пару минут. Это сбрасывает состояние аудиокодека, который мог "зависнуть" в режиме, заданном другой ОС.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#подготовка-загрузочного-носителя-и-проверка-системы">Подготовка загрузочного носителя и проверка системы</a></li><li><a href="#разметка-дискового-пространства-для-dual-boot">Разметка дискового пространства для dual-boot</a></li><li><a href="#процесс-установки-windows-поверх-linux">Процесс установки Windows поверх Linux</a></li><li><a href="#восстановление-загрузчика-grub-после-установки">Восстановление загрузчика GRUB после установки</a></li><li><a href="#настройка-драйверов-и-совместимости">Настройка драйверов и совместимости</a></li><li><a href="#частые-проблемы-и-методы-их-решения">Частые проблемы и методы их решения</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/l/la/lazymedia-deluxe-ne-udaetsya-ustanovit.html" class="related-card">LazyMedia Deluxe не устанавливается: причины и решения</a></li><li><a href="/a/articles/a/a-/a-prilozhenie-rabochij-stol-v-xiaomi-chto-eto-za-prilozhenie.html" class="related-card">Приложение Рабочий стол Xiaomi: что это и зачем нужно?</a></li><li><a href="/a/articles/g/gb/gbox-faceapp-vyletaet.html" class="related-card">Gbox FaceApp вылетает: причины и решения</a></li><li><a href="/a/articles/p/pa/panasonic-viera-ustanovit-prilozhenie-s-fleshki.html" class="related-card">Как установить приложение на Panasonic Viera с флешки: Пошаговая инструкция</a></li><li><a href="/a/articles/k/ka/kak-skachat-igry-v-telegramme-na-ajfone.html" class="related-card">Как скачать игры в Телеграм на iPhone: полный гид</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/l/la/lazymedia-deluxe-ne-udaetsya-ustanovit.html" class="related-bottom-card"><span class="related-bottom-title">LazyMedia Deluxe не устанавливается: причины и решения</span><span class="related-bottom-desc">Приложение LazyMedia Deluxe не удается установить на Android TV? Узнайте, как исправить ошибки, наст</span></a><a href="/a/articles/a/a-/a-prilozhenie-rabochij-stol-v-xiaomi-chto-eto-za-prilozhenie.html" class="related-bottom-card"><span class="related-bottom-title">Приложение Рабочий стол Xiaomi: что это и зачем нужно?</span><span class="related-bottom-desc">Разбираем системное приложение Рабочий стол в Xiaomi. Что будет, если отключить? Как настроить, сбро</span></a><a href="/a/articles/g/gb/gbox-faceapp-vyletaet.html" class="related-bottom-card"><span class="related-bottom-title">Gbox FaceApp вылетает: причины и решения</span><span class="related-bottom-desc">FaceApp вылетает на Gbox? Узнайте точные причины сбоев, методы очистки кэша, настройки памяти и поша</span></a><a href="/a/articles/p/pa/panasonic-viera-ustanovit-prilozhenie-s-fleshki.html" class="related-bottom-card"><span class="related-bottom-title">Как установить приложение на Panasonic Viera с флешки: Пошаговая инструкция</span><span class="related-bottom-desc">Узнайте, можно ли установить приложение на Panasonic Viera с флешки. Полный разбор методов установки</span></a><a href="/a/articles/k/ka/kak-skachat-igry-v-telegramme-na-ajfone.html" class="related-bottom-card"><span class="related-bottom-title">Как скачать игры в Телеграм на iPhone: полный гид</span><span class="related-bottom-desc">Узнайте, как безопасно скачивать игры в Telegram на Айфон. Разбор ботов, облачных игр, App Store и о</span></a><a href="/a/articles/a/as/astra-linuks-udalitt.html" class="related-bottom-card"><span class="related-bottom-title">Астра Линукс Удалитт: полное удаление программ и очистка системы</span><span class="related-bottom-desc">Как использовать утилиту Astra Linux Удалитт для безопасного удаления программ. Полная инструкция, к</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

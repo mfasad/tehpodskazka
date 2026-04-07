@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Как восстановить загрузчик с помощью диска Стрельца: Пошагово — ТехПодсказка</title>
+    <meta name="description" content="Полная инструкция по восстановлению загрузчика Windows через диск Стрельца. Команды Bootrec, работа с EFI и MBR, решение ошибок 0xc0000001 и Bootmgr.">
+    <link rel="canonical" href="/a/articles/k/ka/kak-vosstanovit-zagruzchik-s-pomoschyu-diska-strelca.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как восстановить загрузчик с помощью диска Стрельца: Пошагово">
+    <meta property="og:description" content="Полная инструкция по восстановлению загрузчика Windows через диск Стрельца. Команды Bootrec, работа с EFI и MBR, решение ошибок 0xc0000001 и Bootmgr.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775569404">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/noutbuki-i-zhelezo/">Ноутбуки и Железо</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как восстановить загрузчик с помощью диска Стрельца: Пошагово</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Восстановление загрузчика Windows с помощью диска Стрельца</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#подготовка-загрузочного-носителя-и-настройка-bios">Подготовка загрузочного носителя и настройка BIOS</a></li><li><a href="#диагностика-структуры-разделов-и-поиск-систем">Диагностика структуры разделов и поиск систем</a></li><li><a href="#автоматическое-восстановление-через-меню-winpe">Автоматическое восстановление через меню WinPE</a></li><li><a href="#ручное-восстановление-загрузчика-mbr-через-консоль">Ручное восстановление загрузчика MBR через консоль</a></li><li><a href="#работа-с-efi-загрузчиком-в-среде-gpt">Работа с EFI загрузчиком в среде GPT</a></li><li><a href="#устранение-распространенных-ошибок-и-проверка-результата">Устранение распространенных ошибок и проверка результата</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Ситуация, когда компьютер отказывается загружать операционную систему и выводит черный экран с ошибкой, знакома многим пользователям. Чаще всего проблема кроется в повреждении <strong>загрузочных записей</strong> или нарушении целостности системных файлов после некорректного выключения питания, вирусной атаки или сбоя при обновлении. В этот момент стандартные средства восстановления Windows могут быть недоступны или работать некорректно, что делает необходимым использование специализированного инструмента.</p>
+
+<p>Одним из самых мощных решений для системных администраторов и продвинутых пользователей является <em>диск Стрельца</em>. Это загрузочный LiveCD, базирующийся на ядре Windows PE, который содержит огромный набор утилит для диагностики, ремонта и настройки системы. Восстановление загрузчика с его помощью — это надежный метод, позволяющий вернуть компьютер к жизни даже в самых сложных случаях, когда стандартная загрузочная флешка с Windows бессильна.</p>
+
+<p>В отличие от стандартного установщика, <strong>WinPE</strong> (Windows Preinstallation Environment) на диске Стрельца загружает полноценную рабочую среду с графическим интерфейсом, доступом к файловой системе и сетевым адаптерам. Это дает возможность не только запускать автоматические скрипты, но и вручную править реестр, копировать важные данные и использовать консольные утилиты с расширенным функционалом. Перед началом работ важно убедиться, что у вас есть записанный образ диска и настроен BIOS для загрузки с внешнего носителя.</p>
+
+<h2 id="подготовка-загрузочного-носителя-и-настройка-bios">Подготовка загрузочного носителя и настройка BIOS</h2>
+
+<p>Первым этапом становится создание загрузочной флешки, так как просто скопировать ISO-образ на диск недостаточно для корректной работы <strong>UEFI</strong> или <strong>Legacy BIOS</strong>. Для записи рекомендуется использовать проверенные утилиты, такие как <em>Rufus</em> или <em>WinSetupFromUSB</em>, которые правильно размечают разделы и записывают загрузочный сектор. В настройках программы записи необходимо выбрать схему разделов, соответствующую вашей системе: GPT для современных компьютеров с UEFI и MBR для более старых устройств.</p>
+
+<p>После создания носителя необходимо войти в настройки BIOS/UEFI вашего компьютера. Обычно для этого при включении нужно нажать клавишу <code>Del</code>, <code>F2</code> или <code>F10</code>. В меню загрузки (<em>Boot Menu</em>) следует приоритетным устройством выбрать вашу флешку. Если система использует режим <strong>Secure Boot</strong>, его иногда требуется временно отключить, чтобы сторонний загрузчик мог инициализироваться.</p>
+
+<blockquote>
+<p>⚠️ Внимание: При изменении настроек BIOS будьте осторожны. Неправильный выбор режима загрузки (Legacy вместо UEFI или наоборот) может привести к тому, что диск Стрельца просто не запустится, и вы увидите сообщение об отсутствии загрузочного устройства.</p>
+</blockquote>
+
+<p>Процесс подготовки включает в себя несколько критически важных шагов, игнорирование которых может свести все усилия на нет. Убедитесь, что флешка отформатирована в правильной файловой системе: <strong>FAT32</strong> обязательна для загрузки в режиме UEFI, тогда как NTFS подходит для Legacy-режимов. Также стоит проверить целостность скачанного образа диска Стрельца, сравнив контрольную сумму, чтобы исключить ошибки записи.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка перед загрузкой</h4><label class="check-item"><input type="checkbox"><span>ISO-образ проверен на ошибки</span></label><label class="check-item"><input type="checkbox"><span>Флешка отформатирована в FAT32 (для UEFI)</span></label><label class="check-item"><input type="checkbox"><span>В BIOS включена загрузка с USB</span></label><label class="check-item"><input type="checkbox"><span>Secure Boot отключен (при необходимости)</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="диагностика-структуры-разделов-и-поиск-систем">Диагностика структуры разделов и поиск систем</h2>
+
+<p>После успешной загрузки в среду WinPE первым делом необходимо оценить текущее состояние дисковой системы. Стандартный проводник Windows может не отображать скрытые разделы, поэтому для точной диагностики лучше использовать специализированные инструменты, такие как <em>Acronis Disk Director</em> или консольную утилиту <strong>diskpart</strong>. Запустив командную строку, введите команду <code>diskpart</code>, а затем <code>list volume</code>, чтобы увидеть список всех разделов и их файловые системы.</p>
+
+<p>Важно правильно идентифицировать системный раздел, где установлена Windows, и скрытый раздел зарезервированный системой, где часто хранятся файлы загрузчика. В среде WinPE буквы дисков могут отличаться от привычных: системный диск C может стать диском D или E. Определить нужный том можно по размеру, метке или содержимому папок, введя команду <code>exit</code> для выхода из diskpart и просмотрев корневые директории через <code>dir</code>.</p>
+
+<p>Особое внимание стоит уделить таблице разделов. Если у вас современный компьютер, скорее всего используется стандарт <strong>GPT</strong>, и загрузочные файлы находятся на EFI-разделе с файловой системой FAT32. В случае старых систем с <strong>MBR</strong>, загрузчик располагается в начале диска и на активном первичном разделе. Неправильное определение типа таблицы разделов приведет к выбору неверной команды восстановления.</p>
+
+<details class="faq-item"><summary>Как отличить GPT от MBR в Diskpart?</summary><div class="faq-answer"><p>Введите команду list disk в среде diskpart. Если в столбце GPT стоит звездочка (*), значит диск размечен в формате GPT. Если столбец пуст — используется старый формат MBR.</p></div></details>
+
+<p>Для более наглядного анализа можно воспользоваться графическими утилитами, входящими в состав диска Стрельца, например, <em>Bootice</em> или <em>AOMEI Partition Assistant</em>. Они позволяют визуально увидеть структуру разделов, проверить флаги активности и состояние загрузочных записей. Это особенно полезно, если автоматические скрипты не могут определить систему.</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>MBR (Legacy)</th>
+<th>GPT (UEFI)</th>
+<th>Значение для восстановления</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Файловая система EFI</td>
+<td>Не используется</td>
+<td>FAT32</td>
+<td>Критично для UEFI загрузки</td>
+</tr>
+<tr>
+<td>Размер скрытого раздела</td>
+<td>100-500 Мб</td>
+<td>100-500 Мб</td>
+<td>Здесь лежат файлы BCD</td>
+</tr>
+<tr>
+<td>Команда diskpart</td>
+<td>convert mbr</td>
+<td>convert gpt</td>
+<td>Требует очистки диска</td>
+</tr>
+<tr>
+<td>Расположение загрузчика</td>
+<td>PBR раздела</td>
+<p>\ ESP раздел</td></p>
+<td>Определяет метод лечения</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="автоматическое-восстановление-через-меню-winpe">Автоматическое восстановление через меню WinPE</h2>
+
+<p>Диск Стрельца предлагает пользователю несколько автоматизированных решений, которые могут исправить проблему без глубокого погружения в код командной строки. При загрузке часто появляется меню <strong>WinPE 10-11</strong>, где можно выбрать пункт "Поиск проблем загрузки Windows" или аналогичный. Скрипт самостоятельно просканирует жесткие диски, найдет установленные копии Windows и попытается пересоздать загрузочные записи.</p>
+
+<p>Этот метод идеально подходит для случаев, когда повреждение незначительно, например, слетел флаг активности раздела или повредился файл <strong>BCD</strong> (Boot Configuration Data). Автоматический фиксатор также может проверить целостность системных файлов и при необходимости заменить их копиями из хранилища компонентов. Процесс занимает от 1 до 5 минут в зависимости от скорости диска.</p>
+
+<p>Однако стоит понимать ограничения автоматических средств. Если структура разделов была изменена вручную, удален EFI-раздел или диск имеет нестандартную разметку, скрипт может не справиться с задачей или, того хуже, создать новую конфигурацию загрузки с ошибочными параметрами. Поэтому после работы автомата всегда требуется проверка результата.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой тип ошибки у вас возник?</strong><ul><li>Черный экран с курсором</li><li>Сообщение "Bootmgr is missing"</li><li>Синий экран смерти (BSOD)</li><li>Циклическая перезагрузка</li></ul></div></div>
+
+<p>В некоторых сборках диска Стрельца встречается утилита <em>NTBootAutoFix</em>, которая является стандартом де-факто для быстрого ремонта. Она работает в графическом режиме: вы выбираете букву диска с установленной Windows, и программа предлагает автоматически исправить все найденные проблемы. Это включает в себя создание новых файлов загрузчика, восстановление BCD и проверку файловой системы на ошибки.</p>
+
+<h2 id="ручное-восстановление-загрузчика-mbr-через-консоль">Ручное восстановление загрузчика MBR через консоль</h2>
+
+<p>Если автоматические методы не помогли, необходимо переходить к ручному восстановлению, используя консольные утилиты. Для систем с разметкой <strong>MBR</strong> основным инструментом является команда <code>bootrec</code>. Откройте командную строку и введите <code>bootrec /fixmbr</code>. Эта команда записывает новую главную загрузочную запись в системный раздел, не затрагивая таблицу разделов, что безопасно для ваших данных.</p>
+
+<p>Следующим шагом является запись нового загрузочного сектора в системный раздел командой <code>bootrec /fixboot</code>. В среде WinPE эта операция проходит успешно в большинстве случаев, в отличие от стандартного восстановителя Windows, который часто выдает ошибку "Отказано в доступе". Если команда выполнена успешно, сектор PBR будет перезаписан стандартным кодом загрузчика Windows.</p>
+
+<p>После обновления загрузочных секторов необходимо перестроить хранилище конфигурации загрузки. Команда <code>bootrec /rebuildbcd</code> просканирует все диски на наличие установленных систем Windows и предложит добавить найденные установки в меню загрузки. Вам нужно будет подтвердить добавление, введя <code>Y</code> или <code>A</code> (для всех).</p>
+
+<blockquote>
+<p>⚠️ Внимание: При выполнении команды <code>bootrec /fixboot</code> в некоторых версиях WinPE может возникать ошибка доступа. В таком случае необходимо сначала назначить букву скрытому системному разделу через diskpart и использовать утилиту bootsect для принудительной записи кода.</p>
+</blockquote>
+
+<p>Для более глубокой работы с загрузочным сектором можно использовать утилиту <code>bootsect</code>. Команда <code>bootsect /nt60 C:</code> (где C: — буква системного раздела) гарантирует, что в загрузочном секторе будет прописан код, совместимый с Windows Vista и новее. Это особенно полезно, если на компьютере ранее стояли другие операционные системы или проводились эксперименты с загрузчиками.</p>
+
+<h2 id="работа-с-efi-загрузчиком-в-среде-gpt">Работа с EFI загрузчиком в среде GPT</h2>
+
+<p>Восстановление загрузчика на компьютерах с <strong>UEFI</strong> и таблицей разделов <strong>GPT</strong> имеет свои особенности, так как здесь не используется MBR. Файлы загрузчика находятся на скрытом EFI-разделе (ESP) в формате FAT32. Для работы с ним в командной строке сначала нужно смонтировать этот раздел, назначив ему букву. Используйте <code>diskpart</code>, выберите том с EFI-разделом (обычно 100-500 Мб, FAT32) и введите <code>assign letter=Z</code>.</p>
+
+<p>После назначения буквы необходимо перейти в каталог с загрузчиками. Введите команду <code>cd /d Z:\EFI</code>. Здесь может находиться папка <code>Microsoft</code>, внутри которой лежит папка <code>Boot</code>. Если файлы загрузчика повреждены или удалены, их можно восстановить, скопировав из резервной копии или создав заново с помощью утилиты <code>bcdboot</code>. Команда <code>bcdboot C:\Windows /s Z: /f ALL</code> создаст необходимые файлы загрузки для всех поддерживаемых платформ.</p>
+
+<p>Ключевым моментом является корректное указание пути к папке Windows. Поскольку в среде WinPE буквы дисков могут быть смещены, убедитесь, что вы указываете правильный путь (например, <code>D:\Windows</code> вместо <code>C:\Windows</code>). Ошибка в одной букве приведет к тому, что загрузчик будет создан, но будет указывать на несуществующие файлы.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если команда bcdboot выдает ошибку, попробуйте сначала удалить существующий файл BCD на EFI-разделе (Z:\EFI\Microsoft\Boot\BCD), предварительно сделав его копию, и запустить команду заново.</p></div>
+
+<p>В некоторых случаях требуется вручную прописать путь к загрузчику в NVRAM материнской платы. Для этого используется утилита <code>efibootmgr</code>, доступная в составе диска Стрельца. Она позволяет увидеть список загрузочных записей BIOS и добавить новую, указав путь к файлу <code>\EFI\Microsoft\Boot\bootmgfw.efi</code> на EFI-разделе.</p>
+
+<h2 id="устранение-распространенных-ошибок-и-проверка-результата">Устранение распространенных ошибок и проверка результата</h2>
+
+<p>После выполнения всех манипуляций необходимо проверить результат. Перезагрузите компьютер, извлеките флешку и попробуйте запустить систему. Если загрузка прошла успешно, задача выполнена. Однако, если появилась ошибка <strong>0xc0000001</strong> или <strong>0xc000000e</strong>, это может указывать на повреждение файловой системы или отсутствие доступа к диску.</p>
+
+<p>Частой проблемой является ошибка "INACCESSIBLE_BOOT_DEVICE". Она может возникнуть, если в процессе восстановления были изменены драйверы контроллера дисков или режим работы SATA в BIOS (AHCI/IDE/RAID). Проверьте настройки BIOS и убедитесь, что режим контроллера совпадает с тем, который использовался при установке Windows. Также полезно запустить проверку диска командой <code>chkdsk C: /f /r</code>.</p>
+
+<p>Если система грузится, но появляется выбор двух одинаковых записей Windows, это значит, что старая запись не удалилась из BCD. Очистить меню загрузки можно через утилиту <code>msconfig</code> во вкладке "Загрузка" или командой <code>bcdeedit</code>. Удаление неверных записей ускорит старт системы и избавит от путаницы.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Если после восстановления загрузчика система пишет "Operating System not found", проверьте в BIOS, стоит ли ваш жесткий диск первым в приоритете загрузки. Иногда сброс настроек BIOS возвращает приоритет на сетевую карту или пустой разъем.</p>
+</blockquote>
+
+<p>В редких случаях проблема может крыться в физическом состоянии жесткого диска. Диск Стрельца содержит утилиты для проверки S.M.A.R.T. атрибутов. Если вы видите предупреждения о переназначенных секторах или критических ошибках, восстановление загрузчика даст лишь временный эффект, и следует задуматься о замене накопителя.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Успешное восстановление загрузчика зависит не только от правильности команд, но и от точного определения букв дисков в среде WinPE, которые часто отличаются от стандартных.</p></div>
+
+<details>
+<summary>Почему диск Стрельца не видит мои жесткие диски?</summary>
+<p>Чаще всего проблема заключается в отсутствии драйверов контроллера RAID или AHCI в стандартной сборке WinPE. Попробуйте переключить режим работы SATA в BIOS с RAID на AHCI. Если это не помогло, возможно, диск имеет нестандартную разметку или поврежден физически. Также проверьте, подключен ли диск правильно внутри системного блока.</p>
+</details>
+
+<details>
+<summary>Можно ли восстановить загрузчик без потери данных?</summary>
+<p>Да, описанные методы (bootrec, bcdboot, fixmbr) воздействуют только на служебные области диска и файлы конфигурации загрузки. Ваши личные файлы, документы и установленные программы остаются нетронутыми. Риск потери данных возникает только при ошибочном форматировании разделов или пересоздании таблицы разделов с нуля.</p>
+</details>
+
+<details>
+<summary>Что делать, если команда bootrec /fixboot выдает "Отказано в доступе"?</summary>
+<p>Эта ошибка часто встречается в Windows 10/11. Решением является использование утилиты bootsect вместо bootrec, либо ручное монтирование EFI-раздела и копирование файлов загрузчика вручную. Также помогает удаление атрибута "только для чтения" с EFI-раздела через diskpart перед записью.</p>
+</details>
+
+<details>
+<summary>Как восстановить загрузчик, если удален раздел зарезервировано системой?</summary>
+<p>В этом случае необходимо создать новый раздел объемом 100-500 Мб в начале диска (для MBR) или использовать существующий EFI-раздел (для GPT). Затем отформатировать его в FAT32, назначить букву и скопировать туда файлы загрузчика с помощью команды bcdboot с ключом создания новых файлов.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#подготовка-загрузочного-носителя-и-настройка-bios">Подготовка загрузочного носителя и настройка BIOS</a></li><li><a href="#диагностика-структуры-разделов-и-поиск-систем">Диагностика структуры разделов и поиск систем</a></li><li><a href="#автоматическое-восстановление-через-меню-winpe">Автоматическое восстановление через меню WinPE</a></li><li><a href="#ручное-восстановление-загрузчика-mbr-через-консоль">Ручное восстановление загрузчика MBR через консоль</a></li><li><a href="#работа-с-efi-загрузчиком-в-среде-gpt">Работа с EFI загрузчиком в среде GPT</a></li><li><a href="#устранение-распространенных-ошибок-и-проверка-результата">Устранение распространенных ошибок и проверка результата</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-uznat-model-noutbuka-msi.html" class="related-card">Как узнать модель ноутбука MSI: все способы 2026</a></li><li><a href="/a/articles/k/ka/kak-uluchshit-noutbuk-sony-vayo-vgn-nr21mrs.html" class="related-card">Как улучшить Sony Vaio VGN-NR21MR/S: апгрейд и ускорение</a></li><li><a href="/a/articles/l/le/lenovo-g510-dezhurnoe-napryazhenie-est-displej-ne-svetitsya.html" class="related-card">Lenovo G510: дежурное напряжение есть, но экран не горит</a></li><li><a href="/a/articles/l/l0/l09m6y02-akkumulyator-dlya-lenovo-shema.html" class="related-card">L09M6Y02 Аккумулятор для Lenovo: схема, распиновка и замена</a></li><li><a href="/a/articles/k/ka/kak-pomenyat-ssd-na-hp-15g205ur.html" class="related-card">Замена SSD в HP 15-g205ur: пошаговая инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-uznat-model-noutbuka-msi.html" class="related-bottom-card"><span class="related-bottom-title">Как узнать модель ноутбука MSI: все способы 2026</span><span class="related-bottom-desc">Подробная инструкция: как узнать точную модель ноутбука MSI. Программные методы, командная строка, н</span></a><a href="/a/articles/k/ka/kak-uluchshit-noutbuk-sony-vayo-vgn-nr21mrs.html" class="related-bottom-card"><span class="related-bottom-title">Как улучшить Sony Vaio VGN-NR21MR/S: апгрейд и ускорение</span><span class="related-bottom-desc">Подробный гид по модернизации ноутбука Sony Vaio NR21MR/S. Замена HDD на SSD, установка Windows 10, </span></a><a href="/a/articles/l/le/lenovo-g510-dezhurnoe-napryazhenie-est-displej-ne-svetitsya.html" class="related-bottom-card"><span class="related-bottom-title">Lenovo G510: дежурное напряжение есть, но экран не горит</span><span class="related-bottom-desc">Почему не включается Lenovo G510? Разбор причин отсутствия изображения при работающей индикации. Диа</span></a><a href="/a/articles/l/l0/l09m6y02-akkumulyator-dlya-lenovo-shema.html" class="related-bottom-card"><span class="related-bottom-title">L09M6Y02 Аккумулятор для Lenovo: схема, распиновка и замена</span><span class="related-bottom-desc">Полная схема BMS аккумулятора L09M6Y02 для Lenovo. Инструкция по замене, распиновка контроллера, уст</span></a><a href="/a/articles/k/ka/kak-pomenyat-ssd-na-hp-15g205ur.html" class="related-bottom-card"><span class="related-bottom-title">Замена SSD в HP 15-g205ur: пошаговая инструкция</span><span class="related-bottom-desc">Как заменить жесткий диск на SSD в ноутбуке HP 15-g205ur. Полная инструкция по разборке, установке н</span></a><a href="/a/articles/g/gd/gde-nahoditsya-wifi-modul-v-noutbuke-asus-x550l.html" class="related-bottom-card"><span class="related-bottom-title">Где Wi-Fi модуль в Asus X550L: поиск и замена</span><span class="related-bottom-desc">Точное расположение Wi-Fi модуля в ноутбуке Asus X550L. Инструкция по разборке, фото места установки</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

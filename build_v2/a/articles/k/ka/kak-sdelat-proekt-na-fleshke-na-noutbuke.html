@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Проект на флешке: запуск ПО с USB на ноутбуке — ТехПодсказка</title>
+    <meta name="description" content="Как запустить операционную систему или софт с флешки на ноутбуке. Инструкция по созданию Live USB, настройке BIOS и оптимизации работы.">
+    <link rel="canonical" href="/a/articles/k/ka/kak-sdelat-proekt-na-fleshke-na-noutbuke.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Проект на флешке: запуск ПО с USB на ноутбуке">
+    <meta property="og:description" content="Как запустить операционную систему или софт с флешки на ноутбуке. Инструкция по созданию Live USB, настройке BIOS и оптимизации работы.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775569404">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/noutbuki-i-zhelezo/">Ноутбуки и Железо</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Проект на флешке: запуск ПО с USB на ноутбуке</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Как запустить проект с флешки на ноутбуке: полное руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#выбор-оборудования-и-подготовка-носителя">Выбор оборудования и подготовка носителя</a></li><li><a href="#программное-обеспечение-для-создания-загрузочного-носителя">Программное обеспечение для создания загрузочного носителя</a></li><li><a href="#настройка-bios-и-uefi-для-загрузки-с-usb">Настройка BIOS и UEFI для загрузки с USB</a></li><li><a href="#особенности-работы-с-портативной-операционной-системой">Особенности работы с портативной операционной системой</a></li><li><a href="#безопасность-и-сохранение-данных">Безопасность и сохранение данных</a></li><li><a href="#решение-распространенных-проблем-при-запуске">Решение распространенных проблем при запуске</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>Современные технологии позволяют превратить обычный USB-накопитель в мощный инструмент для работы, тестирования или даже постоянного использования операционной системы. Запуск проекта прямо с внешнего носителя — это идеальное решение для тех, кто хочет сохранить конфиденциальность данных или просто попробовать новую ОС, не рискуя основной системой ноутбука. В отличие от установки на жесткий диск, такой метод не оставляет следов на компьютере хозяина.</p>
+
+<p>Процесс создания загрузочной флешки требует внимательности к деталям, особенно при выборе файловой системы и схемы разделов. <strong>Правильная подготовка</strong> накопителя гарантирует, что ноутбук распознает устройство как загрузочное. Ошибки на этом этапе могут привести к тому, что BIOS или UEFI просто проигнорируют вашу флешку, даже если файлы записаны корректно.</p>
+
+<p>В этой статье мы подробно разберем все этапы: от выбора подходящего программного обеспечения до тонкой настройки параметров загрузки. Вы узнаете, как обойти ограничения скорости USB-портов и обеспечить стабильную работу вашего портативного проекта. <em>Готовность к экспериментам</em> — вот что потребуется вам в первую очередь.</p>
+
+<h2 id="выбор-оборудования-и-подготовка-носителя">Выбор оборудования и подготовка носителя</h2>
+<p>Первым шагом является оценка аппаратных возможностей. Скорость работы вашего проекта напрямую зависит от пропускной способности USB-интерфейса. Если вы планируете запускать тяжелую операционную систему, такую как <em>Linux Mint</em> или <em>Windows To Go</em>, использование старого стандарта USB 2.0 сделает работу невыносимой. Рекомендуется использовать накопители с интерфейсом <strong>USB 3.0</strong> или выше, которые обычно имеют синий цвет внутри разъема.</p>
+
+<p>Объем памяти также играет критическую роль. Минимально необходимый объем зависит от веса образа системы, который вы собираетесь записать. Для легких дистрибутивов Linux может хватить и 8 ГБ, но для полноценной рабочей среды с набором программ лучше взять флешку на 32 ГБ или 64 ГБ. <mark>Скорость записи на современных накопителях типа SSD в формате USB-C может достигать 400 МБ/с, что сопоставимо со скоростью некоторых внутренних дисков ноутбуков.</mark></p>
+
+<p>Важно проверить физическое состояние носителя перед началом работ. Поврежденные сектора или изношенная память могут вызвать ошибки записи, которые проявятся уже в процессе использования. Перед форматированием убедитесь, что на флешке нет важных данных, так как процесс подготовки полностью очистит устройство.</p>
+
+<ul>
+<li>🚀 Используйте порты USB 3.0 (синего цвета) для максимальной скорости передачи данных.</li>
+<li>💾 Выбирайте накопитель объемом не менее 16 ГБ для комфортной работы с ОС.</li>
+<li>🔍 Проверьте флешку на наличие ошибок с помощью утилиты <code>chkdsk</code> перед записью образа.</li>
+<li>🛡️ Убедитесь, что на носителе нет важной информации, так как он будет отформатирован.</li>
+</ul>
+
+<blockquote>
+<p>⚠️ Внимание: Не все USB-накопители одинаковы. Дешевые флешки без названия бренда часто имеют реальную емкость значительно ниже заявленной, что приведет к повреждению данных при записи полного образа системы.</p>
+</blockquote>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой объем флешки вы планируете использовать?</strong><ul><li>8 ГБ</li><li>16 ГБ</li><li>32 ГБ</li><li>64 ГБ и более</li></ul></div></div>
+
+<h2 id="программное-обеспечение-для-создания-загрузочного-носителя">Программное обеспечение для создания загрузочного носителя</h2>
+<p>Для записи образа операционной системы на флешку стандартного копирования файлов недостаточно. Вам потребуется специализированный софт, который корректно создаст загрузочный сектор и запишет файлы в нужном порядке. Одним из самых популярных и надежных инструментов является <em>Rufus</em>. Эта утилита поддерживает широкий спектр файловых систем и схем разделов, что делает ее универсальной для любых задач.</p>
+
+<p>Альтернативой может служить программа <em>Etcher</em>, которая отличается крайне простым интерфейсом и кроссплатформенностью. Она идеально подходит для новичков, так как минимизирует риск выбора неправильного диска. Однако для продвинутых настроек, таких как создание постоянных разделов для сохранения данных в Linux, <strong>Rufus</strong> или <em>Ventoy</em> подходят лучше.</p>
+
+<p>При выборе ПО обращайте внимание на поддержку формата образа. Большинство систем распространяются в формате <code>.ISO</code>, но встречаются и <code>.IMG</code> или архивы <code>.ZIP</code>. Современные программы обычно сами определяют тип файла и предлагают оптимальные параметры записи. Не забывайте запускать эти утилиты от имени администратора, чтобы получить полный доступ к устройству.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка перед записью образа</h4><label class="check-item"><input type="checkbox"><span>Скачан актуальный ISO-образ</span></label><label class="check-item"><input type="checkbox"><span>Флешка подключена в порт USB 3.0</span></label><label class="check-item"><input type="checkbox"><span>Закрыты все лишние программы</span></label><label class="check-item"><input type="checkbox"><span>Выбрана правильная схема разделов (GPT/MBR)</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>Процесс записи может занять от 5 до 30 минут в зависимости от скорости накопителя и размера образа. Прерывание этого процесса категорически запрещено, так как это сделает флешку нечитаемой. После завершения программы обычно проводят проверку контрольных сумм, чтобы убедиться в целостности данных.</p>
+
+<h2 id="настройка-bios-и-uefi-для-загрузки-с-usb">Настройка BIOS и UEFI для загрузки с USB</h2>
+<p>После создания загрузочной флешки необходимо настроить ноутбук так, чтобы он запускался с нее, а не с внутреннего жесткого диска. Для этого нужно войти в интерфейс BIOS или UEFI. Делается это нажатием определенной клавиши сразу после включения ноутбука. Чаще всего это <code>F2</code>, <code>Del</code>, <code>F10</code> или <code>Esc</code>. Точную комбинацию для вашей модели <em>HP</em>, <em>Lenovo</em> или <em>Asus</em> можно найти в документации или на экране приветствия.</p>
+
+<p>В меню настройки вам нужно найти раздел, отвечающий за порядок загрузки (<strong>Boot Order</strong> или <em>Boot Priority</em>). Здесь следует переместить ваше USB-устройство на первую позицию. Если вы используете современный компьютер с UEFI, убедитесь, что включен режим <code>Legacy Support</code> (или CSM), если ваша флешка создана в формате MBR, или наоборот, выключен, если используется GPT.</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Описание</th>
+<th>Рекомендуемое значение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot Mode</td>
+<td>Режим загрузки системы</td>
+<td>UEFI (для новых ОС)</td>
+</tr>
+<tr>
+<td>Secure Boot</td>
+<td>Проверка подписи загрузчика</td>
+<td>Disabled (часто мешает запуску Linux)</td>
+</tr>
+<tr>
+<td>Fast Boot</td>
+<td>Ускоренная загрузка</td>
+<td>Disabled (для возможности входа в BIOS)</td>
+</tr>
+<tr>
+<td>CSM Support</td>
+<td>Поддержка устаревших систем</td>
+<td>Enabled (если нужен MBR)</td>
+</tr>
+</tbody>
+</table>
+
+<p>Особое внимание стоит уделить функции <strong>Secure Boot</strong>. Этот механизм безопасности предотвращает загрузку неподписанных операционных систем. Для многих дистрибутивов Linux или кастомных сборок Windows его необходимо временно отключить. После успешной настройки не забудьте сохранить изменения, обычно это делается клавишей <code>F10</code>.</p>
+
+<details class="faq-item"><summary>Что делать, если ноутбук игнорирует флешку?</summary><div class="faq-answer"><p>Если после всех настроек загрузка не начинается, попробуйте переподключить флешку в другой порт. Иногда порты USB 3.0 (черные или синие внутри) могут не поддерживать загрузку на старых материнских платах, и требуется переключение на порт USB 2.0. Также проверьте, правильно ли выбрана схема разделов: для UEFI обязателен GPT, для Legacy BIOS — MBR.</p></div></details>
+
+<h2 id="особенности-работы-с-портативной-операционной-системой">Особенности работы с портативной операционной системой</h2>
+<p>Запуск ОС с внешнего носителя имеет свои особенности, которые отличаются от работы с установленной системой. Основной bottleneck (узкое место) — это скорость чтения и записи. Даже быстрый USB 3.0 уступает внутреннему NVMe диску. Поэтому <strong>время отклика</strong> приложений может быть увеличено, а загрузка системы займет больше времени.</p>
+
+<p>Для оптимизации работы рекомендуется отключить визуальные эффекты и тяжелые фоновые службы. Если вы используете Linux, можно применить специальные патчи для кэширования данных в оперативную память (RAM), что значительно ускорит работу интерфейса. В Windows существуют режимы работы, специально разработанные для внешних дисков, но они требуют ручной настройки реестра.</p>
+
+<ul>
+<li>🐌 Ожидайте более медленного запуска программ по сравнению с внутренним диском.</li>
+<li>💾 Используйте режим Persisted Storage в Linux для сохранения файлов между сеансами.</li>
+<li>🔋 Портативная система может потреблять больше энергии, увеличивая разряд ноутбука.</li>
+<li>⚙️ Отключите индексацию файлов для продления срока службы флешки.</li>
+</ul>
+
+<blockquote>
+<p>⚠️ Внимание: Частая запись временных файлов и логов на флешку быстро изнашивает ее ячейки памяти. Настройте систему так, чтобы временные папки (<code>/tmp</code> в Linux или переменные <code>TEMP</code> в Windows) располагались в оперативной памяти.</p>
+</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте файловую систему exFAT для совместимости с Windows и Linux, если вам нужно передавать файлы между ними, но для системного раздела Linux лучше подойдет ext4.</p></div>
+
+<h2 id="безопасность-и-сохранение-данных">Безопасность и сохранение данных</h2>
+<p>Работа с проектом на флешке несет в себе риски потери данных. Физическая утрата такого маленького устройства происходит гораздо чаще, чем поломка ноутбука. Поэтому <strong>шифрование диска</strong> становится не просто рекомендацией, а необходимостью. Большинство современных дистрибутивов Linux позволяют зашифровать весь диск при установке, требуя пароль при каждой загрузке.</p>
+
+<p>Регулярное резервное копирование — еще один ключевой момент. Поскольку флешка может выйти из строя в любой момент, критически важные данные нужно дублировать в облако или на другой носитель. Не стоит полагаться на один экземпляр проекта. Создание образа вашей настроенной флешки позволит быстро восстановить работоспособность в случае сбоя.</p>
+
+<p>При использовании общественных компьютеров или чужих ноутбуков помните о потенциальных рисках. На чужом устройстве могут быть установлены кейлоггеры или вирусы, которые попытаются заразить вашу портативную систему при подключении. Всегда проверяйте целостность загрузчика и используйте антивирусные сканеры, даже если вы работаете в Linux.</p>
+
+<h2 id="решение-распространенных-проблем-при-запуске">Решение распространенных проблем при запуске</h2>
+<p>Несмотря на тщательную подготовку, могут возникнуть ошибки. Одна из самых частых — "Operating System not found" или черный экран с мигающим курсором. Это указывает на то, что загрузочная запись повреждена или несовместима с режимом BIOS. Пересоздание флешки с изменением схемы разделов (с MBR на GPT или наоборот) часто решает проблему.</p>
+
+<p>Другая проблема — отсутствие драйверов. Портативная система должна содержать универсальный набор драйверов для работы с различными сетевыми картами, звуковыми чипами и видеоадаптерами. Если на ноутбуке не работает Wi-Fi или звук, возможно, потребуется вручную установить недостающие пакеты или драйверы с другого устройства.</p>
+
+<pre><code>dmesg | grep -i usb
+<p>lsusb</p>
+<p>sudo lspci -k</code></pre></p>
+
+<p>Использование командной строки для диагностики помогает понять, видит ли система устройство и какие ошибки возникают при инициализации. Команды выше позволяют получить подробную информацию о подключенных USB-устройствах и компонентах системы.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Совместимость схемы разделов (MBR/GPT) и режима BIOS (Legacy/UEFI) — причина 90% всех проблем с загрузкой с флешки.</p></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Можно ли запустить Windows 10/11 полностью с флешки?</summary>
+<p>Да, это возможно с помощью функции Windows To Go, однако в домашних версиях Windows она официально отключена. Для реализации потребуется использование сторонних утилит, таких как <em>Rufus</em> (режим Windows To Go) или <em>WinToUSB</em>. Стоит учитывать, что для комфортной работы потребуется очень быстрый накопитель (SSD в корпусе USB 3.1/3.2), иначе система будет работать крайне медленно.</p>
+</details>
+
+<details>
+<summary>Сотрется ли моя основная система на ноутбуке?</summary>
+<p>Нет, если вы все сделаете правильно. Процесс загрузки с флешки и работы с портативной ОС происходит независимо от основного жесткого диска. Данные на внутреннем диске останутся нетронутыми, если вы сами не начнете их изменять или форматировать разделы вручную. Главное — не перепутать диски в процессе установки или записи образа.</p>
+</details>
+
+<details>
+<summary>Почему флешка греется во время работы?</summary>
+<p>При работе операционной системы происходит постоянный обмен данными: запись логов, кэширование, работа виртуальной памяти. Это вызывает нагрев контроллера и чипов памяти. Это нормальное явление, но если нагрев чрезмерный, это может свидетельствовать о перегрузке канала USB или неисправности самого накопителя. Рекомендуется обеспечивать вентиляцию устройства.</p>
+</details>
+
+<details>
+<summary>Можно ли использовать одну флешку для загрузки на разных ноутбуках?</summary>
+<p>Да, портативные системы, особенно на базе Linux, обладают высокой степенью универсальности. Они автоматически определяют оборудование при каждой загрузке. Однако могут возникнуть проблемы с проприетарными драйверами видеокарт (NVIDIA/AMD), которые были установлены для конкретного железа. В таких случаях может потребоваться переустановка драйверов или использование базового видеодрйвера.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#выбор-оборудования-и-подготовка-носителя">Выбор оборудования и подготовка носителя</a></li><li><a href="#программное-обеспечение-для-создания-загрузочного-носителя">Программное обеспечение для создания загрузочного носителя</a></li><li><a href="#настройка-bios-и-uefi-для-загрузки-с-usb">Настройка BIOS и UEFI для загрузки с USB</a></li><li><a href="#особенности-работы-с-портативной-операционной-системой">Особенности работы с портативной операционной системой</a></li><li><a href="#безопасность-и-сохранение-данных">Безопасность и сохранение данных</a></li><li><a href="#решение-распространенных-проблем-при-запуске">Решение распространенных проблем при запуске</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-vyvesti-vremya-na-ekran-v-noutbuke-probok-45-35-s.html" class="related-card">Как вывести время на экран ноутбука Probok 45 35 S: настройка</a></li><li><a href="/a/articles/k/ka/kak-otklyuchit-na-noutbuke-huavej-sensornyj-ekran-matebook-14.html" class="related-card">Как отключить сенсорный экран Huawei MateBook 14: Полная инструкция</a></li><li><a href="/a/articles/k/ka/kak-uznat-est-li-diskovod-na-noutbuke.html" class="related-card">Как узнать есть ли дисковод на ноутбуке: 5 точных способов</a></li><li><a href="/a/articles/g/gd/gde-smotret-model-klaviatury-noutbuka.html" class="related-card">Как узнать модель клавиатуры ноутбука: все способы</a></li><li><a href="/a/articles/k/ka/kak-podklyuchit-airpodsy-k-noutbuku-huavej.html" class="related-card">Как подключить AirPods к ноутбуку Huawei: полная инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-vyvesti-vremya-na-ekran-v-noutbuke-probok-45-35-s.html" class="related-bottom-card"><span class="related-bottom-title">Как вывести время на экран ноутбука Probok 45 35 S: настройка</span><span class="related-bottom-desc">Подробная инструкция по настройке времени на дисплее ноутбука Probok 45 35 S. Решаем проблемы с исче</span></a><a href="/a/articles/k/ka/kak-otklyuchit-na-noutbuke-huavej-sensornyj-ekran-matebook-14.html" class="related-bottom-card"><span class="related-bottom-title">Как отключить сенсорный экран Huawei MateBook 14: Полная инструкция</span><span class="related-bottom-desc">Узнайте, как отключить сенсорный экран на ноутбуке Huawei MateBook 14 через диспетчер устройств. Реш</span></a><a href="/a/articles/k/ka/kak-uznat-est-li-diskovod-na-noutbuke.html" class="related-bottom-card"><span class="related-bottom-title">Как узнать есть ли дисковод на ноутбуке: 5 точных способов</span><span class="related-bottom-desc">Проверьте наличие CD/DVD привода на ноутбуке. Визуальный осмотр, Диспетчер устройств, командная стро</span></a><a href="/a/articles/g/gd/gde-smotret-model-klaviatury-noutbuka.html" class="related-bottom-card"><span class="related-bottom-title">Как узнать модель клавиатуры ноутбука: все способы</span><span class="related-bottom-desc">Узнайте точную модель клавиатуры ноутбука: через командную строку, PowerShell, программы или физичес</span></a><a href="/a/articles/k/ka/kak-podklyuchit-airpodsy-k-noutbuku-huavej.html" class="related-bottom-card"><span class="related-bottom-title">Как подключить AirPods к ноутбуку Huawei: полная инструкция</span><span class="related-bottom-desc">Подробный гид: как подключить AirPods к ноутбуку Huawei. Решение проблем с Bluetooth, настройка звук</span></a><a href="/a/articles/t/to/toshiba-satellite-l40-17t-ne-rabotaet-tachpad.html" class="related-bottom-card"><span class="related-bottom-title">Toshiba Satellite L40-17T: починить тачпад, если он не работает</span><span class="related-bottom-desc">Подробная инструкция: почему на Toshiba L40-17T не работает тачпад. Драйверы, настройки BIOS, отключ</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

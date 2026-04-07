@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Ventoy не загружается: 7 причин и способы решения — ТехПодсказка</title>
+    <meta name="description" content="Ventoy не загружается на ПК? Разбираем ошибки Secure Boot, таблицу разделов MBR/GPT и проблемы с USB. Полное руководство по исправлению.">
+    <link rel="canonical" href="/a/articles/v/ve/ventoy-ne-zagruzhaetsya.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Ventoy не загружается: 7 причин и способы решения">
+    <meta property="og:description" content="Ventoy не загружается на ПК? Разбираем ошибки Secure Boot, таблицу разделов MBR/GPT и проблемы с USB. Полное руководство по исправлению.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775569404">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Ventoy не загружается: 7 причин и способы решения</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Ventoy не загруется: полное руководство по устранению ошибок</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#диагностика-первичных-симптомов-и-аппаратных-проблем">Диагностика первичных симптомов и аппаратных проблем</a></li><li><a href="#настройка-biosuefi-secure-boot-и-режимы-загрузки">Настройка BIOS/UEFI: Secure Boot и режимы загрузки</a></li><li><a href="#проблемы-с-таблицей-разделов-mbr-против-gpt">Проблемы с таблицей разделов: MBR против GPT</a></li><li><a href="#конфликты-файловых-систем-и-размер-кластера">Конфликты файловых систем и размер кластера</a></li><li><a href="#проблемы-с-конкретными-дистрибутивами-и-secure-boot">Проблемы с конкретными дистрибутивами и Secure Boot</a></li><li><a href="#альтернативные-методы-записи-и-восстановление-загрузчика">Альтернативные методы записи и восстановление загрузчика</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Ситуация, когда флешка с <strong>Ventoy</strong> отказывается запускаться на целевом компьютере, знакома многим системным администраторам и энтузиастам. Вместо привычного меню выбора ISO-образов пользователь видит черный экран, сообщение об ошибке загрузки или просто игнорирование устройства BIOS/UEFI. Проблема может крыться в десятках мелочей: от банального плохого контакта USB-порта до конфликтующих настроек безопасности материнской платы.</p>
+
+<p>Часто причиной становится несовместимость режима загрузки <em>Legacy BIOS</em> и современного <em>UEFI</em>, особенно если накопитель был подготовлен с неверной схемой разделов. Также стоит учитывать, что некоторые антивирусы или функции защиты Windows могут блокировать загрузочный сектор, считая его подозрительным. Понимание архитектуры процесса загрузки — первый шаг к успешному решению.</p>
+
+<p>В этой статье мы детально разберем все возможные сценарии отказа, предоставим пошаговые инструкции по пересозданию загрузчика и объясним, как правильно настроить firmware материнской платы. Вы научитесь различать симптомы аппаратных сбоев от программных конфликтов и сможете реанимировать даже проблемные накопители.</p>
+
+<h2 id="диагностика-первичных-симптомов-и-аппаратных-проблем">Диагностика первичных симптомов и аппаратных проблем</h2>
+
+<p>Прежде чем лезть в сложные настройки BIOS, необходимо исключить банальные физические неисправности. Если компьютер даже не реагирует на вставленную флешку (не загорается индикатор, устройство не определяется в списке доступных для загрузки), проблема может быть в самом порту или кабеле. Попробуйте подключить накопитель к другому разъему, желательно напрямую к материнской плате, минуя USB-хабы и передние панели корпуса.</p>
+
+<p>Иногда операционная система видит устройство, но не может прочитать его содержимое, что указывает на файловую систему или повреждение контроллера. В диспетчере устройств Windows проверьте, нет ли желтых восклицательных знаков рядом с контроллерами USB. Также стоит проверить объем свободного места: для корректной работы <strong>Ventoy</strong> требуется не менее 1 ГБ свободного пространства в первом разделе.</p>
+
+<p>Важно убедиться, что сам ISO-образ, который вы пытаетесь запустить, не поврежден. Если файл скачан с ошибками или имеет несовместимую структуру, меню Ventoy может появиться, но загрузка сразу после выбора образа прервется. Проверка контрольных сумм — обязательная процедура для критически важных дистрибутивов.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Если флешка определяется в системе как диск объемом 0 байт или требует форматирования, который не завершается, скорее всего, вышел из строя контроллер памяти или сам чип NAND. В таком случае программные методы восстановления бесполезны.</p>
+</blockquote>
+
+<div class="attention-box attention-info"><div><strong>📊 Как ведет себя ваш компьютер при попытке загрузки с Ventoy?</strong><ul><li>Черный экран и курсор</li><li>Сообщение "No bootable device"</li><li>Меню Ventoy есть, но ОС не грузится</li><li>Компьютер просто игнорирует флешку</li></ul></div></div>
+
+<h2 id="настройка-biosuefi-secure-boot-и-режимы-загрузки">Настройка BIOS/UEFI: Secure Boot и режимы загрузки</h2>
+
+<p>Самая распространенная причина, по которой <em>Ventoy</em> не стартует, кроется в настройках безопасности UEFI. Технология <strong>Secure Boot</strong> по умолчанию блокирует загрузку любых операционных систем и загрузчиков, не имеющих цифровой подписи Microsoft. Хотя Ventoy имеет ключи подписи, на некоторых материнских платах (особенно ASUS, MSI и Gigabyte) требуется ручная регистрация ключей или полное отключение функции.</p>
+
+<p>Для доступа к настройкам необходимо войти в BIOS/UEFI сразу после включения компьютера, используя клавиши <code>F2</code>, <code>Del</code> или <code>F10</code>. Найдите раздел <code>Boot</code> или <code>Security</code>. Если вы используете современные дистрибутивы Linux или Windows 10/11, лучше оставить режим <em>UEFI</em>, но отключить Secure Boot. Для старых систем (Windows XP, старые сборщики) может потребоваться режим <em>CSM</em> или <em>Legacy</em>.</p>
+
+<p>Иногда помогает изменение приоритета загрузки. Убедитесь, что ваша флешка стоит первой в списке <strong>Boot Option Priorities</strong>. Если в списке есть пункт <em>Ventoy</em> с логотипом UEFI и просто название флешки без логотипа, попробуйте выбрать вариант с приставкой UEFI для современных систем.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>На некоторых ноутбуках Lenovo и HP необходимо не только отключить Secure Boot, но и включить опцию "USB Legacy Support" или "Fast Boot" в положение Disabled для корректной инициализации внешних накопителей.</p></div>
+
+<p>После внесения изменений не забудьте сохранить настройки, обычно это делается клавишей <code>F10</code>. Если компьютер продолжает игнировать флешку, попробуйте сбросить BIOS до заводских настроек (<code>Load Optimized Defaults</code>), а затем заново настроить параметры загрузки.</p>
+
+<h2 id="проблемы-с-таблицей-разделов-mbr-против-gpt">Проблемы с таблицей разделов: MBR против GPT</h2>
+
+<p>Структура разделов на флешке должна соответствовать режиму работы материнской платы. Для компьютеров с <strong>UEFI</strong> (в режиме без CSM) накопитель должен быть размечен в формате <em>GPT</em>. Если же вы планируете загружаться на старом железе с <strong>Legacy BIOS</strong>, потребуется классическая таблица <em>MBR</em>. Несоответствие приводит к тому, что BIOS просто "не видит" загрузочную запись.</p>
+
+<p>Программа Ventoy при установке автоматически выбирает тип разметки в зависимости от текущей файловой системы хоста, но иногда происходит ошибка. Чтобы проверить или изменить это, запустите <code>Ventoy2Disk.exe</code> от имени администратора. В меню <code>Option</code> -> <code>Partition Style</code> выберите нужный вариант. После смены стиля разделов флешку придется отформатировать заново.</p>
+
+<p>Ниже приведена таблица совместимости, которая поможет быстро сориентироваться в выборе правильного формата:</p>
+
+<table>
+<thead>
+<tr>
+<th>Режим BIOS/UEFI</th>
+<th>Требуемая таблица разделов</th>
+<th>Файловая система</th>
+<th>Особенности</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UEFI (современный)</td>
+<td>GPT</td>
+<td>exFAT / NTFS</td>
+<td>Поддержка дисков >2ТБ, Secure Boot</td>
+</tr>
+<tr>
+<td>Legacy BIOS</td>
+<td>MBR</td>
+<td>FAT32 / NTFS</td>
+<td>Совместимость со старым ПО, нет Secure Boot</td>
+</tr>
+<tr>
+<td>CSM / Hybrid</td>
+<td>MBR (предпочтительно)</td>
+<td>FAT32</td>
+<td>Эмуляция Legacy на UEFI платах</td>
+</tr>
+</tbody>
+</table>
+
+<p>Если вы не уверены, какой режим использует ваш компьютер, попробуйте создать флешку в режиме <em>MBR</em>, так как многие UEFI-системы умеют загружаться с MBR-дисков при включенном совместимом режиме (CSM). Однако для чисто UEFI-систем (например, новые Mac или планшеты Surface) MBR не подойдет категорически.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка совместимости разделов</h4><label class="check-item"><input type="checkbox"><span>Определить режим работы BIOS (UEFI/Legacy)</span></label><label class="check-item"><input type="checkbox"><span>Выбрать соответствующую схему (GPT/MBR) в Ventoy</span></label><label class="check-item"><input type="checkbox"><span>Выполнить установку заново</span></label><label class="check-item"><input type="checkbox"><span>Проверить загрузку</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="конфликты-файловых-систем-и-размер-кластера">Конфликты файловых систем и размер кластера</h2>
+
+<p>Файловая система играет критическую роль в успешной загрузке. Стандартный <strong>Ventoy</strong> создает два раздела: маленький скрытый раздел для загрузчика и основной раздел для хранения ISO-файлов. Основной раздел чаще всего форматируется в <em>exFAT</em> или <em>NTFS</em>. Проблемы возникают, если размер кластера выбран неверно или файловая система повреждена.</p>
+
+<p>Некоторые BIOS имеют ограничения на чтение больших файлов с разделов NTFS, если драйвер EFI не может корректно обработать структуру файловой системы. В таких случаях рекомендуется использовать <em>FAT32</em>, но у нее есть ограничение на размер одного файла в 4 ГБ. Если ваш образ Windows или Linux весит больше, FAT32 не подойдет без специальных ухищрений.</p>
+
+<p>Для решения проблем с файловой системой можно выполнить быстрое форматирование основного раздела средствами самой программы Ventoy. В меню программы выберите <code>Option</code> -> <code>Format</code> и убедитесь, что стоит галочка <code>Clear all</code>. Это удалит все данные и пересоздаст структуру разделов с нуля, устраняя возможные логические ошибки.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Процесс форматирования через Ventoy полностью уничтожит все данные на флешке. Обязательно скопируйте важные файлы на жесткий диск перед началом процедуры восстановления.</p>
+</blockquote>
+
+<h2 id="проблемы-с-конкретными-дистрибутивами-и-secure-boot">Проблемы с конкретными дистрибутивами и Secure Boot</h2>
+
+<p>Даже если меню Ventoy загружается, конкретный дистрибутив может отказываться стартовать из-за политики безопасности. Например, некоторые версии <em>Kali Linux</em>, <em>Linux Mint</em> или сборщики <em>Windows PE</em> требуют отключения Secure Boot, в то время как официальные образы <em>Ubuntu</em> или <em>Fedora</em> должны работать с включенной защитой.</p>
+
+<p>Если при загрузке появляется ошибка "Invalid Signature" или "Verification failed", это прямой сигнал о конфликте ключей. В этом случае можно попробовать обновить ключи в BIOS или использовать встроенную в Ventoy функцию обновления загрузчика. Иногда помогает переименование ISO-файла: уберите из имени пробелы, русские буквы и специальные символы, оставив только латиницу.</p>
+
+<p>Также стоит проверить целостность самого образа. Если файл был записан на флешку с ошибками (например, прервалось копирование), Ventoy может не суметь его смонтировать. Используйте функцию <code>Checksum</code> в меню Ventoy (клавиша <code>F2</code> при загрузке или через программу в Windows) для сверки контрольной суммы файла с оригиналом.</p>
+
+<details class="faq-item"><summary>Как обновить ключи Secure Boot в Ventoy?</summary><div class="faq-answer"><p>В меню программы Ventoy2Disk.exe перейдите в Option -> Secure Boot Support -> Install key. Это добавит необходимые сертификаты Microsoft и третьих лиц в загрузочный сектор флешки, что часто решает проблему с "красными" экранами смерти при загрузке.</p></div></details>
+
+<h2 id="альтернативные-методы-записи-и-восстановление-загрузчика">Альтернативные методы записи и восстановление загрузчика</h2>
+
+<p>Если стандартная установка не помогает, можно попробовать использовать командную строку для более глубокого вмешательства. Это требует аккуратности, но позволяет обойти некоторые графические ошибки интерфейса. Сначала очистите флешку полностью, создав новую таблицу разделов через утилиту <code>diskpart</code>.</p>
+
+<pre><code>list disk
+<p>select disk X (где X - номер вашей флешки)</p>
+<p>clean</p>
+<p>create partition primary</p>
+<p>format fs=exfat quick</p>
+<p>active</p>
+<p>exit</code></pre></p>
+
+<p>После этой процедуры запустите <code>Ventoy2Disk.exe</code> и нажмите кнопку <code>Install</code>. Такой подход гарантирует, что на накопителе не осталось скрытых разделов или остаточных данных от предыдущих экспериментов с другими загрузчиками (например, Rufus или UltraISO), которые могут конфликтовать.</p>
+
+<p>В крайнем случае, если ничего не помогает, попробуйте другую версию программы. Разработчики часто выпускают обновления, исправляющие совместимость с конкретными моделями ноутбуков или версиями BIOS. Скачайте последнюю стабильную версию с официального репозитория GitHub.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Полная очистка диска через diskpart и повторная установка Ventoy с нуля решает 90% проблем, связанных с логическими ошибками структуры разделов и конфликтами загрузчиков.</p></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Почему флешка определяется в BIOS, но меню Ventoy не появляется?</summary>
+<p>Скорее всего, нарушена последовательность загрузки или активен конфликтующий загрузчик. Проверьте, стоит ли флешка первой в приоритете <code>Boot Option</code>. Также возможно, что файл загрузчика поврежден антивирусом — попробуйте отключить защиту в реальном времени перед записью.</p>
+</details>
+
+<details>
+<summary>Можно ли использовать Ventoy на Mac с процессором M1/M2?</summary>
+<p>Да, но с ограничениями. На ARM-архитектуре Apple Silicon стандартные x86/x64 образы Windows или Linux работать не будут. Однако загрузить совместимые ARM-дистрибутивы можно, если правильно настроить Secure Boot и использовать формат GPT.</p>
+</details>
+
+<details>
+<summary>Что делать, если появляется синий экран с текстом "Reboot and Select proper Boot device"?</summary>
+<p>Это означает, что BIOS не нашел загрузочных записей. Проверьте, активен ли раздел с Ventoy. В программе Ventoy2Disk.exe попробуйте нажать <code>Update</code> вместо <code>Install</code>, чтобы обновить загрузочный сектор без потери данных на флешке.</p>
+</details>
+
+<details>
+<summary>Нужно ли форматировать флешку каждый раз при добавлении нового ISO?</summary>
+<p>Нет, это главное преимущество Ventoy. Вы можете просто копировать или удалять файлы образов как обычные файлы в проводнике. Форматирование требуется только при первоначальной настройке или при смене файловой системы.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#диагностика-первичных-симптомов-и-аппаратных-проблем">Диагностика первичных симптомов и аппаратных проблем</a></li><li><a href="#настройка-biosuefi-secure-boot-и-режимы-загрузки">Настройка BIOS/UEFI: Secure Boot и режимы загрузки</a></li><li><a href="#проблемы-с-таблицей-разделов-mbr-против-gpt">Проблемы с таблицей разделов: MBR против GPT</a></li><li><a href="#конфликты-файловых-систем-и-размер-кластера">Конфликты файловых систем и размер кластера</a></li><li><a href="#проблемы-с-конкретными-дистрибутивами-и-secure-boot">Проблемы с конкретными дистрибутивами и Secure Boot</a></li><li><a href="#альтернативные-методы-записи-и-восстановление-загрузчика">Альтернативные методы записи и восстановление загрузчика</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-ubrat-slovo-boot-iz-pristavki.html" class="related-card">Как убрать слово Boot с приставки: полное руководство по исправлению</a></li><li><a href="/a/articles/k/ka/kak-izmenit-yazyk-na-media-station-x-2025-godu.html" class="related-card">Как изменить язык на Media Station X 2026: пошаговая инструкция</a></li><li><a href="/a/articles/p/pi/pictures-v-galeree-chto-eto.html" class="related-card">Pictures в галерее Android: что это и как работает</a></li><li><a href="/a/articles/k/ka/kak-dobavit-epg-v-ottplayer.html" class="related-card">Как добавить EPG в OttPlayer: полная инструкция</a></li><li><a href="/a/articles/k/ka/kak-slushat-muzyku-s-ajfona-v-kamri-50.html" class="related-card">Как слушать музыку с iPhone в Камри 50: Полная инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-ubrat-slovo-boot-iz-pristavki.html" class="related-bottom-card"><span class="related-bottom-title">Как убрать слово Boot с приставки: полное руководство по исправлению</span><span class="related-bottom-desc">Подробная инструкция, как удалить логотип Boot, загрузочное изображение или зависание на андроид-при</span></a><a href="/a/articles/k/ka/kak-izmenit-yazyk-na-media-station-x-2025-godu.html" class="related-bottom-card"><span class="related-bottom-title">Как изменить язык на Media Station X 2026: пошаговая инструкция</span><span class="related-bottom-desc">Полный гайд по смене языка интерфейса на медиаплеере Media Station X. Решаем проблемы локализации, н</span></a><a href="/a/articles/p/pi/pictures-v-galeree-chto-eto.html" class="related-bottom-card"><span class="related-bottom-title">Pictures в галерее Android: что это и как работает</span><span class="related-bottom-desc">Разбираемся, что такое папка pictures в галерее Android. Как скрыть, удалить или переместить файлы. </span></a><a href="/a/articles/k/ka/kak-dobavit-epg-v-ottplayer.html" class="related-bottom-card"><span class="related-bottom-title">Как добавить EPG в OttPlayer: полная инструкция</span><span class="related-bottom-desc">Узнайте, как настроить EPG в OttPlayer. Пошаговая инструкция по загрузке архива программ для Android</span></a><a href="/a/articles/k/ka/kak-slushat-muzyku-s-ajfona-v-kamri-50.html" class="related-bottom-card"><span class="related-bottom-title">Как слушать музыку с iPhone в Камри 50: Полная инструкция</span><span class="related-bottom-desc">Подробное руководство по подключению iPhone к Toyota Camry v50. Настройка Bluetooth, USB-кабеля и ус</span></a><a href="/a/articles/c/co/confined-with-goddesses-ne-zahodit-v-komnaty-chto-delat.html" class="related-bottom-card"><span class="related-bottom-title">Confined with Goddesses не заходит в комнаты: решение</span><span class="related-bottom-desc">Игра Confined with Goddesses не загружает комнаты? Узнайте, как исправить ошибки подключения, провер</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

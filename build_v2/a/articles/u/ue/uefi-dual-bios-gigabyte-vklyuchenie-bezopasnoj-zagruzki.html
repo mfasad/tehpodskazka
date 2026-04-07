@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>UEFI Dual BIOS Gigabyte: включение Secure Boot — ТехПодсказка</title>
+    <meta name="description" content="Пошаговая инструкция по активации Secure Boot и TPM 2.0 на материнских платах Gigabyte с Dual BIOS. Решение проблем с Windows 11.">
+    <link rel="canonical" href="/a/articles/u/ue/uefi-dual-bios-gigabyte-vklyuchenie-bezopasnoj-zagruzki.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="UEFI Dual BIOS Gigabyte: включение Secure Boot">
+    <meta property="og:description" content="Пошаговая инструкция по активации Secure Boot и TPM 2.0 на материнских платах Gigabyte с Dual BIOS. Решение проблем с Windows 11.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775569404">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/mobilnye-os/">Мобильные ОС</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">UEFI Dual BIOS Gigabyte: включение Secure Boot</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Включение Secure Boot на Gigabyte Dual BIOS: полная инструкция</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#подготовка-системы-и-проверка-текущей-версии-bios">Подготовка системы и проверка текущей версии BIOS</a></li><li><a href="#вход-в-bios-и-переключение-режима-загрузки">Вход в BIOS и переключение режима загрузки</a></li><li><a href="#активация-secure-boot-и-управление-ключами">Активация Secure Boot и управление ключами</a></li><li><a href="#особенности-работы-dual-bios-на-платах-gigabyte">Особенности работы Dual BIOS на платах Gigabyte</a></li><li><a href="#настройка-tpm-и-совместимость-с-windows-11">Настройка TPM и совместимость с Windows 11</a></li><li><a href="#диагностика-и-решение-типичных-проблем">Диагностика и решение типичных проблем</a></li><li><a href="#проверка-результата-и-итоговые-рекомендации">Проверка результата и итоговые рекомендации</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Включение <strong>Secure Boot</strong> на материнских платах Gigabyte с архитектурой Dual BIOS является критически важным шагом для установки операционной системы Windows 11 или запуска современных игр с античит-системами. Многие пользователи сталкиваются с трудностями, когда после обновления прошивки или сброса настроек система перестает загружаться, требуя активации протоколов безопасности UEFI. Понимание различий между основным и резервным BIOS позволяет избежать фатальных ошибок при конфигурировании.</p>
+
+<p>Процесс настройки не является сложным, если четко представлять структуру меню <em>Gigabyte BIOS</em> и последовательность действий. В отличие от старых версий Legacy, современный интерфейс требует переключения режима загрузки в <strong>UEFI</strong> перед активацией любых защитных механизмов. Игнорирование этого правила часто приводит к появлению черного экрана или циклической перезагрузке.</p>
+
+<p>В данном руководстве мы детально разберем каждый этап: от входа в меню настройки до проверки статуса ключей шифрования. Особое внимание уделим нюансам работы с Dual BIOS, так как переключение между чипами может потребоваться в случае неудачного обновления. <mark>Ключевым моментом является установка режима загрузки CSM в положение Disabled перед любыми манипуляциями с Secure Boot.</mark></p>
+
+<h2 id="подготовка-системы-и-проверка-текущей-версии-bios">Подготовка системы и проверка текущей версии BIOS</h2>
+
+<p>Перед внесением изменений в низкоуровневые настройки <strong>UEFI</strong> необходимо убедиться, что ваша материнская плата Gigabyte работает на актуальной версии прошивки. Производители регулярно выпускают обновления, исправляющие ошибки совместимости с новыми процессорами и модулями памяти. Проверку можно выполнить через утилиту <em>@BIOS</em> в операционной системе или непосредственно в меню BIOS через функцию <code>Q-Flash</code>.</p>
+
+<p>Если вы планируете обновляться, убедитесь, что источник питания стабилен. Прерывание процесса записи данных в чип BIOS может привести к повреждению загрузчика. В системах с Dual BIOS при критическом сбое основной чип может быть автоматически восстановлен из резервного, но полагаться на эту функцию как на страховку от отключения электричества не стоит.</p>
+
+<p>Также стоит проверить, установлен ли модуль <strong>TPM 2.0</strong> (или его аналог от процессора: fTPM для AMD, PTT для Intel). Без активного модуля доверенной платформы включение безопасной загрузки не даст желаемого результата для Windows 11. В некоторых случаях требуется сброс ключей платформы до заводских значений перед активацией.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Если вы используете старую видеокарту без поддержки UEFI, переключение в режим pure UEFI (отключение CSM) приведет к отсутствию изображения на мониторе. Убедитесь, что ваше оборудование совместимо со стандартом UEFI 2.x.</p>
+</blockquote>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой у вас процессор?</strong><ul><li>Intel Core (PTT)</li><li>AMD Ryzen (fTPM)</li><li>Старый процессор без поддержки</li><li>Не знаю, какой у меня</li></ul></div></div>
+
+<h2 id="вход-в-bios-и-переключение-режима-загрузки">Вход в BIOS и переключение режима загрузки</h2>
+
+<p>Для входа в настройки материнской платы Gigabyte необходимо перезагрузить компьютер и быстро нажать клавишу <code>Delete</code> или <code>F2</code> во время прохождения POST. После попадания в интерфейс <em>GIGABYTE UEFI BIOS</em> перейдите в расширенный режим, нажав клавишу <code>F2</code>, если открылся упрощенный вид (Easy Mode).</p>
+
+<p>Первым шагом является переход во вкладку <code>Boot</code>. Здесь находится параметр <strong>CSM Support</strong> (Compatibility Support Module). Для работы Secure Boot этот параметр должен быть установлен в значение <code>Disabled</code>. Отключение CSM переводит систему в режим чистой загрузки UEFI, что является обязательным требованием безопасности.</p>
+
+<p>После изменения этого параметра система может потребовать перезагрузки. Это нормальное поведение, так как меняется фундаментальный способ инициализации оборудования. Сохраните изменения, нажав <code>F10</code>, и дождитесь повторного входа в BIOS для продолжения настройки.</p>
+
+<div class="checklist-block"><h4>☑️ Подготовка к настройке Secure Boot</h4><label class="check-item"><input type="checkbox"><span>Нажата клавиша Del при старте</span></label><label class="check-item"><input type="checkbox"><span>Переход в Advanced Mode (F2)</span></label><label class="check-item"><input type="checkbox"><span>Вкладка Boot найдена</span></label><label class="check-item"><input type="checkbox"><span>Параметр CSM Support установлен в Disabled</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>Важно понимать, что после отключения CSM старые операционные системы, установленные в режиме Legacy (например, Windows 7 без конвертации), перестанут загружаться. Убедитесь, что ваша ОС установлена в формате таблиц разделов <strong>GPT</strong>, а не MBR. Проверить это можно в Windows через управление дисками или командную строку.</p>
+
+<h2 id="активация-secure-boot-и-управление-ключами">Активация Secure Boot и управление ключами</h2>
+
+<p>После успешного переключения в режим UEFI становится доступным меню безопасности. Перейдите во вкладку <code>Security</code> или <code>Boot</code>, где расположен пункт <strong>Secure Boot</strong>. По умолчанию он может находиться в состоянии <code>Disabled</code> или <code>Other OS</code>. Вам необходимо изменить значение на <code>Enabled</code> или <code>Windows UEFI Mode</code>.</p>
+
+<p>В некоторых версиях BIOS Gigabyte может потребоваться предварительная установка заводских ключей. Найдите опцию <code>Key Management</code> или <code>Secure Boot Mode</code> и выберите <code>Standard</code>. Если система предупреждает об отсутствии ключей, используйте функцию <code>Install all Factory Default keys</code>. Это действие загружает сертификаты Microsoft и других вендоров в энергонезависимую память.</p>
+
+<p>Процесс установки ключей может выглядеть следующим образом в командной строке (для продвинутых пользователей через Shell), но в графическом интерфейсе Gigabyte это делается кликом мыши:</p>
+
+<pre><code>Setup -> Security -> Key Management -> Install Default Keys</code></pre>
+
+<p>После активации статус Secure Boot изменится на <code>Active</code>. Это означает, что цифровой подписи загрузчика операционной системы теперь уделяется первостепенное внимание. Если загрузчик не подписан доверенным сертификатом, система заблокирует его выполнение.</p>
+
+<blockquote>
+<p>⚠️ Внимание: При установке ключей по умолчанию все ранее добавленные пользовательские ключи будут удалены. Если вы используете корпоративную среду с собственной инфраструктурой PKI, предварительно экспортируйте свои сертификаты.</p>
+</blockquote>
+
+<details class="faq-item"><summary>Что делать, если Secure Boot не включается?</summary><div class="faq-answer"><p>Если пункт Secure Boot недоступен (серый), убедитесь, что полностью отключен режим CSM. Также проверьте, установлен ли пароль администратора BIOS в разделе Security -> Set Admin Password. Некоторые модели Gigabyte блокируют изменение настроек безопасности без пароля суперадминистратора.</p></div></details>
+
+<h2 id="особенности-работы-dual-bios-на-платах-gigabyte">Особенности работы Dual BIOS на платах Gigabyte</h2>
+
+<p>Материнские платы Gigabyte часто оснащаются технологией <strong>Dual BIOS</strong>, которая подразумевает наличие двух чипов: основного (Main BIOS) и резервного (Backup BIOS). Эта технология предназначена для защиты от сбоев при обновлении прошивки или повреждения данных в основном чипе. Понимание логики их работы поможет избежать паники при необычном поведении компьютера.</p>
+
+<p>В нормальном режиме работы система всегда загружается с основного BIOS. Резервный чип молчит и ожидает сигнала тревоги. Переключение на резервный чип происходит автоматически при обнаружении контрольной суммы ошибок в основном BIOS или вручную через специальный переключатель на плате (если модель предусматривает физический свитч) либо комбинацию клавиш при старте.</p>
+
+<p>Если вы обновили основной BIOS, но настройки Secure Boot не применились или система ведет себя нестабильно, можно принудительно скопировать прошивку из резервного чипа в основной или наоборот. Для этого используется меню <code>Q-Flash Plus</code> или соответствующий пункт в самом BIOS:</p>
+
+<ul>
+  <li>🔄 <strong>Save BIOS to Backup:</strong> Сохраняет текущую рабочую конфигурацию в резервный чип.</li>
+  <li>🔄 <strong>Restore BIOS from Backup:</strong> Восстанавливает основной чип из резервной копии (полезно при неудачном апдейте).</li>
+  <li>🔄 <strong>Boot from Backup BIOS:</strong> Принудительная загрузка с резервного чипа для диагностики.</li>
+</ul>
+
+<p>При настройке Secure Boot убедитесь, что вы работаете в основном BIOS. Если вы случайно повредите настройки в основном чипе, система может переключиться на резервный, где настройки безопасности будут сброшены по умолчанию, что потребует повторной конфигурации.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Dual BIOS — это страховка от сбоя прошивки, а не инструмент для хранения разных профилей настроек. Всегда проверяйте, с какого чипа идет загрузка, глядя на индикатор на материнской плате или сообщение при старте.</p></div>
+
+<h2 id="настройка-tpm-и-совместимость-с-windows-11">Настройка TPM и совместимость с Windows 11</h2>
+
+<p>Для полноценной работы Windows 11 недостаточно только Secure Boot; обязателен активный модуль <strong>TPM 2.0</strong>. На процессорах Intel эта технология называется <em>PTT</em> (Platform Trust Technology), а на процессорах AMD — <em>fTPM</em> (Firmware TPM). В материнских платах Gigabyte эти функции встроены непосредственно в чипсет или процессор и не требуют установки отдельного модуля на плату.</p>
+
+<p>Активация производится в разделе <code>Peripherals</code> или <code>Chipset</code>, где нужно найти пункт <strong>Intel PTT</strong> или <strong>AMD fTPM</strong> и переключить его в положение <code>Enabled</code>. После включения и сохранения настроек (<code>F10</code>) операционная система обнаружит новое устройство безопасности.</p>
+
+<p>В таблице ниже приведено соответствие технологий для разных платформ:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Производитель CPU</th>
+      <th>Название технологии</th>
+      <th>Расположение в BIOS Gigabyte</th>
+      <th>Требуемая версия</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Intel (8-14 поколение)</td>
+      <td>Intel PTT</td>
+      <td>Peripherals -> Intel PTT</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <td>AMD (Ryzen 2000+)</td>
+      <td>AMD fTPM</td>
+      <td>Peripherals -> AMD fTPM</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <td>Intel (старые)</td>
+      <td>Intel TXT / TPM</td>
+      <td>Security -> Trusted Computing</td>
+      <td>1.2 / 2.0</td>
+    </tr>
+    <tr>
+      <td>AMD (старые)</td>
+      <td>AMD PSP fTPM</td>
+      <td>Advanced -> AMD CBS</td>
+      <td>1.2 / 2.0</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>После включения TPM может появиться запрос на создание нового ключа безопасности при загрузке. Система предупредит, что данные могут стать недоступны при сбросе ключей. Подтвердите действие, нажав соответствующую клавишу (обычно <code>Y</code> или <code>F1</code>), чтобы инициировать генерацию ключей владельцем платформы.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если после включения fTPM на AMD система стала работать медленнее или наблюдаются микро-фризы, убедитесь, что у вас установлена последняя версия BIOS. Ранние версии микрокода AGESA имели проблемы с буферизацией TPM, которые были исправлены в обновлениях 2022-2026 годов.</p></div>
+
+<h2 id="диагностика-и-решение-типичных-проблем">Диагностика и решение типичных проблем</h2>
+
+<p>Даже при строгом следовании инструкции могут возникнуть ситуации, когда система отказывается загружаться или статус Secure Boot остается <code>Disabled</code>. Частой причиной является наличие в системе устройств или загрузчиков, не поддерживающих цифровую подпись. Например, некоторые старые NVMe накопители или внешние USB-устройства могут блокировать процесс инициализации.</p>
+
+<p>Если после включения Secure Boot появляется синий экран с кодом ошибки <code>0xC0000428</code> или <code>INACCESSIBLE_BOOT_DEVICE</code>, это означает, что загрузчик Windows поврежден или не подписан. В этом случае потребуется восстановление загрузчика через установочную флешку Windows с использованием команд <code>bootrec</code> или <code>bcdboot</code>.</p>
+
+<p>Также стоит проверить список исключений. В меню Key Management иногда можно увидеть список загруженных ключей. Если там есть неизвестные или помеченные как ошибка сертификаты, их следует удалить. Сброс до заводских настроек (<code>Load Optimized Defaults</code>) с последующей повторной настройкой часто решает проблемы с "залипшими" флагами состояния.</p>
+
+<blockquote>
+<p>⚠️ Внимание: При сбросе настроек BIOS на дефолтные (Load Optimized Defaults) параметр Secure Boot снова станет выключенным. Вам придется заново пройти процедуру включения CSM -> Disabled и Secure Boot -> Enabled. Это штатное поведение, а не ошибка.</p>
+</blockquote>
+
+<div class="checklist-block"><h4>☑️ Диагностика проблем</h4><label class="check-item"><input type="checkbox"><span>Проверена версия BIOS</span></label><label class="check-item"><input type="checkbox"><span>CSM полностью отключен</span></label><label class="check-item"><input type="checkbox"><span>Ключи установлены (Standard)</span></label><label class="check-item"><input type="checkbox"><span>OS Type стоит Windows UEFI</span></label><label class="check-item"><input type="checkbox"><span>TPM активирован в Peripherals</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+
+<h2 id="проверка-результата-и-итоговые-рекомендации">Проверка результата и итоговые рекомендации</h2>
+
+<p>После всех манипуляций необходимо убедиться, что настройки применились корректно. Самый простой способ — использовать встроенную утилиту Windows "Проверка состояния системы". Нажмите <code>Win + R</code>, введите <code>tpm.msc</code> и нажмите Enter. В открывшемся окне должно быть указано, что TPM готов к работе, а версия спецификации равна 2.0.</p>
+
+<p>Дополнительно можно запустить команду <code>msinfo32</code>. В строке "Режим BIOS" должно быть указано <strong>UEFI</strong>, а в строке "Состояние безопасной загрузки" — <strong>Вкл</strong> (On). Только наличие обоих параметров гарантирует полную совместимость с требованиями современных операционных систем и игр.</p>
+
+<p>Если вы используете компьютер для работы с критически важными данными, рассмотрите возможность включения BitLocker. С активированным Secure Boot и TPM шифрование диска становится максимально эффективным, так как ключи шифрования привязываются к аппаратному обеспечению и целостности загрузчика.</p>
+
+<details>
+  <summary>Можно ли включить Secure Boot без потери данных на диске?</summary>
+  <p>Да, включение Secure Boot само по себе не удаляет данные. Однако, если ваш диск размечен в стиле MBR, а не GPT, система не сможет загрузиться в режиме UEFI. В таком случае потребуется конвертация диска (например, через утилиту MBR2GPT) или переустановка ОС, что повлечет потерю данных при отсутствии резервной копии.</p>
+</details>
+
+<details>
+  <summary>Почему после обновления BIOS сбросился Secure Boot?</summary>
+  <p>При обновлении прошивки материнской платы Gigabyte часто происходит сброс всех настроек к заводским значениям ради стабильности. Это означает, что CSM снова становится включенным, а Secure Boot — выключенным. Это стандартная процедура безопасности, требующая повторной ручной активации пользователем.</p>
+</details>
+
+<details>
+  <summary>Влияет ли включение Secure Boot на производительность игр?</summary>
+  <p>Нет, активация Secure Boot не оказывает никакого влияния на производительность процессора, видеокарты или скорость загрузки игр. Протокол проверяет цифровую подпись только в момент старта системы перед передачей управления операционной системе. В процессе работы ОС этот механизм не участвует.</p>
+</details>
+
+<details>
+  <summary>Что делать, если клавиша F2 или Del не открывает BIOS?</summary>
+  <p>В Windows 10 и 11 включена функция "Быстрый запуск", которая может пропускать этап опроса клавиатуры. Чтобы попасть в BIOS, зайдите в Параметры -> Обновление и безопасность -> Восстановление -> Особые варианты загрузки -> Перезагрузить сейчас. Затем выберите Поиск неисправностей -> Дополнительные параметры -> Параметры встроенного ПО UEFI.</p>
+</details>
+
+<details>
+  <summary>Обязательно ли иметь физический модуль TPM на плате?</summary>
+  <p>Для современных систем (процессоры AMD Ryzen и Intel Core 8-го поколения и новее) физический модуль не нужен. Достаточно активировать встроенную в процессор технологию (fTPM или PTT) в настройках BIOS. Физические модули требуются только для очень старых платформ, не поддерживающих эти функции на уровне чипсета.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#подготовка-системы-и-проверка-текущей-версии-bios">Подготовка системы и проверка текущей версии BIOS</a></li><li><a href="#вход-в-bios-и-переключение-режима-загрузки">Вход в BIOS и переключение режима загрузки</a></li><li><a href="#активация-secure-boot-и-управление-ключами">Активация Secure Boot и управление ключами</a></li><li><a href="#особенности-работы-dual-bios-на-платах-gigabyte">Особенности работы Dual BIOS на платах Gigabyte</a></li><li><a href="#настройка-tpm-и-совместимость-с-windows-11">Настройка TPM и совместимость с Windows 11</a></li><li><a href="#диагностика-и-решение-типичных-проблем">Диагностика и решение типичных проблем</a></li><li><a href="#проверка-результата-и-итоговые-рекомендации">Проверка результата и итоговые рекомендации</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/c/cl/cloud-gateway-chto-eto-za-programma-na-android.html" class="related-card">Cloud Gateway на Android: что это за процесс и можно ли его удалить</a></li><li><a href="/a/articles/k/ka/kak-vklyuchit-funkciyu-opredeleniya-vozrasta-v-kamere-telefon.html" class="related-card">Как включить определение возраста в камере: Реальность или миф?</a></li><li><a href="/a/articles/k/ka/kak-vernut-2-gis-v-android-avto.html" class="related-card">Как вернуть 2ГИС в Android Auto: пошаговая инструкция</a></li><li><a href="/a/articles/k/ka/kak-otkryt-nastrojki-android-cherez-brauzer.html" class="related-card">Как открыть настройки Android через браузер: ADB и веб-интерфейсы</a></li><li><a href="/a/articles/k/ka/kak-pisat-kommentarii-v-vk-cvetnym-shriftom-na-android.html" class="related-card">Цветные комментарии в ВК на Андроид: миф или реальность?</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/c/cl/cloud-gateway-chto-eto-za-programma-na-android.html" class="related-bottom-card"><span class="related-bottom-title">Cloud Gateway на Android: что это за процесс и можно ли его удалить</span><span class="related-bottom-desc">Подробный разбор процесса cloud gateway на андроид: функции, стоит ли отключать, влияние на батарею </span></a><a href="/a/articles/k/ka/kak-vklyuchit-funkciyu-opredeleniya-vozrasta-v-kamere-telefon.html" class="related-bottom-card"><span class="related-bottom-title">Как включить определение возраста в камере: Реальность или миф?</span><span class="related-bottom-desc">Можно ли включить функцию определения возраста в камере телефона? Разбираем возможности AI, фильтры </span></a><a href="/a/articles/k/ka/kak-vernut-2-gis-v-android-avto.html" class="related-bottom-card"><span class="related-bottom-title">Как вернуть 2ГИС в Android Auto: пошаговая инструкция</span><span class="related-bottom-desc">Верните навигатор 2ГИС в Android Auto. Рабочие методы установки, обход ограничений Google и решение </span></a><a href="/a/articles/k/ka/kak-otkryt-nastrojki-android-cherez-brauzer.html" class="related-bottom-card"><span class="related-bottom-title">Как открыть настройки Android через браузер: ADB и веб-интерфейсы</span><span class="related-bottom-desc">Полная инструкция по удаленному доступу к системе Android через браузер. Методы ADB, Scrcpy, TeamVie</span></a><a href="/a/articles/k/ka/kak-pisat-kommentarii-v-vk-cvetnym-shriftom-na-android.html" class="related-bottom-card"><span class="related-bottom-title">Цветные комментарии в ВК на Андроид: миф или реальность?</span><span class="related-bottom-desc">Правда ли можно писать цветные комментарии в ВК на Андроид? Разбор всех методов, скрытых функций и с</span></a><a href="/a/articles/k/ka/kak-obnovit-bios-noutbuka-dell-inspiron-n5110.html" class="related-bottom-card"><span class="related-bottom-title">Как обновить БИОС Dell Inspiron N5110: пошаговая инструкция</span><span class="related-bottom-desc">Подробное руководство по обновлению BIOS на ноутбуке Dell Inspiron N5110. Скачивание прошивки, подго</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

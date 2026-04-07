@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Server 2019 не видит компьютеры в сети: решение — ТехПодсказка</title>
+    <meta name="description" content="Windows Server 2019 не видит компьютеры в локальной сети? Полный гид по настройке SMB 1.0, служб обнаружения и групповых политик для устранения проблем.">
+    <link rel="canonical" href="/a/articles/s/se/server-2019-ne-vidit-kompyutery-v-lokalnoj-seti.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Server 2019 не видит компьютеры в сети: решение">
+    <meta property="og:description" content="Windows Server 2019 не видит компьютеры в локальной сети? Полный гид по настройке SMB 1.0, служб обнаружения и групповых политик для устранения проблем.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775569404">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/windows-i-pk/">Windows и ПК</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Server 2019 не видит компьютеры в сети: решение</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Решение проблемы: Server 2019 не видит компьютеры в локальной сети</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#проверка-сетевого-профиля-и-базовой-связности">Проверка сетевого профиля и базовой связности</a></li><li><a href="#настройка-служб-обнаружения-и-функциональных-компонентов">Настройка служб обнаружения и функциональных компонентов</a></li><li><a href="#конфигурация-групповых-политик-gpo">Конфигурация групповых политик (GPO)</a></li><li><a href="#проблемы-с-протоколом-smb-и-портами">Проблемы с протоколом SMB и портами</a></li><li><a href="#диагностика-через-powershell-и-реестр">Диагностика через PowerShell и реестр</a></li><li><a href="#влияние-антивирусов-и-стороннего-по">Влияние антивирусов и стороннего ПО</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Ситуация, когда после обновления или первичной развертки <strong>Windows Server 2019</strong> перестает отображать другие узлы в сетевом окружении, является классической, но часто вызывает панику у администраторов. В отличие от клиентских версий ОС, серверные редакции имеют более строгие настройки безопасности по умолчанию, что блокирует автоматическое обнаружение устройств через протоколы типа <em>LLMNR</em> или <em>NetBIOS</em>. Это не ошибка системы, а результат целенаправленной политики Microsoft по повышению защищенности корпоративной среды.</p>
+
+<p>Отсутствие видимости компьютеров в оснастке "Сеть" или проводнике не означает, что сетевое соединение разорвано. Часто пинг проходит успешно, а общие ресурсы доступны по прямому IP-адресу, однако механизм автоматического сканирования сети просто отключен. Чтобы вернуть функциональность, потребуется выполнить ряд последовательных действий по активации необходимых служб и изменению параметров групповых политик.</p>
+
+<p>Дальнейшая инструкция поможет вам системно подойти к диагностике и устранению неисправности. Мы рассмотрим как базовые настройки сетевого профиля, так и более глубокие изменения в реестре и компонентах SMB. Важно понимать, что игнорирование этих шагов может привести к тому, что сервер останется "слепым" в инфраструктуре, что затруднит администрирование и мониторинг.</p>
+
+<h2 id="проверка-сетевого-профиля-и-базовой-связности">Проверка сетевого профиля и базовой связности</h2>
+
+<p>Первым шагом всегда должна быть верификация текущего статуса сетевого подключения. <strong>Windows Server 2019</strong> по умолчанию классифицирует новые подключения как "Общедоступные" (Public), что автоматически включает строгий брандмауэр и скрывает компьютер от обнаружения. Вам необходимо переключить профиль на "Частный" (Private), чтобы разрешить сетевое обнаружение.</p>
+
+<p>Для выполнения этой операции откройте PowerShell с правами администратора и используйте командлет <code>Get-NetConnectionProfile</code>. Если в выводе указано значение "Public", примените команду <code>Set-NetConnectionProfile -Name "ИмяСети" -NetworkCategory Private</code>. Это действие откроет необходимые порты в брандмауэре для протоколов обнаружения.</p>
+
+<blockquote>⚠️ Внимание: Изменение сетевого профиля на "Частный" допустимо только в доверенных внутренних сетях. На интерфейсах, смотрящих в интернет или в гостевые зоны, это может создать критическую уязвимость.</blockquote>
+
+<p>После смены профиля убедитесь, что базовая связность работает корректно. Используйте утилиту <code>ping</code> для проверки доступности шлюза и соседних узлов. Также стоит проверить, что сетевая карта работает в режиме полного дуплекса и не теряет пакеты, что иногда случается при проблемах с драйверами <em>NIC</em>.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте команду Get-NetAdapterStatistics, чтобы проверить наличие ошибок CRC или коллизий на сетевом интерфейсе, которые могут маскироваться под проблемы видимости.</p></div>
+
+<h2 id="настройка-служб-обнаружения-и-функциональных-компонентов">Настройка служб обнаружения и функциональных компонентов</h2>
+
+<p>Даже при правильном сетевом профиле, за видимость компьютеров отвечают конкретные системные службы, которые на сервере могут быть остановлены. Ключевыми здесь являются <strong>Function Discovery Resource Publication</strong> и <strong>Function Discovery Provider Host</strong>. Без их активной работы сервер не будет транслировать информацию о себе и не сможет запрашивать списки других устройств.</p>
+
+<p>Откройте оснастку <code>services.msc</code> и найдите указанные службы. Установите для них тип запуска "Автоматический" и запустите их вручную, если они остановлены. Это часто является решающим фактором, почему Server 2019 не видит компьютеры в локальной сети, особенно в смешанных средах с Windows 10/11.</p>
+
+<ul>
+<li>🔍 Служба <em>Function Discovery Resource Publication</em> регистрирует компьютер и подключенные устройства в сети.</li>
+<li>🔍 Служба <em>SSDP Discovery</em> необходима для обнаружения устройств UPnP.</li>
+<li>🔍 Служба <em>DNS Client</em> кэширует имена DNS и регистрирует имя компьютера.</li>
+</ul>
+
+<p>Дополнительно стоит проверить состояние компонента SMB 1.0. Хотя Microsoft рекомендует отключать его из-за уязвимостей, в старых сетях без поддержки SMB 2.0/3.0 его включение может быть единственным способом увидеть legacy-устройства. Однако <mark>включение SMB 1.0 требуется только для совместимости с Windows XP, Server 2003 или старыми NAS</mark>, в современных доменах это излишне.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой тип сетевой инфраструктуры у вас?</strong><ul><li>Домен Active Directory</li><li>Рабочая группа</li><li>Гибридная среда</li><li>Только облако Azure</li></ul></div></div>
+
+<h2 id="конфигурация-групповых-политик-gpo">Конфигурация групповых политик (GPO)</h2>
+
+<p>Если ручная настройка служб не дала результата, необходимо обратиться к групповым политикам. В Server 2019 настройки сетевого обнаружения часто перекрываются политиками безопасности. Перейдите в <code>gpedit.msc</code> и проследуйте по пути: <em>Computer Configuration → Administrative Templates → Network → Link-Layer Topology Discovery</em>.</p>
+
+<p>Здесь необходимо активировать два параметра: "Turn on Map Network Drive and Connect to Network Location wizards" и "Turn on LLTD Responder". Первый разрешает мастеру обнаружения работать, а второй позволяет серверу отвечать на запросы топологии сети. Без этого компьютеры могут не отображаться в графическом интерфейсе проводника.</p>
+
+<p>Также проверьте раздел <code>Network → Network Connections</code>. Убедитесь, что параметр "Prohibit installation and configuration of Network Bridge on your DNS domain networks" не блокирует необходимые функции, хотя в чистом домене это редкость. Более важно убедиться, что политики не форсируют профиль "Public" через GPO.</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр политики</th>
+<th>Рекомендуемое значение</th>
+<th>Влияние на сеть</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Turn on LLTD Responder</td>
+<td>Включено</td>
+<td>Разрешает обнаружение топологии</td>
+</tr>
+<tr>
+<td>Turn on Map Network Drive</td>
+<td>Включено</td>
+<td>Активирует мастера сети</td>
+</tr>
+<tr>
+<td>Hardened UNC Paths</td>
+<td>Настроено</td>
+<td>Защищает пути UNC от подмены</td>
+</tr>
+</tbody>
+</table>
+
+<details class="faq-item"><summary>Что такое LLTD?</summary><div class="faq-answer"><p>LLTD (Link-Layer Topology Discovery) — это протокол канального уровня, позволяющий операционной системе строить карту сети и определять качество соединения. В серверных ОС он часто отключен по умолчанию для экономии ресурсов и повышения безопасности.</p></div></details>
+
+<h2 id="проблемы-с-протоколом-smb-и-портами">Проблемы с протоколом SMB и портами</h2>
+
+<p>Часто проблема кроется не в самом обнаружении, а в блокировке портов, необходимых для обмена списком компьютеров. Протокол <strong>SMB</strong> (Server Message Block) использует порт 445 для прямого подключения и 139 для NetBIOS. Если брандмауэр или антивирус блокируют эти порты, список компьютеров в сетевом окружении будет пуст.</p>
+
+<p>Проверьте правила входящих подключений в брандмауэре Windows. Должны быть активны правила для "File and Printer Sharing (SMB-In)". Если вы используете сторонние решения безопасности, убедитесь, что они не перехватывают трафик и не применяют свои собственные профили, скрывающие сервер.</p>
+
+<blockquote>⚠️ Внимание: Открытие порта 445 на внешних интерфейсах категорически запрещено. Убедитесь, что правила брандмауэра применяются только к профилям "Domain" и "Private".</blockquote>
+
+<p>Для диагностики можно использовать утилиту <code>Test-NetConnection</code> в PowerShell. Команда <code>Test-NetConnection -ComputerName TargetPC -Port 445</code> покажет, доступен ли порт SMB на целевом компьютере. Если тест не проходит, проблема лежит глубже уровня обнаружения, возможно, в маршрутизации или фильтрации пакетов.</p>
+
+<h2 id="диагностика-через-powershell-и-реестр">Диагностика через PowerShell и реестр</h2>
+
+<p>Для опытных администраторов наиболее точным инструментом диагностики является PowerShell. Командлет <code>Get-SmbServerConfiguration</code> покажет текущие настройки сервера SMB. Обратите внимание на параметр <code>EnableMultiChannel</code> и статус поддержки различных версий протокола.</p>
+
+<p>Иногда требуется правка реестра для принудительного включения обнаружения. Ключ <code>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\lanmanworkstation\parameters</code> содержит параметр <code>AllowInsecureGuestAuth</code>. Установка его в единицу позволяет подключаться к ресурсам, требующим гостевого доступа, что актуально для старых NAS или Linux-серверов.</p>
+
+<pre><code>Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\lanmanworkstation\parameters" -Name "AllowInsecureGuestAuth" -Value 1</code></pre>
+
+<p>Также стоит проверить зависимости служб. Служба "Workstation" зависит от сетевых драйверов и протоколов. Если в логах событий (<code>eventvwr.msc</code>) присутствуют ошибки связанные с <em>Bowser</em> или <em>SmbClient</em>, это укажет на конкретный сбойный модуль.</p>
+
+<div class="checklist-block"><h4>☑️ Диагностика сетевой видимости</h4><label class="check-item"><input type="checkbox"><span>Проверен сетевой профиль (Private)</span></label><label class="check-item"><input type="checkbox"><span>Запущены службы Function Discovery</span></label><label class="check-item"><input type="checkbox"><span>Открыт порт 445 в брандмауэре</span></label><label class="check-item"><input type="checkbox"><span>Включен LLTD в GPO</span></label><label class="check-item"><input type="checkbox"><span>Проведен тест ping и telnet</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+
+<h2 id="влияние-антивирусов-и-стороннего-по">Влияние антивирусов и стороннего ПО</h2>
+
+<p>Не стоит сбрасывать со счетов влияние стороннего программного обеспечения. Агенты защиты конечных точек (EDR), такие как Kaspersky, ESET или Symantec, часто имеют собственные сетевые экраны, которые перекрывают стандартные настройки Windows. Они могут блокировать широковещательные запросы, считая их подозрительной активностью.</p>
+
+<p>Попробуйте временно отключить сетевой экран антивируса (только на тестовом сегменте!) и проверить, появятся ли компьютеры в списке. Если проблема решается, необходимо добавить исключение для системных процессов <code>svchost.exe</code> и портов обнаружения в настройках самого антивируса.</p>
+
+<p>Кроме того, некоторые программы для виртуализации (VMware Tools, VirtualBox) создают собственные виртуальные адаптеры. Если приоритет метрики интерфейса настроен неверно, сервер может пытаться сканировать не тот сегмент сети. Проверьте порядок адаптеров в настройках TCP/IP.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Сторонние антивирусы являются причиной №1 внезапного исчезновения компьютеров из сети после обновления драйверов или баз сигнатур.</p></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Почему Server 2019 не видит компьютеры с Windows 10, хотя пинг есть?</summary>
+<p>Скорее всего, проблема в отключенной службе <strong>Function Discovery Resource Publication</strong> на клиентских машинах или в том, что они находятся в профиле сети "Общественная". Также может мешать отключенный SMB 1.0, если в сети есть старые устройства, тормозящие опрос.</p>
+</details>
+
+<details>
+<summary>Безопасно ли включать SMB 1.0 на Server 2019?</summary>
+<p>Включать SMB 1.0 следует только в изолированных сегментах сети или если это критически необходимо для работы старого оборудования (принтеры, старые NAS). Протокол имеет известные уязвимости (например, EternalBlue). Если включение необходимо, убедитесь, что сервер недоступен из интернета.</p>
+</details>
+
+<details>
+<summary>Как сбросить настройки сетевого обнаружения в командной строке?</summary>
+<p>Используйте команду <code>netsh advfirewall firewall set rule group="Network Discovery" new enable=Yes</code>. Также поможет перезапуск служб: <code>Restart-Service fdrespub, fdhost</code> в PowerShell.</p>
+</details>
+
+<details>
+<summary>Может ли различие во времени мешать видимости компьютеров?</summary>
+<p>Да, если разница во времени между сервером и клиентом превышает 5 минут, протокол Kerberos не позволит установить доверенное соединение, и компьютер может не отображаться корректно в доменных списках ресурсов.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#проверка-сетевого-профиля-и-базовой-связности">Проверка сетевого профиля и базовой связности</a></li><li><a href="#настройка-служб-обнаружения-и-функциональных-компонентов">Настройка служб обнаружения и функциональных компонентов</a></li><li><a href="#конфигурация-групповых-политик-gpo">Конфигурация групповых политик (GPO)</a></li><li><a href="#проблемы-с-протоколом-smb-и-портами">Проблемы с протоколом SMB и портами</a></li><li><a href="#диагностика-через-powershell-и-реестр">Диагностика через PowerShell и реестр</a></li><li><a href="#влияние-антивирусов-и-стороннего-по">Влияние антивирусов и стороннего ПО</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-ochistit-kesh-v-vk-na-kompyutere.html" class="related-card">Как очистить кэш ВК на компьютере: ПК, браузеры и приложение</a></li><li><a href="/a/articles/k/ka/kazaki-snova-vojna-ne-rabotaet-mysh-na-windows-10.html" class="related-card">В Windows 10 не работает мышь: решение проблемы с КАЗАКАМИ</a></li><li><a href="/a/articles/k/ka/kak-sozdat-tochku-vosstanovleniya-v-windows-server-2016-eattykh.html" class="related-card">Как создать точку восстановления в Windows Server 2016: полное руководство</a></li><li><a href="/a/articles/r/rf/rfr-gjlrkxbnm-timecapsula-r-windows11.html" class="related-card">Как подключить Time Capsule к Windows 11: полное руководство</a></li><li><a href="/a/articles/k/ka/kak-udalit-drajver-skanera-windows-10.html" class="related-card">Как удалить драйвер сканера Windows 10: полная инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-ochistit-kesh-v-vk-na-kompyutere.html" class="related-bottom-card"><span class="related-bottom-title">Как очистить кэш ВК на компьютере: ПК, браузеры и приложение</span><span class="related-bottom-desc">Узнайте, как очистить кэш ВК на компьютере для ускорения работы. Полные инструкции для браузера, дес</span></a><a href="/a/articles/k/ka/kazaki-snova-vojna-ne-rabotaet-mysh-na-windows-10.html" class="related-bottom-card"><span class="related-bottom-title">В Windows 10 не работает мышь: решение проблемы с КАЗАКАМИ</span><span class="related-bottom-desc">Почему в игре Казаки не работает мышь на Windows 10? Полный гайд по настройке DPI, совместимости и д</span></a><a href="/a/articles/k/ka/kak-sozdat-tochku-vosstanovleniya-v-windows-server-2016-eattykh.html" class="related-bottom-card"><span class="related-bottom-title">Как создать точку восстановления в Windows Server 2016: полное руководство</span><span class="related-bottom-desc">Подробная инструкция по созданию точки восстановления в Windows Server 2016. Настройка службы VSS, и</span></a><a href="/a/articles/r/rf/rfr-gjlrkxbnm-timecapsula-r-windows11.html" class="related-bottom-card"><span class="related-bottom-title">Как подключить Time Capsule к Windows 11: полное руководство</span><span class="related-bottom-desc">Подробная инструкция по настройке Apple Time Capsule в Windows 11. Сетевые диски, Time Machine и уст</span></a><a href="/a/articles/k/ka/kak-udalit-drajver-skanera-windows-10.html" class="related-bottom-card"><span class="related-bottom-title">Как удалить драйвер сканера Windows 10: полная инструкция</span><span class="related-bottom-desc">Подробная инструкция, как удалить драйвер сканера в Windows 10. Очистка системы от старых устройств </span></a><a href="/a/articles/k/ka/kak-plohoj-kompyuter-vliyaet-na-proizvoditelnost-truda.html" class="related-bottom-card"><span class="related-bottom-title">Как плохой компьютер тормозит работу: скрытые убытки и решения</span><span class="related-bottom-desc">Анализ влияния слабого оборудования на эффективность. Узнайте, как старый ПК крадет ваше время, повы</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

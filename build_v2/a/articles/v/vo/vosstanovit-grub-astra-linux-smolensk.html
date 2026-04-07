@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Как восстановить GRUB в Astra Linux Смоленск: полное руководство — ТехПодсказка</title>
+    <meta name="description" content="Пошаговая инструкция по восстановлению загрузчика GRUB в ОС Astra Linux. Методы chroot, команды update-grub и устранение ошибок загрузки системы.">
+    <link rel="canonical" href="/a/articles/v/vo/vosstanovit-grub-astra-linux-smolensk.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как восстановить GRUB в Astra Linux Смоленск: полное руководство">
+    <meta property="og:description" content="Пошаговая инструкция по восстановлению загрузчика GRUB в ОС Astra Linux. Методы chroot, команды update-grub и устранение ошибок загрузки системы.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775569404">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как восстановить GRUB в Astra Linux Смоленск: полное руководство</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Восстановление GRUB в Astra Linux Смоленск: полное руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#диагностика-проблемы-и-подготовка-окружения">Диагностика проблемы и подготовка окружения</a></li><li><a href="#монтирование-файловой-системы-и-подготовка-chroot">Монтирование файловой системы и подготовка chroot</a></li><li><a href="#выполнение-команды-восстановления-загрузчика">Выполнение команды восстановления загрузчика</a></li><li><a href="#особенности-работы-с-uefi-и-bios">Особенности работы с UEFI и BIOS</a></li><li><a href="#решение-распространенных-ошибок-и-проблем">Решение распространенных ошибок и проблем</a></li><li><a href="#завершение-работ-и-проверка-результата">Завершение работ и проверка результата</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>Ситуация, когда операционная система <strong>Astra Linux</strong> перестает загружаться и выводит пользователя в режим rescue или просто на черный экран с мигающим курсором, часто свидетельствует о повреждении загрузчика <em>GRUB</em>. Это может произойти после неудачного обновления ядра, изменения структуры разделов диска или установки другой операционной системы рядом с Linux. Восстановление доступа к системе является критически важной задачей для администратора или продвинутого пользователя.</p>
+
+<p>В отличие от Windows, где восстановление загрузчика часто требует специальных утилит или установочных дисков конкретной версии, в дистрибутивах на базе <em>Debian</em>, к которым относится <strong>Astra Linux Special Edition</strong>, этот процесс стандартизирован, но требует внимательности при вводе команд. Ошибка в одном символе может привести к невозможности загрузить систему с нужного раздела. Ниже мы подробно разберем алгоритм действий, который позволит вернуть работоспособность вашему серверу или рабочему месту.</p>
+
+<p>Для начала работ вам обязательно потребуется загрузочный носитель (USB-флешка или DVD) с дистрибутивом <strong>Astra Linux</strong>, версия которого максимально близка к установленной на жестком диске системе. Использование LiveCD-сборок других дистрибутивов (например, Ubuntu или Debian) возможно, но может привести к конфликтам версий утилит или библиотек, что усложнит диагностику. Подготовка такого носителя — первый шаг к успешному ремонту.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Перед началом любых манипуляций с загрузочными записями и разделами диска настоятельно советуем создать полную резервную копию важных данных, если у вас есть физический доступ к диску и возможность подключить его к другому исправному компьютеру.</p>
+</blockquote>
+
+<h2 id="диагностика-проблемы-и-подготовка-окружения">Диагностика проблемы и подготовка окружения</h2>
+<p>Первым этапом является определение характера неисправности. Если при загрузке вы видите сообщение <code>error: no such partition</code> или <code>grub rescue></code>, это прямо указывает на то, что загрузчик не может найти свой конфигурационный файл или модули. В некоторых случаях система может просто зависать на логотипе производителя оборудования, игнорируя попытки выбора ОС.</p>
+
+<p>После загрузки с установочного носителя <strong>Astra Linux</strong> необходимо перейти в режим работы с командной строкой или открыть терминал в графическом интерфейсе. Важно убедиться, что система видит ваш жесткий диск. Для этого используется утилита <code>fdisk</code> или <code>lsblk</code>, которые отображают структуру разделов. Отсутствие нужного раздела в списке может свидетельствовать о проблемах с драйверами или физическом подключении диска.</p>
+
+<p>Определение правильного раздела, где установлена система, является ключевым моментом. Часто корневой раздел может называться иначе, чем вы привыкли, особенно если использовалось шифрование или LVM. Визуальная проверка содержимого через команду <code>ls</code> поможет подтвердить, что в корне раздела находятся папки <code>/bin</code>, <code>/etc</code>, <code>/usr</code> и другие системные директории.</p>
+
+<ul>
+<li>🔍 Загрузитесь с LiveCD/USB носителя Astra Linux или совместимого дистрибутива.</li>
+<li>💻 Откройте терминал и выполните команду <code>lsblk</code> для просмотра структуры дисков.</li>
+<li>📂 Найдите раздел с корневой файловой системой (обычно самый объемный).</li>
+<li>⚙️ Убедитесь, что на разделе есть папки <code>/boot</code> и <code>/etc</code>.</li>
+</ul>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой метод восстановления вы предпочитаете?</strong><ul><li>Автоматический (Boot-Repair)</li><li>Ручной через chroot</li><li>Переустановка GRUB с нуля</li><li>Обращение к специалисту</li></ul></div></div>
+
+<h2 id="монтирование-файловой-системы-и-подготовка-chroot">Монтирование файловой системы и подготовка chroot</h2>
+<p>Для восстановления загрузчика нам необходимо оказаться «внутри» установленной системы, имея права администратора. Поскольку мы загружены с внешнего носителя, наша текущая среда — это Live-система. Чтобы работать с файлами на жестком диске как с родными, используется механизм <strong>chroot</strong> (change root). Это позволяет запустить оболочку в контексте корневой директории целевой системы.</p>
+
+<p>Процесс начинается с монтирования корневого раздела. Если ваш <strong>Astra Linux</strong> установлен на разделе <code>/dev/sda2</code>, команда будет выглядеть как <code>mount /dev/sda2 /mnt</code>. Однако, если раздел <code>/boot</code> вынесен в отдельный логический том (что часто бывает при использовании LVM или шифрования), его необходимо смонтировать отдельно по пути <code>/mnt/boot</code>. Игнорирование этого шага приведет к тому, что обновление загрузчика пройдет успешно, но файлы ядер останутся невидимыми для GRUB.</p>
+
+<p>Далее необходимо смонтировать системные каталоги виртуальной файловой системы, такие как <code>/dev</code>, <code>/proc</code> и <code>/sys</code>. Без них многие утилиты, включая сам <code>update-grub</code>, не смогут корректно определить оборудование и доступные ядра. Команды монтирования обычно выполняются последовательно, и ошибка на любом этапе прервет дальнейшую работу.</p>
+
+<div class="checklist-block"><h4>☑️ Подготовка chroot-окружения</h4><label class="check-item"><input type="checkbox"><span>Смонтировать корневой раздел в /mnt</span></label><label class="check-item"><input type="checkbox"><span>Смонтировать /boot (если отдельный)</span></label><label class="check-item"><input type="checkbox"><span>Привязать /dev, /proc, /sys</span></label><label class="check-item"><input type="checkbox"><span>Выполнить chroot /mnt</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<table>
+<thead>
+<tr>
+<th>Команда монтирования</th>
+<th>Описание действия</th>
+<th>Критичность</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mount /dev/sdXn /mnt</code></td>
+<td>Монтирует корневой раздел системы</td>
+<td>Высокая</td>
+</tr>
+<tr>
+<td><code>mount --bind /dev /mnt/dev</code></td>
+<td>Дает доступ к устройствам внутри chroot</td>
+<td>Высокая</td>
+</tr>
+<tr>
+<td><code>mount --bind /proc /mnt/proc</code></td>
+<td>Необходимо для работы системных процессов</td>
+<td>Средняя</td>
+</tr>
+<tr>
+<td><code>mount --bind /sys /mnt/sys</code></td>
+<td>Доступ к информации о системе и оборудовании</td>
+<td>Средняя</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="выполнение-команды-восстановления-загрузчика">Выполнение команды восстановления загрузчика</h2>
+<p>После успешного перехода в окружение установленной системы через <code>chroot /mnt</code>, вы оказываетесь в корне вашей <strong>Astra Linux</strong>. Теперь можно приступать к непосредственному восстановлению. Первым делом стоит проверить, установлен ли пакет <em>grub-pc</em> (для BIOS) или <em>grub-efi</em> (для UEFI). В большинстве случаев пакет уже стоит, но его конфигурация повреждена.</p>
+
+<p>Основная команда для пересоздания конфигурационного файла — <code>update-grub</code>. Она запускает скрипт <code>os-prober</code>, который сканирует диски на наличие других операционных систем (Windows, другие Linux), и генерирует новый файл <code>/boot/grub/grub.cfg</code>. Если команда выполняется без ошибок, вы увидите список найденных ядер Linux и других ОС в выводе терминала.</p>
+
+<p>Однако, просто обновить конфигурацию недостаточно, если сам загрузочный код в MBR (Master Boot Record) или EFI-разделе поврежден. Необходимо выполнить команду установки загрузчика на диск. Важно указать именно устройство (например, <code>/dev/sda</code>), а не раздел (<code>/dev/sda1</code>). Указание раздела приведет к ошибке, так как загрузочная запись должна находиться в начале диска.</p>
+
+<pre><code>grub-install /dev/sda</code></pre>
+
+<p>Выполнение этой команды перезаписывает начальные сектора диска кодом загрузчика GRUB. После этого рекомендуется еще раз запустить <code>update-grub</code>, чтобы убедиться, что все изменения применены корректно. Если процесс прошел успешно, в логе не должно быть сообщений со словом <code>error</code> или <code>failed</code>.</p>
+
+<blockquote>
+<p>⚠️ Внимание: При выполнении команды <code>grub-install</code> убедитесь, что вы указываете правильное устройство диска. Запись загрузчика на неправильный диск (например, на USB-флешку или диск с данными) может сделать его нечитаемым для других систем.</p>
+</blockquote>
+
+<details class="faq-item"><summary>Что делать, если grub-install возвращает ошибку?</summary><div class="faq-answer"><p>Если вы получили ошибку при установке, проверьте, смонтированы ли псевдо-файловые системы (/dev, /proc, /sys) внутри chroot. Также убедитесь, что у вас есть права суперпользователя и что диск не защищен от записи. В редких случаях может потребоваться переустановка пакетов grub-pc или grub-efi через apt.</p></p></div></details>
+
+<h2 id="особенности-работы-с-uefi-и-bios">Особенности работы с UEFI и BIOS</h2>
+<p>Современные компьютеры используют интерфейс <strong>UEFI</strong>, который отличается от классического <strong>BIOS</strong> способом загрузки. В режиме UEFI загрузчик хранится не в MBR, а в специальном разделе FAT32 с файловой системой ESP (EFI System Partition). Для <strong>Astra Linux</strong> это создает дополнительные требования: раздел ESP должен быть смонтирован по пути <code>/boot/efi</code> перед выполнением команды установки.</p>
+
+<p>Если вы работаете с системой на базе BIOS, все проще: загрузчик пишется в первые 512 байт диска (MBR). Здесь важно, чтобы таблица разделов была типа MBR (msdos) или GPT, но с установленным биосовместимым загрузчиком. Ошибки часто возникают, когда пользователь пытается установить GRUB для BIOS на диск с GPT без создания специального раздела <code>bios_grub</code>.</p>
+
+<p>Определить текущий режим загрузки можно по наличию директории <code>/sys/firmware/efi</code>. Если она существует, система работает в режиме UEFI. В противном случае — это Legacy BIOS. Несоответствие режима загрузки Live-носителя и установленной системы (например, загрузка LiveUSB в режиме Legacy, когда система стоит в UEFI) приведет к невозможности корректно смонтировать EFI-раздел и восстановить загрузку.</p>
+
+<ul>
+<li>🖥️ Для UEFI: раздел ESP (обычно <code>/dev/sda1</code>) должен быть отформатирован в FAT32.</li>
+<li>📁 Монтирование для UEFI: <code>mount /dev/sda1 /mnt/boot/efi</code>.</li>
+<li>⚙️ Для BIOS: убедитесь, что на диске с GPT есть раздел <code>bios_grub</code> размером 1-2 Мб.</li>
+<li>🔒 Secure Boot: в настройках UEFI может потребоваться отключить Secure Boot для загрузки Astra Linux.</li>
+</ul>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если вы не уверены, какой у вас тип разметки (GPT или MBR), используйте команду fdisk -l. Для GPT в выводе будет указано "GPT", а для MBR — "DOS". Это критически важно для выбора правильного метода восстановления.</p></div>
+
+<h2 id="решение-распространенных-ошибок-и-проблем">Решение распространенных ошибок и проблем</h2>
+<p>Даже при четком следовании инструкции могут возникнуть непредвиденные ситуации. Одна из частых проблем — ошибка <code>failed to get canonical path of 'aufs'</code> или сообщения о missing modules. Это часто связано с тем, что в файле <code>/etc/default/grub</code> указаны параметры, которые несовместимы с текущим окружением восстановления, или повреждены файлы в директории <code>/boot/grub</code>.</p>
+
+<p>Иногда <code>os-prober</code> не видит Windows, установленную на соседнем разделе. Это решается добавлением строки <code>GRUB_DISABLE_OS_PROBER=false</code> в файл конфигурации <code>/etc/default/grub</code> и повторным запуском <code>update-grub</code>. Без этого шага меню загрузки может содержать только записи Linux, что неудобно для пользователей dual-boot систем.</p>
+
+<p>В случае, если стандартные методы не помогают, можно попробовать переустановить пакеты загрузчика. Находясь в chroot, выполните <code>apt-get update</code> и затем <code>apt-get install --reinstall grub-pc grub-pc-bin grub-common</code> (или соответствующие EFI-пакеты). Это заменит все бинарные файлы загрузчика на свежие, исправляя возможные повреждения файлов.</p>
+
+<mark>Критически важным является проверка целостности файловой системы перед восстановлением GRUB, так как ошибки на диске (bad blocks) могут привести к повторному повреждению загрузчика сразу после восстановления.</mark>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если стандартное восстановление не помогает, попробуйте вручную скопировать файл grub.cfg из резервной копии или сLive-системы, но помните, что это временное решение, требующее дальнейшей настройки.</p></div>
+
+<h2 id="завершение-работ-и-проверка-результата">Завершение работ и проверка результата</h2>
+<p>После успешного выполнения всех команд необходимо правильно завершить работу. Сначала выйдите из окружения chroot командой <code>exit</code>. Затем последовательно размонтируйте все созданные точки монтирования, начиная с вложенных (<code>/mnt/boot/efi</code>, <code>/mnt/dev</code> и т.д.) и заканчивая корневым <code>/mnt</code>. Нарушение порядка размонтирования может привести к потере данных, если буферы записи не успеют очиститься.</p>
+
+<p>Извлеките загрузочный носитель и перезагрузите компьютер. Если все прошло успешно, должно появиться меню <strong>GRUB</strong> с выбором ядер <strong>Astra Linux</strong> и, возможно, других операционных систем. Выбор пункта загрузки должен приводить к штатному запуску системы без ошибок.</p>
+
+<p>В случае возврата к меню BIOS/UEFI или появлению черного экрана, следует повторить процедуру, уделив особое внимание выбору диска для установки загрузчика и режиму работы (UEFI/Legacy). Иногда требуется вручную изменить приоритет загрузки в настройках BIOS, поставив жесткий диск с Linux на первое место.</p>
+
+<ul>
+<li>🛑 Выйдите из chroot командой <code>exit</code>.</li>
+<li>📉 Размонтируйте разделы: <code>umount -R /mnt</code>.</li>
+<li>💾 Извлеките USB-носитель и перезагрузите ПК.</li>
+<li>✅ Проверьте загрузку системы и доступность всех ОС.</li>
+</ul>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Можно ли восстановить GRUB Astra Linux без LiveCD, если есть доступ к консоли?</summary>
+<p>Если у вас есть доступ к консоли восстановления (recovery mode) через меню GRUB, вы можете попробовать выполнить команды <code>update-grub</code> и <code>grub-install</code> оттуда, но часто для этого требуются права root и доступ к полному набору утилит, которые в режиме rescue могут быть ограничены. Использование LiveCD надежнее.</p>
+</details>
+
+<details>
+<summary>Что делать, если команда grub-install пишет "efi directory not found"?</summary>
+<p>Это означает, что вы пытаетесь установить GRUB в режиме UEFI, но раздел EFI не смонтирован или не найден. Убедитесь, что вы смонтировали FAT32 раздел (обычно 100-500 Мб) в папку <code>/boot/efi</code> внутри chroot-окружения перед запуском команды установки.</p>
+</details>
+
+<details>
+<summary>Нужно ли заново настраивать Astra Linux Special Edition после восстановления GRUB?</summary>
+<p>Нет, восстановление загрузчика затрагивает только механизм запуска системы. Все настройки безопасности, пользователи, файлы и конфигурация самой операционной системы <strong>Astra Linux</strong> остаются неизменными. Вам не потребуется повторная активация или настройка политик безопасности.</p>
+</details>
+
+<details>
+<summary>Почему после восстановления пропала Windows из меню загрузки?</summary>
+<p>Скорее всего, утилита <code>os-prober</code> не была запущена или заблокирована. Проверьте файл <code>/etc/default/grub</code> на наличие строки <code>GRUB_DISABLE_OS_PROBER=false</code>. Если ее нет, добавьте, выполните <code>update-grub</code> снова. Также убедитесь, что разделы Windows не скрыты и доступны для чтения.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#диагностика-проблемы-и-подготовка-окружения">Диагностика проблемы и подготовка окружения</a></li><li><a href="#монтирование-файловой-системы-и-подготовка-chroot">Монтирование файловой системы и подготовка chroot</a></li><li><a href="#выполнение-команды-восстановления-загрузчика">Выполнение команды восстановления загрузчика</a></li><li><a href="#особенности-работы-с-uefi-и-bios">Особенности работы с UEFI и BIOS</a></li><li><a href="#решение-распространенных-ошибок-и-проблем">Решение распространенных ошибок и проблем</a></li><li><a href="#завершение-работ-и-проверка-результата">Завершение работ и проверка результата</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/h/ha/hartens-50-11s-obzor-nastrojka.html" class="related-card">Hartens 50-11S: обзор, настройка и скрытые функции Smart TV</a></li><li><a href="/a/articles/w/ww/www-money-2-mobile-ru.html" class="related-card">Money 2 Mobile: как работает сервис и стоит ли им пользоваться</a></li><li><a href="/a/articles/k/ka/kak-otklyuchit-sberpej-v-sberbank-onlajn.html" class="related-card">Как отключить SberPay в СберБанк Онлайн: полная инструкция</a></li><li><a href="/a/articles/a/ac/acer-n16q15-obzor.html" class="related-card">Acer N16Q15 обзор: Характеристики и особенности ноутбука</a></li><li><a href="/a/articles/p/p5/p5ws0-ne-vklyuchaetsya.html" class="related-card">p5ws0 не включается: причины, ремонт и сброс</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/h/ha/hartens-50-11s-obzor-nastrojka.html" class="related-bottom-card"><span class="related-bottom-title">Hartens 50-11S: обзор, настройка и скрытые функции Smart TV</span><span class="related-bottom-desc">Полный обзор телевизора Hartens 50-11S. Инструкция по настройке каналов, Wi-Fi, установке приложений</span></a><a href="/a/articles/w/ww/www-money-2-mobile-ru.html" class="related-bottom-card"><span class="related-bottom-title">Money 2 Mobile: как работает сервис и стоит ли им пользоваться</span><span class="related-bottom-desc">Полный обзор Money 2 Mobile: комиссии, лимиты и безопасность переводов с карты на карту. Узнайте, ка</span></a><a href="/a/articles/k/ka/kak-otklyuchit-sberpej-v-sberbank-onlajn.html" class="related-bottom-card"><span class="related-bottom-title">Как отключить SberPay в СберБанк Онлайн: полная инструкция</span><span class="related-bottom-desc">Узнайте, как отключить SberPay в приложении СберБанк Онлайн. Пошаговый алгоритм действий, причины от</span></a><a href="/a/articles/a/ac/acer-n16q15-obzor.html" class="related-bottom-card"><span class="related-bottom-title">Acer N16Q15 обзор: Характеристики и особенности ноутбука</span><span class="related-bottom-desc">Полный обзор Acer N16Q15: анализ производительности, экрана и автономности. Стоит ли покупать эту мо</span></a><a href="/a/articles/p/p5/p5ws0-ne-vklyuchaetsya.html" class="related-bottom-card"><span class="related-bottom-title">p5ws0 не включается: причины, ремонт и сброс</span><span class="related-bottom-desc">Телевизор p5ws0 перестал включаться? Полный разбор неисправностей, кодов ошибок, пошаговая инструкци</span></a><a href="/a/articles/v/vy/vyletaet-zhurnal-zaschity-sochinenie-klass.html" class="related-bottom-card"><span class="related-bottom-title">Вылетает журнал защиты сочинение: разбор класса и решение</span><span class="related-bottom-desc">Анализ ошибки &#x27;вылетает журнал защиты сочинение класс&#x27;. Почему падает процесс? Как исправить сбой на</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>
