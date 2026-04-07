@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Жесткий диск 4 ТБ не видит весь объем: решение проблемы — ТехПодсказка</title>
+    <meta name="description" content="Почему Windows 10 не видит полный объем диска 4 ТБ? Узнайте, как исправить MBR, GPT и分区 ошибки через командную строку.">
+    <link rel="canonical" href="/a/articles/z/zh/zhestkij-disk-4-tb-ne-vidit-ves-obem-windows-10.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Жесткий диск 4 ТБ не видит весь объем: решение проблемы">
+    <meta property="og:description" content="Почему Windows 10 не видит полный объем диска 4 ТБ? Узнайте, как исправить MBR, GPT и分区 ошибки через командную строку.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775569404">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/windows-i-pk/">Windows и ПК</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Жесткий диск 4 ТБ не видит весь объем: решение проблемы</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Жесткий диск 4 ТБ не видит весь объем Windows 10: полное руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#причины-ограничения-объема-диска-в-операционной-системе">Причины ограничения объема диска в операционной системе</a></li><li><a href="#диагностика-текущего-состояния-диска">Диагностика текущего состояния диска</a></li><li><a href="#конвертация-mbr-в-gpt-без-потери-данных">Конвертация MBR в GPT без потери данных</a></li><li><a href="#использование-командной-строки-для-ручной-разметки">Использование командной строки для ручной разметки</a></li><li><a href="#проблемы-с-внешними-корпусами-и-контроллерами">Проблемы с внешними корпусами и контроллерами</a></li><li><a href="#настройка-biosuefi-и-драйверов">Настройка BIOS/UEFI и драйверов</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>Ситуация, когда после подключения нового накопителя <strong>жесткий диск 4 ТБ</strong> отображается в системе как устройство емкостью всего 2 ТБ или даже меньше, встречается пугающе часто. Пользователи сразу начинают подозревать производственный брак, неисправность контроллера или подделку, хотя в подавляющем большинстве случаев дело кроется в программных ограничениях файловой системы или таблицы разделов. Операционная система <em>Windows 10</em> обладает мощными инструментами для работы с большими объемами данных, но по умолчанию может использовать устаревшие стандарты разметки.</p>
+
+<p>Основным виновником проблемы обычно выступает формат <strong>MBR</strong> (Master Boot Record), который физически не способен адресовать более 2,2 ТБ дискового пространства. Это техническое ограничение было заложено decades ago, когда такие объемы казались фантастикой. Чтобы <em>накопитель</em> работал корректно и использовал свой полный потенциал, необходимо переключиться на современный стандарт <strong>GPT</strong> (GUID Partition Table), который лишен подобных ограничений и полностью совместим с интерфейсом <em>UEFI</em>.</p>
+
+<p>В данном материале мы подробно разберем алгоритм диагностики и исправления ошибки, когда <strong>Windows 10</strong> некорректно определяет размер диска. Вы узнаете, как безопасно конвертировать таблицу разделов без потери данных, как проверить состояние портов SATA и почему иногда проблема кроется глубже, чем просто настройки BIOS. Правильная подготовка хранилища данных — залог стабильной работы всей системы.</p>
+
+<h2 id="причины-ограничения-объема-диска-в-операционной-системе">Причины ограничения объема диска в операционной системе</h2>
+<p>Первым шагом к решению проблемы является понимание природы возникновения ограничения. Когда <strong>жесткий диск</strong> объемом 4 терабайта определяется системой как 2 терабайта, это классический признак использования старой схемы разметки <em>MBR</em>. Архитектура MBR использует 32-битную адресацию блоков, что математически ограничивает максимальный размер адресуемого пространства. Даже если физический носитель способен хранить больше, логическая структура не дает системе "увидеть" остальное.</p>
+
+<p>Кроме того, существуют аппаратные ограничения, связанные с контроллером или кабелем подключения. Дешевые внешние корпусы для HDD или старые кабели SATA могут не поддерживать режим работы <em>AHCI</em> в полной мере или иметь ограничения по пропускной способности, которые косвенно влияют на определение геометрии диска. Иногда BIOS материнской платы настроен в режиме совместимости (<em>Legacy</em>), что принудительно заставляет систему использовать MBR вместо GPT.</p>
+
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> Процесс конвертации таблицы разделов с MBR на GPT часто требует полного удаления всех данных на диске. Убедитесь, что вы скопировали важные файлы на другой носитель перед началом работ.</p>
+</blockquote>
+
+<p>Также стоит учитывать, что некоторые производители используют десятичную систему исчисления (1 ТБ = 1 000 000 000 000 байт), а операционная система — двоичную (1 ТиБ = 1 099 511 627 776 байт). Однако эта разница составляет лишь около 7-9% и не может объяснить потерю ровно половины объема. Если вы видите цифру около 2048 ГБ вместо 4000 ГБ, то проблема гарантированно в таблице разделов.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой объем вашего диска определяется неверно?</strong><ul><li>1 ТБ вместо 2 ТБ</li><li>2 ТБ вместо 4 ТБ</li><li>Половина объема</li><li>Диск не определяется совсем</li></ul></div></div>
+
+<h2 id="диагностика-текущего-состояния-диска">Диагностика текущего состояния диска</h2>
+<p>Прежде чем вносить изменения, необходимо точно определить текущий статус накопителя. Встроенная утилита <strong>Управление дисками</strong> предоставляет базовую информацию, но для глубокой диагностики лучше использовать командную строку. Запустите терминал от имени администратора и введите команду <code>diskpart</code>, затем <code>list disk</code>. Это покажет список всех подключенных накопителей и их реальный физический размер.</p>
+
+<p>Обратите внимание на столбец "Gpt". Если напротив вашего диска 4 ТБ стоит звездочка или пустота (в зависимости от версии вывода), это укажет на тип таблицы разделов. Отсутствие маркировки GPT означает, что диск размечен в формате MBR. Также стоит проверить статус файловой системы: если диск отображается как "Не распределен" или имеет несколько странных разделов малого размера, это confirms необходимость переразметки.</p>
+
+<p>Для более детального анализа можно использовать сторонние улиты, такие как <em>CrystalDiskInfo</em> или <em>AIDA64</em>. Они покажут SMART-статус, режим подключения (SATA III или II) и поддерживаемые функции. Если диск подключен через USB-адаптер, убедитесь, что он поддерживает протокол <em>UASP</em> и работу с дисками свыше 2 ТБ, так как старые контроллеры USB 2.0 могут обрезАть объем.</p>
+
+<ul>
+<li>🔍 Проверьте отображаемый размер в <strong>Управлении дисками</strong> (diskmgmt.msc).</li>
+<li>🔍 Используйте команду <code>list disk</code> в утилите diskpart для确认 типа таблицы.</li>
+<li>🔍 Убедитесь, что в BIOS включен режим <em>AHCI</em> для контроллера SATA.</li>
+<li>🔍 Проверьте модель адаптера, если используется внешний карман HDD.</li>
+</ul>
+
+<p>Важно различать программную ошибку и физическую неисправность. Если диск издает посторонние звуки или периодически исчезает из системы, программные методы могут не помочь. В таком случае <strong>диагностика</strong> должна начинаться с проверки кабелей и подключения к другому порту.</p>
+
+<h2 id="конвертация-mbr-в-gpt-без-потери-данных">Конвертация MBR в GPT без потери данных</h2>
+<p>Начиная с версии <em>Windows 10</em> (обновление 1703 и новее), Microsoft внедрила нативную утилиту <strong>mbr2gpt</strong>, которая позволяет конвертировать системный диск из MBR в GPT без форматирования. Однако для несистемного диска 4 ТБ, который просто не виден полностью, этот метод может не подойти напрямую, если диск уже имеет данные. В большинстве случаев для полного доступа к 4 ТБ требуется очистка диска.</p>
+
+<p>Если на диске нет важных данных, самый надежный способ — полностью очистить структуру разделов. В утилите <code>diskpart</code> выберите нужный диск командой <code>select disk X</code> (где X — номер вашего 4 ТБ диска) и выполните команду <code>clean</code>. Это удалит всю таблицу разделов. После этого при создании нового тома система по умолчанию предложит создать GPT-раздел, если диск больше 2 ТБ.</p>
+
+<div class="checklist-block"><h4>☑️ Подготовка к конвертации</h4><label class="check-item"><input type="checkbox"><span>Скопировать данные на другой диск</span></label><label class="check-item"><input type="checkbox"><span>Закрыть все программы</span></label><label class="check-item"><input type="checkbox"><span>Запустить командную строку от админа</span></label><label class="check-item"><input type="checkbox"><span>Выполнить команду clean</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>Существуют сторонние программы, например <em>Acronis Disk Director</em> или <em>MiniTool Partition Wizard</em>, которые декларируют возможность конвертации MBR в GPT без потери данных путем сложной перекомпоновки секторов. Однако этот процесс рискован: при скачке напряжения или сбое во время операции вы можете потерять все файлы. Надежнее и быстрее сделать резервную копию, очистить диск и отформатировать его заново.</p>
+
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> Команда <code>clean</code> в diskpart безвозвратно удаляет все разделы на выбранном диске. Трижды проверьте номер диска, чтобы не стереть системный раздел Windows.</p>
+</blockquote>
+
+<p>После очистки диска необходимо создать новый раздел. В графическом интерфейсе "Управление дисками" щелкните правой кнопкой мыши по неразмеченной области и выберите "Создать простой том". Мастер автоматически выберет стиль <strong>GPT</strong> для дисков объемом более 2 ТБ. Файловую систему лучше выбирать <em>NTFS</em>, так как она наиболее стабильна для Windows.</p>
+
+<h2 id="использование-командной-строки-для-ручной-разметки">Использование командной строки для ручной разметки</h2>
+<p>Для опытных пользователей графический интерфейс может показаться избыточным. Командная строка предоставляет полный контроль над геометрией диска. Чтобы вручную создать GPT-раздел на диске 4 ТБ, запустите <code>diskpart</code> и последовательно выполните команды. Это гарантирует, что никаких скрытых разделов восстановления от производителя, ограничивающих объем, не останется.</p>
+
+<pre><code>select disk 1
+<p>clean</p>
+<p>convert gpt</p>
+<p>create partition primary</p>
+<p>format fs=ntfs quick label="Data4TB"</p>
+<p>assign letter=Z</code></pre></p>
+
+<p>Данный скрипт выберет второй диск в системе, полностью очистит его, конвертирует в GPT, создаст основной раздел, быстро отформатирует его в NTFS и присвоит букву Z. Использование параметра <code>quick</code> ускоряет процесс, так как полная проверка поверхности для современного HDD 4 ТБ может занять несколько часов. Метка <strong>label</strong> помогает сразу идентифицировать диск в проводнике.</p>
+
+<details class="faq-item"><summary>Что делает команда convert gpt?</summary><div class="faq-answer"><p>Эта команда перестраивает загрузочную запись и таблицу разделов. Она создает защитный MBR-раздел для совместимости со старыми программами и основную таблицу GUID, позволяющую адресовать до 9.4 зеттабайт данных.>
+
+<p>Если после выполнения команды <code>convert gpt</code> система выдает ошибку о невозможности конвертации, это значит, что на диске все еще есть активные разделы. В этом случае команда <code>clean</code> обязательна. Также убедитесь, что вы не пытаетесь конвертировать системный диск, если компьютер загружен в режиме Legacy BIOS — в этом случае система просто не запустится после конвертации.</p>
+
+<h2 id="проблемы-с-внешними-корпусами-и-контроллерами">Проблемы с внешними корпусами и контроллерами</h2>
+<p>Ситуация усложняется, если <strong>жесткий диск 4 ТБ</strong> подключается не напрямую к материнской плате, а через USB-карман или док-станцию. Многие бюджетные внешние корпуса оснащены контроллерами, которые имеют аппаратное ограничение в 2 ТБ. Это "железная" проблема: микросхема просто не умеет передавать адреса секторов выше определенного предела.</p>
+
+<p>Проверить поддержку больших объемов можно, посмотрев спецификацию чипа контроллера (часто это <em>JMicron</em>, <em>ASMedia</em> или <em>Realtek</em>). Если контроллер старый (выпущен до 2012-2013 годов), он скорее всего обрежет диск. Решением в данном случае является замена платы контроллера внутри корпуса или использование внутреннего подключения SATA.</p>
+
+<table>
+<thead>
+<tr>
+<th>Тип подключения</th>
+<th>Макс. объем (теор.)</th>
+<th>Реальный лимит старых устройств</th>
+<th>Рекомендация</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SATA III (внутренний)</td>
+<td>до 100+ ТБ</td>
+<td>Нет ограничений</td>
+<td>Идеально для 4 ТБ+</td>
+</tr>
+<tr>
+<td>USB 3.0 (современный)</td>
+<td>до 10+ ТБ</td>
+<td>Зависит от контроллера</td>
+<td>Проверять модель</td>
+</tr>
+<tr>
+<td>USB 2.0</td>
+<td>до 2 ТБ</td>
+<td>Часто 2 ТБ</td>
+<td>Не рекомендуется</td>
+</tr>
+<tr>
+<td>eSATA</td>
+<td>до 10+ ТБ</td>
+<td>Нет ограничений</td>
+<td>Хорошая альтернатива</td>
+</tr>
+</tbody>
+</table>
+
+<p>Также стоит обратить внимание на питание. Диск 4 ТБ требует стабильного напряжения 12В и 5В. Если вы используете USB-хаб без собственного питания, диску может не хватать энергии для инициализации всех пластин, что приведет к ошибкам определения объема или постоянным отключениям.</p>
+
+
+
+<h2 id="настройка-biosuefi-и-драйверов">Настройка BIOS/UEFI и драйверов</h2>
+<p>Иногда корень проблемы лежит в настройках BIOS материнской платы. Для корректной работы с дисками объемом более 2 ТБ и использованием таблицы разделов GPT, режим работы SATA контроллера должен быть установлен в <strong>AHCI</strong>. Режимы <em>IDE</em> или <em>Compatibility</em> могут вызывать ограничения. Кроме того, для загрузки с таких дисков (если это системный диск) необходим режим <em>UEFI</em>.</p>
+
+<p>Проверьте наличие обновлений прошивки (firmware) для самого жесткого диска. Производители иногда выпускают обновления, исправляющие ошибки адресации больших секторов. Также убедитесь, что установлены последние драйверы чипсета для вашей материнской платы, так как они управляют работой SATA-портов.</p>
+
+<p>В редких случаях помогает сброс настроек BIOS до заводских (<em>Load Optimized Defaults</em>). Это может активировать скрытые функции контроллера, которые были отключены. Если вы используете RAID-массив, убедитесь, что конфигурация позволяет использовать полный объем каждого диска, а не эмулирует меньший размер.</p>
+
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> Изменение режима SATA с IDE на AHCI в BIOS при уже установленной Windows может привести к ошибке загрузки (синий экран). Меняйте этот параметр только на пустом диске или предварительно подготовив систему.</p>
+</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Для полноценной работы диска 4 ТБ обязательна связка: стиль разделов GPT + режим контроллера AHCI + файловая система NTFS.</p></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Почему мой диск 4 ТБ показывает 3.63 ТБ после форматирования?</summary>
+<p>Это нормально и не является ошибкой. Производители используют десятичную систему (1 ТБ = 1000 ГБ), а Windows — двоичную (1 ТиБ = 1024 ГБ). Разница составляет около 7-10%. Главное, чтобы число не было около 2 ТБ.</p>
+</details>
+
+<details>
+<summary>Можно ли разбить диск 4 ТБ на два раздела по 2 ТБ в формате MBR?</summary>
+<p>Технически да, вы можете создать два раздела MBR по 2 ТБ. Однако это не решит проблему полностью, если вы планируете использовать диск для хранения больших файлов или специфических приложений, требующих GPT. Лучше конвертировать весь диск в GPT.</p>
+</details>
+
+<details>
+<summary>Потеряю ли я данные при конвертации из MBR в GPT?</summary>
+<p>Стандартная процедура через <code>diskpart</code> (команда clean) удаляет все данные. Использование стороннего софта может сохранить данные, но риск повреждения велик. Всегда делайте резервную копию перед конвертацией.</p>
+</details>
+
+<details>
+<summary>Поддерживает ли Windows 10 Home диски больше 2 ТБ?</summary>
+<p>Да, все редакции Windows 10 (Home, Pro, Enterprise) полностью поддерживают диски объемом 4 ТБ, 8 ТБ и более, при условии использования файловой системы NTFS и таблицы разделов GPT.</p>
+</details>
+
+<details>
+<summary>Что делать, если диск 4 ТБ определяется как 0 байт?</summary>
+<p>Если объем显示ится как 0 байт, это указывает на серьезную проблему: сгоревший контроллер, обрыв шлейфа или критическую ошибку firmware. Попробуйте подключить диск к другому ПК или заменить SATA-кабель.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#причины-ограничения-объема-диска-в-операционной-системе">Причины ограничения объема диска в операционной системе</a></li><li><a href="#диагностика-текущего-состояния-диска">Диагностика текущего состояния диска</a></li><li><a href="#конвертация-mbr-в-gpt-без-потери-данных">Конвертация MBR в GPT без потери данных</a></li><li><a href="#использование-командной-строки-для-ручной-разметки">Использование командной строки для ручной разметки</a></li><li><a href="#проблемы-с-внешними-корпусами-и-контроллерами">Проблемы с внешними корпусами и контроллерами</a></li><li><a href="#настройка-biosuefi-и-драйверов">Настройка BIOS/UEFI и драйверов</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/b/ba/batareya-dlya-sony-vaio-pcg-71311v-raspinovka.html" class="related-card">Распиновка батареи Sony Vaio PCG-71311V: схема и диагностика</a></li><li><a href="/a/articles/s/sm/sm-kontroller-shiny-windows-11.html" class="related-card">SM контроллер шины Windows 11: решение проблемы драйвера</a></li><li><a href="/a/articles/m/mo/mo-nass-kompyutere-eto.html" class="related-card">MO на компьютере: что это за файл и можно ли его удалять</a></li><li><a href="/a/articles/h/hp/hp-17-ak075ur-ne-hochet-ustanavlivat-windows-10.html" class="related-card">HP 17-ak075ur не ставит Windows 10: решение проблем</a></li><li><a href="/a/articles/k/ka/kak-podklyuchit-dvd-privod-ot-noutbuka-k-kompyuteru-shema.html" class="related-card">Как подключить DVD привод ноутбука к ПК: схема и инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/b/ba/batareya-dlya-sony-vaio-pcg-71311v-raspinovka.html" class="related-bottom-card"><span class="related-bottom-title">Распиновка батареи Sony Vaio PCG-71311V: схема и диагностика</span><span class="related-bottom-desc">Подробная распиновка аккумулятора для Sony Vaio PCG-71311V. Схема контактов, напряжения, поиск неисп</span></a><a href="/a/articles/s/sm/sm-kontroller-shiny-windows-11.html" class="related-bottom-card"><span class="related-bottom-title">SM контроллер шины Windows 11: решение проблемы драйвера</span><span class="related-bottom-desc">Полное руководство по устранению ошибки SM контроллер шины в Windows 11. Как найти ID оборудования, </span></a><a href="/a/articles/m/mo/mo-nass-kompyutere-eto.html" class="related-bottom-card"><span class="related-bottom-title">MO на компьютере: что это за файл и можно ли его удалять</span><span class="related-bottom-desc">Подробный разбор файла mo: назначение, связь с драйверами и играми. Стоит ли удалять MO.exe или библ</span></a><a href="/a/articles/h/hp/hp-17-ak075ur-ne-hochet-ustanavlivat-windows-10.html" class="related-bottom-card"><span class="related-bottom-title">HP 17-ak075ur не ставит Windows 10: решение проблем</span><span class="related-bottom-desc">Ноутбук HP 17-ak075ur не устанавливает Windows 10? Узнайте причины ошибок, настройку BIOS, режимы UE</span></a><a href="/a/articles/k/ka/kak-podklyuchit-dvd-privod-ot-noutbuka-k-kompyuteru-shema.html" class="related-bottom-card"><span class="related-bottom-title">Как подключить DVD привод ноутбука к ПК: схема и инструкция</span><span class="related-bottom-desc">Подробная схема подключения DVD привода от ноутбука к компьютеру через SATA или USB. Разбор пинов, п</span></a><a href="/a/articles/r/re/realtek-hd-pc.html" class="related-bottom-card"><span class="related-bottom-title">Realtek HD PC: Настройка, драйверы и устранение проблем</span><span class="related-bottom-desc">Полное руководство по Realtek HD Audio для ПК. Установка драйверов, настройка микрофона, устранение </span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

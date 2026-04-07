@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Astra Linux Live рядом с Win10 на ноутбуке: полная инструкция — ТехПодсказка</title>
+    <meta name="description" content="Как запустить Astra Linux в режиме Live рядом с Windows 10 на ноутбуке. Пошаговая настройка двойной загрузки, создание загрузчика и решение проблем UEFI.">
+    <link rel="canonical" href="/a/articles/a/as/astra-linux-live-ryadom-s-win10-na-noutbuke.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Astra Linux Live рядом с Win10 на ноутбуке: полная инструкция">
+    <meta property="og:description" content="Как запустить Astra Linux в режиме Live рядом с Windows 10 на ноутбуке. Пошаговая настройка двойной загрузки, создание загрузчика и решение проблем UEFI.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775569404">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/windows-i-pk/">Windows и ПК</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Astra Linux Live рядом с Win10 на ноутбуке: полная инструкция</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Astra Linux Live рядом с Win10: запуск без установки</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#подготовка-оборудования-и-проверка-совместимости">Подготовка оборудования и проверка совместимости</a></li><li><a href="#создание-загрузочного-носителя-для-uefi">Создание загрузочного носителя для UEFI</a></li><li><a href="#настройка-bios-и-загрузка-с-флешки">Настройка BIOS и загрузка с флешки</a></li><li><a href="#запуск-live-режима-и-первичная-диагностика">Запуск Live-режима и первичная диагностика</a></li><li><a href="#разметка-диска-для-двойной-загрузки">Разметка диска для двойной загрузки</a></li><li><a href="#настройка-загрузчика-grub-и-завершение">Настройка загрузчика GRUB и завершение</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Современные требования к информационной безопасности и необходимость тестирования отечественного ПО часто ставят перед пользователями задачу запуска <strong>Astra Linux</strong> на оборудовании, где уже установлена <em>Windows 10</em>. Использование режима <strong>Live</strong> позволяет оценить совместимость драйверов ноутбука, проверить работоспособность периферии и ознакомиться с интерфейсом графического окружения <em>Fly</em> без внесения изменений в основную систему. Это идеальный сценарий для администраторов и разработчиков, которым нужен временный доступ к Linux-среде.</p>
+
+<p>Однако, простой запуск с флешки имеет свои ограничения, такие как отсутствие сохраненных настроек после перезагрузки и более низкая скорость работы по сравнению с установленной системой. Чтобы обойти эти ограничения, многие пользователи стремятся настроить <strong>двойную загрузку</strong> (dual-boot), сохраняя возможность выбора операционной системы при старте компьютера. В этом руководстве мы подробно разберем процесс подготовки, создания загрузочного носителя и настройки <em>GRUB</em> для корректного соседства двух ОС.</p>
+
+<p>Важно понимать, что работа с разделами диска всегда несет в себе риски потери данных, поэтому предварительное резервное копирование критически важно. Мы рассмотрим не только стандартные процедуры, но и нюансы, связанные с <strong>UEFI</strong> и Secure Boot, которые часто становятся препятствием для новичков. Грамотная подготовка позволит вам запустить <mark>Astra Linux Special Edition</mark> или Common Edition рядом с вашей основной системой без конфликтов файловых систем.</p>
+
+<h2 id="подготовка-оборудования-и-проверка-совместимости">Подготовка оборудования и проверка совместимости</h2>
+
+<p>Первым шагом перед любыми манипуляциями с дисковой подсистемой ноутбука является тщательная проверка аппаратной совместимости. <strong>Astra Linux</strong> базируется на ядре Linux, которое обладает отличной поддержкой оборудования, но проприетарные драйверы Wi-Fi или видеокарт <em>NVIDIA</em> могут требовать额外的ных действий. Рекомендуется заранее узнать модель сетевого адаптера и видеокарты, чтобы убедиться в наличии драйверов в репозиториях или возможности их установки в офлайн-режиме.</p>
+
+<p>Особое внимание следует уделить режиму работы дискового контроллера в BIOS/UEFI. Для корректной работы современных дистрибутивов Linux, включая Astra, часто требуется переключение режима SATA с <em>RAID</em> или <em>RST</em> на <strong>AHCI</strong>. Изменение этого параметра в уже установленной Windows 10 без предварительной подготовки может привести к невозможности загрузки основной системы, так как драйверы storahci могут быть отключены.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Переключение режима SATA в BIOS может сделать Windows 10 незагружаемой. Перед изменением настроек убедитесь, что у вас есть точка восстановления системы или вы готовы выполнить процедуру безопасного переключения драйверов Windows в режим AHCI.</p>
+</blockquote>
+
+<p>Также необходимо освободить место на жестком диске или SSD. Для комфортной работы в режиме Live с возможностью сохранения данных или полноценной установки рекомендуется иметь непрерывный блок свободного пространства объемом не менее 30-50 Гб. Дефрагментация диска в Windows перед уменьшением раздела поможет избежать фрагментации файлов и потенциальных ошибок при изменении структуры разделов.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте встроенную утилиту Windows «Управление дисками» (diskmgmt.msc) для предварительного анализа структуры разделов и выделения свободного места перед загрузкой с флешки.</p></div>
+
+<h2 id="создание-загрузочного-носителя-для-uefi">Создание загрузочного носителя для UEFI</h2>
+
+<p>Процесс записи образа <strong>ISO</strong> на USB-накопитель требует использования специализированного ПО, которое корректно создаст таблицу разделов <strong>GPT</strong> и файловую систему <em>FAT32</em>, необходимые для загрузки в режиме UEFI. Популярная утилита <em>Rufus</em> является одним из лучших инструментов для этой задачи, позволяя гибко настраивать параметры записи. При выборе образа Astra Linux важно следить, чтобы схема раздела была указана как GPT, а целевая система — как UEFI (без CSM).</p>
+
+<p>В настройках Rufus или аналогичных программ (например, <em>Etcher</em> или <em>Ventoy</em>) следует выбрать метод записи <strong>ISO Image</strong>, а не DD, если вы используете стандартный установочный образ. Это обеспечит правильную структуру файлов на флешке, позволяющую загрузчику найти необходимые ядра и модули. Скорость записи зависит от класса USB-накопителя, но для современных образов Astra Linux, содержащих множество пакетов, лучше использовать порты USB 3.0 и выше.</p>
+
+<ul>
+<li>📀 Скачайте актуальный образ Astra Linux с официального сайта или проверенного источника.</li>
+<li>💾 Вставьте USB-флешку объемом не менее 8 Гб и убедитесь, что на ней нет важных данных.</li>
+<li>⚙️ Запустите Rufus, выберите устройство и путь к ISO-файлу, убедитесь в схеме GPT.</li>
+<li>🚀 Нажмите «Старт» и дождитесь завершения процесса записи и проверки контрольных сумм.</li>
+</ul>
+
+<p>После завершения записи рекомендуется проверить целостность файлов на флешке, если программа предлагает такую опцию. Это поможет избежать ошибок чтения во время загрузки, которые могут проявляться в виде зависаний или сообщений о поврежденных пакетах. Корректно созданный носитель — залог успешного старта установки или запуска Live-режима.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка загрузочной флешки</h4><label class="check-item"><input type="checkbox"><span>Образ записан в режиме GPT/UEFI:Флешка отформатирована в FAT32:Файлы образа скопированы без ошибок:USB-порт исправен и поддерживает загрузку</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 1</div></div>
+
+<h2 id="настройка-bios-и-загрузка-с-флешки">Настройка BIOS и загрузка с флешки</h2>
+
+<p>Для запуска ноутбука с созданного носителя необходимо войти в настройки firmware материнской платы. В зависимости от производителя ноутбука (<em>Lenovo</em>, <em>HP</em>, <em>Asus</em>, <em>Dell</em>), комбинация клавиш может отличаться: чаще всего используются <code>F2</code>, <code>F10</code>, <code>Del</code> или <code>Esc</code>. В меню BIOS/UEFI первым делом нужно найти раздел, отвечающий за безопасность, и отключить функцию <strong>Secure Boot</strong>, так как по умолчанию ключи подписи Astra Linux могут отсутствовать в базе доверенных производителей.</p>
+
+<p>Далее следует убедиться, что в приоритете загрузки (<strong>Boot Priority</strong>) USB-устройство стоит выше, чем <em>Windows Boot Manager</em>. Некоторые ноутбуки имеют отдельное меню быстрого выбора загрузочного устройства (<em>Boot Menu</em>), вызываемое клавишами <code>F12</code> или <code>F9</code> при старте, что позволяет временно изменить порядок загрузки без изменения постоянных настроек BIOS. Это наиболее безопасный вариант для разового запуска.</p>
+
+<table>
+<thead>
+<tr>
+<th>Производитель</th>
+<th>Клавиша входа в BIOS</th>
+<th>Клавиша Boot Menu</th>
+<th>Нюансы</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lenovo</td>
+<td>F2 или Fn+F2</td>
+<td>F12</td>
+<td>Часто требуется кнопка Novo Button</td>
+</tr>
+<tr>
+<td>HP</td>
+<td>F10</td>
+<td>F9</td>
+<td>Нужно отключать Fast Boot</td>
+</tr>
+<tr>
+<td>Asus</td>
+<td>F2 (Del)</td>
+<td>F8</td>
+<td>Режим Advanced Mode для настроек</td>
+</tr>
+<tr>
+<td>Dell</td>
+<td>F2</td>
+<td>F12</td>
+<td>Строгая проверка Secure Boot</td>
+</tr>
+</tbody>
+</table>
+
+<p>Если после выбора загрузки с флешки экран остается черным или появляется сообщение об ошибке, попробуйте изменить настройки видео в BIOS или использовать параметры безопасной графики. В меню загрузчика <strong>GRUB</strong> часто доступна опция «Safe graphics» или «Compatibility mode», которая запускает систему с базовыми драйверами <em>VESA</em> или <em>LLVMpipe</em>, что помогает обойти проблемы с проприетарными драйверами видеокарты на начальном этапе.</p>
+
+<details class="faq-item"><summary>Что делать, если флешка не определяется в Boot Menu?</summary><div class="faq-answer"><p>Если ваша флешка не отображается в списке загрузочных устройств, попробуйте переподключить ее в другой USB-порт (желательно USB 2.0, черный, а не синий). Также убедитесь, что в BIOS включена поддержка Legacy/CSM, если вы записывали образ в этом режиме, хотя для Astra Linux предпочтительнее чистый UEFI.</p></div></details>
+
+<h2 id="запуск-live-режима-и-первичная-диагностика">Запуск Live-режима и первичная диагностика</h2>
+
+<p>После успешной загрузки меню <strong>GRUB</strong> выберите пункт «Astra Linux (Live)» или аналогичный, не содержащий слова «Install». Система начнет загрузку в оперативную память, что займет от 1 до 3 минут в зависимости от скорости USB-порта и объема RAM. В отличие от установки, в режиме Live все изменения сохраняются только до перезагрузки, если не настроено специальное хранилище (persistence), что делает этот режим идеальным полигоном для тестов.</p>
+
+<p>Первое, что необходимо сделать после появления рабочего стола <em>Fly</em> — проверить подключение к сети и доступ в интернет. Для проводного соединения (<strong>Ethernet</strong>) проблем обычно не возникает, так как драйверы встроены в ядро. Для Wi-Fi может потребоваться авторизация через веб-интерфейс провайдера или ввод пароля. Если беспроводной адаптер не обнаружен, возможно, потребуются проприетарные firmware, которые в версии Special Edition могут отсутствовать из-за лицензионных ограничений.</p>
+
+<p>Далее следует проверить отображение разрешения экрана и работу тачпада. В Astra Linux настройки дисплея находятся в панели управления <code>Пуск → Настройка → Экран</code>. Если разрешение неверное или отсутствуют нужные частоты обновления, это сигнализирует о необходимости установки проприетарных драйверов видеокарты, что в режиме Live сделать сложно, но можно проверить наличие устройства в диспетчере устройств или через терминал командой <code>lspci</code>.</p>
+
+<ul>
+<li>🌐 Проверьте статус сетевого соединения в трее или через <code>nm-connection-editor</code>.</li>
+<li>🖥️ Убедитесь, что разрешение экрана соответствует матрице ноутбука.</li>
+<li>🔊 Протестируйте вывод звука через системные настройки или воспроизведение тестового файла.</li>
+<li>💾 Проверьте видимость разделов Windows в файловом менеджере <em>PCManFM</em>.</li>
+</ul>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Режим Live позволяет безопасно протестировать железо и драйверы, не затрагивая данные на жестком диске, что является критически важным этапом перед принятием решения об установке.</p></div>
+
+<h2 id="разметка-диска-для-двойной-загрузки">Разметка диска для двойной загрузки</h2>
+
+<p>Если тесты в Live-режиме прошли успешно и вы приняли решение установить Astra Linux рядом с Windows 10, необходимо подготовить дисковое пространство. Самый безопасный способ — использовать встроенную в Windows утилиту «Управление дисками» для сжатия системного раздела <strong>NTFS</strong>. Это минимизирует риск повреждения загрузчика Windows и файловой системы. Выделите свободное место объемом не менее 30 Гб для комфортной работы.</p>
+
+<p>При запуске установщика Astra Linux (<em>installer</em>) выберите режим ручной разметки («Вручную» или «Manual»). Вам нужно будет создать необходимые разделы на месте неразмеченной области. Для современной системы потребуется как минимум корневой раздел <code>/</code> (файловая система <strong>ext4</strong>) и, желательно, раздел подкачки <strong>swap</strong>, особенно если объем оперативной памяти менее 8 Гб. Раздел <em>/home</em> можно вынести отдельно, что упростит переустановку системы в будущем.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Будьте предельно внимательны при выборе диска для установки. Не отформатируйте раздел EFI (ESP), созданный Windows, иначе основная система перестанет загружаться. Используйте существующий EFI-раздел для размещения загрузчика Linux.</p>
+</blockquote>
+
+<p>В процессе разметки важно правильно указать точку монтирования для EFI-раздела. Обычно он имеет размер 100–500 Мб и файловую систему FAT32. В установщике Astra Linux необходимо выбрать этот раздел, нажать «Изменить» и установить флаг использования как <strong>EFI System Partition</strong>, не форматируя его. Это позволит <strong>GRUB</strong> добавить свои файлы загрузки рядом с файлами Windows, создав единое меню выбора ОС.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой объем диска вы планируете выделить под Linux?</strong><ul><li>20-30 Гб</li><li>50-100 Гб</li><li>Более 100 Гб</li><li>Полный диск (с удалением Windows)</li></ul></div></div>
+
+<h2 id="настройка-загрузчика-grub-и-завершение">Настройка загрузчика GRUB и завершение</h2>
+
+<p>Финальным и самым важным этапом является настройка загрузчика <strong>GRUB</strong>. В процессе установки система предложит установить загрузчик в EFI-раздел. После завершения установки и первой перезагрузки вы должны увидеть меню GRUB, где будут перечислены Astra Linux и <em>Windows Boot Manager</em>. Если меню не появилось и сразу загружается Windows, возможно, в BIOS сбился приоритет загрузки, и нужно вручную выставить <strong>Astra Linux</strong> первым в списке.</p>
+
+<p>В некоторых случаях, особенно на ноутбуках с агрессивной реализацией UEFI, Windows может перехватывать управление загрузкой. Для решения этой проблемы можно использовать утилиту <code>efibootmgr</code> в Live-режиме или терминале установленной системы, чтобы изменить порядок загрузки. Команда позволяет просмотреть текущие записи и установить нужную последовательность, гарантируя, что при старте ноутбука управление получит именно GRUB.</p>
+
+<p>После успешной загрузки в новую систему рекомендуется выполнить обновление пакетов и установить необходимые драйверы. Для Astra Linux Special Edition это делается через репозитории «Орел» или «Смоленск» с использованием утилиты <code>apt</code>. Проверка работоспособности всех устройств после первой полной установки — обязательный шаг перед началом продуктивной работы.</p>
+
+<details>
+<summary>Что делать, если пропало меню выбора ОС после обновления Windows?</summary>
+<p>Обновления Windows иногда сбрасывают порядок загрузки UEFI. Вам потребуется загрузиться с Live-флешки Astra Linux, открыть терминал и выполнить команду <code>sudo update-grub</code> (если смонтирована корневая система) или использовать <code>efibootmgr</code> для восстановления приоритета загрузчика Linux. Также можно в BIOS принудительно выставить путь к <code>shimx64.efi</code> или <code>grubx64.efi</code> как первичный.</p>
+</details>
+
+<details>
+<summary>Можно ли получить доступ к файлам Windows из Astra Linux?</summary>
+<p>Да, файловая система NTFS, используемая в Windows 10, полностью поддерживается в Linux. После установки пакетов <code>ntfs-3g</code> (обычно установлен по умолчанию) вы сможете монтировать разделы Windows и работать с файлами. Однако режим «Быстрого запуска» (Fast Startup) в Windows может блокировать разделы для записи, поэтому их рекомендуется размонтировать или отключить Fast Startup в настройках электропитания Windows.</p>
+</details>
+
+<details>
+<summary>Как удалить Astra Linux и вернуть загрузку Windows?</summary>
+<p>Для удаления достаточно загрузиться с установочной флешки Windows, войти в режим восстановления и выполнить команды восстановления загрузчика (<code>bootrec /fixboot</code> и <code>bootrec /fixmbr</code>), либо использовать утилиту <code>efibootmgr</code> в Linux Live для удаления записи GRUB. После этого разделы Linux можно удалить через «Управление дисками» Windows и расширить основной раздел.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#подготовка-оборудования-и-проверка-совместимости">Подготовка оборудования и проверка совместимости</a></li><li><a href="#создание-загрузочного-носителя-для-uefi">Создание загрузочного носителя для UEFI</a></li><li><a href="#настройка-bios-и-загрузка-с-флешки">Настройка BIOS и загрузка с флешки</a></li><li><a href="#запуск-live-режима-и-первичная-диагностика">Запуск Live-режима и первичная диагностика</a></li><li><a href="#разметка-диска-для-двойной-загрузки">Разметка диска для двойной загрузки</a></li><li><a href="#настройка-загрузчика-grub-и-завершение">Настройка загрузчика GRUB и завершение</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-vklyuchaetsya-kompyuter-iru.html" class="related-card">Как включить компьютер IRU: пошаговая инструкция и решение проблем</a></li><li><a href="/a/articles/i/iz/izmenit-imya-kompyutera-astra-linux.html" class="related-card">Как изменить имя компьютера в Astra Linux: Полное руководство</a></li><li><a href="/a/articles/p/po/podklyuchit-ftp-kak-setevoj-disk-windows-10.html" class="related-card">Как подключить FTP как сетевой диск в Windows 10: Инструкция</a></li><li><a href="/a/articles/h/hd/hd-realtek-audio-driver-windows-10.html" class="related-card">Realtek HD Audio Driver для Windows 10: полная инструкция по установке</a></li><li><a href="/a/articles/w/wi/windows-xp-emulator-online.html" class="related-card">Windows XP Emulator Online: Как запустить ретро-ОС в браузере</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-vklyuchaetsya-kompyuter-iru.html" class="related-bottom-card"><span class="related-bottom-title">Как включить компьютер IRU: пошаговая инструкция и решение проблем</span><span class="related-bottom-desc">Узнайте, как правильно включить компьютер IRU. Подробная инструкция для ноутбуков и ПК, поиск кнопки</span></a><a href="/a/articles/i/iz/izmenit-imya-kompyutera-astra-linux.html" class="related-bottom-card"><span class="related-bottom-title">Как изменить имя компьютера в Astra Linux: Полное руководство</span><span class="related-bottom-desc">Подробная инструкция по смене hostname в Astra Linux. Методы через терминал, графический интерфейс F</span></a><a href="/a/articles/p/po/podklyuchit-ftp-kak-setevoj-disk-windows-10.html" class="related-bottom-card"><span class="related-bottom-title">Как подключить FTP как сетевой диск в Windows 10: Инструкция</span><span class="related-bottom-desc">Подробная инструкция: подключить FTP как сетевой диск Windows 10. Решаем ошибки подключения, настраи</span></a><a href="/a/articles/h/hd/hd-realtek-audio-driver-windows-10.html" class="related-bottom-card"><span class="related-bottom-title">Realtek HD Audio Driver для Windows 10: полная инструкция по установке</span><span class="related-bottom-desc">Как скачать, обновить и настроить Realtek HD Audio Driver в Windows 10. Решение проблем со звуком, у</span></a><a href="/a/articles/w/wi/windows-xp-emulator-online.html" class="related-bottom-card"><span class="related-bottom-title">Windows XP Emulator Online: Как запустить ретро-ОС в браузере</span><span class="related-bottom-desc">Запустите Windows XP онлайн без установки. Обзор лучших эмуляторов для браузера, анализ безопасности</span></a><a href="/a/articles/i/ip/iplircontrol-sluzhba-windows-ne-najdena-status-238.html" class="related-bottom-card"><span class="related-bottom-title">Ошибка iplircontrol: как исправить статус 238 в Windows</span><span class="related-bottom-desc">Подробный разбор ошибки iplircontrol службы Windows не найдена status = 238. Эффективные методы восс</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

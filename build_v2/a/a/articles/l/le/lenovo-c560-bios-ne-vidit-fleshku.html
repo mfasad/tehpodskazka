@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Lenovo C560 BIOS не видит флешку: причины и решение — ТехПодсказка</title>
+    <meta name="description" content="Почему Lenovo C560 не видит USB-флешку в BIOS? Полный разбор настроек CSM, Legacy/UEFI, форматов FAT32 и исправление ошибок загрузки.">
+    <link rel="canonical" href="/a/articles/l/le/lenovo-c560-bios-ne-vidit-fleshku.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Lenovo C560 BIOS не видит флешку: причины и решение">
+    <meta property="og:description" content="Почему Lenovo C560 не видит USB-флешку в BIOS? Полный разбор настроек CSM, Legacy/UEFI, форматов FAT32 и исправление ошибок загрузки.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775569404">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/mobilnye-os/">Мобильные ОС</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Lenovo C560 BIOS не видит флешку: причины и решение</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Решение проблемы: Lenovo C560 не видит флешку в BIOS</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#проверка-физического-подключения-и-состояния-накопителя">Проверка физического подключения и состояния накопителя</a></li><li><a href="#настройка-режима-загрузки-legacy-и-uefi-в-bios">Настройка режима загрузки Legacy и UEFI в BIOS</a></li><li><a href="#создание-загрузочной-флешки-fat32-против-ntfs">Создание загрузочной флешки: FAT32 против NTFS</a></li><li><a href="#отключение-secure-boot-и-других-ограничений-безопасности">Отключение Secure Boot и других ограничений безопасности</a></li><li><a href="#специфика-работы-с-портами-usb-20-и-30">Специфика работы с портами USB 2.0 и 3.0</a></li><li><a href="#сброс-настроек-bios-и-обновление-прошивки">Сброс настроек BIOS и обновление прошивки</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Ситуация, когда моноблок <em>Lenovo C560</em> игнорирует подключенную USB-флешку при загрузке, часто ставит в тупик даже опытных пользователей. Вы вставили накопитель, вошли в настройки BIOS, но в списке загрузочных устройств его просто нет. Это распространенная проблема, которая обычно кроется не в физической поломке портов, а в специфических настройках совместимости режимов загрузки.</p>
+<p>Современные версии BIOS, установленные на <strong>Lenovo C560</strong>, могут автоматически переключаться между режимами UEFI и Legacy, что иногда приводит к конфликтам со старыми или неправильно отформатированными накопителями. Понимание того, как система взаимодействует с внешними устройствами на низком уровне, поможет вам быстро вернуть возможность загрузки с USB и переустановить операционную систему или провести диагностику.</p>
+<p>Прежде чем паниковать и нести устройство в сервис, стоит проверить несколько ключевых параметров, которые часто сбиты по умолчанию или изменены предыдущим пользователем. Мы разберем конкретные шаги по настройке <code>Boot Mode</code> и структуры разделов, которые гарантированно заставят компьютер увидеть ваш накопитель.</p>
+
+<h2 id="проверка-физического-подключения-и-состояния-накопителя">Проверка физического подключения и состояния накопителя</h2>
+<p>Первым делом необходимо исключить банальные аппаратные проблемы, так как BIOS не сможет определить устройство, которое не получает достаточного питания или имеет физические повреждения. Моноблоки серии <em>C560</em> оснащены несколькими портами USB, но не все из них могут вести себя одинаково на этапе предзагрузочной диагностики. Попробуйте переподключить флешку в разъем, расположенный на задней панели устройства, так как они часто имеют более надежный контакт с материнской платой.</p>
+<p>Обратите внимание на файловую систему вашего накопителя. Если флешка отформатирована в <strong>NTFS</strong>, а BIOS настроен на работу только с UEFI, система может ее проигнорировать. Для гарантированной совместимости со старыми и новыми системами загрузки лучше всего использовать файловую систему <code>FAT32</code>. Также стоит проверить флешку на другом компьютере, чтобы убедиться, что она физически исправна и определяется операционной системой.</p>
+<blockquote>
+<p>⚠️ Внимание: Если индикатор флешки не загорается при подключении к Lenovo C560, попробуйте использовать USB-хаб с собственным питанием или подключите накопитель до включения моноблока, а не во время работы BIOS.</p>
+</blockquote>
+<p>Иногда проблема кроется в самом порту: пыль или окисление контактов могут препятствовать нормальному обмену данными. Аккуратно продуйте порты сжатым воздухом и попробуйте вставить накопитель до щелчка. Если у вас есть возможность, используйте флешку объемом не более 32 Гб, так как большие объемы иногда требуют специфических драйверов, которые могут отсутствовать в базовой версии BIOS.</p>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте USB-порт версии 2.0 (черный) вместо 3.0 (синий) для максимальной совместимости при загрузке старых версий BIOS или установщиков Windows 7.</p></div>
+
+<h2 id="настройка-режима-загрузки-legacy-и-uefi-в-bios">Настройка режима загрузки Legacy и UEFI в BIOS</h2>
+<p>Самой частой причиной, почему <em>Lenovo C560</em> не видит загрузочную флешку, является несоответствие режима загрузки. В меню BIOS необходимо найти раздел <code>Boot</code> или <code>Startup</code>. Здесь располагается параметр <strong>Boot Mode</strong>, который может иметь значения <em>UEFI</em> или <em>Legacy Support</em>. Если ваша флешка записана в формате MBR, а включен режим UEFI, компьютер просто не увидит загрузочный сектор.</p>
+<p>Для переключения режима выполните следующие действия: войдите в BIOS, нажав клавишу F1 или F2 при старте, затем перейдите в вкладку <code>Startup</code>. Найдите строку <code>UEFI/Legacy Boot</code> и измените значение на <code>Both</code> или <code>Legacy Only</code>. После этого параметр <code>UEFI/Legacy Priority</code> должен быть установлен в положение <code>Legacy First</code>. Это заставит систему в первую очередь искать загрузочные записи на устройствах с классической разметкой.</p>
+<ul>
+<li>🔧 Переключите <strong>CSM Support</strong> в положение Enabled, если такой пункт присутствует в меню Security или Boot.</li>
+<li>🔧 Убедитесь, что <em>Quick Boot</em> отключен, чтобы система успевала опрашивать все USB-порты при старте.</li>
+<li>🔧 Проверьте порядок загрузки в <code>Boot Priority Order</code>, переместив USB-устройство на первую позицию.</li>
+</ul>
+<p>После внесения изменений обязательно сохраните настройки, нажав F10, и перезагрузите компьютер. Если вы планируете устанавливать современную Windows 10 или 11, лучше все же использовать режим UEFI, но тогда и флешку нужно форматировать в GPT. Однако для реанимации системы или установки Linux часто требуется именно Legacy-режим, который на <strong>Lenovo C560</strong> работает стабильно при правильной настройке.</p>
+
+<h2 id="создание-загрузочной-флешки-fat32-против-ntfs">Создание загрузочной флешки: FAT32 против NTFS</h2>
+<p>Форматирование накопителя играет критическую роль в процессе обнаружения. Многие пользователи ошибочно записывают образы ISO сразу на флешку без предварительной подготовки, что приводит к ошибкам чтения. Для режима Legacy Bios идеально подходит файловая система <code>FAT32</code>, в то время как для UEFI часто требуется <strong>GPT</strong> разметка диска, хотя FAT32 также поддерживается большинством UEFI-систем.</p>
+<p>Используйте проверенные улиты для записи образов, такие как <em>Rufus</em> или <em>Etcher</em>. В программе Rufus при выборе образа системы автоматически подберется оптимальная схема раздела. Если вы создаете загрузочную флешку вручную, убедитесь, что таблица разделов установлена в <code>MBR</code> для старых BIOS и <code>GPT</code> для новых. Неправильный выбор схемы — это <mark>главная причина</mark> игнорирования накопителя системой.</p>
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Режим Legacy</th>
+<th>Режим UEFI</th>
+<th>Режим Both</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Схема разделов</td>
+<td>MBR</td>
+<td>GPT</td>
+<td>MBR или GPT</td>
+</tr>
+<tr>
+<td>Файловая система</td>
+<td>FAT32 / NTFS</td>
+<td>FAT32</td>
+<td>FAT32</td>
+</tr>
+<tr>
+<td>Кластер</td>
+<td>Стандартный</td>
+<td>4096 байт</td>
+<td>Стандартный</td>
+</tr>
+<tr>
+<td>Загрузчик</td>
+<td>BIOS / MBR</td>
+<td>EFI</td>
+<td>Гибридный</td>
+</tr>
+</tbody>
+</table>
+<p>При форматировании в Windows через стандартное меню «Мой компьютер» система может не дать выбрать FAT32 для дисков объемом более 32 Гб. В этом случае используйте командную строку или сторонние утилиты. Важно понимать, что если флешка отформатирована в NTFS, а BIOS ожидает FAT32 (что часто бывает в UEFI), устройство просто не появится в списке загрузочных.</p>
+<div class="attention-box attention-info"><div><strong>📊 Какой режим загрузки вы используете чаще всего?</strong><ul><li>Legacy (MBR)</li><li>UEFI (GPT)</li><li>Both (Гибридный)</li><li>Не знаю / Сложный вопрос</li></ul></div></div>
+
+<h2 id="отключение-secure-boot-и-других-ограничений-безопасности">Отключение Secure Boot и других ограничений безопасности</h2>
+<p>Функция <strong>Secure Boot</strong> предназначена для защиты системы от запуска неавторизованного программного обеспечения, но она часто блокирует загрузку с пользовательских флешек, особенно если на них записаны инструменты восстановления или альтернативные ОС. На <em>Lenovo C560</em> этот параметр может находиться в разделе <code>Security</code> или <code>Boot</code>. Для успешной загрузки с внешнего носителя его необходимо отключить.</p>
+<p>Зайдите в BIOS и найдите пункт <code>Secure Boot</code>. Измените его значение на <code>Disabled</code>. В некоторых версиях прошивки может потребоваться сначала сбросить ключи безопасности, выбрав опцию <code>Reset to Setup Mode</code> или <code>Delete Secure Boot Keys</code>. Только после этого система разрешит запуск кода с USB-накопителя, который не имеет цифровой подписи Microsoft.</p>
+<blockquote>
+<p>⚠️ Внимание: После отключения Secure Boot система может выдавать предупреждение о изменении конфигурации безопасности при каждой загрузке. Это нормальное поведение, подтверждающее, что защита была деактивирована пользователем.</p>
+</blockquote>
+<p>Также стоит проверить наличие функции <em>Fast Boot</em>. Хотя она ускоряет включение компьютера, она может пропускать этап инициализации USB-портов, из-за чего флешка не успевает определиться. Отключение <code>Fast Boot</code> дает системе дополнительное время на опрос подключенных устройств, что повышает шансы на успех.</p>
+
+<h2 id="специфика-работы-с-портами-usb-20-и-30">Специфика работы с портами USB 2.0 и 3.0</h2>
+<p>Моноблок <em>Lenovo C560</em> оснащен портами разных стандартов, и это может влиять на видимость устройств в BIOS. Порты USB 3.0 (обычно синего цвета) требуют более сложных драйверов для работы на уровне BIOS по сравнению с USB 2.0. Если базовая прошивка не содержит встроенных драйверов xHCI, то в синие порты флешка может не определиться.</p>
+<p>Попробуйте подключить накопитель в черный порт USB 2.0. Это наиболее надежный способ заставить BIOS увидеть устройство. Если у вас нет портов 2.0 (только 3.0), убедитесь, что в BIOS включена поддержка <strong>xHCI Mode</strong> или <code>USB 3.0 Support</code>. Иногда помогает переключение режима работы контроллера с <em>Auto</em> на <em>Enabled</em>.</p>
+<ul>
+<li>🔌 Используйте короткий USB-кабель-удлинитель, если флешка имеет нестандартный корпус и мешает соседним портам.</li>
+<li>🔌 Избегайте использования USB-хабов без собственного питания при загрузке, так как им может не хватать тока.</li>
+<li>🔌 Проверьте, не отключен ли контроллер USB в разделе <code>Peripherals</code> или <code>Integrated Peripherals</code>.</li>
+</ul>
+<p>В редких случаях статическое электричество может блокировать работу портов. Попробуйте выполнить полную разрядку статического напряжения: выключите моноблок, отсоедините кабель питания, нажмите кнопку включения и держите ее 15-20 секунд. Затем подключите питание обратно и попробуйте загрузиться снова.</p>
+<div class="checklist-block"><h4>☑️ Диагностика портов USB</h4><label class="check-item"><input type="checkbox"><span>Проверен порт USB 2.0</span></label><label class="check-item"><input type="checkbox"><span>Отключены лишние USB-устройства</span></label><label class="check-item"><input type="checkbox"><span>Выполнен сброс статики</span></label><label class="check-item"><input type="checkbox"><span>Проверена работа флешки на другом ПК</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="сброс-настроек-bios-и-обновление-прошивки">Сброс настроек BIOS и обновление прошивки</h2>
+<p>Если никакие настройки не помогают, возможно, в конфигурации BIOS накопились ошибки или она была повреждена. Сброс к заводским настройкам часто возвращает работоспособность функции загрузки. Для этого в меню BIOS выберите пункт <code>Load Setup Defaults</code> или нажмите клавишу F9. После сброса заново проверьте параметры <strong>Boot Mode</strong> и <code>Secure Boot</code>.</p>
+<p>Более радикальным, но эффективным методом является обновление BIOS. Производители выпускают обновления, которые исправляют ошибки совместимости с новым оборудованием и накопителями. Посетите официальный сайт поддержки Lenovo, найдите модель <em>C560</em> и скачайте последнюю версию BIOS. Обновление можно выполнить из-под Windows, если система загружается, или создав специальный загрузочный носитель.</p>
+<blockquote>
+<p>⚠️ Внимание: Обновление BIOS — рискованная операция. Убедитесь, что моноблок подключен к источнику бесперебойного питания, и не прерывайте процесс ни при каких обстоятельствах, иначе устройство может превратиться в «кирпич».</p>
+</blockquote>
+<p>Перед обновлением запишите текущие настройки, так как после прошивки они могут сброситься. В некоторых случаях помогает очистка CMOS-памяти путем извлечения батарейки на материнской плате, но для моноблока <strong>Lenovo C560</strong> это требует частичной разборки корпуса и должно выполняться только при наличии опыта.</p>
+<details class="faq-item"><summary>Как сбросить BIOS без входа в меню?</summary><div class="faq-answer"><p>Выключите компьютер, отключите питание. Найдите на материнской плате джампер CLR_CMOS (обычно рядом с батарейкой). Замкните его контакты металлическим предметом на 10 секунд, затем верните в исходное положение.</p></div></details>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+<details>
+<summary>Почему флешка видна в Windows, но не видна в BIOS Lenovo C560?</summary>
+<p>Это означает, что физически накопитель исправен, но его структура разделов или файловая система не соответствует требованиям текущего режима загрузки BIOS. Скорее всего, флешка отформатирована в GPT, а BIOS ждет MBR (или наоборот), либо активен Secure Boot, блокирующий устройство.</p>
+</details>
+<details>
+<summary>Можно ли загрузиться с USB 3.0 на Lenovo C560?</summary>
+<p>Да, можно, но только если в BIOS включена поддержка xHCI и установлены соответствующие драйверы в прошивке. Для максимальной совместимости, особенно при установке старых ОС, рекомендуется использовать порты USB 2.0.</p>
+</details>
+<details>
+<summary>Какой клавишей вызывать Boot Menu на Lenovo C560?</summary>
+<p>Обычно это клавиша <code>F12</code> или комбинация <code>Fn + F12</code>, которую нужно нажимать сразу после включения питания. Также может работать специальная кнопка Novo Button (маленькое отверстие рядом с кнопкой питания), если она предусмотрена конструкцией.</p>
+</details>
+<details>
+<summary>Что делать, если после смены настроек BIOS перестала грузиться Windows?</summary>
+<p>Верните настройки <strong>Boot Mode</strong> в исходное состояние. Если Windows была установлена в режиме UEFI, а вы включили Legacy, система не найдет загрузчик. Переключите режим обратно на UEFI или переустановите систему в соответствии с новыми настройками.</p>
+</details>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>В 90% случаев проблема решается переключением режима Boot Mode на Legacy и форматированием флешки в FAT32 с схемой MBR.</p></div></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#проверка-физического-подключения-и-состояния-накопителя">Проверка физического подключения и состояния накопителя</a></li><li><a href="#настройка-режима-загрузки-legacy-и-uefi-в-bios">Настройка режима загрузки Legacy и UEFI в BIOS</a></li><li><a href="#создание-загрузочной-флешки-fat32-против-ntfs">Создание загрузочной флешки: FAT32 против NTFS</a></li><li><a href="#отключение-secure-boot-и-других-ограничений-безопасности">Отключение Secure Boot и других ограничений безопасности</a></li><li><a href="#специфика-работы-с-портами-usb-20-и-30">Специфика работы с портами USB 2.0 и 3.0</a></li><li><a href="#сброс-настроек-bios-и-обновление-прошивки">Сброс настроек BIOS и обновление прошивки</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/o/of/oformit-rassrochku-na-telefon-onlajn-v-svyaznom.html" class="related-card">Рассрочка на телефон в Связном онлайн: условия, документы, пошагово</a></li><li><a href="/a/articles/k/ka/kak-udalit-soobschenie-s-knopochnogo-telefona-guwet.html" class="related-card">Как удалить сообщение с кнопочного телефона Guwet: Полная инструкция</a></li><li><a href="/a/articles/a/av/avtomagnitola-2-din-android-postoyanno-perezagruzhaetsya.html" class="related-card">Автомагнитола Android 2 дин перезагружается: причины и решение</a></li><li><a href="/a/articles/v/vs/vse-znachki-v-telefone-redmi-13-254-gb.html" class="related-card">Все значки в телефоне Redmi 13 254 ГБ: расшифровка и скрытые функции</a></li><li><a href="/a/articles/k/ka/kak-dobavit-potok-v-vlc-na-android.html" class="related-card">Как добавить поток в VLC на Андроид: полная инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/o/of/oformit-rassrochku-na-telefon-onlajn-v-svyaznom.html" class="related-bottom-card"><span class="related-bottom-title">Рассрочка на телефон в Связном онлайн: условия, документы, пошагово</span><span class="related-bottom-desc">Как оформить рассрочку на телефон онлайн в Связном? Полный гид по банкам, условиям, пакету документо</span></a><a href="/a/articles/k/ka/kak-udalit-soobschenie-s-knopochnogo-telefona-guwet.html" class="related-bottom-card"><span class="related-bottom-title">Как удалить сообщение с кнопочного телефона Guwet: Полная инструкция</span><span class="related-bottom-desc">Подробный гид по удалению СМС на кнопочных телефонах Guwet. Разбор меню, очистка памяти и решение пр</span></a><a href="/a/articles/a/av/avtomagnitola-2-din-android-postoyanno-perezagruzhaetsya.html" class="related-bottom-card"><span class="related-bottom-title">Автомагнитола Android 2 дин перезагружается: причины и решение</span><span class="related-bottom-desc">Почему автомагнитола на Андроид 2 дин постоянно перезагружается? Полный гид по диагностике: от пробл</span></a><a href="/a/articles/v/vs/vse-znachki-v-telefone-redmi-13-254-gb.html" class="related-bottom-card"><span class="related-bottom-title">Все значки в телефоне Redmi 13 254 ГБ: расшифровка и скрытые функции</span><span class="related-bottom-desc">Полный разбор значков интерфейса Redmi 13. Узнайте, что означают индикаторы батареи, сети и уведомле</span></a><a href="/a/articles/k/ka/kak-dobavit-potok-v-vlc-na-android.html" class="related-bottom-card"><span class="related-bottom-title">Как добавить поток в VLC на Андроид: полная инструкция</span><span class="related-bottom-desc">Подробный гид по добавлению сетевых потоков в VLC на Android. Настройка IPTV, M3U плейлистов и устра</span></a><a href="/a/articles/z/za/zapis-sistemnyh-nastroek-v-android-chto.html" class="related-bottom-card"><span class="related-bottom-title">Запись системных настроек Android: зачем это нужно и как работает</span><span class="related-bottom-desc">Полный разбор процесса записи системных настроек в Android. Что такое write settings, почему система</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

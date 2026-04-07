@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>SVG viewBox не работает: как исправить масштабирование — ТехПодсказка</title>
+    <meta name="description" content="Разбираемся, почему viewBox не грузит SVG. Причины пустого атрибута, синтаксические ошибки и решения для корректного отображения графики.">
+    <link rel="canonical" href="/a/articles/v/vi/viewbox-ne-gruzit.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="SVG viewBox не работает: как исправить масштабирование">
+    <meta property="og:description" content="Разбираемся, почему viewBox не грузит SVG. Причины пустого атрибута, синтаксические ошибки и решения для корректного отображения графики.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775569404">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">SVG viewBox не работает: как исправить масштабирование</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Почему SVG viewBox не работает: полный разбор ошибок</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#природа-атрибута-viewbox-и-частые-ошибки-синтаксиса">Природа атрибута viewBox и частые ошибки синтаксиса</a></li><li><a href="#конфликт-с-атрибутами-width-и-height">Конфликт с атрибутами width и height</a></li><li><a href="#проблемы-с-css-и-родительскими-контейнерами">Проблемы с CSS и родительскими контейнерами</a></li><li><a href="#влияние-preserveaspectratio-на-отображение">Влияние preserveAspectRatio на отображение</a></li><li><a href="#специфика-работы-в-react-vue-и-других-фреймворках">Специфика работы в React, Vue и других фреймворках</a></li><li><a href="#алгоритм-поиска-и-устранения-неисправностей">Алгоритм поиска и устранения неисправностей</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Ситуация, когда графический элемент не отображается на странице, а в коде красуется пустой или некорректный атрибут, знакома многим веб-разработчикам. Часто причиной становится именно <strong>viewBox</strong>, который не грузит изображение или растягивает его на весь экран без сохранения пропорций. Это происходит из-за нарушения синтаксиса, отсутствия явных размеров контейнера или конфликтов с CSS-стилями, переопределяющими поведение векторной графики.</p>
+
+<p>Понимание того, как браузер интерпретирует координатную плоскость SVG, критически важно для верстки адаптивных интерфейсов. Если вы видите пустой квадрат или иконку, уходящую за пределы видимости, значит, система координат не сопоставлена с областью просмотра правильно. В этой статье мы детально разберем механику работы атрибута, найдем скрытые ошибки и научимся писать код, который гарантированно работает во всех современных движках рендеринга.</p>
+
+<p>Ошибки в определении видимой области часто приводят к тому, что контент «улетает» за границы холста. Браузер просто не знает, какую часть рисунка показать пользователю, если параметры заданы неверно. Далее мы рассмотрим конкретные кейсы, таблицы соответствий и интерактивные инструменты, которые помогут вам диагностировать проблему за считанные минуты.</p>
+
+<h2 id="природа-атрибута-viewbox-и-частые-ошибки-синтаксиса">Природа атрибута viewBox и частые ошибки синтаксиса</h2>
+
+<p>Атрибут <code>viewBox</code> определяет, какая именно часть SVG-документа будет видна пользователю и как она масштабируется. Он состоит из четырех чисел, разделенных пробелами или запятыми: <code>min-x</code>, <code>min-y</code>, <code>width</code> и <code>height</code>. Если хотя бы одно из этих значений отсутствует или записано с нарушением формата (например, лишняя запятая в конце строки), браузер может проигнорировать весь атрибут целиком, оставив график без масштабирования.</p>
+
+<p>Частой ошибкой является попытка использовать относительные единицы или проценты внутри самого атрибута <code>viewBox</code>. Это <strong>категорически запрещено</strong> спецификацией W3C. Значения должны быть абсолютными числами, соответствующими внутренней системе координат рисунка. Если вы укажете <code>viewBox="0 0 100% 100%"</code>, браузер не сможет рассчитать масштаб, и изображение схлопнется или исчезнет.</p>
+
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> Не смешивайте разделители! Хотя спецификация позволяет использовать пробелы или запятые, лучше придерживаться единого стиля (только пробелы), чтобы избежать проблем в старых парсерах и минификаторах кода.</p>
+</blockquote>
+
+<p>Также стоит помнить, что порядок следования чисел строго фиксирован. Перепутав ширину и высоту, вы получите искаженную картинку, которую сложно назвать корректно работающей. Проверьте, что третье и четвертое число соответствуют реальным размерам вашего холста в пикселях или условных единицах.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте SVG-оптимизаторы вроде SVGO, которые автоматически исправляют синтаксические ошибки в viewBox перед продакшеном.</p></div>
+
+<h2 id="конфликт-с-атрибутами-width-и-height">Конфликт с атрибутами width и height</h2>
+
+<p>Одной из самых коварных причин, по которой <strong>viewBox</strong> не работает как ожидается, является отсутствие явных атрибутов <code>width</code> и <code>height</code> в теге <code>&lt;svg&gt;</code>. Без них браузер может не понять, в какую область экрана вписывать контент, особенно если CSS-правила не задают размеры родительскому контейнеру. В результате вы получаете изображение размером 300x150 пикселей по умолчанию или полный ноль.</p>
+
+<p>Существует тонкая грань между адаптивностью и жесткой фиксацией. Если вы хотите, чтобы SVG растягивался на всю ширину блока, но сохранял пропорции, используйте <code>width="100%"</code> и <code>height="auto"</code>. Однако, если вы укажете только проценты без определенного <code>viewBox</code>, браузер не сможет рассчитать aspect ratio (соотношение сторон), и графика «поедет».</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Как вы обычно задаете размеры SVG?</strong><ul><li>Только viewBox</li><li>width и height в пикселях</li><li>width 100% и height auto</li><li>Через CSS-классы</li></ul></div></div>
+
+<p>Рассмотрим типичные сценарии поведения браузера при разных комбинациях атрибутов:</p>
+
+<table>
+<thead>
+<tr>
+<th>Наличие viewBox</th>
+<th>Наличие width/height</th>
+<th>Результат рендеринга</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Есть</td>
+<td>Есть</td>
+<td>Идеальное масштабирование, сохранение пропорций</td>
+</tr>
+<tr>
+<td>Есть</td>
+<td>Нет</td>
+<td>Масштабирование есть, но размер по умолчанию (часто 300x150)</td>
+</tr>
+<tr>
+<td>Нет</td>
+<td>Есть</td>
+<td>Отрисовка 1:1, обрезание краев если контент больше размеров</td>
+</tr>
+<tr>
+<td>Нет</td>
+<td>Нет</td>
+<td>Непредсказуемое поведение, часто 300x150 без масштабирования</td>
+</tr>
+</tbody>
+</table>
+
+<p>Важно понимать, что <em>CSS-свойства</em> имеют приоритет над HTML-атрибутами. Если в стилях прописано <code>width: 50px</code>, а в HTML <code>width="100"</code>, браузер применит правило из CSS. Это может сбить с толку при отладке, когда вроде бы все задано, но картинка не меняется.</p>
+
+<h2 id="проблемы-с-css-и-родительскими-контейнерами">Проблемы с CSS и родительскими контейнерами</h2>
+
+<p>Даже идеально написанный SVG-код может не отобразиться, если родительский элемент имеет нулевую высоту. Это классическая проблема flex- и grid-верстки, где блок сжимается, если в нем нет контента с явными размерами. В таком случае <strong>viewBox</strong> формально работает, но видимая область схлопывается в ноль, и пользователь видит пустоту.</p>
+
+<p>Проверьте цепочку наследования стилей. Иногда внешние библиотеки или фреймворки применяют <code>display: none</code> или <code>visibility: hidden</code> к графическим элементам при определенных условиях. Также стоит обратить внимание на свойство <code>overflow</code> у родителя: если оно скрыто, а SVG пытается выйти за границы из-за неверного масштаба, его просто обрежет.</p>
+
+<p>Для диагностики используйте инструменты разработчика в браузере. Наведите курсор на элемент SVG: если вы видите синюю рамку, но картинки нет — проблема в содержимом или масштабе. Если рамки нет вообще — элемент не занимает места в потоке документа.</p>
+
+<div class="checklist-block"><h4>☑️ Диагностика CSS-проблем</h4><label class="check-item"><input type="checkbox"><span>Проверить height родителя:Убедиться в отсутствии display none:Проверить overflow:hidden:Сравнить computed styles</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 1</div></div>
+
+<h2 id="влияние-preserveaspectratio-на-отображение">Влияние preserveAspectRatio на отображение</h2>
+
+<p>Атрибут <code>preserveAspectRatio</code> управляет тем, как содержимое вписывается в заданный прямоугольник. По умолчанию он равен <code>xMidYMid meet</code>, что означает центрирование и вписывание без обрезки. Если вы случайно или намеренно изменили его на <code>none</code>, изображение растянется, игнорируя пропорции, что может выглядеть как ошибка загрузки.</p>
+
+<p>Значение <code>slice</code> заставляет браузер заполнять всю область, обрезая лишние части. Это полезно для фоновых изображений, но опасно для иконок, где важна целостность формы. Неправильный выбор параметра может создать иллюзию того, что <strong>viewBox</strong> не работает, хотя на самом деле он работает слишком агрессивно.</p>
+
+<p>Рассмотрим основные значения:</p>
+<ul>
+<li>🔲 <strong>meet</strong> — изображение видно целиком, могут остаться пустые поля (letterboxing).</li>
+<li>✂️ <strong>slice</strong> — область заполнена полностью, края обрезаны (cropping).</li>
+<li>📏 <strong>none</strong> — игнорирование пропорций, сильное искажение формы.</li>
+</ul>
+
+<p>Если вам нужно растянуть графику на всю ширину без сохранения пропорций (например, для градиентных фонов), используйте <code>none</code>. В остальных случаях лучше оставить стандартное поведение или явно указать <code>meet</code>, чтобы избежать сюрпризов на разных экранах.</p>
+
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> Изменение <code>preserveAspectRatio</code> не исправит ошибку в цифрах <code>viewBox</code>. Сначала убедитесь, что координаты заданы верно, и только потом экспериментируйте с выравниванием.</p>
+</blockquote>
+
+<h2 id="специфика-работы-в-react-vue-и-других-фреймворках">Специфика работы в React, Vue и других фреймворках</h2>
+
+<p>При использовании современных JS-фреймворков часто возникает проблема кеширования компонентов или неправильной передачи пропсов. В React, например, атрибут <code>viewBox</code> чувствителен к регистру в JSX (должен быть <code>viewBox</code>, а не <code>ViewBox</code>), хотя браузеры и прощают это в обычном HTML. Ошибка в регистре может привести к тому, что атрибут не применится.</p>
+
+<p>В Vue.js или Angular динамическое绑定 (binding) может передавать значение как объект или массив, а не как строку. Если вы передадите <code>:viewBox="[0, 0, 100, 100]"</code>, результат может отличаться от ожидаемого в зависимости от версии фреймворка и способа рендеринга. Всегда проверяйте итоговый HTML-код в инспекторе.</p>
+
+<details class="faq-item"><summary>Проблема гидратации в Next.js/Nuxt</summary><div class="faq-answer"><p>При серверном рендеринге (SSR) может возникать несоответствие между тем, что отрисовал сервер, и тем, что ожидает клиент. Это вызывает предупреждения в консоли и может приводить к мерцанию или исчезновению SVG до полной загрузки JS-гидратации. Решение — использовать компонент SVG без SSR или явно задавать размеры.</p></div></details>
+
+<p>Также стоит упомянуть о кешировании. Если вы обновили файл SVG на сервере, но у пользователя в браузере осталась старая версия с ошибкой, никакие изменения в коде не помогут. Используйте хеши в именах файлов (например, <code>icon.svg?v=2</code>) для принудительного обновления кеша.</p>
+
+<h2 id="алгоритм-поиска-и-устранения-неисправностей">Алгоритм поиска и устранения неисправностей</h2>
+
+<p>Если вы столкнулись с проблемой, действуйте системно. Не меняйте все параметры сразу. Сначала проверьте синтаксис чисел, затем наличие ширины и высоты, и только потом лезьте в CSS. Часто решение кроется в одной пропущенной цифре или лишнем пробеле.</p>
+
+<p>Попробуйте упростить код до минимума: уберите все стили, оставьте только тег <code>&lt;svg&gt;</code> с <code>viewBox</code> и одним простым прямоугольником внутри. Если он работает, постепенно добавляйте сложность, пока проблема не проявится снова. Это поможет изолировать конфликтующий фактор.</p>
+
+<p>Вот краткий чек-лист действий:</p>
+<ul>
+<li>🔍 Проверьте, что в <code>viewBox</code> ровно 4 числа.</li>
+<li>📐 Убедитесь, что заданы <code>width</code> и <code>height</code> (хотя бы в CSS).</li>
+<li>🎨 Проверьте, не скрыт ли элемент стилями родителя.</li>
+<li>🔄 Очистите кеш браузера или откройте в режиме инкогнито.</li>
+</ul>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>90% проблем с viewBox решаются проверкой синтаксиса (4 числа через пробел) и добавлением явных width/height к тегу svg.</p></div>
+
+<p>Помните, что векторная графика — мощный инструмент, но она требует точности. <mark>Нулевое значение ширины или высоты в viewBox автоматически скрывает весь контент</mark>, так как деление на ноль или масштабирование в ноль делает изображение невидимым. Всегда проверяйте эти параметры в первую очередь.</p>
+
+<details>
+<summary>Почему мой SVG выглядит размытым при правильном viewBox?</summary>
+<p>Размытость обычно вызвана несоответствием разрешения экрана и размера отрисовки. Убедитесь, что SVG не растягивается CSS-ом больше своего реального размера, или используйте более высокое разрешение исходника. Также проверьте, не включено ли сглаживание (anti-aliasing) слишком агрессивно в браузере.</p>
+</details>
+
+<details>
+<summary>Можно ли использовать отрицательные значения в viewBox?</summary>
+<p>Да, <code>min-x</code> и <code>min-y</code> могут быть отрицательными. Это просто сдвигает начало координатной плоскости. Однако ширина и высота всегда должны быть положительными числами, иначе браузер не сможет построить масштаб.</p>
+</details>
+
+<details>
+<summary>Как сделать SVG адаптивным без viewBox?</summary>
+<p>Без <code>viewBox</code> полноценной адаптивности добиться сложно. Можно использовать проценты для <code>width</code> и <code>height</code>, но масштабирование внутренней графики работать не будет. Лучшее решение — всегда добавлять <code>viewBox</code>, соответствующий оригинальным размерам рисунка.</p>
+</details>
+
+<details>
+<summary>Влияет ли порядок чисел в viewBox на результат?</summary>
+<p>Да, порядок строго фиксирован: X, Y, Ширина, Высота. Если перепутать X и Ширину, изображение сместится и исказится. Браузер не угадывает намерения, он слепо следует указанной последовательности.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#природа-атрибута-viewbox-и-частые-ошибки-синтаксиса">Природа атрибута viewBox и частые ошибки синтаксиса</a></li><li><a href="#конфликт-с-атрибутами-width-и-height">Конфликт с атрибутами width и height</a></li><li><a href="#проблемы-с-css-и-родительскими-контейнерами">Проблемы с CSS и родительскими контейнерами</a></li><li><a href="#влияние-preserveaspectratio-на-отображение">Влияние preserveAspectRatio на отображение</a></li><li><a href="#специфика-работы-в-react-vue-и-других-фреймворках">Специфика работы в React, Vue и других фреймворках</a></li><li><a href="#алгоритм-поиска-и-устранения-неисправностей">Алгоритм поиска и устранения неисправностей</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-nastroit-most-na-vin-10.html" class="related-card">Как настроить мост на Вин 10: полное руководство</a></li><li><a href="/a/articles/k/ka/kak-raspechatat-foto-s-sohraneniem-v-razmer-6h4.html" class="related-card">Как напечатать фото 6х4: точный размер и пропорции</a></li><li><a href="/a/articles/k/ka/kak-v-prilozhenii-chelovek-iduschij-uluchshit-rezultaty.html" class="related-card">Как улучшить результаты в &#x27;Человек идущий&#x27;: гайд по прокачке</a></li><li><a href="/a/articles/g/gd/gde-v-elektroschitke-najti-obschuyu-antennu.html" class="related-card">Где в электрощитке найти общую антенну: поиск ТВ-сигнала</a></li><li><a href="/a/articles/n/no/novyj-xtream-codes-plejlist.html" class="related-card">Новый Xtream Codes плейлист: актуальные серверы 2026</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-nastroit-most-na-vin-10.html" class="related-bottom-card"><span class="related-bottom-title">Как настроить мост на Вин 10: полное руководство</span><span class="related-bottom-desc">Пошаговая инструкция по созданию сетевого моста в Windows 10. Объединение интерфейсов Wi-Fi и Ethern</span></a><a href="/a/articles/k/ka/kak-raspechatat-foto-s-sohraneniem-v-razmer-6h4.html" class="related-bottom-card"><span class="related-bottom-title">Как напечатать фото 6х4: точный размер и пропорции</span><span class="related-bottom-desc">Полная инструкция: как распечатать фото 6х4 см без обрезки и полей. Настройка DPI, выбор бумаги и пр</span></a><a href="/a/articles/k/ka/kak-v-prilozhenii-chelovek-iduschij-uluchshit-rezultaty.html" class="related-bottom-card"><span class="related-bottom-title">Как улучшить результаты в &#x27;Человек идущий&#x27;: гайд по прокачке</span><span class="related-bottom-desc">Узнайте, как в приложении &#x27;Человек идущий&#x27; улучшить результаты. Эффективные стратегии тренировок, на</span></a><a href="/a/articles/g/gd/gde-v-elektroschitke-najti-obschuyu-antennu.html" class="related-bottom-card"><span class="related-bottom-title">Где в электрощитке найти общую антенну: поиск ТВ-сигнала</span><span class="related-bottom-desc">Где найти общую антенну в щитке? Инструкция по поиску ТВ-разъема, устранению помех и подключению каб</span></a><a href="/a/articles/n/no/novyj-xtream-codes-plejlist.html" class="related-bottom-card"><span class="related-bottom-title">Новый Xtream Codes плейлист: актуальные серверы 2026</span><span class="related-bottom-desc">Где найти рабочий Xtream Codes плейлист в 2026 году. Проверка URL, обновление подписок и решение оши</span></a><a href="/a/articles/z/zh/zheltoe-pyatno-ajfon-11.html" class="related-bottom-card"><span class="related-bottom-title">Желтое пятно на экране iPhone 11: причины и как исправить</span><span class="related-bottom-desc">Почему на iPhone 11 появляется желтое пятно? Разбираем причины выгорания OLED, залива и программные </span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

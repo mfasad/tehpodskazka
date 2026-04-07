@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Как включить интернет через БИОС: настройка Wake-on-LAN и PXE — ТехПодсказка</title>
+    <meta name="description" content="Подробная инструкция, как активировать сетевой адаптер в BIOS/UEFI. Настройка Wake-on-LAN, PXE и Ethernet для стабильного подключения.">
+    <link rel="canonical" href="/a/articles/k/ka/kak-vklyuchit-internet-cherez-bios.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как включить интернет через БИОС: настройка Wake-on-LAN и PXE">
+    <meta property="og:description" content="Подробная инструкция, как активировать сетевой адаптер в BIOS/UEFI. Настройка Wake-on-LAN, PXE и Ethernet для стабильного подключения.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775569404">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/mobilnye-os/">Мобильные ОС</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как включить интернет через БИОС: настройка Wake-on-LAN и PXE</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Как включить интернет через БИОС: настройка сетевых функций</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Многие пользователи ошибочно полагают, что полноценный выход в глобальную сеть возможен непосредственно из интерфейса базовой системы ввода-вывода. На самом деле, <strong>BIOS</strong> или его современный аналог <em>UEFI</em> не обладают встроенными браузерами или драйверами для серфинга в интернете. Однако, именно здесь находятся критически важные настройки, которые позволяют компьютеру «видеть» сеть, загружаться через неё или включаться по команде извне.</p>
+
+<p>Понимание того, как правильно конфигурировать сетевой контроллер на уровне «железа», необходимо для решения специфических задач. Это может быть настройка удалённого управления сервером, загрузка операционной системы с сетевого хранилища или активация функции «магического пакета» для включения ПК. Без правильной активации этих параметров в прошивке материнской платы даже установленная операционная система может не получить доступ к локальной сети.</p>
+
+<p>В этой статье мы детально разберем процесс активации сетевых функций, который часто называют «включением интернета через БИОС». Мы рассмотрим разницу между устаревшим стандартом Legacy и современным <em>UEFI</em>, а также уделим внимание безопасности, так как открытые сетевые порты на низком уровне могут стать уязвимостью. Готовьтесь работать с техническими терминами и внимательно проверять каждый шаг, чтобы не нарушить стабность системы.</p>
+
+<h2>Разница между BIOS и UEFI в контексте сетевых настроек</
+
+<p>Прежде чем переходить к конкретным действиям, важно чётко осознавать архитектурные различия между классическим <strong>BIOS</strong> и интерфейсом <em>UEFI</em>. Старые системы используют текстовый режим и ограниченный набор драйверов, что делает настройку сети там крайне примитивной или вовсе невозможной для сложных протоколов. В то же время, современные платы с <em>UEFI</em> поддерживают полноценные сетевые стеки, позволяя даже обновлять прошивку материнской платы напрямую, без загрузки Windows или Linux.</p>
+
+<p>В среде <em>UEFI</em> сетевые настройки часто вынесены в отдельный, более дружелюбный раздел, где можно даже увидеть MAC-адрес устройства и статус подключения кабеля. <strong>Legacy BIOS</strong> полагается исключительно на опции ROM сетевой карты, которые активируются скрытыми горячими клавишами или базовыми флагами в меню периферии. Игнорирование этого различия приводит к тому, что пользователи ищут несуществующие кнопки в старых интерфейсах или теряются в избытке функций новых.</p>
+
+<blockquote>⚠️ Внимание: Попытка изменить настройки сетевого стека в разделе, предназначенном для безопасной загрузки (Secure Boot), может привести к блокировке загрузки операционной системы с сетевых дисков.</blockquote>
+
+<p>Пользователям новых систем стоит помнить, что <em>UEFI</em> часто по умолчанию отключает поддержку устаревших сетевых протоколов PXE в пользу более современных стандартов HTTP Boot. Это сделано ради безопасности и скорости, но в корпоративных сетях со старым оборудованием может потребоваться принудительно вернуть совместимость. Понимание версии вашей прошивки — первый шаг к успеху.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой интерфейс BIOS у вашего компьютера?</strong><ul><li>Классический синий BIOS (Legacy)</li><li>Современный UEFI с мышкой</li><li>Не знаю / Не уверен</li><li>У меня Mac (EFI)</li><li>Другое</li></ul></div></div>
+
+<h2>Вход в настройки и поиск раздела периферии</
+
+<p>Процесс конфигурации всегда начинается с входа в меню Setup. Для этого необходимо нажать специальную клавишу сразу после включения компьютера, до появления логотипа операциной системы. Чаще всего используется клавиша <code>Delete</code> или <code>F2</code>, однако производители ноутбуков <em>HP</em>, <em>Dell</em> и <em>Lenovo</em> могут использовать комбинации вроде <code>F10</code>, <code>F12</code> или <code>Esc</code>.</p>
+
+<p>После попадания в меню нужно найти раздел, отвечающий за встроенные устройства. В разных версиях прошивок он может называться по-разному, и поиск требует внимательности. Обычно искомые настройки скрыты в вкладках с названиями, указывающими на периферию или интеграцию компонентов на плате.</p>
+
+<p>Основные названия разделов, где стоит искать сетевые опции:</p>
+<ul>
+<li>🔍 <strong>Integrated Peripherals</strong> — классическое название для старых плат.</li>
+<li>🔍 <strong>Advanced</strong> → <strong>Onboard Devices Configuration</strong> —常见 для <em>ASUS</em> и <em>Gigabyte</em>.</li>
+<li>🔍 <strong>Chipset</strong> → <strong>South Bridge</strong> — иногда настройки прячут здесь.</li>
+<li>🔍 <strong>Boot</strong> — раздел загрузки, где часто лежит настройка приоритета сети.</li>
+</ul>
+
+<p>Если вы не видите этих разделов, возможно, ваш компьютер находится в режиме «Easy Mode». В интерфейсе <em>UEFI</em> часто есть кнопка перехода в «Advanced Mode» (обычно клавиша <code>F7</code>), которая открывает полный доступ ко всем параметрам. Без этого переключения многие критические настройки будут скрыты от глаз пользователя.</p>
+
+<h2>Активация сетевого контроллера и LAN Option ROM</
+
+<p>Центральным элементом настройки является непосредственная активация сетевого адаптера. Даже если карта встроена в материнскую плату, она может быть программно отключена для экономии энергии или из-за конфликта ресурсов. Вам необходимо найти параметр, содержащий слова <strong>Onboard LAN</strong>, <em>Integrated NIC</em> или <strong>Ethernet Controller</strong>.</p>
+
+<p>Значение этого параметра должно быть установлено в положение <code>Enabled</code>. Если стоит <code>Disabled</code>, операционная система просто не увидит физическое устройство, и никакие драйверы не помогут. В некоторых случаях, особенно на серверных платах, может потребоваться выбрать конкретный режим работы, например, <em>Auto</em> или принудительно указать скорость <code>1 Gbps</code>.</p>
+
+<p>Отдельного внимания заслуживает параметр <strong>LAN Option ROM</strong> или <em>PXE Boot ROM</em>.</p>
+<p>Эта функция загружает微小ую программу с сетевого адаптера до старта ОС.</p>
+<p>Она необходима только если вы планируете загрузку компьютера по сети.</p>
+<p>В домашних условиях её лучше держать выключенной (<code>Disabled</code>), так как это ускоряет старт системы.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка активации LAN</h4><label class="check-item"><input type="checkbox"><span>Найти раздел Integrated Peripherals</span></label><label class="check-item"><input type="checkbox"><span>Убедиться, что Onboard LAN стоит Enabled</span></label><label class="check-item"><input type="checkbox"><span>Проверить статус LAN Option ROM</span></label><label class="check-item"><input type="checkbox"><span>Сохранить изменения клавишей F10</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<blockquote>⚠️ Внимание: Включение опции PXE ROM на незащищённой сети может позволить злоумышленникам попытаться загрузить вредоносный код на ваш компьютер при старте.</blockquote>
+
+<h2>Настройка Wake-on-LAN для удаленного включения</
+
+<p>Одной из самых полезных функций, доступных через БИОС, является технология <strong>Wake-on-LAN</strong> (WoL). Она позволяет включать компьютер удалённо, отправляя специальный сигнал («магический пакет») через локальную сеть. Это крайне удобно для организации домашнего сервера или доступа к рабочему ПК из другой комнаты.</p>
+
+<p>Для активации WoL недостаточно просто включить сетевую карту. Необходимо найти параметр с названием <em>Wake on LAN</em>, <strong>PME Event Wake Up</strong> или <code>Resume By PCI/PCI-E Device</code>. Установка значения <code>Enabled</code> разрешает материнской плате подавать питание на сетевой контроллер даже когда компьютер выключен (находится в состоянии S5).</p>
+
+<p>В современных системах <em>UEFI</em> также важно проверить настройки управления питанием в разделе <strong>APM Configuration</strong>.</p>
+<p>Там может потребоваться разрешить пробуждение по сети explicitly.</p>
+<p>Без этого шага компьютер будет игнорировать входящие пакеты в выключенном состоянии.</p>
+<p>Убедитесь, что в операционной системе в диспетчере устройств также разрешено выводу из спящего режима.</p>
+
+<details class="faq-item"><summary>Почему WoL не работает после настройки?</summary><div class="faq-answer"><p>Часто проблема кроется не в БИОСе, а в настройках энергосбережения Windows. Зайдите в Диспетчер устройств → Сетевые адаптеры → Свойства вашей карты → Управление электропитанием и снимите галочку «Разрешить отключение этого устройства для экономии энергии», но оставьте галочку «Разрешить этому устройству выводить компьютер из ждущего режима». Также убедитесь, что в БИОС включена функция ErP/EuP Ready (иногда её нужно выключить, иногда включить — зависит от производителя, попробуйте оба варианта).</p></div></details>
+
+<h2>Приоритет загрузки и сетевой протокол PXE</
+
+<p>Если ваша цель — не просто удалённое включение, а именно загрузка операционной системы с сервера, необходимо настроить приоритет boot-устройств. В разделе <strong>Boot</sub> найдите пункт <em>Boot Option Priorities</strong>. Здесь вы должны поднять устройство с названием <strong>Network</em>, <em>PXE</em> или <strong>IPV4/IPv6 Network</strong> на первое место.</p>
+
+<p>Существует два основных протокола для сетевой загрузки: устаревший <strong>PXE</strong> (Preboot Execution Environment) и более новый <em>HTTP Boot</em>.</p>
+<p>PXE работает на уровне UDP и требует наличия DHCP-сервера в сети.</p>
+<p>HTTP Boot использует стандартные веб-протоколы и часто не требует сложной настройки DHCP, что делает его предпочтительным для современных развёртываний.</p>
+<p>Выбор протокола зависит от инфраструктуры вашей сети.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если вы не используете корпоративную сеть для загрузки ОС, обязательно поставьте ваш жесткий диск (Windows Boot Manager) на первое место в приоритете загрузки. Это ускорит включение компьютера на несколько секунд, так как системе не придется ждать ответа от несуществующего сетевого сервера.</p></div>
+
+<p>Таблица ниже поможет сравнить основные параметры сетевых настроек в БИОС:</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Значение для дома</th>
+<th>Значение для сервера/корпорации</th>
+<th>Влияние на скорость</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Onboard LAN</td>
+<td>Enabled</td>
+<td>Enabled</td>
+<td>Нет</td>
+</tr>
+<tr>
+<td>LAN Option ROM (PXE)</td>
+<td>Disabled</td>
+<td>Enabled</td>
+<td>Увеличивает время старта</td>
+</tr>
+<tr>
+<td>Wake-on-LAN</td>
+<td>По желанию</td>
+<td>Enabled</td>
+<td>Минимальное</td>
+</tr>
+<tr>
+<td>Boot Priority (Network)</td>
+<td>Низкий</td>
+<td>Высокий (если нужно)</td>
+<td>Сильное при включенном PXE</td>
+</tr>
+</tbody>
+</table>
+
+<h2>Проблемы совместимости: Legacy и UEFI</
+
+<p>При настройке сетевой загрузки в современных системах часто возникает конфликт режимов загрузки. Если ваш сетевой сервер поддерживает только старый протокол PXE (Legacy), а в БИОС включен режим <strong>UEFI Only</strong>, компьютер не сможет загрузиться по сети. В этом случае необходимо найти параметр <em>CSM</em> (Compatibility Support Module) и включить его.</p>
+
+<p>Включение <strong>CSM</strong> позволяет эмулировать среду Legacy BIOS внутри UEFI.</p>
+<p>После активации CSM появится возможность выбрать тип загрузки для сетевых устройств: <code>Legacy</code> или <code>UEFI</code>.</p>
+<p>Для максимальной совместимости со старым оборудованием иногда приходится переключать весь режим загрузки на <em>Legacy</em>, но это лишит вас преимуществ быстрого старта и безопасности GPT-разметки.</p>
+
+<blockquote>⚠️ Внимание: Переключение режима загрузки (CSM/Legacy) на уже установленной операционной системе может привести к тому, что Windows перестанет загружаться. Делайте это только если вы понимаете разницу между MBR и GPT разделами.</blockquote>
+
+<p>Также стоит упомянуть проблему с драйверами сетевой карты в среде предзагрузки. Некоторые материнские платы <em>ASRock</em> или <em>MSI</em> могут не иметь встроенного драйвера для гигабитных карт в базовой прошивке, требуя обновления BIOS до последней версии для корректной работы сетевых функций.</p>
+
+<h2>Безопасность сетевых функций в BIOS</
+
+<p>Активация сетевых функций на уровне прошивки открывает потенциальные векторы атаки. Хакеры могут использовать уязвимости в реализации <strong>PXE</strong> или <em>Wake-on-LAN</em> для получения доступа к системе до загрузки антивируса. Поэтому, если вы не используете эти функции явно, их лучше держать отключенными.</p>
+
+<p>Особое внимание стоит уделить параметру <strong>Secure Boot</strong>.</p>
+<p>Хотя он в первую очередь защищает загрузчик ОС, в связке с сетевой загрузкой он может блокировать неподписанные сетевые образы.</p>
+<p>Для корпоративных сред это критически важно, чтобы сотрудники не загружали неавторизованные ОС с флешек или по сети.</p>
+<p>В домашних условиях Secure Boot лучше оставить включенным.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Главный принцип безопасности: включайте сетевые функции в BIOS (PXE, WoL) только если вы actively используете их. Лишние открытые порты на уровне железа — это риск, который не оправдан для обычного домашнего пользователя.</p></div>
+
+<p>Для дополнительной защиты можно установить пароль на вход в сам BIOS. Это предотвратит несанкционированное изменение сетевых настроек злоумышленником, получившим физический доступ к компьютеру. Пароль должен быть сложным и уникальным, не используйте стандартные комбинации вроде «1234».</h2>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Можно ли выйти в интернет из BIOS, чтобы обновить драйверы?</summary>
+<p>В классическом понимании — нет. Вы не можете открыть браузер. Однако, современные платы с <em>UEFI</em> часто имеют встроенную утилиту для обновления прошивки BIOS через интернет. Она находится в разделе «Tool» или «Advanced». Драйверы же обновляются только внутри операционной системы.</p>
+</details>
+
+<details>
+<summary>Почему компьютер долго включается после настройки сети в BIOS?</summary>
+<p>Скорее всего, у вас в приоритете загрузки стоит сетевая карта (<strong>PXE</strong>), и компьютер при каждом старте ждет ответа от сервера, которого нет. Зайдите в раздел <code>Boot</code> и поставьте ваш жесткий диск первым в списке, а сетевую загрузку отключите или опустите в самый низ.</p>
+</details>
+
+<details>
+<summary>Работает ли Wake-on-LAN через роутер (из интернета)?</summary>
+<p>Сам по себе BIOS и функция WoL работают только в локальной сети. Чтобы включать компьютер через интернет, вам потребуется роутер с поддержкой проброса пакетов (Port Forwarding) на порт 9 UDP и, желательно, статический IP-адрес или настроенный DDNS.</p>
+</details>
+
+<details>
+<summary>Как сбросить настройки сети в BIOS, если компьютер перестал видеть кабель?</summary>
+<p>Найдите опцию <code>Load Optimized Defaults</code> (обычно клавиша <code>F9</code> или <code>F5</code>). Это вернет все настройки, включая сетевые, к заводским значениям. После этого заново проверьте, включен ли <strong>Onboard LAN</strong>.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/a/al/alisa-radiostanciya-goryachaya-liniya.html" class="related-card">Алиса радиостанция: Горячая линия и настройка голоса</a></li><li><a href="/a/articles/k/ka/kak-ochistit-kesh-na-telefone-android-honor-10aj.html" class="related-card">Как очистить кэш на Honor 10i: полная инструкция</a></li><li><a href="/a/articles/s/sm/sml-482-hd-base-proshivka-na-android-cherez-usb.html" class="related-card">SML-482 HD Base: прошивка на Android через USB (Инструкция)</a></li><li><a href="/a/articles/t/ti/tik-tok-propal-s-ekrana-androida.html" class="related-card">Тик ток пропал с экрана андроида: как вернуть иконку</a></li><li><a href="/a/articles/k/ka/kak-otklyuchit-podpisku-na-wink-na-iphone.html" class="related-card">Как отключить подписку Wink на iPhone: пошаговая инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/a/al/alisa-radiostanciya-goryachaya-liniya.html" class="related-bottom-card"><span class="related-bottom-title">Алиса радиостанция: Горячая линия и настройка голоса</span><span class="related-bottom-desc">Как активировать голосовой помощник Алиса на радиостанции, настроить горячую линию и решить проблемы</span></a><a href="/a/articles/k/ka/kak-ochistit-kesh-na-telefone-android-honor-10aj.html" class="related-bottom-card"><span class="related-bottom-title">Как очистить кэш на Honor 10i: полная инструкция</span><span class="related-bottom-desc">Ускорьте работу Honor 10i. Подробная инструкция по очистке системного кэша, памяти приложений и брау</span></a><a href="/a/articles/s/sm/sml-482-hd-base-proshivka-na-android-cherez-usb.html" class="related-bottom-card"><span class="related-bottom-title">SML-482 HD Base: прошивка на Android через USB (Инструкция)</span><span class="related-bottom-desc">Полная инструкция по прошивке SML-482 HD Base через USB. Установка Android, восстановление после сбо</span></a><a href="/a/articles/t/ti/tik-tok-propal-s-ekrana-androida.html" class="related-bottom-card"><span class="related-bottom-title">Тик ток пропал с экрана андроида: как вернуть иконку</span><span class="related-bottom-desc">Пропал Тик Ток с экрана андроида? Узнайте, как найти скрытое приложение, отключить блокировщик или в</span></a><a href="/a/articles/k/ka/kak-otklyuchit-podpisku-na-wink-na-iphone.html" class="related-bottom-card"><span class="related-bottom-title">Как отключить подписку Wink на iPhone: пошаговая инструкция</span><span class="related-bottom-desc">Узнайте, как отменить подписку Wink на Айфоне через настройки или App Store. Пошаговый гид по управл</span></a><a href="/a/articles/m/my/mynokiatool-ne-vidit-telefon.html" class="related-bottom-card"><span class="related-bottom-title">Mynokiatool не видит телефон: причины и решение</span><span class="related-bottom-desc">Почему mynokiatool не видит телефон? Полный гид по устранению ошибок подключения, драйверам и выбору</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>
