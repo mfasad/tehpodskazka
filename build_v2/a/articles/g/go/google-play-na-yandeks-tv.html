@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Google Play на Яндекс ТВ: установка приложений Android — tehpodskazka.vercel.app2</title>
+    <meta name="description" content="Полная инструкция по запуску Google Play на Яндекс ТВ. Разбор методов через ADB, настройки DNS и альтернативные магазины приложений.">
+    <link rel="canonical" href="/a/articles/g/go/google-play-na-yandeks-tv.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Google Play на Яндекс ТВ: установка приложений Android">
+    <meta property="og:description" content="Полная инструкция по запуску Google Play на Яндекс ТВ. Разбор методов через ADB, настройки DNS и альтернативные магазины приложений.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775560692">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>tehpodskazka.vercel.app2</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/nastroika-tv/">Настройка ТВ</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Google Play на Яндекс ТВ: установка приложений Android</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Как запустить Google Play на Яндекс ТВ: полное руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#особенности-платформы-яндекс-тв-и-ограничения-экосистемы">Особенности платформы Яндекс ТВ и ограничения экосистемы</a></li><li><a href="#подготовительный-этап-настройка-телевизора-для-установки">Подготовительный этап: настройка телевизора для установки</a></li><li><a href="#метод-установки-через-adb-и-файловый-менеджер">Метод установки через ADB и файловый менеджер</a></li><li><a href="#альтернативные-магазины-приложений-и-их-функционал">Альтернативные магазины приложений и их функционал</a></li><li><a href="#решение-проблем-совместимости-и-ошибок-запуска">Решение проблем совместимости и ошибок запуска</a></li><li><a href="#безопасность-и-стабильность-работы-системы">Безопасность и стабильность работы системы</a></li><li><a href="#сравнение-методов-что-выбрать-пользователю">Сравнение методов: что выбрать пользователю</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Владельцы современных телевизоров с платформой Яндекс ТВ часто сталкиваются с ограниченным выбором программного обеспечения в сравнении с классической Android TV. Основной причиной является отсутствие нативного магазина <strong>Google Play</strong>, который привычен миллионам пользователей по смартфонам и планшетам. Это ограничение существенно сужает возможности установки популярных стриминговых сервисов, игр и утилит, которые не представлены в официальном каталоге Яндекса.</p>
+
+<p>Однако технически платформа Яндекс ТВ базируется на операционной системе Android, что теоретически позволяет устанавливать сторонние приложения. Процесс интеграции сервисов Google требует определенных знаний и осторожности, так как вмешательство в системные файлы может привести к нестабильной работе устройства. В этой статье мы подробно разберем безопасные и проверенные методы расширения функционала вашего телевизора.</p>
+
+<p>Стоит сразу отметить, что универсальной «волшебной кнопки» не существует. Успех операции зависит от модели телевизора, версии прошивки и года выпуска устройства. <em>Яндекс Модуль</em> и встроенные Smart-системы могут иметь разные уровни защиты, поэтому перед началом любых действий необходимо точно идентифицировать свою модель и текущую версию программного обеспечения.</p>
+
+<h2 id="особенности-платформы-яндекс-тв-и-ограничения-экосистемы">Особенности платформы Яндекс ТВ и ограничения экосистемы</h2>
+
+<p>Платформа Яндекс ТВ представляет собой форк операционной системы Android, глубоко модифицированный инженерами компании для работы с голосовым помощником Алиса и фирменными сервисами. Основное отличие заключается в отсутствии сертифицированных Google Mobile Services (GMS). Именно этот пакет отвечает за корректную работу аккаунта Google, синхронизацию и установку приложений из Play Market.</p>
+
+<p>Отсутствие Google Play на борту — это не просто маркетинговый ход, а результат лицензионных соглашений и стратегических решений по развитию собственной экосистемы. Пользователи лишены возможности автоматически обновлять приложения через привычный интерфейс, что требует поиска альтернативных путей установки APK-файлов.</p>
+
+<blockquote>⚠️ Внимание: Попытка принудительной установки сервисов Google на некоторые модели телевизоров с закрытым загрузчиком может привести к программному сбою, известному как «bootloop» (циклическая перезагрузка).</blockquote>
+
+<p>Тем не менее, энтузиасты находят обходные пути. Чаще всего речь идет о ручной установке APK-файлов через USB-накопитель или использовании отладки по сети. Важно понимать, что <strong>системные ограничения</strong> могут блокировать запуск некоторых приложений, даже если они успешно установились. Это связано с проверкой цифровой подписи и отсутствием необходимых библиотек в ядре системы.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Сталкивались ли вы с нехваткой приложений на Яндекс ТВ?</strong><ul><li>Да, постоянно ищу обходные пути</li><li>Нет, хватает встроенных сервисов</li><li>Планирую покупать приставку с Android TV</li><li>Вообще не пользуюсь Smart TV</li></ul></div></div>
+
+<h2 id="подготовительный-этап-настройка-телевизора-для-установки">Подготовительный этап: настройка телевизора для установки</h2>
+
+<p>Прежде чем приступать к установке стороннего программного обеспечения, необходимо активировать скрытые возможности системы. Стандартный интерфейс Яндекс ТВ скрывает параметры разработчика, поэтому первым шагом будет их активация. Это позволит включить отладку по USB или сети, что критически важно для передачи файлов.</p>
+
+<p>Для начала перейдите в меню настроек телевизора. Вам потребуется найти раздел «О телевизоре» или «Система». Внутри этого раздела нужно найти строку «Номер сборки» или «Версия ПО». Нажмите на эту строку пультом 7-10 раз подряд до появления уведомления о том, что режим разработчика активирован.</p>
+
+<p>После активации в меню настроек появится новый пункт «Для разработчиков». Перейдя в него, необходимо найти и включить опцию <code>Отладка по USB</code> или <code>Отладка по сети (ADB)</code>. Также рекомендуется включить установку из неизвестных источников, хотя на некоторых версиях Яндекс ТВ этот параметр запрашивается автоматически при первом запуске установщика.</p>
+
+<div class="checklist-block"><h4>☑️ Чек-лист подготовки телевизора</h4><label class="check-item"><input type="checkbox"><span>Найти раздел «О телевизоре» в настройках</span></label><label class="check-item"><input type="checkbox"><span>7 раз нажать на «Номер сборки»</span></label><label class="check-item"><input type="checkbox"><span>Зайти в «Для разработчиков»</span></label><label class="check-item"><input type="checkbox"><span>Включить «Отладку по сети»</span></label><label class="check-item"><input type="checkbox"><span>Узнать IP-адрес телевизора</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+
+<p>Обязательно запишите IP-адрес вашего телевизора, который отображается в сетевых настройках или в том же меню разработчика. Он понадобится для подключения с компьютера или смартфона. Без этого шага дальнейшие манипуляции невозможны.</p>
+
+<h2 id="метод-установки-через-adb-и-файловый-менеджер">Метод установки через ADB и файловый менеджер</h2>
+
+<p>Наиболее распространенным способом интеграции Google Play является использование инструментария ADB (Android Debug Bridge). Этот метод позволяет передавать и устанавливать APK-файлы напрямую с компьютера или мобильного устройства, минуя ограничения встроенного браузера.</p>
+
+<p>Для реализации этого метода вам потребуется скачать на компьютер программу <em>ADB AppControl</em> или аналогичный софт, а также сам установочный файл Google Play Services и Google Play Store. Файлы необходимо брать только из проверенных источников, таких как APKMirror, чтобы избежать заражения телевизора вредоносным кодом.</p>
+
+<p>Процесс подключения выглядит следующим образом: убедитесь, что компьютер и телевизор находятся в одной Wi-Fi сети. Введите IP-адрес телевизора в программе ADB на компьютере. На экране телевизора появится запрос на разрешение отладки — подтвердите его, выбрав «Всегда разрешать».</p>
+
+<pre><code>adb connect 192.168.1.105:5555</code></pre>
+
+<p>После успешного соединения можно загрузить APK-файлы. Сначала устанавливаются сервисы Google Play, затем сам магазин. Важно соблюдать последовательность, так как магазин не запустится без базовых служб. Если установка прошла успешно, иконка появится в списке приложений.</p>
+
+<details class="faq-item"><summary>Что делать, если установка прерывается?</summary><div class="faq-answer"><p>Если процесс установки зависает или прерывается, попробуйте отключить телевизор от сети на 10 секунд, затем повторите процедуру. Также поможет очистка кэша установщика пакетов в меню приложений.</p></div></details>
+
+<h2 id="альтернативные-магазины-приложений-и-их-функционал">Альтернативные магазины приложений и их функционал</h2>
+
+<p>Если установка оригинального Google Play кажется слишком рискованной или сложной, существуют альтернативные каталоги приложений, которые адаптированы для работы на телевизорах без сертификации Google. Наиболее популярным решением является магазин <strong>Aptoide TV</strong> или <em>F-Droid</em> для открытого ПО.</p>
+
+<p>Эти платформы предлагают широкий выбор приложений, оптимизированных для управления с пульта. Они не требуют глубокой интеграции в систему и часто работают стабильнее, чем попытки «натянуть» полноценный Google Play на ограниченную платформу Яндекс ТВ.</p>
+
+<table>
+<thead>
+<tr>
+<th>Магазин приложений</th>
+<th>Наличие сертификата</th>
+<th>Удобство на ТВ</th>
+<th>Безопасность</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Google Play</td>
+<td>Требуется GMS</td>
+<td>Высокое</td>
+<td>Максимальная</td>
+</tr>
+<tr>
+<td>Aptoide TV</td>
+<td>Не требуется</td>
+<td>Высокое</td>
+<td>Средняя</td>
+</tr>
+<tr>
+<td>ruStore</td>
+<td>Не требуется</td>
+<td>Среднее</td>
+<td>Высокая</td>
+</tr>
+<tr>
+<td>4PDA</td>
+<td>Не требуется</td>
+<td>Низкое</td>
+<td>Зависит от файла</td>
+</tr>
+</tbody>
+</table>
+
+<p>Использование альтернативных магазинов позволяет получать обновления приложений, что является критически важным для безопасности и функциональности. Однако стоит помнить, что некоторые тяжелые приложения, такие как Netflix в 4K, могут не работать без официальной сертификации устройства, независимо от способа установки магазина.</p>
+
+<h2 id="решение-проблем-совместимости-и-ошибок-запуска">Решение проблем совместимости и ошибок запуска</h2>
+
+<p>Даже после успешной установки пользователи могут столкнуться с ошибками при запуске приложений. Часто встречается сообщение «Ваше устройство не сертифицировано» или черный экран при попытке открыть видео. Это связано с механизмом защиты DRM и проверкой целостности системы.</p>
+
+<p>Одной из частых проблем является нехватка оперативной памяти. Телевизоры с 1.5 ГБ RAM и менее могут с трудом справляться с фоновыми сервисами Google. В этом случае рекомендуется отключить неиспользуемые приложения и очистить кэш.</p>
+
+<blockquote>⚠️ Внимание: Не устанавливайте несколько магазинов приложений одновременно. Это может вызвать конфликт служб и привести к тому, что телевизор начнет работать медленно или перезагружаться.</blockquote>
+
+<p>Также стоит обратить внимание на разрешение экрана и плотность пикселей (DPI). Некоторые мобильные версии приложений могут отображаться некорректно на большом экране. Использование специальных лаунчеров, таких как <em>ATV Launcher</em>, помогает адаптировать интерфейс под управление пультом.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте беспроводную мышь или клавиатуру для первичной настройки установленных приложений, так как некоторые поля ввода могут не активироваться пультом.</p></div>
+
+<h2 id="безопасность-и-стабильность-работы-системы">Безопасность и стабильность работы системы</h2>
+
+<p>Устанавливая программное обеспечение из непроверенных источников, вы берете на себя ответственность за безопасность данных. Телевизор имеет доступ к вашей домашней сети, и компрометация устройства может открыть доступ к другим гаджетам.</p>
+
+<p>Регулярно проверяйте список установленных приложений и удаляйте те, которыми не пользуетесь. Фоновые процессы могут потреблять ресурсы процессора, вызывая нагрев и замедление работы интерфейса Яндекс ТВ. Стабильность системы напрямую зависит от количества активного софта.</p>
+
+<p>Если после установки Google Play телевизор начал работать нестабильно, всегда можно выполнить сброс до заводских настроек. Для этого перейдите в <code>Настройки → Система → Сброс</code>. Это вернет устройство в исходное состояние, удалив все сторонние приложения и аккаунты.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Главный приоритет при модификации телевизора — сохранение гарантии и стабильности работы основной платформы Яндекс.</p></div>
+
+<h2 id="сравнение-методов-что-выбрать-пользователю">Сравнение методов: что выбрать пользователю</h2>
+
+<p>Выбор метода расширения функционала зависит от ваших технических навыков и целей. Если вам нужен только конкретный плеер или IPTV, проще установить один APK-файл через USB, чем пытаться внедрить полноценный Google Play.</p>
+
+<p>Для пользователей, которым критически важна экосистема Google, Chromecast встроенный и синхронизация с телефоном, возможно, стоит рассмотреть покупку внешней ТВ-приставки на чистом Android TV. Это избавит от рисков поломки телевизора и обеспечит максимальную производительность.</p>
+
+<p>Встроенные решения Яндекс ТВ постоянно обновляются, и список доступных приложений растет. Прежде чем вмешиваться в работу системы, проверьте, не появилось ли нужное вам приложение в официальном каталоге. Часто проблема решается простым обновлением прошивки телевизора.</p>
+
+<details>
+<summary>Можно ли полностью удалить Яндекс и оставить только Google Play?</summary>
+<p>Полное удаление системных приложений Яндекс на телевизорах без root-прав невозможно. Попытки удаления системных компонентов приведут к неработоспособности устройства. Можно лишь отключить некоторые процессы или использовать сторонний лаунчер.</p>
+</details>
+
+<details>
+<summary>Работает ли голосовой поиск Google после установки?</summary>
+<p>В большинстве случаев голосовой поиск Google не заработает полноценно, так как он конфликтует с Алисой и требует глубокой интеграции в систему, которая на Яндекс ТВ заблокирована производителем.</p>
+</details>
+
+<details>
+<summary>Снизится ли скорость работы телевизора?</summary>
+<p>Да, установка тяжелых сервисов Google на устройства с ограниченным объемом оперативной памяти (менее 2 ГБ) гарантированно приведет к снижению скорости отклика интерфейса и увеличению времени загрузки.</p>
+</details>
+
+<details>
+<summary>Нужно ли покупать лицензию для Google Play?</summary>
+<p>Сам магазин Google Play бесплатен, однако для покупки контента внутри него требуется привязка банковской карты. Установка магазина сторонними методами не дает лицензии на платные приложения, если они не были куплены официально.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#особенности-платформы-яндекс-тв-и-ограничения-экосистемы">Особенности платформы Яндекс ТВ и ограничения экосистемы</a></li><li><a href="#подготовительный-этап-настройка-телевизора-для-установки">Подготовительный этап: настройка телевизора для установки</a></li><li><a href="#метод-установки-через-adb-и-файловый-менеджер">Метод установки через ADB и файловый менеджер</a></li><li><a href="#альтернативные-магазины-приложений-и-их-функционал">Альтернативные магазины приложений и их функционал</a></li><li><a href="#решение-проблем-совместимости-и-ошибок-запуска">Решение проблем совместимости и ошибок запуска</a></li><li><a href="#безопасность-и-стабильность-работы-системы">Безопасность и стабильность работы системы</a></li><li><a href="#сравнение-методов-что-выбрать-пользователю">Сравнение методов: что выбрать пользователю</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-ustanovit-prilozhenie-na-televizor-sharp-aquos.html" class="related-card">Как установить приложение на телевизор Sharp Aquos: полная инструкция</a></li><li><a href="/a/articles/k/ka/kak-smotret-extreme-code-iptv.html" class="related-card">Как смотреть Extreme Code IPTV: настройка и плейлисты</a></li><li><a href="/a/articles/k/ka/kak-ustanovit-prilozhenie-wink-na-smart-tv-panasonik.html" class="related-card">Как установить Wink на Smart TV Panasonic: полная инструкция</a></li><li><a href="/a/articles/k/ka/kak-zapisat-potokovoe-video-na-smartfon.html" class="related-card">Как записать потоковое видео на смартфон: полные методы</a></li><li><a href="/a/articles/k/ka/kak-obnovit-prilozhenie-kinopoisk-na-televizore-samsung.html" class="related-card">Как обновить Кинопоиск на Samsung TV: пошаговая инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-ustanovit-prilozhenie-na-televizor-sharp-aquos.html" class="related-bottom-card"><span class="related-bottom-title">Как установить приложение на телевизор Sharp Aquos: полная инструкция</span><span class="related-bottom-desc">Подробное руководство по установке программ на Smart TV Sharp Aquos. Настройка Android TV, установка</span></a><a href="/a/articles/k/ka/kak-smotret-extreme-code-iptv.html" class="related-bottom-card"><span class="related-bottom-title">Как смотреть Extreme Code IPTV: настройка и плейлисты</span><span class="related-bottom-desc">Подробная инструкция: как активировать, настроить и смотреть Extreme Code IPTV на Smart TV, Android </span></a><a href="/a/articles/k/ka/kak-ustanovit-prilozhenie-wink-na-smart-tv-panasonik.html" class="related-bottom-card"><span class="related-bottom-title">Как установить Wink на Smart TV Panasonic: полная инструкция</span><span class="related-bottom-desc">Подробный гид по установке Wink на телевизоры Panasonic. Настройка через виджет, DLNA, HDMI и обход </span></a><a href="/a/articles/k/ka/kak-zapisat-potokovoe-video-na-smartfon.html" class="related-bottom-card"><span class="related-bottom-title">Как записать потоковое видео на смартфон: полные методы</span><span class="related-bottom-desc">Узнайте, как записать потоковое видео на смартфон Android или iPhone. Лучшие приложения, обход DRM-з</span></a><a href="/a/articles/k/ka/kak-obnovit-prilozhenie-kinopoisk-na-televizore-samsung.html" class="related-bottom-card"><span class="related-bottom-title">Как обновить Кинопоиск на Samsung TV: пошаговая инструкция</span><span class="related-bottom-desc">Подробный гид по обновлению приложения Кинопоиск на телевизорах Самсунг. Решаем проблемы с Tizen OS,</span></a><a href="/a/articles/v/v-/v-windows-7-otsutstvuet-com-port.html" class="related-bottom-card"><span class="related-bottom-title">В Windows 7 отсутствует COM порт: полное руководство по восстановлению</span><span class="related-bottom-desc">Пропал COM порт в Windows 7? Узнайте, как найти скрытые устройства, обновить драйверы и исправить ош</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 tehpodskazka.vercel.app2</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 tehpodskazka.vercel.app2. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

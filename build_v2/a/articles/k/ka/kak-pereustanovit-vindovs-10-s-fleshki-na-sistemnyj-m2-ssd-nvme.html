@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Как переустановить Windows 10 с флешки на M.2 NVMe SSD — tehpodskazka.vercel.app2</title>
+    <meta name="description" content="Пошаговая инструкция по установке Windows 10 на NVMe накопитель. Настройка BIOS, разметка диска GPT и решение проблем с драйверами.">
+    <link rel="canonical" href="/a/articles/k/ka/kak-pereustanovit-vindovs-10-s-fleshki-na-sistemnyj-m2-ssd-nvme.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как переустановить Windows 10 с флешки на M.2 NVMe SSD">
+    <meta property="og:description" content="Пошаговая инструкция по установке Windows 10 на NVMe накопитель. Настройка BIOS, разметка диска GPT и решение проблем с драйверами.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775560692">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>tehpodskazka.vercel.app2</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/noutbuki-i-zhelezo/">Ноутбуки и Железо</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как переустановить Windows 10 с флешки на M.2 NVMe SSD</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Установка Windows 10 на M.2 NVMe SSD: полное руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#подготовка-загрузочного-носителя-и-выбор-образа">Подготовка загрузочного носителя и выбор образа</a></li><li><a href="#настройка-biosuefi-для-работы-с-nvme">Настройка BIOS/UEFI для работы с NVMe</a></li><li><a href="#процесс-разметки-диска-и-установка-системы">Процесс разметки диска и установка системы</a></li><li><a href="#решение-проблем-с-драйверами-контроллера">Решение проблем с драйверами контроллера</a></li><li><a href="#сравнение-производительности-и-форматов">Сравнение производительности и форматов</a></li><li><a href="#первоначальная-настройка-и-оптимизация">Первоначальная настройка и оптимизация</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Переход на современные накопители формата <em>M.2 NVMe</em> открывает колоссальные возможности для быстродействия операционной системы, однако сам процесс инсталляции часто вызывает вопросы у пользователей, привыкших к классическим <em>SATA</em> дискам. В отличие от старых механических приводов, быстрые PCIe-накопители требуют корректной настройки режима работы контроллера и правильного формата разметки разделов, иначе установщик просто не увидит ваше устройство.</p>
+
+<p>В этой статье мы детально разберем, как подготовить загрузочную флешку, настроить <strong>UEFI/BIOS</strong> материнской платы и провести чистую установку <strong>Windows 10</strong> на <em>NVMe</em> диск без потери производительности. Вы узнаете о нюансах конвертации таблиц разделов в <strong>GPT</strong>, установке драйверов контроллера и оптимизации системы под высокоскоростное хранилище.</p>
+
+<p>Прежде чем приступать к实际操作, убедитесь, что у вас есть стабильное подключение к интернету для загрузки образа системы и резервная копия важных данных, так как все файлы на целевом диске будут безвозвратно удалены. Процесс займет от 20 до 40 минут в зависимости от скорости вашего USB-накопителя и производительности процессора.</p>
+
+<h2 id="подготовка-загрузочного-носителя-и-выбор-образа">Подготовка загрузочного носителя и выбор образа</h2>
+
+<p>Первым этапом является создание загрузочной флешки, которая должна быть совместима с современным стандартом <strong>UEFI</strong>. Для работы с накопителями <em>NVMe</em> критически важно использовать образ в формате <strong>GPT</strong>, а не устаревший <em>MBR</em>, поэтому лучшим решением станет использование официальной утилиты <code>Media Creation Tool</code> от Microsoft или проверенной программы <em>Rufus</em>.</p>
+
+<p>При использовании <em>Rufus</em> необходимо внимательно следить за схемой раздела: в поле "Схема раздела" обязательно выбирается <strong>GPT</strong>, а целевая система — <strong>UEFI (non CSM)</strong>. Если вы ошибетесь и выберете <em>MBR</em>, установщик может запуститься в режиме совместимости, что не позволит установить систему на <em>NVMe</em> диск или приведет к ошибкам при загрузке.</p>
+
+<blockquote>
+<p>⚠️ Внимание: При форматировании флешки все данные на ней будут уничтожены. Убедитесь, что скопировали важные файлы с USB-накопителя на другой носитель перед началом записи образа.</p>
+</blockquote>
+
+<p>Объем флешки должен составлять не менее 8 ГБ, хотя для комфортной работы и наличия места для временных файлов лучше использовать накопитель на 16 ГБ или 32 ГБ. Скорость записи также играет роль: использование порта <strong>USB 3.0</strong> (синий разъем) значительно ускорит процесс создания установщика и последующую установку системы.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой инструмент вы предпочитаете для создания загрузочной флешки?</strong><ul><li>Rufus</li><li>Media Creation Tool</li><li>Ventoy</li><li>UltraISO</li><li>Другой</li></ul></div></div>
+
+<h2 id="настройка-biosuefi-для-работы-с-nvme">Настройка BIOS/UEFI для работы с NVMe</h2>
+
+<p>Перед запуском установки необходимо правильно сконфигурировать микропрограмму материнской платы. Зайдите в <strong>BIOS/UEFI</strong> (обычно клавишей <code>F2</code>, <code>Del</code> или <code>F10</code> при старте ПК) и найдите раздел, отвечающий за режим работы дисков, часто называемый <code>SATA Configuration</code> или <code>Storage Configuration</code>.</p>
+
+<p>Ключевым моментом является режим работы контроллера: он должен быть установлен в значение <strong>AHCI</strong>. Если у вас стоит режим <em>RAID</em> или <em>Intel RST</em> (без наличия RAID-массива), установщик Windows может не обнаружить ваш <em>NVMe</em> диск, пока вы вручную не подгрузите драйверы, что усложняет процесс. Режим <strong>AHCI</strong> обеспечивает нативную поддержку и максимальную совместимость.</p>
+
+<p>Также убедитесь, что включена поддержка <strong>UEFI Boot</strong> и отключена опция <em>CSM (Compatibility Support Module)</em>, если вы хотите использовать преимущества современной разметки <strong>GPT</strong>. В некоторых системах требуется явно выбрать приоритет загрузки <strong>UEFI</strong> для вашего USB-накопителя в меню <code>Boot Priority</code>.</p>
+
+<ul>
+<li>💡 Переключите режим SATA в <strong>AHCI</strong> для корректного определения накопителя.</li>
+<li>💡 Активируйте опцию <strong>Fast Boot</strong> для ускорения старта системы, но будьте готовы отключить её при отладке.</li>
+<li>💡 Убедитесь, что <strong>Secure Boot</strong> установлен в режим <em>Windows UEFI</em>, чтобы избежать проблем с загрузчиком.</li>
+</ul>
+
+<p>После внесения изменений не забудьте сохранить настройки, обычно это делается клавишей <code>F10</code>, и перезагрузить компьютер. Если система не видит загрузчик флешки, попробуйте изменить порт подключения USB или пересоздать установочный носитель.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если после переключения на AHCI система перестала загружаться с старого диска, возможно, потребуется правка реестра или повторная установка драйверов чипсета, но для чистого NVMe диска это стандартная настройка.</p></div>
+
+<h2 id="процесс-разметки-диска-и-установка-системы">Процесс разметки диска и установка системы</h2>
+
+<p>После загрузки с флешки и выбора языка нажмите "Установить". Дойдя до этапа выбора типа установки, выберите пункт <strong>Выборочная: только установка Windows (для опытных пользователей)</strong>. Именно этот вариант позволяет вручную управлять разделами на вашем <em>NVMe</em> диске.</p>
+
+<p>Вы увидите список доступных накопителей. Если диск новый или данные на нем не нужны, удалите все существующие разделы, выделенные для этого диска, пока не останется одна строка "Незанятое пространство на диске". Это гарантирует создание чистой структуры разделов без конфликтов с предыдущей файловой системой.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Будьте предельно внимательны при выборе диска, если у вас подключено несколько накопителей. Удаление разделов на системном диске приведет к полной потере данных, восстановить которые будет крайне сложно.</p>
+</blockquote>
+
+<p>После очистки просто выберите незанятое пространство и нажмите "Далее". Операционная система автоматически создаст необходимые служебные разделы: <strong>EFI</strong> (для загрузчика), <strong>MSR</strong> (зарезервированный) и основной раздел с данными. Для <em>NVMe</em> дисков размер служебного раздела EFI обычно составляет около 100 МБ.</p>
+
+<div class="checklist-block"><h4>☑️ Контрольный список перед установкой</h4><label class="check-item"><input type="checkbox"><span>Сделана резервная копия данных</span></label><label class="check-item"><input type="checkbox"><span>Режим SATA установлен в AHCI</span></label><label class="check-item"><input type="checkbox"><span>Флешка подключена в порт USB 3.0</span></label><label class="check-item"><input type="checkbox"><span>Выбрана схема GPT</span></label><label class="check-item"><input type="checkbox"><span>Удалены старые разделы</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+
+<p>Начнется процесс копирования файлов. Благодаря высокой скорости чтения и записи интерфейса <strong>PCIe</strong>, эта стадия пройдет значительно быстрее, чем на обычных SSD. Компьютер несколько раз перезагрузится — в этот момент флешку можно извлечь, чтобы не началась повторная установка.</p>
+
+<h2 id="решение-проблем-с-драйверами-контроллера">Решение проблем с драйверами контроллера</h2>
+
+<p>Иногда случается так, что на этапе выбора диска список пуст, хотя накопитель физически подключен и определен в BIOS. Это часто происходит на ноутбуках с процессорами <em>Intel</em> 11-го поколения и новее, где по умолчанию активирован режим <em>Intel RST</em>, а в дистрибутиве Windows нет встроенного драйвера.</p>
+
+<p>Для решения этой проблемы вам понадобится скачать драйвер <em>Intel Rapid Storage Technology (IRST)</em> с сайта производителя ноутбука или материнской платы. Нужен именно драйвер для установки (F6 driver), а не исполняемый файл <code>.exe</code>; его нужно распаковать и поместить на ту же установочную флешку.</p>
+
+<p>В окне выбора диска нажмите кнопку <code>Загрузить</code> (Load Driver), укажите путь к папке с распакованным драйвером и выберите соответствующее устройство из списка. После успешной установки драйвера ваш <em>NVMe</em> диск появится в списке доступных для разметки.</p>
+
+<details class="faq-item"><summary>Где найти правильный драйвер?</summary><div class="faq-answer"><p>Ищите на сайте поддержки вашей модели ноутбука в разделе "Storage" или "SATA". Файл часто имеет в названии "F6", "Floppy" или "Preinstall". Не скачивайте установщик IRST для Windows, он не подойдет.</p></div></details>
+
+<h2 id="сравнение-производительности-и-форматов">Сравнение производительности и форматов</h2>
+
+<p>Понимание различий между форматами накопителей помогает оценить целесообразность перехода на <em>NVMe</em>. В таблице ниже приведено сравнение ключевых характеристик, влияющих на работу операционной системы и скорость загрузки приложений.</p>
+
+<table>
+<thead>
+<tr>
+<th>Характеристика</th>
+<th>SATA III SSD</th>
+<th>NVMe (PCIe 3.0)</th>
+<th>NVMe (PCIe 4.0)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Максимальная скорость</td>
+<td>до 600 МБ/с</td>
+<td>до 3500 МБ/с</td>
+<td>до 7500 МБ/с</td>
+</tr>
+<tr>
+<td>Интерфейс подключения</td>
+<td>SATA</td>
+<td>PCIe 3.0 x4</td>
+<td>PCIe 4.0 x4</td>
+</tr>
+<tr>
+<td>Форм-фактор</td>
+<td>2.5" / M.2</td>
+<td>M.2 2280</td>
+<td>M.2 2280</td>
+</tr>
+<tr>
+<td>Задержка (Latency)</td>
+<td>Высокая</td>
+<td>Низкая</td>
+<td>Минимальная</td>
+</tr>
+</tbody>
+</table>
+
+<p>Как видно из таблицы, прирост производительности при переходе на <strong>PCIe 4.0</strong> может быть десятикратным по сравнению с SATA. Однако для повседневных задач разница между <em>PCIe 3.0</em> и <em>4.0</em> может быть менее заметна, чем переход с HDD на любой тип SSD.</p>
+
+<p>Важно отметить, что для работы <em>PCIe 4.0</em> необходима поддержка со стороны процессора и материнской платы. Если установить такой диск в слот <em>PCIe 3.0</em>, он будет работать, но на пониженной скорости, совместимой с версией слота.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Главный прирост скорости NVMe ощущается при работе с большими файлами и быстрой загрузке тяжелых приложений, а не в обычных офисных задачах.</p></div>
+
+<h2 id="первоначальная-настройка-и-оптимизация">Первоначальная настройка и оптимизация</h2>
+
+<p>После завершения установки и первичной настройки учетной записи рекомендуется сразу проверить, активирован ли режим <strong>AHCI</strong> в диспетчере устройств. Откройте <code>Диспетчер устройств</code> (команда <code>devmgmt.msc</code>), раскройте ветку "Контроллеры IDE ATA/ATAPI" или "Контроллеры запоминающих устройств" и убедитесь, что там указан стандартный контроллер <strong>Standard NVM Express Controller</strong> или аналогичный без ошибок.</p>
+
+<p>Windows 10 автоматически оптимизирует <em>NVMe</em> диск, включая команду <strong>TRIM</strong>, которая продлевает срок службы накопителя. Проверить статус можно через командную строку, запущенную от имени администратора, введя команду <code>fsutil behavior query DisableDeleteNotify</code>. Если результат <code>0</code>, значит оптимизация включена.</p>
+
+<p>Не рекомендуется проводить дефрагментацию твердотельных накопителей классическими методами, используемыми для HDD. Система сама выполняет необходимую оптимизацию, а сторонние программы могут лишь сократить ресурс диска. Достаточно оставить стандартное расписание обслуживания.</p>
+
+<ul>
+<li>🚀 Обновите драйверы чипсета с сайта производителя материнской платы для стабильности.</li>
+<li>🚀 Проверьте наличие обновлений BIOS, которые могут улучшать совместимость с <em>NVMe</em>.</li>
+<li>🚀 Убедитесь, что в схеме электропитания выбран режим "Высокая производительность".</li>
+</ul>
+
+<blockquote>
+<p>⚠️ Внимание: Не заполняйте <em>NVMe</em> диск полностью "под завязку". Свободное место (около 10-15%) необходимо контроллеру для эффективного распределения нагрузки и сохранения высокой скорости записи.</p>
+</blockquote>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Нужно ли форматировать NVMe диск перед установкой, если он новый?</summary>
+<p>Нет, в процессе установки Windows вы сами удалите все разделы в окне выбора диска, и система отформатирует его в файловую систему <strong>NTFS</strong> с правильной структурой <strong>GPT</strong>. Предварительное форматирование сторонними утилитами не требуется.</p>
+</details>
+
+<details>
+<summary>Можно ли клонировать систему с HDD на NVMe без переустановки?</summary>
+<p>Да, это возможно с помощью специализированного софта (например, Acronis или Macrium Reflect), но для <em>NVMe</em> дисков чистая установка ("с нуля") всегда предпочтительнее. Клонирование может перенести старые ошибки реестра и драйверы, неoptimized для нового контроллера.</p>
+</details>
+
+<details>
+<summary>Почему мой NVMe диск греется во время установки?</summary>
+<p>Высокая температура — нормальное явление для скоростных накопителей, особенно при интенсивной записи. Убедитесь, что на диск установлен радиатор или термопрокладка, если это предусмотрено конструкцией ноутбука или материнской платы.</p>
+</details>
+
+<details>
+<summary>Сработает ли команда TRIM автоматически?</summary>
+<p>Да, Windows 10 и 11 автоматически распознают SSD и NVMe накопители и включают функцию TRIM по умолчанию. Дополнительная активация через реестр обычно не требуется, если не установлены сторонние драйверы управления дисками.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#подготовка-загрузочного-носителя-и-выбор-образа">Подготовка загрузочного носителя и выбор образа</a></li><li><a href="#настройка-biosuefi-для-работы-с-nvme">Настройка BIOS/UEFI для работы с NVMe</a></li><li><a href="#процесс-разметки-диска-и-установка-системы">Процесс разметки диска и установка системы</a></li><li><a href="#решение-проблем-с-драйверами-контроллера">Решение проблем с драйверами контроллера</a></li><li><a href="#сравнение-производительности-и-форматов">Сравнение производительности и форматов</a></li><li><a href="#первоначальная-настройка-и-оптимизация">Первоначальная настройка и оптимизация</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/2/2-/2-akkaunta-cherez-prilozhenie-yandeks-diska.html" class="related-card">Как добавить 2 аккаунта в Яндекс Диск: Инструкция</a></li><li><a href="/a/articles/l/le/lenovo-s145-15iwl-morgaet-knopka-vklyucheniya-i-ne-vklyuchaetsya.html" class="related-card">Lenovo S145-15IWL: мигает кнопка и не включается — решение</a></li><li><a href="/a/articles/v/vy/vyklyuchaetsya-noutbuk-pri-vklyuchenii-ege-voda.html" class="related-card">Ноутбук выключается при включении: причины и ремонт</a></li><li><a href="/a/articles/g/go/gotika-3-ne-rabotaet-klaviatura.html" class="related-card">Готика 3 не работает клавиатура: решения и фиксы</a></li><li><a href="/a/articles/k/ka/kak-pomenyat-modul-wifi-v-noutbuke-asus-altec-x53s.html" class="related-card">Замена WiFi модуля в ноутбуке ASUS X53S: полная инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/2/2-/2-akkaunta-cherez-prilozhenie-yandeks-diska.html" class="related-bottom-card"><span class="related-bottom-title">Как добавить 2 аккаунта в Яндекс Диск: Инструкция</span><span class="related-bottom-desc">Подробная инструкция, как подключить 2 аккаунта через приложение Яндекс Диска. Решение проблем с вхо</span></a><a href="/a/articles/l/le/lenovo-s145-15iwl-morgaet-knopka-vklyucheniya-i-ne-vklyuchaetsya.html" class="related-bottom-card"><span class="related-bottom-title">Lenovo S145-15IWL: мигает кнопка и не включается — решение</span><span class="related-bottom-desc">Почему Lenovo S145-15IWL моргает и не загружается? Полная инструкция по сбросу статического заряда, </span></a><a href="/a/articles/v/vy/vyklyuchaetsya-noutbuk-pri-vklyuchenii-ege-voda.html" class="related-bottom-card"><span class="related-bottom-title">Ноутбук выключается при включении: причины и ремонт</span><span class="related-bottom-desc">Ноутбук сразу выключается при включении? Разбираем причины: от залитой клавиатуры водой до короткого</span></a><a href="/a/articles/g/go/gotika-3-ne-rabotaet-klaviatura.html" class="related-bottom-card"><span class="related-bottom-title">Готика 3 не работает клавиатура: решения и фиксы</span><span class="related-bottom-desc">В Gothic 3 не работает клавиатура или мышь? Полный гид по исправлению управления: правка ini-файлов,</span></a><a href="/a/articles/k/ka/kak-pomenyat-modul-wifi-v-noutbuke-asus-altec-x53s.html" class="related-bottom-card"><span class="related-bottom-title">Замена WiFi модуля в ноутбуке ASUS X53S: полная инструкция</span><span class="related-bottom-desc">Пошаговая инструкция по замене модуля WiFi в ноутбуке ASUS X53S (Altec). Как снять крышку, найти ада</span></a><a href="/a/articles/v/vk/vklyuchit-osveschenie-klaviatury-na-noutbuke-dns.html" class="related-bottom-card"><span class="related-bottom-title">Как включить подсветку клавиатуры на ноутбуке DNS: полная инструкция</span><span class="related-bottom-desc">Узнайте, как включить клавиатуру с подсветкой на ноутбуке DNS. Подробные методы для разных моделей, </span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 tehpodskazka.vercel.app2</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 tehpodskazka.vercel.app2. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

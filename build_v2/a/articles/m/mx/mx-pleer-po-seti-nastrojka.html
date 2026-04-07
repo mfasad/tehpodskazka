@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>MX Player по сети: настройка DLNA и SMB для потокового видео — tehpodskazka.vercel.app2</title>
+    <meta name="description" content="Подробная инструкция по настройке MX Player для воспроизведения видео по сети (SMB, DLNA). Решаем проблемы буферизации, настраиваем сетевое окружение и кодеки.">
+    <link rel="canonical" href="/a/articles/m/mx/mx-pleer-po-seti-nastrojka.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="MX Player по сети: настройка DLNA и SMB для потокового видео">
+    <meta property="og:description" content="Подробная инструкция по настройке MX Player для воспроизведения видео по сети (SMB, DLNA). Решаем проблемы буферизации, настраиваем сетевое окружение и кодеки.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775560692">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>tehpodskazka.vercel.app2</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/striming-i-kino/">Стриминг и Кино</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">MX Player по сети: настройка DLNA и SMB для потокового видео</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Настройка MX Player для воспроизведения видео по сети: полное руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#подготовка-сетевой-инфраструктуры-для-стриминга">Подготовка сетевой инфраструктуры для стриминга</a></li><li><a href="#настройка-общего-доступа-в-windows-и-создание-папки">Настройка общего доступа в Windows и создание папки</a></li><li><a href="#инструкция-по-подключению-mx-player-через-smb">Инструкция по подключению MX Player через SMB</a></li><li><a href="#использование-dlna-и-upnp-для-беспроводной-трансляции">Использование DLNA и UPnP для беспроводной трансляции</a></li><li><a href="#оптимизация-воспроизведения-и-работа-с-кодеками">Оптимизация воспроизведения и работа с кодеками</a></li><li><a href="#решение常见问题-и-устранение-ошибок-подключения">Решение常见问题 и устранение ошибок подключения</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Современные мультимедийные возможности мобильных устройств позволяют превратить смартфон или планшет в мощный центр управления домашним кинотеатром. Однако встроенные галереи и стандартные видеоплееры часто не справляются с воспроизведением тяжелых файлов или не умеют работать с сетевыми хранилищами. Именно здесь на сцену выходит <em>MX Player</em>, зарекомендовавший себя как один из самых гибких инструментов для Android.</p>
+
+<p>Правильная <strong>настройка MX Player по сети</strong> открывает доступ к медиатеке, хранящейся на компьютере, NAS-сервере или даже другом телефоне, без необходимости копирования гигабайтов данных. Это экономит внутреннюю память устройства и позволяет мгновенно переключаться между фильмами, сериалами и домашним видео. В этой статье мы детально разберем протоколы SMB и DLNA, устраним типичные ошибки подключения и обеспечим плавное воспроизведение контента высокого разрешения.</p>
+
+<p>Прежде чем переходить к техническим параметрам, стоит отметить, что стабильность соединения зависит не только от настроек приложения, но и от качества вашей локальной сети. <strong>Wi-Fi роутер</strong>, частотный диапазон и даже расположение устройств играют критическую роль. Если вы планируете смотреть 4K-видео с высоким битрейтом, убедитесь, что оба устройства находятся в одной подсети и имеют устойчивый сигнал.</p>
+
+<h2 id="подготовка-сетевой-инфраструктуры-для-стриминга">Подготовка сетевой инфраструктуры для стриминга</h2>
+
+<p>Фундаментом успешной настройки является корректная организация локальной сети. Устройства должны «видеть» друг друга, что часто становится проблемой в современных операционных системах, таких как Windows 10 или 11, где по умолчанию ограничены функции общего доступа. Вам необходимо убедиться, что оба устройства подключены к одному роутеру, желательно в диапазоне <code>5 ГГц</code>, чтобы обеспечить пропускную способность, достаточную для передачи видеопотока без задержек.</p>
+
+<p>Для работы по протоколу <strong>SMB (Server Message Block)</strong> на компьютере должна быть включена функция обнаружения сети. В Windows это делается через «Панель управления» -> «Центр управления сетями и общим доступом». Здесь следует выбрать текущий профиль сети (частная сеть) и активировать пункты «Включить сетевое обнаружение» и «Включить общий доступ к файлам и принтерам». Без этих действий <em>MX Player</em> просто не сможет найти ваш ПК в списке доступных устройств.</p>
+
+<p>Также важно проверить настройки брандмауэра. Иногда антивирусное ПО или системный файервол блокируют входящие соединения на порты, используемые для передачи медиа. Обычно это порты <code>139</code> и <code>445</code> для SMB. Если вы используете сторонний антивирус, попробуйте временно отключить его сетевой экран для проверки гипотезы о блокировке.</p>
+
+<ul>
+<li>📡 Убедитесь, что смартфон и ПК находятся в одной подсети (например, <code>192.168.1.x</code>).</li>
+<li>🔓 Включите общий доступ к папкам на компьютере через свойства конкретной директории.</li>
+<li>🆔 Запишите IP-адрес компьютера, он понадобится для ручной настройки подключения.</li>
+<li>🔒 Создайте отдельного пользователя с правами доступа или используйте гостевой аккаунт для безопасности.</li>
+</ul>
+
+<blockquote>
+<p>⚠️ Внимание: При включении общего доступа в Windows убедитесь, что вы не открываете доступ к системным папкам (C:\Windows, Program Files). Предоставляйте права только на конкретные папки с медиафайлами, чтобы не подвергать риску безопасность всей системы.</p>
+</blockquote>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой протокол вы планируете использовать чаще всего?</strong><ul><li>SMB (расшаренные папки Windows)</li><li>DLNA (медиа-сервер)</li><li>FTP (файловый сервер)</li><li>UPnP (автоматическое обнаружение)</li></ul></div></div>
+
+<h2 id="настройка-общего-доступа-в-windows-и-создание-папки">Настройка общего доступа в Windows и создание папки</h2>
+
+<p>После активации сетевых функций необходимо подготовить саму папку, где хранятся ваши фильмы. Найдите директорию с медиафайлами, кликните по ней правой кнопкой мыши и выберите «Свойства». Перейдите на вкладку «Доступ» и нажмите кнопку «Расширенная настройка». Здесь нужно поставить галочку «Открыть общий доступ к этой папке» и нажать кнопку «Разрешения».</p>
+
+<p>В окне разрешений по умолчанию может стоять группа «Все», что допустимо для домашней сети, но менее безопасно. Лучше добавить конкретного пользователя, под которым вы входите в систему, или создать нового пользователя специально для медиа-доступа с паролем. Убедитесь, что для выбранного пользователя установлены флаги «Полный доступ», «Изменение» и «Чтение». Это позволит <em>MX Player</em> не только читать список файлов, но и, при необходимости, сохранять метаданные о просмотре.</p>
+
+<p>Теперь узнаем IP-адрес компьютера. Откройте командную строку (Win+R, введите <code>cmd</code>) и введите команду <code>ipconfig</code>. Найдите строку «IPv4-адрес» в разделе вашего сетевого адаптера. Этот набор цифр, например <code>192.168.1.55</code>, является ключом к вашему хранилищу. Запишите его, так как автоматическое обнаружение в мобильных приложениях иногда работает нестабильно.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка настроек Windows</h4><label class="check-item"><input type="checkbox"><span>Включено сетевое обнаружение:Открыт общий доступ к папке:Известен IP-адрес компьютера:Пароль пользователя сохранен</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 1</div></div>
+
+<p>Стоит упомянуть о версии протокола SMB. Современные версии Windows по умолчанию используют <strong>SMB v2</strong> и <strong>SMB v3</strong>, тогда как старые устройства или некоторые плееры могут требовать <strong>SMB v1</strong>. Включать SMB v1 на Windows 10/11 не рекомендуется из-за уязвимостей безопасности, поэтому лучше убедиться, что ваш <em>MX Player</em> обновлен до последней версии, поддерживающей новые стандарты шифрования и передачи данных.</p>
+
+<h2 id="инструкция-по-подключению-mx-player-через-smb">Инструкция по подключению MX Player через SMB</h2>
+
+<p>Запустите приложение <em>MX Player</em> на вашем Android-устройстве. На главном экране найдите значок «Сеть» (обычно выглядит как буква <code>N</code> или иконка глобуса) в верхней части интерфейса или в боковом меню. Нажав на него, вы попадете в раздел сетевых подключений. Если это ваш первый вход, приложение может запросить разрешение на доступ к локальной сети — обязательно подтвердите его.</p>
+
+<p>В списке доступных устройств ваш компьютер может отобразиться автоматически. Если этого не произошло, нажмите кнопку «+» или «Новое подключение» в углу экрана. Выберите тип протокола <strong>SMB</strong>. В открывшемся окне настройки введите ранее записанный IP-адрес сервера (вашего ПК). Поле «Порт» оставьте без изменений (<code>445</code>), если вы не меняли стандартные настройки Windows.</p>
+
+<p>Далее необходимо ввести учетные данные. В поле «Имя пользователя» введите имя вашей учетной записи Windows или специально созданного пользователя. В поле «Пароль» введите соответствующий пароль. Имя сервера можно задать произвольное, например, «HomeMedia», чтобы легко узнавать его в списке. После ввода данных нажмите «Сохранить» или «OK».</p>
+
+<pre><code>Путь для ручного ввода (пример):
+<p>smb://192.168.1.55/Movies/</code></pre></p>
+
+<p>Если все данные введены верно, <strong>MX Player</strong> выполнит подключение и отобразит список папок, к которым у вас есть доступ. Вы увидите свою расшаренную директорию. При первом запуске видеофайла плеер может предложить включить «Аппаратное ускорение» (HW+) — соглашайтесь, это критически важно для плавного воспроизведения тяжелых форматов.</p>
+
+<ul>
+<li>📂 Выберите нужную папку с фильмами из списка доступных ресурсов.</li>
+<li>▶️ Нажмите на видеофайл, чтобы начать воспроизведение или открыть меню файла.</li>
+<li>⚙️ В настройках воспроизведения проверьте, выбран ли правильный декодер (HW или SW).</li>
+<li>📝 При необходимости создайте новую сетевую папку через меню «Добавить».</li>
+</ul>
+
+<blockquote>
+<p>⚠️ Внимание: Если при вводе пароля возникает ошибка «Неверное имя пользователя или пароль», попробуйте в имени пользователя указать домен или имя компьютера перед логином в формате <code>ИМЯ_ПК\Пользователь</code>. Это помогает избежать конфликтов идентификации в доменных или сложных домашних сетях.</p>
+</blockquote>
+
+<h2 id="использование-dlna-и-upnp-для-беспроводной-трансляции">Использование DLNA и UPnP для беспроводной трансляции</h2>
+
+<p>Альтернативой SMB является протокол <strong>DLNA</strong> (Digital Living Network Alliance). Его главное преимущество — отсутствие необходимости вводить пароли и IP-адреса; устройства находят друг друга автоматически благодаря технологии UPnP. Для работы этого метода на компьютере должен быть запущен медиа-сервер. В Windows 10/11 это встроенная функция «Поток» (Media Streaming), которую можно активировать через «Параметры» -> «Приложения» -> «Воспроизведение мультимедиа».</p>
+
+<p>В <em>MX Player</em> процесс еще проще: перейдите в раздел «Сеть», и если DLNA активен, вы увидите свой компьютер в списке без дополнительных настроек. Нажав на него, вы получите доступ к медиатеке, отсортированной по типам контента (видео, музыка, фото). Этот метод идеален для быстрого запуска видео на телевизоре или планшете, когда не хочется возиться с файловой структурой.</p>
+
+<p>Однако у DLNA есть ограничения. Протокол не позволяет редактировать файлы, создавать папки или видеть скрытые системные файлы. Кроме того, <strong>субтитры</strong> могут не подгружаться автоматически, если они не встроены в видеофайл, так как DLNA часто не передает внешние файлы субтитров (.srt) вместе с видео. Для просмотра фильмов с внешними субтитрами SMB остается более надежным выбором.</p>
+
+<details class="faq-item"><summary>Почему DLNA может не работать?</summary><div class="faq-answer"><p>DLNA требует, чтобы на роутере была включена функция IGMP Snooping. Без неё широковещательные пакеты обнаружения устройств могут блокироваться, и смартфон просто «не увидит» компьютер, даже если оба подключены к одной сети. Также убедитесь, что служба «Windows Media Player Network Sharing Service» запущена в системе.</p></div></details>
+
+<p>Для продвинутых пользователей рекомендуется использование специализированного серверного ПО, такого как <em>Plex</em> или <em>Jellyfin</em>, которые также транслируют контент через DLNA/UPnP, но предоставляют гораздо более красивый интерфейс, постеры фильмов и описание сюжета прямо в плеере. <em>MX Player</em> отлично работает с такими серверами, отображая метаданные, если они передаются корректно.</p>
+
+<h2 id="оптимизация-воспроизведения-и-работа-с-кодеками">Оптимизация воспроизведения и работа с кодеками</h2>
+
+<p>Даже при идеальной сети видео может тормозить, если неправильно выбран метод декодирования. <em>MX Player</em> предлагает три основных режима: <strong>SW (Software)</strong> — программное декодирование процессором, <strong>HW</strong> — аппаратное декодирование стандартными средствами, и <strong>HW+</strong> — улучшенное аппаратное декодирование. Для сетевых потоков высокой четкости (1080p, 4K) режим <strong>HW+</strong> является предпочтительным, так как он меньше нагружает CPU и лучше справляется с буферизацией.</p>
+
+<p>Если при воспроизведении по сети вы видите рассинхронизацию звука и изображения или «квакание» аудио, попробуйте изменить размер буфера. Зайдите в <code>Настройки -> Плеер -> Сеть</code> (или类似的 раздел в зависимости от версии) и увеличьте значение буфера. Также в меню воспроизведения (три точки в углу) можно переключить декодер на лету, не прерывая просмотр, что очень удобно для тестирования.</p>
+
+<p>Отдельного внимания заслуживают <strong>аудиокодеки</strong>. Форматы вроде DTS или AC3 могут не воспроизводиться в аппаратном режиме на некоторых устройствах из-за лицензионных ограничений Android. В таких случаях <em>MX Player</em> предложит скачать дополнительный плагин кодеков. Обязательно установите его, чтобы избежать ситуации, когда видео идет, а звука нет.</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>SMB</th>
+<th>DLNA/UPnP</th>
+<th>FTP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Скорость передачи</td>
+<td>Высокая (зависит от сети)</td>
+<td>Средняя/Высокая</td>
+<td>Средняя</td>
+</tr>
+<tr>
+<td>Поддержка субтитров</td>
+<td>Полная (.srt, .ass)</td>
+<td>Ограниченная</td>
+<td>Полная</td>
+</tr>
+<tr>
+<td>Сложность настройки</td>
+<td>Средняя (нужен IP/пароль)</td>
+<td>Низкая (авто)</td>
+<td>Высокая (сервер)</td>
+</tr>
+<tr>
+<td>Работа с файлами</td>
+<td>Чтение/Запись</td>
+<td>Только чтение</td>
+<td>Чтение/Запись</td>
+</tr>
+</tbody>
+</table>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Для просмотра 4K HDR контента по сети всегда используйте протокол SMB с включенным аппаратным ускорением HW+ в настройках плеера, так как DLNA часто не справляется с высокими битрейтами без буферизации.</p></div>
+
+<h2 id="решение常见问题-и-устранение-ошибок-подключения">Решение常见问题 и устранение ошибок подключения</h2>
+
+<p>Одной из самых частых проблем является внезапное пропадание доступа после обновления Windows. Microsoft периодически меняет политики безопасности, отключая старые методы аутентификации. Если <em>MX Player</em> перестал видеть папку, проверьте, не отключилась ли функция SMB 1.0 (хотя лучше включить поддержку SMB 2/3 в самом приложении) или не сменился ли IP-адрес компьютера. Статический IP для ПК поможет избежать повторной настройки.</p>
+
+<p>Другая распространенная ошибка — «Недостаточно прав» или «Access Denied». Это означает, что на уровне файловой системы NTFS у пользователя, чьи данные вы вводите в плеере, нет прав на чтение папки. Даже если в «Общем доступе» все открыто, во вкладке «Безопасность» свойств папки должен присутствовать этот пользователь с правами на чтение. Часто эти настройки разнесены и путают пользователей.</p>
+
+<p>Если видео воспроизводится рывками, хотя сеть быстрая, попробуйте снизить нагрузку на декодер. В настройках плеера отключите «Устранение дрожания» (Deinterlacing) или уменьшите масштабирование. Также убедитесь, что роутер не перегружен другими устройствами, скачивающими торренты или играющими в онлайн-игры, что создает лаги в локальной сети.</p>
+
+<ul>
+<li>🔄 Перезагрузите роутер и оба устройства (ПК и смартфон) для сброса сетевых кэшей.</li>
+<li>🛡️ Проверьте антивирус на предмет блокировки портов 139 и 445.</li>
+<li>📶 Переключите смартфон на частоту 5 ГГц, если роутер поддерживает двухдиапазонный режим.</li>
+<li>🔑 Убедитесь, что пароль от учетной записи Windows не содержит спецсимволов, которые могут некорректно парситься.</li>
+</ul>
+
+<blockquote>
+<p>⚠️ Внимание: Если вы используете VPN на смартфоне, локальная сеть может стать недоступной для MX Player, так как VPN создает виртуальный туннель и меняет маршрут трафика. Для работы с домашней сетью отключайте VPN или настройте исключение для локальных адресов (Split Tunneling).</p>
+</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте приложение «WiFi Analyzer» на смартфоне, чтобы проверить загрузку каналов Wi-Fi. Если ваш канал перегружен соседями, переключение роутера на свободный канал значительно улучшит стабильность потока видео по сети.</p></div>
+
+<p>В заключение стоит отметить, что <mark>стабильность проводного Ethernet-соединения для сервера (ПК) всегда выше, чем у любого Wi-Fi</mark>. Если ваш компьютер подключен к роутеру кабелем, а смартфон работает через Wi-Fi 5 ГГц, вы получите максимально возможную производительность для стриминга видео в высоком разрешении без артефактов и буферизации.</p>
+
+<details>
+<summary>Почему MX Player не видит компьютер в сети?</summary>
+<p>Чаще всего проблема кроется в профиле сети Windows. Если сеть помечена как «Общественная», система блокирует обнаружение устройств. Переключите профиль на «Частный» в настройках сети Windows. Также убедитесь, что служба «Хост устройства обнаружения» запущена.</p>
+</details>
+
+<details>
+<summary>Как воспроизвести видео с субтитрами по сети?</summary>
+<p>Протокол SMB поддерживает внешние субтитры. Убедитесь, что файл субтитров (.srt) имеет точно такое же имя, как и видеофайл, и лежит в той же папке. В меню плеера выберите «Субтитры» -> «Открыть» и найдите файл вручную, если автоматическая загрузка не сработала.</p>
+</details>
+
+<details>
+<summary>Можно ли смотреть 4K видео по Wi-Fi через MX Player?</summary>
+<p>Да, это возможно, но требует роутера стандарта 802.11ac (Wi-Fi 5) или новее (Wi-Fi 6) и подключения в диапазоне 5 ГГц. Для 4K с высоким битрейтом (более 80 Мбит/с) рекомендуется использовать проводное соединение или SMB v3 с аппаратным ускорением.</p>
+</details>
+
+<details>
+<summary>Где найти логи ошибок подключения в MX Player?</summary>
+<p>В настройках приложения перейдите в раздел «О программе» или «Диагностика» (если доступно в вашей версии). Однако проще всего отследить ошибки через журнал событий Windows (Просмотр событий -> Журналы Windows -> Система), фильтруя по источнику «SMBClient» или «Server».</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#подготовка-сетевой-инфраструктуры-для-стриминга">Подготовка сетевой инфраструктуры для стриминга</a></li><li><a href="#настройка-общего-доступа-в-windows-и-создание-папки">Настройка общего доступа в Windows и создание папки</a></li><li><a href="#инструкция-по-подключению-mx-player-через-smb">Инструкция по подключению MX Player через SMB</a></li><li><a href="#использование-dlna-и-upnp-для-беспроводной-трансляции">Использование DLNA и UPnP для беспроводной трансляции</a></li><li><a href="#оптимизация-воспроизведения-и-работа-с-кодеками">Оптимизация воспроизведения и работа с кодеками</a></li><li><a href="#решение常见问题-и-устранение-ошибок-подключения">Решение常见问题 и устранение ошибок подключения</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-posmotret-balans-steam.html" class="related-card">Как посмотреть баланс Steam: полная инструкция 2026</a></li><li><a href="/a/articles/o/ok/okko-est-li-subtitry.html" class="related-card">Есть ли субтитры в Okko: как включить и настроить</a></li><li><a href="/a/articles/k/ka/kak-zaregistrirovatsya-na-list-chtoby-smotret-dom-2.html" class="related-card">Как зарегистрироваться на лист для просмотра Дом 2: пошаговая инструкция</a></li><li><a href="/a/articles/k/ka/kak-sdelat-otdelnoe-okno-v-ivi.html" class="related-card">Как сделать отдельное окно в Иви: мультиэкран и Picture-in-Picture</a></li><li><a href="/a/articles/i/iv/ivi-kak-smotret-filmy-dlya-vzroslyh.html" class="related-card">Как смотреть 18+ на Иви: настройки родительского контроля</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-posmotret-balans-steam.html" class="related-bottom-card"><span class="related-bottom-title">Как посмотреть баланс Steam: полная инструкция 2026</span><span class="related-bottom-desc">Узнайте, как быстро проверить баланс Steam на ПК, телефоне или через браузер. Подробный разбор всех </span></a><a href="/a/articles/o/ok/okko-est-li-subtitry.html" class="related-bottom-card"><span class="related-bottom-title">Есть ли субтитры в Okko: как включить и настроить</span><span class="related-bottom-desc">Подробный гид по субтитрам в Okko. Как включить скрытые титры, изменить шрифт, решить проблемы с син</span></a><a href="/a/articles/k/ka/kak-zaregistrirovatsya-na-list-chtoby-smotret-dom-2.html" class="related-bottom-card"><span class="related-bottom-title">Как зарегистрироваться на лист для просмотра Дом 2: пошаговая инструкция</span><span class="related-bottom-desc">Узнайте, как зарегистрироваться на лист, чтобы смотреть Дом 2 онлайн. Полный гайд по созданию аккаун</span></a><a href="/a/articles/k/ka/kak-sdelat-otdelnoe-okno-v-ivi.html" class="related-bottom-card"><span class="related-bottom-title">Как сделать отдельное окно в Иви: мультиэкран и Picture-in-Picture</span><span class="related-bottom-desc">Узнайте, как запустить Иви в отдельном окне или режиме PiP на Smart TV, ПК и смартфонах. Инструкция </span></a><a href="/a/articles/i/iv/ivi-kak-smotret-filmy-dlya-vzroslyh.html" class="related-bottom-card"><span class="related-bottom-title">Как смотреть 18+ на Иви: настройки родительского контроля</span><span class="related-bottom-desc">Подробная инструкция по настройке ограничений для взрослых фильмов на Иви. Как включить и отключить </span></a><a href="/a/articles/s/ss/ss-prilozhenie-dlya-obmena-dush-smotret-na-russkom.html" class="related-bottom-card"><span class="related-bottom-title">SS приложение для обмена душ смотреть: Полный гид и обзор</span><span class="related-bottom-desc">Узнайте, как найти SS приложение для обмена душ смотреть на русском языке. Обзор функций, инструкция</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 tehpodskazka.vercel.app2</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 tehpodskazka.vercel.app2. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

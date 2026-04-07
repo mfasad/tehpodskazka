@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>FIDO UAF Client: что это, как работает и зачем нужен — tehpodskazka.vercel.app2</title>
+    <meta name="description" content="Подробный разбор технологии FIDO UAF Client. Узнайте, как работает клиентская часть для входа без паролей, в чем её преимущества и как это влияет на безопасность.">
+    <link rel="canonical" href="/a/articles/f/fi/fido-uaf-client-chto.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="FIDO UAF Client: что это, как работает и зачем нужен">
+    <meta property="og:description" content="Подробный разбор технологии FIDO UAF Client. Узнайте, как работает клиентская часть для входа без паролей, в чем её преимущества и как это влияет на безопасность.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775560692">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>tehpodskazka.vercel.app2</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">FIDO UAF Client: что это, как работает и зачем нужен</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>FIDO UAF Client: устройство и принцип работы протокола</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#архитектура-и-роль-клиента-в-экосистеме-fido">Архитектура и роль клиента в экосистеме FIDO</a></li><li><a href="#принцип-работы-от-регистрации-до-аутентификации">Принцип работы: от регистрации до аутентификации</a></li><li><a href="#ключевые-компоненты-и-взаимодействие-с-asm">Ключевые компоненты и взаимодействие с ASM</a></li><li><a href="#преимущества-использования-fido-uaf-перед-паролями">Преимущества использования FIDO UAF перед паролями</a></li><li><a href="#сценарии-использования-и-совместимость">Сценарии использования и совместимость</a></li><li><a href="#проблемы-внедрения-и-будущие-перспективы">Проблемы внедрения и будущие перспективы</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>В современном цифровом ландшафте, перенасыщенном утечками данных и фишинговыми атаками, традиционные пароли стремительно теряют свою надежность. На смену им приходят более совершенные методы аутентификации, среди которых выделяется стандарт <strong>FIDO UAF</strong>. Когда вы сталкиваетесь с запросом на разблокировку устройства или подтверждение входа через биометрию, за этим часто стоит именно <em>FIDO UAF Client</em>, являющийся ключевым компонентом этой экосистемы.</p>
+
+<p>Понимание того, что такое <strong>FIDO UAF Client</strong>, необходимо не только разработчикам, но и специалистам по информационной безопасности, а также продвинутым пользователям. Этот программный модуль выступает связующим звеном между вашим устройством, биометрическими датчиками и серверами сервисов, обеспечивая вход без использования паролей. В этой статье мы детально разберем архитектуру, функции и преимущества данной технологии.</p>
+
+<p>Основная задача клиента заключается в безопасном управлении криптографическими ключами и локальной верификации пользователя. Вместо того чтобы передавать секретные данные через сеть, <em>FIDO UAF Client</em> генерирует уникальную пару ключей для каждого сервиса. Это означает, что даже в случае компрометации сервера злоумышленник не получит доступа к вашим учетным данным, так как их просто не существует в привычном виде.</p>
+
+<h2 id="архитектура-и-роль-клиента-в-экосистеме-fido">Архитектура и роль клиента в экосистеме FIDO</h2>
+
+<p>Архитектура <strong>FIDO Alliance</strong> построена на четком разделении обязанностей между клиентской и серверной частями. <em>FIDO UAF Client</em> — это программный компонент, работающий непосредственно на устройстве пользователя (смартфоне, планшете или ПК). Его главная функция — взаимодействие с локальными механизмами аутентификации, такими как сканеры отпечатков пальцев, камеры для распознавания лица или PIN-коды.</p>
+
+<p>Клиент не хранит пароли. Вместо этого он управляет <strong>приватными ключами</strong>, которые никогда не покидают защищенную среду устройства (TEE — Trusted Execution Environment). Когда сервис запрашивает вход, клиент инициирует локальную проверку пользователя. Только после успешной биометрической или иной верификации клиент подписывает запрос своим приватным ключом и отправляет подпись на сервер.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Приватные ключи, управляемые FIDO UAF Client, никогда не передаются на сервер и не синхизируются в облако в открытом виде. Их утечка возможна только при физическом взломе самого устройства пользователя.</p>
+</blockquote>
+
+<p>Взаимодействие происходит через стандартизированные протоколы, что позволяет <em>FIDO UAF Client</em> работать с различными приложениями и веб-сайтами без необходимости индивидуальной настройки для каждого из них. Это создает единую среду доверия, где одно устройство может использоваться для доступа к множеству сервисов.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Главная роль FIDO UAF Client — создание и безопасное хранение приватных ключей внутри устройства, исключая их передачу по сети.</p></div>
+
+<h2 id="принцип-работы-от-регистрации-до-аутентификации">Принцип работы: от регистрации до аутентификации</h2>
+
+<p>Процесс использования технологии делится на два основных этапа: регистрация и непосредственно аутентификация. На этапе регистрации <strong>FIDO UAF Client</strong> получает от сервера параметры политики безопасности. Устройство проверяет, соответствует ли оно этим требованиям, и если да, то генерирует новую пару криптографических ключей.</p>
+
+<p>Публичный ключ отправляется на сервер и привязывается к учетной записи пользователя, а приватный остается в памяти клиента. Далее, при каждом входе, сервер отправляет挑战 (challenge) — случайную строку данных. Клиент запрашивает подтверждение у пользователя через биометрию и, получив его, подписывает challenge приватным ключом.</p>
+
+<p>Этот механизм гарантирует, что:</p>
+<ul>
+<li>🔐 Каждая транзакция подписывается уникальным криптографическим ключом, привязанным к конкретному устройству.</li>
+<li>👤 Биометрические данные (отпечаток, лицо) остаются на устройстве и никуда не передаются.</li>
+<li>🛡️ Сервер проверяет только математическую корректность подписи, не зная, каким именно способом пользователь подтвердил вход.</li>
+</ul>
+
+<p>Важно отметить, что <em>FIDO UAF Client</em> поддерживает различные уровни assurance. Это означает, что для доступа к банковскому приложению может потребоваться сканирование лица, а для входа в новостной сайт достаточно простого PIN-кода, если политика сервера это допускает.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой метод аутентификации вы используете чаще всего?</strong><ul><li>Пароли в браузере</li><li>Отпечаток пальца</li><li>Распознавание лица</li><li>PIN-код</li></ul></div></div>
+
+<h2 id="ключевые-компоненты-и-взаимодействие-с-asm">Ключевые компоненты и взаимодействие с ASM</h2>
+
+<p>Для своей работы <strong>FIDO UAF Client</strong> взаимодействует с другим важным модулем — <em>Authenticator Specific Module (ASM)</em>. ASM выступает в роли переводчика между клиентом и конкретным биометрическим датчиком или модулем безопасности. Это позволяет абстрагироваться от hardware-реализации.</p>
+
+<p>Клиент отправляет команды ASM, например, "зарегистрировать нового пользователя" или "выполнить аутентификацию". ASM, в свою очередь, управляет конкретным сенсором. Такая модульность позволяет производителям устройств внедрять новые типы биометрии без необходимости переписывать весь стек программного обеспечения FIDO.</p>
+
+<p>Основные функции взаимодействия включают:</p>
+<ul>
+<li>📡 Передача списков поддерживаемых алгоритмов шифрования и биометрических модальностей.</li>
+<li>🔑 Безопасная генерация и хранение ключей в изолированной среде.</li>
+<li>📝 Формирование отчетов о результатах аутентификации для удаленного сервера.</li>
+</ul>
+
+<p>Благодаря этому разделению, <em>FIDO UAF Client</em> остается универсальным программным слоем, который может работать на Android, iOS, Windows и других платформах, используя нативные возможности безопасности каждой из них.</p>
+
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Функция</th>
+<th>Расположение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FIDO UAF Client</td>
+<td>Управление протоколом и ключами</td>
+<td>ОС устройства (Software)</td>
+</tr>
+<tr>
+<td>ASM (Authenticator Specific Module)</td>
+<td>Связь с биометрическим датчиком</td>
+<td>Драйвер устройства</td>
+</tr>
+<tr>
+<td>Биометрический сенсор</td>
+<td>Считывание данных пользователя</td>
+<td>Hardware (Камера/Сканер)</td>
+</tr>
+<tr>
+<td>TEE (Trusted Execution Environment)</td>
+<td>Безопасное хранение ключей</td>
+<td>Защищенная область процессора</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="преимущества-использования-fido-uaf-перед-паролями">Преимущества использования FIDO UAF перед паролями</h2>
+
+<p>Переход на <strong>FIDO UAF</strong> обусловлен критическими уязвимостями парольной защиты. Пароли часто бывают слабыми, повторяются на разных сайтах и могут быть украдены через фишинг. Клиентская часть протокола устраняет эти риски, так как пользователь ничего не запоминает и не вводит вручную.</p>
+
+<p>Кроме того, <em>FIDO UAF Client</em> обеспечивает высокую степень конфиденциальности. Поскольку для каждого сайта генерируется уникальная пара ключей, утечка данных с одного сервиса не компрометирует аккаунты пользователя на других ресурсах. Это решает проблему "эффекта домино", характерную для повторного использования паролей.</p>
+
+<p>Среди ключевых преимуществ также стоит выделить:</p>
+<ul>
+<li>🚀 Скорость: вход занимает секунды и не требует ввода текста.</li>
+<li>🌐 Удобство: отсутствие необходимости помнить сложные комбинации символов.</li>
+<li>🔒 Безопасность: устойчивость к фишингу, так как ключи привязаны домену сайта.</li>
+</ul>
+
+<blockquote>
+<p>⚠️ Внимание: Несмотря на высокую безопасность, потеря устройства, на котором зарегистрирован FIDO UAF Client, может создать сложности с восстановлением доступа, если не настроены резервные методы входа.</p>
+</blockquote>
+
+<p>Таким образом, технология не только повышает защищенность, но и значительно улучшает пользовательский опыт (UX), делая процесс входа быстрым и незаметным.</p>
+
+<details class="faq-item"><summary>Что происходит при сбросе устройства?</summary><div class="faq-answer"><p>При полном сбросе устройства (Factory Reset) приватные ключи, хранящиеся в FIDO UAF Client, обычно удаляются. Для восстановления доступа потребуется использование резервного метода аутентификации, предусмотренного сервисом (например, SMS-код или резервный ключ безопасности).</p></div></details>
+
+<h2 id="сценарии-использования-и-совместимость">Сценарии использования и совместимость</h2>
+
+<p>Технология <strong>FIDO UAF</strong> широко внедряется в мобильные приложения банков, финансовые сервисы и корпоративные системы. Например, при входе в банковское приложение через <code>Настройки → Безопасность → Биометрия</code>, вы активируете функции, которые управляются именно этим клиентом.</p>
+
+<p>Совместимость обеспечивается на уровне операционных систем. В Android эта функциональность реализована через <em>Android BiometricPrompt</em> и системные службы безопасности. В Windows аналогичные функции доступны через <em>Windows Hello</em>. Это позволяет разработчикам приложений интегрировать вход без паролей, используя стандартные API платформы.</p>
+
+<p>Для разработчиков интеграция выглядит следующим образом:</p>
+<pre><code>// Пример запроса аутентификации (псевдокод)
+<p>FidoUafClient.authenticate(request, callback) {</p>
+<p>if (userVerified) {</p>
+<p>signChallenge(privateKey);</p>
+<p>sendToServer();</p>
+<p>}</p>
+<p>}</code></pre></p>
+
+<p>Важно, что <em>FIDO UAF Client</em> поддерживает сценарии как с одним фактором (только биометрия), так и с несколькими (биометрия + PIN). Гибкость настроек позволяет адаптировать уровень безопасности под конкретные требования бизнеса.</p>
+
+<div class="checklist-block"><h4>☑️ Готовность устройства к FIDO UAF</h4><label class="check-item"><input type="checkbox"><span>Наличие биометрического датчика</span></label><label class="check-item"><input type="checkbox"><span>Поддержка TEE (Trusted Execution Environment)</span></label><label class="check-item"><input type="checkbox"><span>Актуальная версия ОС</span></label><label class="check-item"><input type="checkbox"><span>Наличие модуля NFC (опционально)</span></label><label class="check-item"><input type="checkbox"><span>Включен экран блокировки</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+
+<h2 id="проблемы-внедрения-и-будущие-перспективы">Проблемы внедрения и будущие перспективы</h2>
+
+<p>Несмотря на очевидные преимущества, внедрение <strong>FIDO UAF Client</strong> сталкивается с рядом挑战. Основная из них — фрагментация устройств. Не все смартфоны имеют необходимые защищенные элементы (TEE) или качественные биометрические датчики, что ограничивает доступность технологии для некоторых групп пользователей.</p>
+
+<p>Кроме того, существует проблема миграции. Переход от парольной базы требует тщательного планирования со стороны сервис-провайдеров. Необходимо обеспечить параллельную работу старых и новых методов входа, что увеличивает нагрузку на инфраструктуру. Однако стандарт <em>FIDO2</em>, являющийся развитием UAF, постепенно решает这些问题, объединяя лучшие практики.</p>
+
+<p>В будущем ожидается полное исчезновение паролей в массовом сегменте. <strong>FIDO UAF Client</strong> станет невидимым, но фундаментальным слоем безопасности, работающим в фоновом режиме. Развитие технологий, таких как Passkeys от Apple, Google и Microsoft, базируется именно на этих принципах.</p>
+
+<blockquote>
+<p>⚠️ Внимание: При обновлении операционной системы устройства убедитесь, что биометрические данные и ключи FIDO корректно мигрировали, чтобы не потерять доступ к критически важным приложениям.</p>
+</blockquote>
+
+<p>Эволюция стандартов продолжается, и <em>FIDO UAF Client</em> остается центральным элементом в построении мира без паролей, обеспечивая баланс между удобством и максимальной защитой данных.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если вы разработчик, всегда проверяйте наличие обновлений для библиотек FIDO UAF в вашем SDK, чтобы гарантировать совместимость с последними версиями Android и iOS.</p></div>
+
+<h2 id="faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</h2>
+
+<details>
+<summary>Что произойдет, если я потеряю телефон с настроенным FIDO UAF?</summary>
+<p>В этом случае доступ к аккаунтам через биометрию будет невозможен. Вам потребуется использовать резервный метод входа, который вы настроили при регистрации (например, одноразовый код по SMS, email или резервный физический ключ безопасности). После входа на новом устройстве нужно будет заново зарегистрировать его в качестве доверенного.</p>
+</details>
+
+<details>
+<summary>Можно ли использовать FIDO UAF Client на компьютере без биометрии?</summary>
+<p>Да, но с ограничениями. Если на ПК нет биометрического датчика, клиент может использовать сопряженный смартфон (через Bluetooth или QR-код) для проведения аутентификации. В этом случае телефон выступает в роли внешнего authenticator'а.</p>
+</details>
+
+<details>
+<summary>Безопасно ли хранить ключи в FIDO UAF Client?</summary>
+<p>Да, это один из самых безопасных методов. Ключи хранятся в защищенной области процессора (TEE) и не могут быть скопированы или экспортированы даже при наличии root-прав. Для их использования требуется физическое присутствие пользователя.</p>
+</details>
+
+<details>
+<summary>Чем FIDO UAF отличается от FIDO U2F?</summary>
+<p>UAF (Universal Authentication Framework) ориентирован на вход без паролей с использованием встроенных в устройство датчиков (биометрия). U2F (Universal 2nd Factor) — это стандарт для вторых факторов, обычно требующий внешнего устройства (токена) в дополнение к паролю. Современные реализации часто объединяют оба подхода.</p>
+</details>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>FIDO UAF Client — это фундамент технологии входа без паролей, обеспечивающий хранение ключей в безопасности устройства и проверку пользователя через биометрию.</p></div></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#архитектура-и-роль-клиента-в-экосистеме-fido">Архитектура и роль клиента в экосистеме FIDO</a></li><li><a href="#принцип-работы-от-регистрации-до-аутентификации">Принцип работы: от регистрации до аутентификации</a></li><li><a href="#ключевые-компоненты-и-взаимодействие-с-asm">Ключевые компоненты и взаимодействие с ASM</a></li><li><a href="#преимущества-использования-fido-uaf-перед-паролями">Преимущества использования FIDO UAF перед паролями</a></li><li><a href="#сценарии-использования-и-совместимость">Сценарии использования и совместимость</a></li><li><a href="#проблемы-внедрения-и-будущие-перспективы">Проблемы внедрения и будущие перспективы</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/v/v-/v-prilozhenii-vtb-ne-otobrazhaetsya-karta-pochemu.html" class="related-card">Почему в ВТБ Онлайн не отображается карта: причины и решение</a></li><li><a href="/a/articles/k/ka/kak-vernut-udalyonnyj-podarok-vk.html" class="related-card">Как вернуть удалённый подарок ВК: пошаговая инструкция</a></li><li><a href="/a/articles/n/ne/nepristojnye-zhelaniya-prohozhdenie.html" class="related-card">Непристойные желания: полное прохождение и все концовки</a></li><li><a href="/a/articles/d/de/default-vyzov-chto-takoe.html" class="related-card">Default вызов: что это такое и как работает в Android</a></li><li><a href="/a/articles/k/ka/kak-prozvonit-komnatnuyu-antennu-multimetrom-s-blokom-pitaniya.html" class="related-card">Как прозвонить комнатную антенну мультиметром с блоком питания</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/v/v-/v-prilozhenii-vtb-ne-otobrazhaetsya-karta-pochemu.html" class="related-bottom-card"><span class="related-bottom-title">Почему в ВТБ Онлайн не отображается карта: причины и решение</span><span class="related-bottom-desc">Не видите карту в приложении ВТБ? Разбираем все причины: от блокировки до сбоя настроек. Пошаговая и</span></a><a href="/a/articles/k/ka/kak-vernut-udalyonnyj-podarok-vk.html" class="related-bottom-card"><span class="related-bottom-title">Как вернуть удалённый подарок ВК: пошаговая инструкция</span><span class="related-bottom-desc">Узнайте, можно ли вернуть удалённый подарок ВК. Разбор работы подарочной системы, скрытые настройки </span></a><a href="/a/articles/n/ne/nepristojnye-zhelaniya-prohozhdenie.html" class="related-bottom-card"><span class="related-bottom-title">Непристойные желания: полное прохождение и все концовки</span><span class="related-bottom-desc">Подробный гайд по игре Непристойные желания. Прохождение всех сцен, поиск секретов, выбор вариантов </span></a><a href="/a/articles/d/de/default-vyzov-chto-takoe.html" class="related-bottom-card"><span class="related-bottom-title">Default вызов: что это такое и как работает в Android</span><span class="related-bottom-desc">Подробный разбор default вызова в Android. Узнайте, что такое default app, как сбросить настройки и </span></a><a href="/a/articles/k/ka/kak-prozvonit-komnatnuyu-antennu-multimetrom-s-blokom-pitaniya.html" class="related-bottom-card"><span class="related-bottom-title">Как прозвонить комнатную антенну мультиметром с блоком питания</span><span class="related-bottom-desc">Полная инструкция по проверке активной комнатной антенны тестером. Диагностика усилителя, замер напр</span></a><a href="/a/articles/k/kl/klyuchi-aktivacii-dlya-televzr-light.html" class="related-bottom-card"><span class="related-bottom-title">Ключи активации для Televzr Light: Полная инструкция по разблокировке</span><span class="related-bottom-desc">Узнайте, как получить и ввести ключи активации для Televzr Light. Актуальные коды, способы обхода ог</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 tehpodskazka.vercel.app2</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 tehpodskazka.vercel.app2. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

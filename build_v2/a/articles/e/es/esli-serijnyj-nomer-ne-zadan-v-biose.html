@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Серийный номер не задан в биосе: причины и решение — tehpodskazka.vercel.app2</title>
+    <meta name="description" content="Почему в биосе не задан серийный номер? Полный разбор ошибок SMBIOS, методы восстановления DMI через командную строку и риски подделки идентификаторов.">
+    <link rel="canonical" href="/a/articles/e/es/esli-serijnyj-nomer-ne-zadan-v-biose.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Серийный номер не задан в биосе: причины и решение">
+    <meta property="og:description" content="Почему в биосе не задан серийный номер? Полный разбор ошибок SMBIOS, методы восстановления DMI через командную строку и риски подделки идентификаторов.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775560692">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>tehpodskazka.vercel.app2</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/mobilnye-os/">Мобильные ОС</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Серийный номер не задан в биосе: причины и решение</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Что делать, если серийный номер не задан в биосе</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#причины-отсутствия-серийного-идентификатора-в-системе">Причины отсутствия серийного идентификатора в системе</a></li><li><a href="#диагностика-и-проверка-текущих-значений-dmi">Диагностика и проверка текущих значений DMI</a></li><li><a href="#методы-восстановления-через-командную-строку-windows">Методы восстановления через командную строку Windows</a></li><li><a href="#использование-специализированного-софта-для-редактирования-smbios">Использование специализированного софта для редактирования SMBIOS</a></li><li><a href="#сравнение-методов-восстановления-идентификаторов">Сравнение методов восстановления идентификаторов</a></li><li><a href="#риски-и-последствия-изменения-данных-bios">Риски и последствия изменения данных BIOS</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Ситуация, когда при загрузке операционной системы или диагностике оборудования обнаруживается, что <strong>серийный номер не задан в биосе</strong>, может вызвать недоумение у пользователя. Вместо привычного буквенно-цифрового кода в соответствующем поле красуется заглушка вроде "Default String", "To be filled by O.E.M." или просто пустая строка. Это не всегда свидетельствует о критической неисправности, но игнорировать такой сигнал нельзя, так как он влияет на идентификацию устройства в корпоративных сетях и работу лицензионного софта.</p>
+
+<p>В основе проблемы лежит область памяти <em>DMI</em> (Desktop Management Interface), которая хранит информацию о конфигурации системы. Именно туда записываются данные о производителе материнской платы, версии BIOS и уникальном идентификаторе. Если эти данные отсутствуют или повреждены, операционная система не может корректно считать характеристики "железа", что иногда приводит к конфликтам драйверов или отказу в активации предустановленных лицензий.</p>
+
+<p>Важно понимать, что отсутствие серийного номера в <strong>SMBIOS</strong> (System Management BIOS) часто встречается на устройствах, собранных энтузиастами, или после некорректной перепрошивки. В некоторых случаях это штатное поведение для бюджетных моделей ноутбуков или материнских плат, где производитель не удосужился прописать уникальные значения для каждой единицы товара, ограничившись общим партионным номером.</p>
+
+<h2 id="причины-отсутствия-серийного-идентификатора-в-системе">Причины отсутствия серийного идентификатора в системе</h2>
+
+<p>Первопричиной чаще всего выступает сам процесс производства или обновления firmware. Когда завод-изготовитель программирует чип BIOS, он должен заполнить специальные таблицы данными, уникальными для каждого устройства. Если этот этап был пропущен из-за человеческого фактора или сбоя автоматизированной линии, пользователь получает устройство с пустыми полями идентификации. Также это характерно для материнских плат, купленных отдельно от корпуса и процессора.</p>
+
+<p>Другой распространенный сценарий — неудачное обновление BIOS. В процессе flashing (перепрошивки) иногда происходит очистка области DMI, особенно если используется универсальная прошивка, не адаптированная под конкретную модель платы. В этот момент <strong>UUID</strong> (Universally Unique Identifier) и серийный номер могут быть стерты, и система начинает считать их невалидными или отсутствующими.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Попытка записать случайный серийный номер без привязки к заводской базе данных может привести к невозможности гарантийного обслуживания. Производитель имеет право отказать в ремонте, если идентификаторы в BIOS не совпадают с наклейкой на корпусе или отсутствуют в реестре.</p>
+</blockquote>
+
+<p>Не стоит сбрасывать со счетов и программные сбои. Вирусное ПО или действия неопытных пользователей, пытавшихся скрыть информацию о системе для обхода блокировок, могли изменить значения в реестре или самой прошивке. В таких случаях <em>DMI</em> содержит нулевые значения или строки-заглушки, которые операционная система интерпретирует как ошибку конфигурации.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Сталкивались ли вы с отсутствием серийного номера в BIOS?</strong><ul><li>Да, на ноутбуке</li><li>Да, на ПК</li><li>Видел в отчете AIDA64</li><li>Никогда не встречал</li></ul></div></div>
+
+<h2 id="диагностика-и-проверка-текущих-значений-dmi">Диагностика и проверка текущих значений DMI</h2>
+
+<p>Прежде чем приступать к исправлению, необходимо убедиться в наличии проблемы и оценить её масштаб. Простейший способ — использовать встроенные средства Windows. Открыв командную строку с правами администратора, можно запросить информацию у BIOS напрямую, минуя графический интерфейс. Это позволит увидеть, что именно "видит" система на самом низком уровне.</p>
+
+<p>Для получения точных данных введите команду: <code>wmic bios get serialnumber</code>. Если в ответ вы получите строку "Default String" или "To be filled by O.E.M.", значит, поле действительно не заполнено производителем. Более детальную информацию, включая версию BIOS, производителя и модель материнской платы, можно получить через расширенный запрос: <code>wmic bios get smbiosbiosversion, manufacturer, serialnumber</code>.</p>
+
+<p>Для глубокой диагностики рекомендуется использовать специализированный софт, такой как <em>AIDA64</em> или <em>CPU-Z</em>. Эти программы умеют считывать сырые данные из таблиц SMBIOS и отображать их в удобном виде. В разделе "Системная плата" или "BIOS" будут указаны все поля. Если серийный номер отсутствует, в соответствующей графе будет прочерк или надпись "N/A".</p>
+
+<details class="faq-item"><summary>Почему wmic может показывать неверные данные?</summary><div class="faq-answer"><p>Иногда команда wmic выдает кэшированные или ошибочные данные из-за конфликтов драйверов управления. В таких случаях лучше использовать утилиту dmidecode (в Linux) или загрузиться с LiveCD, чтобы получить доступ к raw-данным BIOS напрямую, минуя влияние операциной системы Windows.</p></div></details>
+
+<p>Важно сравнить полученные программные данные с физической наклейкой на корпусе устройства. Если на наклейке номер есть, а в BIOS его нет — это явный признак ошибки прошивки. Если же номера нет нигде, кроме гарантийного талона, возможно, устройство собрано из запасных частей или является восстановленным рефабришером, где такие детали могли быть упущены.</p>
+
+<h2 id="методы-восстановления-через-командную-строку-windows">Методы восстановления через командную строку Windows</h2>
+
+<p>В операционных системах семейства Windows существуют встроенные механизмы для работы с WMI (Windows Management Instrumentation), которые в некоторых случаях позволяют перезаписать значения в DMI, если это поддерживает сама материнская плата. Однако стоит помнить, что стандартными средствами изменить серийный номер в BIOS удается далеко не всегда, так как многие производители блокируют запись в эти области.</p>
+
+<p>Тем не менее, попытаться стоит. Сначала нужно узнать текущий UUID системы, выполнив команду: <code>wmic path win32_computersystemproduct get uuid</code>. Если система позволяет модификацию, можно попробовать использовать утилиты от производителя, которые часто идут в комплекте с драйверами. Для некоторых брендов, например <em>Dell</em> или <em>HP</em>, существуют специальные сервисные утилиты, восстанавливающие заводские настройки DMI.</p>
+
+<p>Если стандартные методы не работают, можно воспользоваться сторонними инструментами, работающими через WMI, но это требует осторожности. Перед любыми манипуляциями обязательно создайте точку восстановления системы. Введите в командную строку (от имени администратора) команду для сброса настроек WMI, что иногда помогает системе заново считать корректные данные: <code>net stop winmgmt</code>, затем <code>winmgmt /resetrepository</code> и снова <code>net start winmgmt</code>.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка перед изменением BIOS</h4><label class="check-item"><input type="checkbox"><span>Сделайте бэкап текущей прошивки</span></label><label class="check-item"><input type="checkbox"><span>Убедитесь в стабильности питания</span></label><label class="check-item"><input type="checkbox"><span>Запишите оригинальные значения DMI</span></label><label class="check-item"><input type="checkbox"><span>Найдите точную модель материнской платы</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>Стоит отметить, что если BIOS жестко заблокирован производителем, команды Windows будут возвращать ошибку "Access Denied" или просто не дадут эффекта. В таком случае программное исправление на уровне ОС невозможно, и потребуется использование специализированного софта для прошивки или обращение в сервис.</p>
+
+<h2 id="использование-специализированного-софта-для-редактирования-smbios">Использование специализированного софта для редактирования SMBIOS</h2>
+
+<p>Для более глубокого вмешательства в структуру BIOS существуют утилиты, работающие напрямую с таблицами SMBIOS. Одной из самых известных является <em>DMIEdit</em> (часто идет в составе AMI Aptio Utility) или <em>SMBIOS Viewer</em>. Эти программы позволяют просматривать и, что важнее, редактировать поля DMI, включая серийный номер, UUID и информацию о производителе.</p>
+
+<p>Работа с такими утилитами требует крайней осторожности. Интерфейс обычно спартанский, а риск повредить загрузочный блок велик. Процесс выглядит следующим образом: вы загружаете утилиту, находите поле <strong>Serial Number</strong>, вводите корректное значение (обычно указанное на наклейке) и сохраняете изменения. После этого необходим полный перезапуск системы (cold boot), чтобы BIOS перечитал измененные таблицы.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Использование сторонних утил для редактирования DMI на ноутбуках с гарантией может привести к её потере. Кроме того, некорректный ввод данных (например, неверная контрольная сумма) может сделать систему не загружаемой или вызвать сбои в работе периферии.</p>
+</blockquote>
+
+<p>Для материнских плат на базе чипсетов <em>Intel</em> часто используется утилита <code>dmidecode</code> (в Linux-среде) или её аналоги под DOS. Они позволяют не только читать, но и в некоторых случаях записывать данные, если установлен соответствующий флаг в BIOS. Команда для записи может выглядеть сложно, поэтому лучше использовать графические оболочки, если они доступны для вашей модели платы.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Редактирование SMBIOS — это операция низкого уровня, которая требует точного знания модели платы и совместимости утилиты. Не используйте программы, предназначенные для других чипсетов.</p></div>
+
+<h2 id="сравнение-методов-восстановления-идентификаторов">Сравнение методов восстановления идентификаторов</h2>
+
+<p>Выбор метода восстановления зависит от типа устройства, доступных инструментов и рисков, на которые вы готовы пойти. Ниже приведена сравнительная таблица, которая поможет определиться с оптимальным способом решения проблемы для вашего случая.</p>
+
+<table>
+<thead>
+<tr>
+<th>Метод</th>
+<th>Сложность</th>
+<th>Риск потери данных</th>
+<th>Эффективность</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Команды WMIC (Windows)</td>
+<td>Низкая</td>
+<td>Минимальный</td>
+<td>Низкая (работает редко)</td>
+</tr>
+<tr>
+<td>Утилиты производителя (OEM Tools)</td>
+<td>Средняя</td>
+<td>Низкий</td>
+<td>Высокая (для родных устройств)</td>
+</tr>
+<tr>
+<td>Редакторы DMI (DMIEdit)</td>
+<td>Высокая</td>
+<td>Средний</td>
+<td>Высокая (универсально)</td>
+</tr>
+<tr>
+<td>Перепрошивка BIOS</td>
+<td>Очень высокая</td>
+<td>Критический</td>
+<td>Максимальная (сброс к заводским)</td>
+</tr>
+</tbody>
+</table>
+
+<p>Как видно из таблицы, использование родных утилит от производителя — самый безопасный путь, если он доступен. Редакторы DMI дают больше свободы, но требуют технической грамотности. Перепрошивка BIOS является крайней мерой, к которой стоит прибегать только если другие способы не помогли, и вы уверены в источнике прошивки.</p>
+
+<p>В корпоративной среде часто используют автоматизированные скрипты развертывания, которые прописывают серийные номера массово. Для домашнего пользователя такой подход избыточен, но понимание принципов помогает выбрать правильный инструмент. Всегда начинайте с наименее инвазивных методов.</p>
+
+<h2 id="риски-и-последствия-изменения-данных-bios">Риски и последствия изменения данных BIOS</h2>
+
+<p>Манипуляции с BIOS и таблицами DMI несут в себе потенциальные угрозы стабильности системы. Самое страшное последствие — "окирпичивание" материнской платы, когда устройство перестает реагировать на включение. Это происходит, если при записи новых данных был поврежден загрузочный сектор или нарушена целостность структуры таблиц.</p>
+
+<p>Кроме того, изменение серийного номера может повлиять на работу лицензионного программного обеспечения. Многие программы привязывают лицензию к "железу", и резкая смена идентификаторов может быть расценена антивирусом или системой защиты как попытка взлома или переноса на другой компьютер. В результате вы можете потерять доступ к купленным продуктам.</p>
+
+<blockquote>
+<p>⚠️ Внимание: В корпоративных сетях с доменной структурой изменение серийного номера может вызвать конфликт учетных записей компьютера, так как объект в Active Directory будет идентифицироваться по старому UUID, а физическое устройство — по новому.</p>
+</blockquote>
+
+<p>Также стоит учитывать юридический аспект. Подделка серийных номеров для обхода блокировок активации Windows или других платных сервисов является нарушением лицензионного соглашения. Все описанные методы предназначены исключительно для восстановления заводских данных или легальной диагностики оборудования.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Всегда фотографируйте оригинальную наклейку с серийным номером на корпусе перед началом любых работ. Это ваш единственный способ восстановить оригинальное значение в случае ошибки.</p></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Можно ли активировать Windows, если серийный номер в BIOS не задан?</summary>
+<p>Да, активация Windows возможна даже при отсутствии серийного номера в BIOS, если у вас есть действующий лицензионный ключ. Система будет использовать другие аппаратные идентификаторы (хэш оборудования) для привязки лицензии. Однако для корпоративных версий (Volume License) наличие корректного DMI может быть обязательным требованием политик безопасности.</p>
+</details>
+
+<details>
+<summary>Влияет ли отсутствие серийника в BIOS на производительность компьютера?</summary>
+<p>Нет, отсутствие или некорректное значение серийного номера никак не влияет на скорость работы процессора, память или видеокарту. Это исключительно информационный параметр для управления активами, диагностики и идентификации устройства в сети. Производительность останется прежней.</p>
+</details>
+
+<details>
+<summary>Опасно ли покупать б/у ноутбук, если в BIOS стоит "Default String"?</summary>
+<p>Это повод для настороженности. Такая надпись может означать, что материнская плата была заменена на неоригинальную (китайский аналог), либо BIOS был перепрошит кустарным способом. Перед покупкой обязательно проверьте работоспособность всех портов и возможность обновления прошивки официальными методами.</p>
+</details>
+
+<details>
+<summary>Как узнать реальный серийный номер, если в BIOS пусто?</summary>
+<p>Единственный достоверный источник — физическая наклейка на корпусе устройства (обычно на дне ноутбука или задней стенке ПК). Также номер часто дублируется на коробке от устройства и в гарантийном талоне. Если наклейки стерты, узнать заводской номер практически невозможно без доступа к заводской базе производителя.</p>
+</details>
+
+<details>
+<summary>Можно ли прошить серийный номер через Linux?</summary>
+<p>Да, в Linux есть мощные инструменты для работы с DMI, такие как <code>dmidecode</code> и <code>biosdevname</code>. Однако для записи данных (а не только чтения) обычно требуются специфические утилиты от производителя чипсета или материнской платы, которые не всегда доступны в репозиториях дистрибутивов и могут требовать компиляции из исходников.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#причины-отсутствия-серийного-идентификатора-в-системе">Причины отсутствия серийного идентификатора в системе</a></li><li><a href="#диагностика-и-проверка-текущих-значений-dmi">Диагностика и проверка текущих значений DMI</a></li><li><a href="#методы-восстановления-через-командную-строку-windows">Методы восстановления через командную строку Windows</a></li><li><a href="#использование-специализированного-софта-для-редактирования-smbios">Использование специализированного софта для редактирования SMBIOS</a></li><li><a href="#сравнение-методов-восстановления-идентификаторов">Сравнение методов восстановления идентификаторов</a></li><li><a href="#риски-и-последствия-изменения-данных-bios">Риски и последствия изменения данных BIOS</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/e/ev/everlasting-life-ne-zapuskaetsya-android-net-internet-soedineniya.html" class="related-card">Everlasting Life на Android не запускается: нет интернета</a></li><li><a href="/a/articles/n/no/noutbuk-icl-kak-zajti-v-bios.html" class="related-card">Ноутбук ICL: как зайти в BIOS — полные инструкции</a></li><li><a href="/a/articles/k/ka/kak-udalit-prilozhenie-huawei-koshelek.html" class="related-card">Как удалить приложение Huawei Кошелек: полная инструкция</a></li><li><a href="/a/articles/a/an/android-auto-vlc-player-kak-smotret.html" class="related-card">Android Auto и VLC Player: как смотреть видео в машине</a></li><li><a href="/a/articles/n/ne/ne-otkryvaetsya-prilozhenie-na-telefon-huavej.html" class="related-card">Не открывается приложение на Huawei: решения и fixes</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/e/ev/everlasting-life-ne-zapuskaetsya-android-net-internet-soedineniya.html" class="related-bottom-card"><span class="related-bottom-title">Everlasting Life на Android не запускается: нет интернета</span><span class="related-bottom-desc">Решение ошибки подключения в игре Everlasting Life. Почему нет сети на Android, как исправить запуск</span></a><a href="/a/articles/n/no/noutbuk-icl-kak-zajti-v-bios.html" class="related-bottom-card"><span class="related-bottom-title">Ноутбук ICL: как зайти в BIOS — полные инструкции</span><span class="related-bottom-desc">Подробная инструкция, как на ноутбуке ICL войти в BIOS. Узнайте, какие клавиши (F2, Del) нажать при </span></a><a href="/a/articles/k/ka/kak-udalit-prilozhenie-huawei-koshelek.html" class="related-bottom-card"><span class="related-bottom-title">Как удалить приложение Huawei Кошелек: полная инструкция</span><span class="related-bottom-desc">Пошаговое руководство по удалению Huawei Кошелек. Безопасные методы отключения системного приложения</span></a><a href="/a/articles/a/an/android-auto-vlc-player-kak-smotret.html" class="related-bottom-card"><span class="related-bottom-title">Android Auto и VLC Player: как смотреть видео в машине</span><span class="related-bottom-desc">Подробная инструкция: как запустить VLC Player на Android Auto. Обход ограничений, установка APK, на</span></a><a href="/a/articles/n/ne/ne-otkryvaetsya-prilozhenie-na-telefon-huavej.html" class="related-bottom-card"><span class="related-bottom-title">Не открывается приложение на Huawei: решения и fixes</span><span class="related-bottom-desc">Что делать, если не открывается приложение на телефоне Huawei? Полный гид по устранению зависаний, о</span></a><a href="/a/articles/i/is/ischezla-ikonka-yutyub-s-ekrana-android.html" class="related-bottom-card"><span class="related-bottom-title">Пропала иконка YouTube на Android: причины и восстановление</span><span class="related-bottom-desc">Если исчезла иконка YouTube с экрана Android, не паникуйте. Узнайте, как вернуть приложение через на</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 tehpodskazka.vercel.app2</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 tehpodskazka.vercel.app2. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

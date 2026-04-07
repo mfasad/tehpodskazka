@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Как размонтировать ISO в Windows 10: 3 способа — tehpodskazka.vercel.app2</title>
+    <meta name="description" content="Подробная инструкция по размонтированию ISO образов в Windows 10. Решаем проблему с блокировкой флешек и файловыми конфликтами через Проводник и PowerShell.">
+    <link rel="canonical" href="/a/articles/k/ka/kak-razmontirovat-obraz-iso-v-windows-10.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как размонтировать ISO в Windows 10: 3 способа">
+    <meta property="og:description" content="Подробная инструкция по размонтированию ISO образов в Windows 10. Решаем проблему с блокировкой флешек и файловыми конфликтами через Проводник и PowerShell.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775560692">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>tehpodskazka.vercel.app2</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/windows-i-pk/">Windows и ПК</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как размонтировать ISO в Windows 10: 3 способа</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Как размонтировать образ ISO в Windows 10</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#стандартный-метод-через-проводник-windows">Стандартный метод через Проводник Windows</a></li><li><a href="#использование-контекстного-меню-самого-файла-iso">Использование контекстного меню самого файла ISO</a></li><li><a href="#принудительное-размонтирование-через-управление-дисками">Принудительное размонтирование через Управление дисками</a></li><li><a href="#решение-проблем-с-блокировкой-файлов-и-процессов">Решение проблем с блокировкой файлов и процессов</a></li><li><a href="#размонтирование-через-powershell-и-командную-строку">Размонтирование через PowerShell и командную строку</a></li><li><a href="#сторонние-утилиты-для-работы-с-образами">Сторонние утилиты для работы с образами</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>Работа с <strong>виртуальными дисками</strong> стала неотъемлемой частью использования операционной системы, позволяя запускать установщики программ или игры без физической записи на оптические носители. Однако пользователи часто сталкиваются с ситуацией, когда после завершения работы с содержимым образа система продолжает считать, что диск вставлен, что может блокировать запись на физические накопители или вызывать конфликты при попытке смонтировать новый файл. Стандартный механизм <em>Windows 10</em> не всегда очевиден для новичков, так как кнопка размонтирования может быть скрыта или неактивна в зависимости от контекстного меню.</p>
+<p>Необходимость извлечь виртуальный носитель возникает не только при завершении установки софта, но и в случаях, когда требуется освободить букву диска для подключения USB-накопителя или внешнего жесткого диска. Иногда система просто «зависает» в состоянии ожидания, и файл <strong>ISO</strong> остается активным, потребляя системные ресурсы и мешая нормальной работе проводника. Понимание того, как корректно завершить сеанс работы с образом, является базовым навыком администрирования персонального компьютера.</p>
+<p>В этой статье мы детально разберем все доступные методы, от простейшего клика мышью до использования командной строки для продвинутых пользователей. Мы рассмотрим причины, по которых образ может не хотить «выходить» из привода, и предложим решения для самых сложных случаев блокировки процессов. <em>Размонтирование</em> — это безопасная операция, которая не удаляет сам файл образа, а лишь отключает его виртуальное представление в системе.</p>
+
+<h2 id="стандартный-метод-через-проводник-windows">Стандартный метод через Проводник Windows</h2>
+<p>Самый простой и очевидный способ, который должен знать каждый пользователь, заключается в использовании встроенного функционала <strong>Проводника</strong>. После того как вы открыли образ ISO, он отображается в разделе «Этот компьютер» как отдельный дисковод, обычно с буквой, следующей за физическими жесткими дисками. Для выполнения операции извлечения достаточно найти этот виртуальный привод в списке устройств.</p>
+<p>Нажмите правой кнопкой мыши на значок дисковода с образом. В появившемся контекстном меню необходимо выбрать пункт <code>Извлечь</code>. Если этот пункт активен, система мгновенно разорвет соединение с файлом образа, и значок дисковода исчезнет из списка доступных накопителей. Это штатное поведение операционной системы <em>Microsoft Windows</em>, которое не требует перезагрузки или использования стороннего софта.</p>
+<blockquote>
+<p>⚠️ Внимание: Если пункт «Извлечь» в контекстном меню окрашен серым цветом или отсутствует, это означает, что в данный момент какой-то процесс активно использует файлы внутри образа. Закройте все открытые окна установщиков, медиаплееры или архиваторы, работающие с данным диском, и попробуйте снова.</p>
+</blockquote>
+<p>Иногда бывает полезно использовать альтернативный путь через верхнее меню Проводника. Выделите виртуальный диск левой кнопкой мыши, после чего в верхней панели инструментов перейдите на вкладку <code>Управление</code> (или «Работа с дисками»). Там также должна присутствовать крупная кнопка «Извлечь», дублирующая функцию контекстного меню. Этот метод особенно удобен, если правая кнопка мыши по каким-то причинам не откликается.</p>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если стандартное меню не реагирует, попробуйте сначала открыть содержимое виртуального диска и закрыть его, а затем сразу же кликнуть правой кнопкой мыши по значку привода в боковой панели навигации.</p></div>
+
+<h2 id="использование-контекстного-меню-самого-файла-iso">Использование контекстного меню самого файла ISO</h2>
+<p>Существует менее известный, но эффективный способ управления виртуальными приводами, который не требует поиска значка дисковода в «Моем компьютере». Вы можете управлять состоянием смонтированного образа непосредственно через исходный файл <strong>ISO</strong>, расположенный на вашем жестком диске. Этот метод часто выручает, когда в Проводнике возникла визуальная ошибка и значок дисковода пропал или не отображается корректно.</p>
+<p>Найдите исходный файл образа на диске, нажмите на него правой кнопкой мыши. В списке действий найдите опцию <code>Извлечь</code>. В некоторых версиях сборки <em>Windows 10</em> эта команда может называться «Отключить» или быть доступна только если образ уже смонтирован. Если образ не смонтирован, здесь будет доступна команда «Подключить», а если смонтирован — «Извлечь».</p>
+<ul>
+<li>📁 Найдите файл образа в папке загрузок или на рабочем столе.</li>
+<li>🖱️ Нажмите правую кнопку мыши для вызова контекстного меню.</li>
+<li>📀 Выберите команду извлечения виртуального носителя.</li>
+<li>✅ Убедитесь, что значок дисковода исчез из «Этого компьютера».</li>
+</ul>
+<p>Важно отметить, что работа с исходным файлом позволяет избежать путаницы, если у вас подключено несколько виртуальных приводов от разных программ или системных эмуляторов. <strong>Контекстное меню</strong> файла дает гарантию, что вы воздействуете именно на тот образ, который нужен, а не на соседний виртуальный диск с похожим содержимым.</p>
+
+<h2 id="принудительное-размонтирование-через-управление-дисками">Принудительное размонтирование через Управление дисками</h2>
+<p>Если графический интерфейс Проводника не реагирует или выдает ошибки доступа, на помощь приходит более глубокий инструмент администрирования — <strong>Управление дисками</strong>. Этот системный компонент позволяет видеть все подключенные накопители, включая виртуальные, и управлять их состоянием на низком уровне. Доступ к нему осуществляется через меню «Пуск».</p>
+<p>Нажмите правой кнопкой мыши на кнопку «Пуск» и выберите в списке пункт <code>Управление дисками</code>. Откроется окно, где в нижней части будут представлены все диски. Виртуальный привод от ISO-образа будет отображаться как съемный носитель или CD-ROM, часто с меткой «No Media» после попытки извлечения, или с буквенным обозначением, если он активен.</p>
+<p>Найдите в списке диск, соответствующий вашему образу (обычно это CD/DVD-ROM). Нажмите на него правой кнопкой мыши и выберите команду <code>Изменить букву диска или путь</code> либо, если доступно, <code>Отключить</code>. Однако в стандартном диспетчере дисков Windows 10 прямая кнопка «Извлечь» для виртуальных приводов Microsoft ISO часто отсутствует, и этот метод служит скорее для диагностики. Если привод «завис», иногда помогает изменение буквы диска на свободную, а затем возврат обратно, что принудительно перезагружает драйвер устройства.</p>
+<details class="faq-item"><summary>Почему привод не исчезает?</summary><div class="faq-answer"><p>Иногда процесс explorer.exe «держит» ссылку на файловую систему образа. В этом случае помогает перезапуск процесса Проводника через Диспетчер задач, но не завершение работы полностью, а именно перезапуск задачи explorer.exe.</p></div></details>
+<p>Для пользователей, которым требуется частое управление виртуальными приводами, существует консольная утилита <code>diskpart</code>, но она требует осторожности. Запускать ее нужно от имени администратора. Введите <code>list volume</code> для отображения всех томов, найдите номер тома с образом и используйте команду <code>remove letter=Буква</code>, чтобы отобрать букву, что фактически размонтирует доступ к нему.</p>
+
+<h2 id="решение-проблем-с-блокировкой-файлов-и-процессов">Решение проблем с блокировкой файлов и процессов</h2>
+<p>Наиболее частая проблема, с которой сталкиваются пользователи — невозможность извлечь диск из-за ошибки «Файл занят» или просто игнорирование команд системой. Это происходит, когда фоновый процесс <em>Windows</em>, антивирусный сканер или индексатор поиска блокирует доступ к файловой структуре образа. В такой ситуации стандартные методы могут не сработать.</p>
+<p>Первым шагом должна стать проверка запущенных приложений. Убедитесь, что ни одна программа не обращается к файлам внутри виртуального диска. Даже открытая картинка или текстовый документ, скопированный с образа, могут держать связь активной. Закройте все лишние окна и попробуйте снова нажать <code>Извлечь</code>.</p>
+<p>Если визуальное закрытие программ не помогает, можно воспользоваться Диспетчером задач. Нажмите комбинацию <code>Ctrl + Shift + Esc</code>, найдите в списке процессов «Проводник» (Windows Explorer). Нажмите на нем правой кнопкой мыши и выберите <code>Перезапустить</code>. Это действие перезагрузит графическую оболочку и часто сбрасывает блокировку файловой системы, позволяя успешно размонтировать образ.</p>
+<table>
+<thead>
+<tr>
+<th>Симптом</th>
+<th>Вероятная причина</th>
+<th>Метод решения</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Пункт «Извлечь» серый</td>
+<td>Файл занят процессом</td>
+<td>Закрыть программы или перезапустить Проводник</td>
+</tr>
+<tr>
+<td>Ошибка доступа</td>
+<td>Недостаточно прав</td>
+<td>Запуск от имени Администратора</td>
+</tr>
+<tr>
+<td>Привод не исчезает</td>
+<td>Сбой драйвера</td>
+<td>Изменить букву диска в Управлении дисками</td>
+</tr>
+<tr>
+<td>Система зависает</td>
+<td>Поврежден сектор образа</td>
+<td>Перезагрузка ПК</td>
+</tr>
+</tbody>
+</table>
+<div class="checklist-block"><h4>☑️ Диагностика блокировки</h4><label class="check-item"><input type="checkbox"><span>Закрыть все окна папок</span></label><label class="check-item"><input type="checkbox"><span>Остановить антивирус на 1 мин</span></label><label class="check-item"><input type="checkbox"><span>Перезапустить Проводник</span></label><label class="check-item"><input type="checkbox"><span>Проверить Диспетчер задач</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="размонтирование-через-powershell-и-командную-строку">Размонтирование через PowerShell и командную строку</h2>
+<p>Для любителей <strong>командной строки</strong> и системных администраторов существует мощный метод управления виртуальными приводами через PowerShell. Этот способ позволяет автоматизировать процесс или решить проблему, когда графический интерфейс полностью не отвечает. PowerShell в Windows 10 имеет встроенные cmdlet для работы с дисковыми образами.</p>
+<p>Откройте PowerShell от имени администратора (правый клик на Пуск -> Windows PowerShell (Администратор)). Чтобы увидеть все смонтированные образы, введите команду <code>Get-DiskImage</code>. Вы увидите список образов с их путями и статусом. Если образ подключен, в столбце Attached будет значение True.</p>
+<pre><code>Dismount-DiskImage -ImagePath "C:\Downloads\example.iso"</code></pre>
+<p>Выполнение этой команды принудительно размонтирует указанный файл. Если вы не знаете точный путь, можно сначала выполнить <code>Get-DiskImage | Dismount-DiskImage</code>, что попытается размонтировать все активные образы сразу. Это «тяжелая артиллерия», которая гарантированно освободит виртуальные приводы, если не повреждена сама файловая система Windows.</p>
+<blockquote>
+<p>⚠️ Внимание: При использовании командной строки будьте предельно внимательны к синтаксису и путям к файлам. Ошибка в пути может привести к выполнению команды над другим объектом, хотя в случае с Dismount-DiskImage риск потери данных минимален, так как удаляется только маппинг, а не сам файл.</p>
+</blockquote>
+
+<h2 id="сторонние-утилиты-для-работы-с-образами">Сторонние утилиты для работы с образами</h2>
+<p>Если встроенные средства Windows 10 кажутся вам неудобными или работают нестабильно, рынок предлагает множество сторонних решений. Программы вроде <em>Daemon Tools Lite</em>, <em>UltraISO</em> или <em>Alcohol 120%</em> создают свои собственные виртуальные приводы, которые часто обладают более гибким управлением. Они позволяют создавать очередь задач, назначать горячие клавиши для монтирования и размонтирования.</p>
+<p>Использование таких утилит оправдано, если вы работаете со старыми форматами образов (например, .bin, .cue, .nrg), которые стандартный проводник Windows не понимает, или если вам нужно эмулировать защиту от копирования. В интерфейсе таких программ кнопка размонтирования обычно находится на панели инструментов и выглядит как диск со стрелкой вверх или крестиком.</p>
+<ul>
+<li>🚀 <strong>Daemon Tools</strong>: Позволяет быстро освобождать приводы через трей.</li>
+<li>💾 <strong>UltraISO</strong>: Имеет удобный менеджер виртуальных приводов.</li>
+<li>⚙️ <strong>WinCDEmu</strong>: Легкая open-source альтернатива с простым меню.</li>
+</ul>
+<p>Однако стоит помнить, что установка дополнительного ПО увеличивает нагрузку на систему и может конфликтовать со стандартными драйверами Microsoft. Для обычного пользователя, работающего только с форматом <strong>ISO</strong>, встроенных средств Windows 10 более чем достаточно, и использование стороннего софта может быть избыточным.</p>
+<div class="attention-box attention-info"><div><strong>📊 Чем вы пользуетесь для работы с ISO?</strong><ul><li>Стандартный проводник Windows</li><li>Daemon Tools</li><li>UltraISO</li><li>PowerShell/Командная строка</li></ul></div></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+<details>
+<summary>Удалится ли сам файл ISO после размонтирования?</summary>
+<p>Нет, размонтирование (извлечение) лишь отключает виртуальный привод. Сам файл образа остается лежать на жестком диске в той папке, куда вы его скачали. Если вам нужно освободить место, файл необходимо удалить отдельно.</p>
+</details>
+<details>
+<summary>Можно ли размонтировать образ, если он используется установщиком Windows?</summary>
+<p>Нет, если идет процесс установки операционной системы или программы, файл занят. Необходимо дождаться завершения установки или прервать её, после чего станет возможным извлечь образ.</p>
+</details>
+<details>
+<summary>Почему после размонтирования буква диска (например, E:) все еще видна?</summary>
+<p>Иногда Проводник не обновляет список устройств мгновенно. Попробуйте нажать клавишу <code>F5</code> для обновления или перезапустить Проводник через Диспетчер задач. Если буква занята, но диск пуст — это визуальный глюк, который исчезнет после перезагрузки.</p>
+</details>
+<details>
+<summary>Безопасно ли выдергивать USB-флешку, пока смонтирован ISO?</summary>
+<p>Да, это разные устройства. Однако, если вы записываете данные с образа на флешку, то извлекать флешку нельзя до окончания записи. Сам факт смонтирования ISO не блокирует USB-порты, если только образ не является загрузочным и не пытается управлять контроллерами (что в среде работающей Windows маловероятно).</p>
+</details>
+<details>
+<summary>Как размонтировать все образы сразу?</summary>
+<p>Самый быстрый способ — использовать команду PowerShell: <code>Get-DiskImage | Dismount-DiskImage</code>. Также можно просто перезагрузить компьютер, так как виртуальные приводы не сохраняют состояние после выключения питания.</p>
+</details>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Самый надежный способ размонтирования в спорных ситуациях — использование PowerShell или простая перезагрузка компьютера, которая сбрасывает все временные драйверы виртуальных приводов.</p></div></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#стандартный-метод-через-проводник-windows">Стандартный метод через Проводник Windows</a></li><li><a href="#использование-контекстного-меню-самого-файла-iso">Использование контекстного меню самого файла ISO</a></li><li><a href="#принудительное-размонтирование-через-управление-дисками">Принудительное размонтирование через Управление дисками</a></li><li><a href="#решение-проблем-с-блокировкой-файлов-и-процессов">Решение проблем с блокировкой файлов и процессов</a></li><li><a href="#размонтирование-через-powershell-и-командную-строку">Размонтирование через PowerShell и командную строку</a></li><li><a href="#сторонние-утилиты-для-работы-с-образами">Сторонние утилиты для работы с образами</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/s/so/sony-vaio-pcg-7164.html" class="related-card">Ноутбук Sony Vaio PCG-7164: характеристики, драйверы и ремонт</a></li><li><a href="/a/articles/k/ka/kak-udalit-beamng-drive-s-kompyutera-polnostyu.html" class="related-card">Как удалить BeamNG.drive полностью: полное руководство</a></li><li><a href="/a/articles/k/ka/kak-zapustit-gotika-3-na-windows-10.html" class="related-card">Как запустить Gothic 3 на Windows 10: Полный гайд по исправлению ошибок</a></li><li><a href="/a/articles/k/ka/kak-otmenit-zaplanirovannoe-obnovlenie-windows.html" class="related-card">Как отменить обновление Windows: полное руководство</a></li><li><a href="/a/articles/k/ka/kak-ustanovit-spravki-bk-na-windows-10.html" class="related-card">Как установить справки БК на Windows 10: полное руководство</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/s/so/sony-vaio-pcg-7164.html" class="related-bottom-card"><span class="related-bottom-title">Ноутбук Sony Vaio PCG-7164: характеристики, драйверы и ремонт</span><span class="related-bottom-desc">Полный обзор Sony Vaio PCG-7164. Технические характеристики, инструкция по разборке, установка драйв</span></a><a href="/a/articles/k/ka/kak-udalit-beamng-drive-s-kompyutera-polnostyu.html" class="related-bottom-card"><span class="related-bottom-title">Как удалить BeamNG.drive полностью: полное руководство</span><span class="related-bottom-desc">Подробная инструкция, как удалить BeamNG.drive с ПК. Удаляем остатки файлов, реестр и моды. Чистим с</span></a><a href="/a/articles/k/ka/kak-zapustit-gotika-3-na-windows-10.html" class="related-bottom-card"><span class="related-bottom-title">Как запустить Gothic 3 на Windows 10: Полный гайд по исправлению ошибок</span><span class="related-bottom-desc">Подробная инструкция: как запустить Gothic 3 на Windows 10. Решаем проблемы с вылетами, черным экран</span></a><a href="/a/articles/k/ka/kak-otmenit-zaplanirovannoe-obnovlenie-windows.html" class="related-bottom-card"><span class="related-bottom-title">Как отменить обновление Windows: полное руководство</span><span class="related-bottom-desc">Подробная инструкция, как отменить запланированное обновление Windows 10 и 11. Методы остановки служ</span></a><a href="/a/articles/k/ka/kak-ustanovit-spravki-bk-na-windows-10.html" class="related-bottom-card"><span class="related-bottom-title">Как установить справки БК на Windows 10: полное руководство</span><span class="related-bottom-desc">Подробная инструкция по установке клиентских программ букмекерских контор на ПК. Решаем проблемы сов</span></a><a href="/a/articles/k/ka/kak-sozdat-klon-prilozheniya-na-kompyutere-dlya-2-akkaunta.html" class="related-bottom-card"><span class="related-bottom-title">Как создать клон приложения на ПК: инструкция для 2 аккаунтов</span><span class="related-bottom-desc">Подробная инструкция, как запустить два аккаунта одного приложения на компьютере. Эффективные методы</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 tehpodskazka.vercel.app2</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 tehpodskazka.vercel.app2. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

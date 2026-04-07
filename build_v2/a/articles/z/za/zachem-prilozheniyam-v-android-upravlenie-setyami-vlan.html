@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Зачем Android-приложениям доступ к VLAN: разбор рисков — tehpodskazka.vercel.app2</title>
+    <meta name="description" content="Зачем приложениям на Android доступ к управлению сетями VLAN? Разбираем риски безопасности, сценарии использования и реальные угрозы для корпоративных данных.">
+    <link rel="canonical" href="/a/articles/z/za/zachem-prilozheniyam-v-android-upravlenie-setyami-vlan.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Зачем Android-приложениям доступ к VLAN: разбор рисков">
+    <meta property="og:description" content="Зачем приложениям на Android доступ к управлению сетями VLAN? Разбираем риски безопасности, сценарии использования и реальные угрозы для корпоративных данных.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775560692">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>tehpodskazka.vercel.app2</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/mobilnye-os/">Мобильные ОС</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Зачем Android-приложениям доступ к VLAN: разбор рисков</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Зачем приложениям на Android управление сетями VLAN: анализ безопасности</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#технические-основы-работы-vlan-на-мобильных-устройствах">Технические основы работы VLAN на мобильных устройствах</a></li><li><a href="#сценарии-использования-кому-и-зачем-это-нужно">Сценарии использования: кому и зачем это нужно</a></li><li><a href="#анализ-рисков-безопасности-при-предоставлении-прав">Анализ рисков безопасности при предоставлении прав</a></li><li><a href="#как-android-ограничивает-доступ-к-сетевым-настройкам">Как Android ограничивает доступ к сетевым настройкам</a></li><li><a href="#настройка-корпоративного-доступа-практический-пример">Настройка корпоративного доступа: практический пример</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>Современная мобильная операционная система <strong>Android</strong> давно переросла статус простой платформы для развлечений, превратившись в мощный инструмент корпоративного сегмента. В корпоративной среде часто возникает требование изолировать трафик мобильных устройств, помещая их в отдельные виртуальные сегменты сети, известные как <em>VLAN</em>. Однако, когда пользователь или системный администратор сталкивается с запросом приложения на доступ к управлению сетевыми интерфейсами или изменению конфигурации Wi-Fi, это вызывает закономерные вопросы о безопасности.</p>
+
+<p>На самом базовом уровне стандартное пользовательское приложение не должно и, как правило, не может самостоятельно управлять тегированием трафика или переключением портов коммутатора. <strong>VLAN</strong> (Virtual Local Area Network) — это технология канального уровня (L2), которая логически разделяет физическую сеть. Для того чтобы мобильное устройство оказалось в нужном сегменте, обычно достаточно правильной настройки точки доступа или использования протоколов аутентификации вроде <em>802.1X</em>. Тем не менее, существуют специфические сценарии, где приложения запрашивают расширенные сетевые права.</p>
+
+<p>Понимание того, зачем конкретному софту могут понадобиться такие权限, критически важно для обеспечения целостности корпоративного периметра безопасности. Часто за безобидным названием скрывается необходимость тонкой настройки туннелей или работы с профессиональным сетевым оборудованием. <mark>Ключевым моментом является различие между запросом на использование существующего VLAN-соединения и попыткой приложения самостоятельно переконфигурировать сетевой стек устройства.</mark> В этой статье мы детально разберем технические аспекты, риски и реальные потребности, стоящие за такими запросами.</p>
+
+<h2 id="технические-основы-работы-vlan-на-мобильных-устройствах">Технические основы работы VLAN на мобильных устройствах</h2>
+<p>Чтобы понять необходимость доступа приложений, нужно сначала разобраться в архитектуре сетевой подсистемы <strong>Android</strong>. Операционная система использует абстрактный слой HAL (Hardware Abstraction Layer) для взаимодействия с сетевым оборудованием. Стандартный стек TCP/IP не поддерживает нативное тегирование 802.1Q на уровне пользовательских приложений без root-прав или специальных API. Обычно устройство подключается к Wi-Fi сети, которая уже принадлежит определенному <em>VLAN</em> на стороне инфраструктуры.</p>
+
+<p>Приложения могут запрашивать доступ к <strong>Network API</strong> для того, чтобы принудительно направить свой трафик через конкретный сетевой интерфейс. Это часто требуется в сценариях, когда на устройстве одновременно активны Wi-Fi и мобильный интернет, и критически важная корпоративная программа должна работать исключительно через защищенный канал. В таких случаях приложение не создает VLAN, а лишь выбирает правильный <code>NetworkRequest</code> для передачи данных.</p>
+
+<p>Существуют также сценарии использования туннелей, таких как <em>IPsec</em> или <em>OpenVPN</em>, которые эмулируют виртуальные интерфейсы. Для организации защищенного соединения приложение-клиент должно иметь возможность создавать виртуальный сетевой интерфейс (TUN/TAP), через который будет проходить весь корпоративный трафик. Это позволяет изолировать рабочие данные от личной активности пользователя, даже если физическое подключение идет через публичный Wi-Fi.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Если обычное приложение-фонарик или калькулятор запрашивает права на изменение настроек Wi-Fi или создание сетевых интерфейсов, это является аномальным поведением и потенциальным признаком вредоносной активности.</p>
+</blockquote>
+
+<p>Разработчики используют специальные разрешения в манифесте приложения, такие как <code>CHANGE_WIFI_STATE</code> или <code>NETWORK_ADMIN</code>, чтобы реализовать функционал переключения сетей. Однако, глубокая настройка тегов VLAN на уровне драйверов Wi-Fi чипа в Android по умолчанию закрыта. Доступ к этим функциям возможен только через проприетарные расширения производителей оборудования или при наличии прав суперпользователя.</p>
+
+<h2 id="сценарии-использования-кому-и-зачем-это-нужно">Сценарии использования: кому и зачем это нужно</h2>
+<p>Наиболее распространенной категорией приложений, требующих глубокого сетевого контроля, являются решения для <strong>MDM</strong> (Mobile Device Management) и <em>EMM</em> (Enterprise Mobility Management). Такие системы, как <em>Microsoft Intune</em>, <em>VMware Workspace ONE</em> или <em>Samsung Knox</em>, должны гарантировать, что устройство сотрудника находится в правильном сегменте сети корпорации. Для этого они могут инициировать переподключение к Wi-Fi с определенными параметрами безопасности или активировать корпоративный профиль.</p>
+
+<p>Второй важный сценарий — это профессиональные инструменты для сетевых администраторов. Приложения вроде <em>Termux</em> (с соответствующими правами), <em>Packet Capture</em> или специализированные утилиты от <em>Cisco</em> и <em>Ubiquiti</em> позволяют инженерам проводить диагностику сети. Им необходимо отправлять сырые пакеты, менять MAC-адреса или проверять доступность ресурсов в разных подсетях, что требует прямого доступа к сетевому стеку.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Используете ли вы корпоративные приложения на личном телефоне?</strong><ul><li>Да, активно использую</li><li>Только для почты и чатов</li><li>Нет, разделяю устройства</li><li>Не знаю, что это</li></ul></div></div>
+
+<p>Третий сценарий связан с IoT-шлюзами и промышленными планшетами. В условиях производства планшет на базе Android может выступать в роли контроллера, который должен общаться с оборудованием в изолированной сети <strong>OT</strong> (Operational Technology). Здесь приложение может требовать статической IP-конфигурации или работы в特定的 VLAN без выхода в интернет, чтобы исключить утечку данных или внешние атаки на производственную линию.</p>
+
+<p>Также стоит упомянуть приложения для организации защищенной связи, которые создают собственные виртуальные сети поверх существующей инфраструктуры. <em>SD-WAN</em> клиенты на мобильных устройствах могут динамически выбирать оптимальный путь для трафика, что требует гибкого управления сетевыми потоками. Без соответствующих разрешений такие приложения не смогут выполнить свою основную функцию по оптимизации и защите передачи данных.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>При установке корпоративного профиля всегда проверяйте, какие именно разрешения вы даете администратору устройства. Полные права позволяют не только управлять сетью, но и отслеживать геолокацию или блокировать камеру.</p></div>
+
+<h2 id="анализ-рисков-безопасности-при-предоставлении-прав">Анализ рисков безопасности при предоставлении прав</h2>
+<p>Предоставление приложению прав на управление сетевыми интерфейсами открывает широкий вектор для потенциальных атак. В первую очередь речь идет о возможности проведения <strong>MITM</strong> (Man-in-the-Middle) атак. Зловредное приложение, получившее контроль над сетевым стеком, может перенаправить трафик других приложений через себя, подменяя SSL-сертификаты и перехватывая логины, пароли и конфиденциальные данные.</p>
+
+<p>Второй риск связан с горизонтальным перемещением внутри сети. Если устройство с вредоносным ПО попадает в корпоративный <em>VLAN</em>, оно может сканировать порты других устройств в этом сегменте, пытаясь найти уязвимости в серверах файлов, принтерах или системах видеонаблюдения. Наличие прав на изменение сетевых настроек позволяет злоумышленнику легче обходить базовые механизмы изоляции, если они не настроены правильно на уровне коммутаторов.</p>
+
+<ul>
+<li>🕵️‍♂️ Перехват незашифрованного трафика (HTTP, FTP, Telnet) внутри доверенной сети.</li>
+<li>🔓 Обход правил файрвола путем создания туннелей или изменения DNS-серверов.</li>
+<li>📡 Скрытая передача больших объемов данных (эксфильтрация) через фоновые соединения.</li>
+<li>💣 Проведение ARP-спуфинга для атаки на другие устройства в том же сегменте сети.</li>
+</ul>
+
+<p>Особую опасность представляет ситуация, когда права предоставляются некорректно настроенным или устаревшим приложениям. Уязвимости в коде таких программ могут стать бэкдором для внешних хакеров. Даже если само приложение benign (доброжелательное), дыра в его сетевом модуле позволяет запустить произвольный код с высокими привилегиями. Поэтому принцип минимальных привилегий здесь работает безотказно: если приложению не нужно управлять VLAN, оно не должно иметь такой возможности.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Установка приложений из неизвестных источников (sideloading) с запросом сетевых административных прав категорически запрещена в корпоративных политиках безопасности. Это прямой путь к компрометации всей сети.</p>
+</blockquote>
+
+<h2 id="как-android-ограничивает-доступ-к-сетевым-настройкам">Как Android ограничивает доступ к сетевым настройкам</h2>
+<p>Начиная с версии <strong>Android 10</strong> и продолжая в более новых версиях, Google внедрила жесткие ограничения на доступ к уникальным идентификаторам устройства и глубоким сетевым настройкам. Система использует механизм <em>Scoped Storage</em> и разделение прав доступа, чтобы ни одно приложение не могло получить полный контроль над сетью без ведома пользователя или администратора. Стандартные API не позволяют произвольно назначать VLAN ID для Wi-Fi соединения.</p>
+
+<p>Для реализации сложной сетевой логики разработчики вынуждены использовать <strong>Device Owner</strong> режим. В этом режиме приложение устанавливается как владелец устройства (обычно через QR-код при первоначальной настройке или через ADB). Только в этом статусе приложение получает доступ к <em>DevicePolicyManager</em>, который позволяет конфигурировать глобальные параметры Wi-Fi, включая установку корпоративных профилей с указанием конкретных VLAN.</p>
+
+<details class="faq-item"><summary>Что такое режим Device Owner?</summary><div class="faq-answer"><p>Режим Device Owner — это состояние устройства Android, при котором одно приложение получает полные административные права на управление устройством. В этом режиме можно блокировать камеру, запрещать установку других приложений,强制но настраивать Wi-Fi и VPN, а также отслеживать местоположение. Обычные приложения не могут стать Device Owner без сброса устройства к заводским настройкам и специальной процедуры регистрации.</p></div></details>
+
+<p>Кроме того, современные версии Android используют <em>SELinux</em> (Security-Enhanced Linux) в режиме enforcing. Это означает, что даже если приложение имеет формальные права, ядро системы может заблокировать попытку доступа к определенным сетевым сокеты или ioctl-вызовам, если это не прописано в политиках безопасности. Это создает дополнительный барьер для злоумышленников, пытающихся эксплуатировать уязвимости для получения сетевого контроля.</p>
+
+<p>Важно отметить роль <strong>Google Play Protect</strong> и сервисов Google Play. Они постоянно сканируют установленные приложения на наличие признаков вредоносного поведения, включая попытки несанкционированного доступа к сетевым настройкам. Если приложение ведет себя подозрительно, система может автоматически ограничить его функционал или полностью удалить.</p>
+
+<h2 id="настройка-корпоративного-доступа-практический-пример">Настройка корпоративного доступа: практический пример</h2>
+<p>Рассмотрим типичный сценарий внедрения, когда компании необходимо обеспечить доступ сотрудников к ресурсам ERP-системы через гостевой Wi-Fi, но с изоляцией в отдельный <em>VLAN</em>. Для этого используется связка: RADIUS-сервер, контроллер беспроводной сети и MDM-агент на Android. Приложение MDM конфигурирует профиль Wi-Fi, который требует аутентификации по сертификату.</p>
+
+<p>В процессе настройки администратор создает XML-конфигурацию или использует консоль управления, чтобы задать параметры EAP-TLS. В этой конфигурации может быть указан тег VLAN, который контроллер присвоит клиенту после успешной аутентификации. Само приложение на телефоне не "говорит" коммутатору, в какой VLAN идти; оно лишь предоставляет правильные учетные данные, а инфраструктура сама принимает решение о сегментации.</p>
+
+<div class="checklist-block"><h4>☑️ Чек-лист подготовки корпоративного профиля</h4><label class="check-item"><input type="checkbox"><span>Проверка наличия сертификата CA</span></label><label class="check-item"><input type="checkbox"><span>Настройка политики паролей</span></label><label class="check-item"><input type="checkbox"><span>Конфигурация Wi-Fi профиля</span></label><label class="check-item"><input type="checkbox"><span>Тестирование на пилотной группе</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>Если же речь идет о проводном подключении через USB-to-Ethernet адаптер, ситуация меняется. Здесь Android может не поддерживать тегирование VLAN на уровне ОС для внешних адаптеров без root-прав. В таких случаях приложения могут использовать туннелирование (например, запускать <strong>SSH</strong> туннель) для попадания в нужную сеть, либо требовать от пользователя ручной настройки статического IP, если адаптер эмулирует стандартный сетевой интерфейс.</p>
+
+<table>
+<thead>
+<tr>
+<th>Тип приложения</th>
+<th>Необходимые права</th>
+<th>Риск misuse</th>
+<th>Метод реализации</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MDM Агент</td>
+<td>Device Owner, Wi-Fi Control</td>
+<td>Средний (доверенный вендор)</td>
+<td>Enterprise Wi-Fi Config</td>
+</tr>
+<tr>
+<td>Сетевой сканер</td>
+<td>Raw Socket, Network State</td>
+<td>Высокий (инструмент хакера)</td>
+<td>Root / ADB</td>
+</tr>
+<tr>
+<td>VPN Клиент</td>
+<td>VPN Service, TUN Interface</td>
+<td>Низкий (стандартный API)</td>
+<td>Android VPN API</td>
+</tr>
+<tr>
+<td>IoT Контроллер</td>
+<td>Network Admin, Static IP</td>
+<td>Средний (ошибка конфигурации)</td>
+<td>Kiosk Mode</td>
+</tr>
+</tbody>
+</table>
+
+<p>Важно понимать разницу между активным управлением VLAN и пассивным нахождением в нем. В 95% случаев корпоративным приложениям не нужно самостоятельно тегировать трафик. Достаточно правильно настроить профиль подключения, который будет активирован при запуске приложения или входе пользователя в корпоративный периметр. Сложные сценарии с динамическим переключением VLAN требуют кастомизации прошивки или использования специализированного оборудования.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Безопасность строится не на запрете функций, а на правильном контексте их использования. Приложение для управления VLAN необходимо только узкому кругу профессионального софта, а не обычным играм или утилитам.</p></div>
+
+<h2 id="faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</h2>
+<details>
+<summary>Может ли обычное приложение само переключить мой телефон в VLAN для гостей?</summary>
+<p>Нет, стандартное приложение из Google Play не может самостоятельно изменить тег VLAN на уровне сетевого оборудования. Оно может лишь предложить подключиться к другой Wi-Fi сети, которая уже настроена на гостевой VLAN, но для этого потребуется подтверждение пользователя. Прямое управление коммутатором через приложение невозможно без специальной инфраструктуры и прав администратора.</p>
+</details>
+
+<details>
+<summary>Безопасно ли давать права на изменение Wi-Fi настроек приложению для умного дома?</summary>
+<p>Приложения для умного дома (например, <em>Tuya Smart</em> или <em>Mi Home</em>) часто требуют доступа к геолокации и изменения состояния Wi-Fi для процесса сопряжения устройств (pairing). Это необходимо для передачиSSID и пароля роутера на умную лампочку или розетку. Если приложение имеет хорошую репутацию и загружено из официального магазина, такой запрос является обоснованным и безопасным.</p>
+</details>
+
+<details>
+<summary>Что делать, если приложение запрашивает доступ к VPN, но я им не пользуюсь?</summary>
+<p>Если приложение, не являющееся VPN-клиентом или браузером с функцией прокси, запрашивает создание VPN-подключения, это красный флаг. Такой доступ позволяет перенаправлять весь ваш интернет-трафик через серверы разработчика. Рекомендуется отклонить запрос и, если функционал приложения без этого не работает, удалить его, так как это может указывать на скрытый майнинг или сбор данных.</p>
+</details>
+
+<details>
+<summary>Как проверить, какие приложения имеют права Device Owner?</summary>
+<p>Вы можете проверить статус владельца устройства, перейдя в <code>Настройки → Безопасность → Администраторы устройства</code> (путь может отличаться в зависимости от модели). Там будет список приложений с правами администратора. Если вы видите неизвестное приложение с полными правами, которое вы не устанавливали сознательно как корпоративный профиль, это повод для беспокойства и проверки устройства антивирусом.</p>
+</details>
+
+<details>
+<summary>Влияет ли использование VLAN на скорость работы приложений на Android?</summary>
+<p>Само по себе нахождение в VLAN не влияет на скорость, так как это логическое разделение. Однако, если приложение вынуждено постоянно переключать сети или поднимать тяжелые VPN-туннели для доступа к ресурсам VLAN, это может увеличить задержку (latency) и расход батареи. Правильно настроенная инфраструктура, где устройство автоматически попадает в нужный VLAN при подключении к корпоративному Wi-Fi, не создает заметной нагрузки на устройство.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#технические-основы-работы-vlan-на-мобильных-устройствах">Технические основы работы VLAN на мобильных устройствах</a></li><li><a href="#сценарии-использования-кому-и-зачем-это-нужно">Сценарии использования: кому и зачем это нужно</a></li><li><a href="#анализ-рисков-безопасности-при-предоставлении-прав">Анализ рисков безопасности при предоставлении прав</a></li><li><a href="#как-android-ограничивает-доступ-к-сетевым-настройкам">Как Android ограничивает доступ к сетевым настройкам</a></li><li><a href="#настройка-корпоративного-доступа-практический-пример">Настройка корпоративного доступа: практический пример</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-uluchshit-grafika-v-pabg-s-gfx-tool-iphone-14.html" class="related-card">Как улучшить графику в PUBG на iPhone 14 через GFX Tool</a></li><li><a href="/a/articles/t/ti/tik-tok-propal-s-ekrana-androida.html" class="related-card">Тик ток пропал с экрана андроида: как вернуть иконку</a></li><li><a href="/a/articles/k/ka/kak-ochistit-kesh-na-telefone-android-honor-10aj.html" class="related-card">Как очистить кэш на Honor 10i: полная инструкция</a></li><li><a href="/a/articles/k/ka/kak-ubrat-na-hajvej-mnogostranichnyj-rezhim-na-telefone.html" class="related-card">Как убрать многостраничный режим на HighWay: полная инструкция</a></li><li><a href="/a/articles/k/ka/kak-mne-skachat-vizualizaciya-na-android-11-nokia-g21-muzykalnyj.html" class="related-card">Как скачать визуализацию на Nokia G21: музыка и Android 11</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-uluchshit-grafika-v-pabg-s-gfx-tool-iphone-14.html" class="related-bottom-card"><span class="related-bottom-title">Как улучшить графику в PUBG на iPhone 14 через GFX Tool</span><span class="related-bottom-desc">Подробная инструкция по настройке графики PUBG Mobile на iPhone 14. Увеличьте FPS, уберите лаги и ул</span></a><a href="/a/articles/t/ti/tik-tok-propal-s-ekrana-androida.html" class="related-bottom-card"><span class="related-bottom-title">Тик ток пропал с экрана андроида: как вернуть иконку</span><span class="related-bottom-desc">Пропал Тик Ток с экрана андроида? Узнайте, как найти скрытое приложение, отключить блокировщик или в</span></a><a href="/a/articles/k/ka/kak-ochistit-kesh-na-telefone-android-honor-10aj.html" class="related-bottom-card"><span class="related-bottom-title">Как очистить кэш на Honor 10i: полная инструкция</span><span class="related-bottom-desc">Ускорьте работу Honor 10i. Подробная инструкция по очистке системного кэша, памяти приложений и брау</span></a><a href="/a/articles/k/ka/kak-ubrat-na-hajvej-mnogostranichnyj-rezhim-na-telefone.html" class="related-bottom-card"><span class="related-bottom-title">Как убрать многостраничный режим на HighWay: полная инструкция</span><span class="related-bottom-desc">Подробный гид по отключению многостраничного интерфейса HighWay на Android. Решаем проблемы с произв</span></a><a href="/a/articles/k/ka/kak-mne-skachat-vizualizaciya-na-android-11-nokia-g21-muzykalnyj.html" class="related-bottom-card"><span class="related-bottom-title">Как скачать визуализацию на Nokia G21: музыка и Android 11</span><span class="related-bottom-desc">Подробная инструкция: как включить и скачать музыкальную визуализацию на Nokia G21 с Android 11. Реш</span></a><a href="/a/articles/v/vk/vk-play-machine-na-telefon.html" class="related-bottom-card"><span class="related-bottom-title">VK Play Machine на телефон: полный гид по запуску и настройке</span><span class="related-bottom-desc">Подробная инструкция по установке VK Play Machine на Android и iOS. Как играть в ПК-игры на телефоне</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 tehpodskazka.vercel.app2</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 tehpodskazka.vercel.app2. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Как посмотреть видеокарту в AIDA64: подробная инструкция — tehpodskazka.vercel.app2</title>
+    <meta name="description" content="Узнайте, как в АИДА посмотреть видеокарту: модель, память, драйверы и температуры. Подробный разбор разделов Отображение и GPGPU для точной диагностики.">
+    <link rel="canonical" href="/a/articles/k/ka/kak-v-aida-posmotret-videokartu.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как посмотреть видеокарту в AIDA64: подробная инструкция">
+    <meta property="og:description" content="Узнайте, как в АИДА посмотреть видеокарту: модель, память, драйверы и температуры. Подробный разбор разделов Отображение и GPGPU для точной диагностики.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775560692">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>tehpodskazka.vercel.app2</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/striming-i-kino/">Стриминг и Кино</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как посмотреть видеокарту в AIDA64: подробная инструкция</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Как в АИДА посмотреть видеокарту: полный гид по диагностике GPU</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#запуск-программы-и-первичная-навигация">Запуск программы и первичная навигация</a></li><li><a href="#раздел-отображение-базовые-характеристики-gpu">Раздел Отображение: базовые характеристики GPU</a></li><li><a href="#монитор-dmi-идентификация-оборудования">Монитор DMI: идентификация оборудования</a></li><li><a href="#диагностика-gpgpu-вычислительные-возможности">Диагностика GPGPU: вычислительные возможности</a></li><li><a href="#мониторинг-датчиков-температуры-и-напряжения">Мониторинг датчиков: температуры и напряжения</a></li><li><a href="#тест稳定性-gpu-и-анализ-стабильности">Тест稳定性 GPU и анализ стабильности</a></li><li><a href="#анализ-драйверов-и-реестра">Анализ драйверов и реестра</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Современная компьютерная техника требует постоянного мониторинга, особенно когда речь заходит о графическом ускорителе, который часто становится узким местом в играх или профессиональных рендерах. Пользователи часто задаются вопросом, как в аида посмотреть видеокарту, чтобы получить исчерпывающую информацию о её характеристиках, текущем состоянии и температурном режиме. Программа <em>AIDA64</em> является одним из самых мощных инструментов для системной диагностики, предоставляющим доступ к данным, которые скрыты от стандартных средств операционной системы.</p>
+<p>В отличие от простого диспетчера задач, этот софт умеет считывать данные напрямую из регистров оборудования, показывая реальную частоту ядер, объем доступной видеопамяти и даже версию BIOS графического адаптера. Глубокое понимание того, где искать эти параметры, позволит вам не просто узнать модель устройства, но и провести полноценную диагностику перед покупкой б/у карты или troubleshooting системы.</p>
+<p>Мы рассмотрим все нюансы навигации по интерфейсу программы, разберем специфические разделы для геймеров и профессионалов, а также обратим внимание на критически важные показатели, которые нельзя игнорировать при анализе здоровья графической подсистемы вашего компьютера.</p>
+
+<h2 id="запуск-программы-и-первичная-навигация">Запуск программы и первичная навигация</h2>
+<p>После установки утилиты перед вами откроется главное окно с древовидной структурой в левой части экрана. Именно здесь сосредоточены все категории оборудования, и для начала работы необходимо найти ветку, отвечающую за графические интерфейсы. <strong>Навигация</strong> осуществляется простым кликом по плюсу рядом с нужным разделом, что раскрывает вложенные подразделы с детальной информацией.</p>
+<p>Вам не нужно обладать навыками системного администратора, чтобы сориентироваться в меню, так как логика построения дерева соответствует стандартной иерархии компонентов ПК. Однако стоит помнить, что некоторые данные могут обновляться с небольшой задержкой, поэтому после запуска программы рекомендуется подождать несколько секунд для завершения сканирования шины PCI.</p>
+<blockquote>⚠️ Внимание: Если вы используете портативную версию программы, убедитесь, что она имеет права администратора, иначе некоторые низкоуровневые данные о видеокарте могут отображаться некорректно или отсутствовать.</blockquote>
+<p>Для быстрого доступа к нужной информации можно использовать поиск, но ручной проход по разделам дает более полное представление о структуре системы. В правой части окна будет отображаться содержимое выбранного пункта, которое может включать текст, таблицы или графики в зависимости от выбранной категории.</p>
+
+<h2 id="раздел-отображение-базовые-характеристики-gpu">Раздел Отображение: базовые характеристики GPU</h2>
+<p>Основная информация о графическом адаптере сосредоточена в разделе <code>Отображение</code> (Display), который является отправной точкой для большинства пользователей. Здесь вы найдете сводные данные о типе устройства, его имени и основных параметрах, которые чаще всего интересуют при проверке конфигурации системы.</p>
+<p>В подразделе <strong>Графический процессор</strong> (Graphics Processor) отображается кодовое имя чипа, техпроцесс и площадь кристалла. Эти данные важны для идентификации точной ревизии карты, так как одна и та же модель может выпускаться на разных производственных линиях с отличными характеристиками энергопотребления.</p>
+<ul>
+<li>🖥️ Полное коммерческое название устройства, например, <em>NVIDIA GeForce RTX 3080</em> или <em>AMD Radeon RX 6800 XT</em>.</li>
+<li>📐 Технические спецификации: количество транзисторов, площадь кристалла и используемый техпроцесс в нанометрах.</li>
+<li>🔌 Тип интерфейса подключения, обычно <em>PCI Express</em>, с указанием версии и текущей скорости работы линии.</li>
+</ul>
+<p>Также в этом разделе можно увидеть объем доступной и зарезервированной памяти, что особенно актуально для систем с интегрированной графикой, где часть оперативной памяти динамически выделяется под нужды видеоядра. Для дискретных карт здесь указывается реальный объем установленной GDDR памяти.</p>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Обратите внимание на параметр "Clock Speed" в этом разделе: он показывает базовую частоту, но в реальном времени она может быть значительно выше благодаря технологиям буста.</p></div>
+
+<h2 id="монитор-dmi-идентификация-оборудования">Монитор DMI: идентификация оборудования</h2>
+<p>Для получения максимально точной информации о производителе и конкретной модели платы стоит обратиться к разделу DMI (Desktop Management Interface). Этот источник данных часто содержит более детальную информацию, чем стандартный опрос через драйверы, включая серийные номера и версии BIOS.</p>
+<p>В категории <code>Отображение -> DMI</code> вы сможете найти разделы, описывающие устройства и их соединения. Это особенно полезно, если в системе установлено несколько графических адаптеров и нужно понять, какой из них подключен к конкретному монитору.</p>
+<p>Здесь же часто доступна информация о BIOS видеокарты, включая дату выпуска прошивки и её версию. <strong>Идентификация</strong> через DMI помогает отличить оригинальное устройство от перепрошитого или модифицированного, что критически важно при покупке оборудования с рук.</p>
+<div class="attention-box attention-info"><div><strong>📊 Какой параметр видеокарты для вас важнее всего?</strong><ul><li>Модель и серия</li><li>Объем видеопамяти</li><li>Температурный режим</li><li>Версия BIOS</li></ul></div></div>
+
+<h2 id="диагностика-gpgpu-вычислительные-возможности">Диагностика GPGPU: вычислительные возможности</h2>
+<p>Отдельного внимания заслуживает раздел <code>GPGPU</code>, который посвящен вычислительным характеристикам графического процессора. Этот инструмент предназначен для оценки производительности в задачах параллельных вычислений, что важно для видеомонтажа, 3D-рендеринга и майнинга.</p>
+<p>В этом разделе программа проводит тестирование пропускной способности памяти и скорости вычислений с плавающей запятой. Результаты тестов позволяют сравнить вашу карту с другими моделями в базе данных и оценить, работает ли она на заявленной производителем мощности.</p>
+<p>Здесь детально расписаны поддерживаемые технологии, такие как <em>CUDA</em> для карт NVIDIA или <em>OpenCL</em> и <em>Vulkan</em> для AMD. Наличие и версия этих API определяют совместимость карты с современным профессиональным софтом и игровыми движками.</p>
+<blockquote>⚠️ Внимание: При запуске бенчмарков в разделе GPGPU нагрузка на видеокарту достигает 100%, что вызывает резкий рост температуры. Убедитесь, что система охлаждения исправна перед тестированием.</blockquote>
+<p>Анализ результатов GPGPU-теста помогает выявить потенциальные проблемы с памятью или нестабильность частот, которые могут не проявляться в обычной работе, но приводят к вылетам в тяжелых приложениях.</p>
+
+<h2 id="мониторинг-датчиков-температуры-и-напряжения">Мониторинг датчиков: температуры и напряжения</h2>
+<p>Одним из самых важных аспектов эксплуатации является контроль температурного режима, который отображается в разделе <code>Компьютер -> Датчики</code>. Здесь в реальном времени выводятся показания термометров, встроенных в GPU, а также данные о скорости вращения вентиляторов.</p>
+<p>Для видеокарты критически важны два параметра: температура графического процессора (GPU Core) и температура горячей точки (Hot Spot). Разница между ними может составлять 10-20 градусов, и большой разброс часто указывает на проблемы с прилеганием термопрокладок или высохшую термопасту.</p>
+<p>Также здесь можно отследить напряжения, подаваемые на различные цепи питания карты. Стабильность вольтажа — ключевой фактор долговечности электроники, и сильные скачки могут свидетельствовать о неисправности блока питания или модулей VRM самой видеокарты.</p>
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Нормальный диапазон</th>
+<th>Критическое значение</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GPU Temperature</td>
+<td>40°C - 75°C</td>
+<td>> 85°C</td>
+<td>Температура ядра под нагрузкой</td>
+</tr>
+<tr>
+<td>GPU Hot Spot</td>
+<td>До 95°C</td>
+<td>> 105°C</td>
+<td>Максимальная температура кристалла</td>
+</tr>
+<tr>
+<td>Memory Temp</td>
+<td>До 90°C</td>
+<td>> 100°C</td>
+<td>Температура видеопамяти GDDR</td>
+</tr>
+<tr>
+<td>Fan Speed</td>
+<td>1000 - 2500 RPM</td>
+<td>0 RPM (в простое)</td>
+<td>Скорость вращения кулеров</td>
+</tr>
+</tbody>
+</table>
+<div class="checklist-block"><h4>☑️ Проверка системы охлаждения</h4><label class="check-item"><input type="checkbox"><span>Очистить радиатор от пыли</span></label><label class="check-item"><input type="checkbox"><span>Проверить работу вентиляторов</span></label><label class="check-item"><input type="checkbox"><span>Обновить термопасту</span></label><label class="check-item"><input type="checkbox"><span>Проверить прижим кулера</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="тест稳定性-gpu-и-анализ-стабильности">Тест稳定性 GPU и анализ стабильности</h2>
+<p>Для проверки стабильности работы видеокарты в экстремальных условиях в AIDA64 встроен инструмент <code>Тест稳定性 GPU</code>. Он создает искусственную нагрузку, заставляя графический процессор работать на пределе своих возможностей в течение заданного времени.</p>
+<p>Во время теста программа строит график изменения температуры, позволяя визуально оценить эффективность системы охлаждения. Если кривая температуры резко уходит вверх и не стабилизируется, это явный признак того, что радиатор не справляется с отводом тепла.</p>
+<p>Также в процессе стресс-теста можно отследить троттлинг — автоматическое снижение частот процессора для защиты от перегрева. Появление сообщений о троттлинге означает, что видеокарта не может поддерживать заявленные частоты из-за тепловых ограничений.</p>
+<details class="faq-item"><summary>Что такое троттлинг?</summary><div class="faq-answer"><p>Троттлинг — это защитный механизм, при котором система принудительно снижает тактовую частоту процессора при достижении критической температуры, чтобы предотвратить физическое повреждение оборудования. Это приводит к падению FPS в играх и замедлению работы системы.</p></div></details>
+<p>Рекомендуется проводить такой тест после чистки компьютера или замены термоинтерфейсов, чтобы убедиться в правильности сборки и эффективности обслуживания.</p>
+
+<h2 id="анализ-драйверов-и-реестра">Анализ драйверов и реестра</h2>
+<p>Информация об установленных драйверах доступна в разделе <code>Программы</code>, где можно увидеть версию драйвера, дату его установки и поставщика. Это помогает понять, актуальна ли используемая версия ПО для корректной работы новых игр.</p>
+<p>Иногда в системе могут оставаться следы старых драйверов, которые конфликтуют с новыми. AIDA64 позволяет увидеть список всех установленных компонентов, связанных с графикой, включая компоненты <em>PhysX</em>, <em>OpenCL</em> и панели управления.</p>
+<p>Для продвинутых пользователей доступен просмотр реестра и загруженных модулей, где можно найти глубинные настройки, влияющие на работу GPU. Однако редактирование этих параметров без должных знаний может привести к нестабильной работе системы.</p>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Регулярная проверка версии драйверов и их соответствие модели видеокарты — простой способ избежать множества проблем с совместимостью и производительностью.</p></div>
+
+<details>
+<summary>Как узнать точную модель видеокарты, если она не определяется?</summary>
+<p>Если в стандартном разделе отображения информация скудная, попробуйте обновить базу данных программы через меню "Файл" -> "Настройки" -> "Проверка обновлений". Также можно воспользоваться разделом DMI или посмотреть ID оборудования в диспетчере устройств и пробить его в интернете.</p>
+</details>
+<details>
+<summary>Почему AIDA64 показывает разные частоты в простое и нагрузке?</summary>
+<p>Это нормальное поведение современных видеокарт, оснащенных технологиями энергосбережения. В простое частота снижается для уменьшения шума и энергопотребления, а под нагрузкой автоматически повышается до максимальных значений.</p>
+</details>
+<details>
+<summary>Можно ли через AIDA64 разогнать видеокарту?</summary>
+<p>Сама программа AIDA64 не предназначена для разгона (изменения частот и вольтажа). Она служит только для мониторинга и тестирования. Для разгона используйте специализированный софт, например, MSI Afterburner.</p>
+</details>
+<details>
+<summary>Что делать, если температура GPU Hot Spot значительно выше основной?</summary>
+<p>Большая разница (более 20-25 градусов) между температурой ядра и горячей точкой часто указывает на неравномерное прилегание подошвы радиатора или необходимость замены термопасты. В некоторых случаях это может быть конструктивной особенностью чипа.</p>
+</details>
+<details>
+<summary>Как сохранить отчет о видеокарте?</summary>
+<p>В главном меню выберите "Отчет" -> "Мастер отчетов", выберите формат (HTML или текст) и отметьте нужные разделы, такие как "Отображение" и "GPGPU", чтобы сохранить всю информацию в файл.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#запуск-программы-и-первичная-навигация">Запуск программы и первичная навигация</a></li><li><a href="#раздел-отображение-базовые-характеристики-gpu">Раздел Отображение: базовые характеристики GPU</a></li><li><a href="#монитор-dmi-идентификация-оборудования">Монитор DMI: идентификация оборудования</a></li><li><a href="#диагностика-gpgpu-вычислительные-возможности">Диагностика GPGPU: вычислительные возможности</a></li><li><a href="#мониторинг-датчиков-температуры-и-напряжения">Мониторинг датчиков: температуры и напряжения</a></li><li><a href="#тест稳定性-gpu-и-анализ-стабильности">Тест稳定性 GPU и анализ стабильности</a></li><li><a href="#анализ-драйверов-и-реестра">Анализ драйверов и реестра</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/h/hi/hisense-75e7kq-pro-otklyuchit-demo-video.html" class="related-card">Как отключить демо-режим на Hisense 75E7KQ Pro: полная инструкция</a></li><li><a href="/a/articles/v/vi/videoobzor-prilozheniya-banki-ru-polnyj.html" class="related-card">Банки.ру видеообзор: полный разбор функций приложения 2026</a></li><li><a href="/a/articles/v/vo/vodyanoj-znak-neaktivirovannogo-vindovs-mozhno-li-ubrat.html" class="related-card">Как убрать водяной знак Windows: Активация и обход</a></li><li><a href="/a/articles/k/ka/kak-sdelat-v-kinopoiske-chtob-pri-vklyuchenii-vklyuchalsya-pervyj-kanal-na.html" class="related-card">Автозапуск первого канала на телевизоре: инструкция для Кинопоиска</a></li><li><a href="/a/articles/k/ka/kak-ubrat-ivi-s-mts.html" class="related-card">Как убрать Иви с МТС: полное руководство по отключению</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/h/hi/hisense-75e7kq-pro-otklyuchit-demo-video.html" class="related-bottom-card"><span class="related-bottom-title">Как отключить демо-режим на Hisense 75E7KQ Pro: полная инструкция</span><span class="related-bottom-desc">Подробный гид по отключению навязчивого демо-видео на Hisense 75E7KQ Pro. Сброс настроек, вход в сер</span></a><a href="/a/articles/v/vi/videoobzor-prilozheniya-banki-ru-polnyj.html" class="related-bottom-card"><span class="related-bottom-title">Банки.ру видеообзор: полный разбор функций приложения 2026</span><span class="related-bottom-desc">Подробный видеообзор приложения Банки.ру. Узнайте, как работает сервис, какие есть скрытые функции, </span></a><a href="/a/articles/v/vo/vodyanoj-znak-neaktivirovannogo-vindovs-mozhno-li-ubrat.html" class="related-bottom-card"><span class="related-bottom-title">Как убрать водяной знак Windows: Активация и обход</span><span class="related-bottom-desc">Узнайте, можно ли удалить надпись активации Windows. Легальные способы, правка реестра и риски испол</span></a><a href="/a/articles/k/ka/kak-sdelat-v-kinopoiske-chtob-pri-vklyuchenii-vklyuchalsya-pervyj-kanal-na.html" class="related-bottom-card"><span class="related-bottom-title">Автозапуск первого канала на телевизоре: инструкция для Кинопоиска</span><span class="related-bottom-desc">Как настроить автоматическое включение первого канала на ТВ через Кинопоиск? Полное руководство по S</span></a><a href="/a/articles/k/ka/kak-ubrat-ivi-s-mts.html" class="related-bottom-card"><span class="related-bottom-title">Как убрать Иви с МТС: полное руководство по отключению</span><span class="related-bottom-desc">Подробная инструкция, как отключить подписку Иви от МТС, убрать автопродление и вернуть деньги. Разб</span></a><a href="/a/articles/l/la/lazy-media-drugie-pleera-bez-zvuka.html" class="related-bottom-card"><span class="related-bottom-title">Почему нет звука в Lazy Media Deluxe и других плеерах</span><span class="related-bottom-desc">Разбираем, почему Lazy Media, Kodi и другие плееры работают без звука. Решение проблем с кодеками, н</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 tehpodskazka.vercel.app2</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 tehpodskazka.vercel.app2. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

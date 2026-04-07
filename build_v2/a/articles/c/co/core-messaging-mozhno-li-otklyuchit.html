@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Core Messaging: можно ли отключить и зачем это нужно — tehpodskazka.vercel.app2</title>
+    <meta name="description" content="Можно ли отключить Core Messaging на Android? Полный разбор системного процесса, рисков удаления и безопасных методов оптимизации.">
+    <link rel="canonical" href="/a/articles/c/co/core-messaging-mozhno-li-otklyuchit.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Core Messaging: можно ли отключить и зачем это нужно">
+    <meta property="og:description" content="Можно ли отключить Core Messaging на Android? Полный разбор системного процесса, рисков удаления и безопасных методов оптимизации.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775560692">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>tehpodskazka.vercel.app2</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Core Messaging: можно ли отключить и зачем это нужно</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Core Messaging: можно ли отключить системный процесс</h1>
+                    
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Многие пользователи смартфонов на базе Android, заглядывая в список запущенных процессов или расходу батареи, замечают активную работу компонента под названием <strong>Core Messaging</strong>. Возникает закономерный вопрос: что это за служба, почему она потребляет ресурсы и можно ли её отключить без вреда для устройства? <em>Core Messaging</em> — это не вирус и не вредоносное ПО, а важный системный модуль, отвечающий за работу с мультимедийными сообщениями MMS и расширенными функциями SMS (RCS).</p>
+
+<p>Однако желание освободить оперативную память или остановить фоновую активность понятно. Полное удаление или некорректная деактивация этого процесса могут привести к нестабильной работе стандартного приложения «Сообщения», невозможности получения кодов подтверждения или сбоям в работе мессенджеров, завязанных на системные уведомления. В этой статье мы подробно разберем архитектуру работы службы, оценим риски её отключения и предложим безопасные альтернативы для оптимизации.</p>
+
+<p>Прежде чем принимать решение об изменении настроек системы, необходимо четко понимать функциональное назначение <strong>Core Messaging</strong>. Этот процесс является частью фреймворка Android и выступает посредником между аппаратной частью модема, SIM-картой и пользовательскими приложениями для обмена сообщениями. Он обрабатывает входящие и исходящие данные, конвертирует форматы и обеспечивает доставку контента.</p>
+
+<p>В современных версиях Android, особенно в оболочках от Samsung, Xiaomi и Huawei, данный компонент тесно интегрирован с сервисами Google и проприетарными надстройками производителей. <em>Отключение Core Messaging</em> может разорвать цепочку передачи данных, что приведет к тому, что смартфон перестанет воспринимать SMS как таковые. Это критично для двухфакторной аутентификации в банках и социальных сетях.</p>
+
+<p>Стоит отметить, что сам по себе процесс потребляет минимальное количество энергии в фоновом режиме. Если вы наблюдаете аномальный расход заряда, связанный с этим элементом, проблема, скорее всего, кроется не в самой службе, а в «зависшем» приложении-мессенджере или ошибке в прошивке. <strong>Принудительная остановка</strong> в таком случае даст лишь временный эффект, так как система автоматически перезапустит процесс при первой же попытке отправить или принять сообщение.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Попытка полного удаления системного пакета <code>com.android.messaging</code> или его аналогов через ADB без наличия резервной копии может привести к циклической перезагрузке устройства (bootloop) или полной неработоспособности функции звонков и SMS.</p>
+</blockquote>
+
+<p>Технически, <strong>Core Messaging</strong> представляет собой набор библиотек и сервисов, которые управляют базой данных сообщений. Когда вы получаете SMS, сигнал сначала обрабатывается радиомодулем, затем передается системному демону RIL (Radio Interface Layer), который, в свою очередь, активирует <em>Core Messaging</em> для записи данных в хранилище и уведомления интерфейса. Без этого звена цепочка разрывается.</p>
+
+<p>В контексте вопроса «можно ли отключить», ответ зависит от того, что именно вы подразумеваете под отключением. Если речь идет о временной приостановке через меню разработчика или настройки батареи, то это возможно, но бесполезно. Если же речь идет о глубокой деактивации через <strong>ADB (Android Debug Bridge)</strong>, то технически это реализуемо, но требует root-прав или специфических команд для заморозки пользовательских приложений, маскирующихся под системные.</p>
+
+<p>Важно различать стандартное приложение «Сообщения» и фоновый процесс <code>com.samsung.android.messaging</code> (на устройствах Samsung) или <code>com.android.mms</code>. Удаление первого лишит вас интерфейса для чтения, удаление второго — нарушит фундаментальную логику работы ОС. <mark>На устройствах с Android 12 и новее компоненты сообщений часто вшиты в системный раздел read-only, что делает их отключение невозможным без разблокировки загрузчика.</mark></p>
+
+<div class="attention-box attention-info"><div><strong>📊 Сталкивались ли вы с высоким расходом батареи процессом сообщений?</strong><ul><li>Да, телефон греется</li><li>Заметил(а) в статистике, но не мешает</li><li>Никогда не видел(а) такого</li><li>У меня iPhone, не знаю</li></ul></div></div>
+
+<p>Если вы твердо решили ограничить активность службы, существует несколько уровней вмешательства, каждый из которых имеет свои последствия. Первый и самый безопасный уровень — ограничение фоновой активности через настройки операциной системы. Это не отключает процесс полностью, но запрещает ему работать, когда экран выключен или приложение не используется активно.</p>
+
+<p>Для этого необходимо перейти в настройки приложений, найти соответствующий пункт (часто он скрыт в меню «Показать системные процессы») и выбрать опцию «Остановить» или «Отключить». Однако современные версии Android могут игнорировать эти команды для критически важных системных служб, автоматически включая их обратно. <strong>Принудительная остановка</strong> работает до первой перезагрузки или до поступления нового сигнала сотовой сети.</p>
+
+<p>Более радикальный метод involves использование командной строки ADB. Подключив смартфон к компьютеру, можно отправить команду на заморозку пакета. Например: <code>adb shell pm disable-user --user 0 com.android.messaging</code>. Эта команда не удаляет файл физически, но делает его невидимым для системы и пользователя. Эффект аналогичен удалению, но обратимым.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка перед вмешательством в систему</h4><label class="check-item"><input type="checkbox"><span>Сделана полная резервная копия данных</span></label><label class="check-item"><input type="checkbox"><span>Включена отладка по USB</span></label><label class="check-item"><input type="checkbox"><span>Установлены драйверы ADB на ПК</span></label><label class="check-item"><input type="checkbox"><span>Заряд батареи более 50%</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<ul>
+<li> 📉 <strong>Снижение фоновой активности</strong>: Ограничение работы в фоне может немного увеличить время автономной работы, но牺牲ует своевременность доставки сообщений.</li>
+<li> 🛑 <strong>Потеря функционала MMS/RCS</strong>: При отключении核心的组件 вы не сможете отправлять картинки или получать сообщения через Wi-Fi (Chat features).</li>
+<li> 🔄 <strong>Сбои в работе других приложений</strong>: Многие сервисы (банки, такси, доставка) используют SMS для авторизации; их коды могут просто не приходить.</li>
+<li> ⚙️ <strong>Нестабильность системы</strong>: На некоторых оболочках (MIUI, OneUI) отключение системных сообщений вызывает ошибки в работе интерфейса и уведомлений.</li>
+</ul>
+
+<blockquote>
+<p>⚠️ Внимание: Использование команд ADB для отключения системных пакетов требует точности. Ошибка в имени пакета (например, удаление <code>com.android.providers.telephony</code> вместо <code>messaging</code>) может полностью уничтожить возможность совершения звонков.</p>
+</blockquote>
+
+<p>Для сравнения методов воздействия на системный процесс <strong>Core Messaging</strong> целесообразно рассмотреть их эффективность и риски в сводной таблице. Это поможет выбрать оптимальную стратегию в зависимости от вашей цели: экономия батареи, конфиденциальность или просто любопытство.</p>
+
+<table>
+<thead>
+<tr>
+<th>Метод воздействия</th>
+<th>Сложность</th>
+<th>Риск для системы</th>
+<th>Эффективность</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ограничение в настройках батареи</td>
+<td>Низкая</td>
+<td>Отсутствует</td>
+<td>Низкая (система может перезапустить)</td>
+</tr>
+<tr>
+<td>Очистка данных приложения</td>
+<td>Средняя</td>
+<td>Средний (удаление истории SMS)</td>
+<td>Средняя (помогает при багах)</td>
+</tr>
+<tr>
+<td>ADB команда disable-user</td>
+<td>Высокая</td>
+<td>Высокий (требует осторожности)</td>
+<td>Высокая (полное отключение)</td>
+</tr>
+<tr>
+<td>Root-удаление файла</td>
+<td>Очень высокая</td>
+<td>Критический (возможна поломка ОС)</td>
+<td>Абсолютная (необратимо без перепрошивки)</td>
+</tr>
+</tbody>
+</table>
+
+<p>Если вашей целью является устранение багов, а не полное отключение службы, попробуйте сначала очистить кэш и данные приложения. Перейдите в <code>Настройки → Приложения → Сообщения → Хранилище</code> и нажмите «Очистить кэш». Это часто решает проблемы с зависанием процесса без необходимости глубокого вмешательства.</p>
+
+<details class="faq-item"><summary>Что делать, если после отключения пропали SMS?</summary><div class="faq-answer"><p>Восстановить работу можно через ADB командой: <code>adb shell pm enable com.android.messaging</code>. Если доступа к компьютеру нет, потребуется сброс до заводских настроек (Hard Reset), что удалит все данные с устройства.
+</blockquote>
+</summary>
+</details>
+
+<p>Альтернативой отключению системного компонента является замена стандартного приложения-мессенджера на стороннее, которое может игнорировать некоторые функции <em>Core Messaging</em> или работать через свой собственный серверный шлюз (как Telegram или WhatsApp, хотя они используют интернет, а не SMS). Однако для классических SMS и звонков системная зависимость остается неизбежной.</p>
+
+<p>Существует также концепция «облегченных» сборок Android (Custom ROM), где разработчики вырезают лишние компоненты, включая тяжелые надстройки над базовым протоколом сообщений. Установка такой прошивки — единственный способ легально и безопасно избавиться от раздутого системного мусора, который часто маскируется под <strong>Core Messaging</strong> на стоковых устройствах.</p>
+
+
+
+<p>В заключение стоит подчеркнуть, что <strong>Core Messaging</strong> — это не враг вашего смартфона, а необходимый механизм коммуникации. Его отключение оправдано только в редких случаях диагностики или для опытных пользователей, понимающих последствия своих действий. Для обычного пользователя риски потери важных уведомлений и кодов безопасности значительно перевешивают потенциальную, но часто иллюзорную, экономию ресурсов.</p>
+
+<details>
+<summary>Можно ли удалить Core Messaging без root-прав?</summary>
+<p>Полное удаление файла с устройства без прав суперпользователя (root) невозможно, так как системный раздел защищен от записи. Однако можно использовать ADB-команды для «заморозки» или отключения для текущего пользователя, что визуально и функционально приравнено к удалению, но не требует взлома системы.</p>
+</details>
+
+<details>
+<summary>Почему процесс Core Messaging постоянно запускается?</summary>
+<p>Это нормальное поведение. Служба должна находиться в состоянии ожидания (listen), чтобы мгновенно реагировать на входящий сигнал от базовой станции сотового оператора. Если она будет полностью выключена, вы узнаете о приходе SMS только после ручного открытия приложения, что противоречит концепции мгновенных сообщений.</p>
+</details>
+
+<details>
+<summary>Безопасно ли использовать сторонние приложения вместо системных?</summary>
+<p>Использование альтернативных SMS-клиентов (например, Textra, Pulse) безопасно и часто даже предпочтительнее стоковых решений благодаря лучшему функционалу. Однако они все равно rely on системный <em>Core Messaging</em> для базовой передачи данных, поэтому полностью исключить системный процесс не получится.</p>
+</details>
+
+<details>
+<summary>Влияет ли отключение службы на работу WhatsApp и Viber?</summary>
+<p>Прямого влияния на мессенджеры, работающие через интернет (Wi-Fi/Mobile Data), отключение SMS-сервисов не оказывает. Однако вы не сможете пройти регистрацию в этих приложениях, если код подтверждения придет именно в виде SMS, а не через голосовой вызов или push-уведомление.</p>
+</details>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Core Messaging — критический системный компонент. Его полное отключение возможно только через ADB, но несет высокие риски потери связи. Для оптимизации лучше использовать ограничение фоновой активности.</p></div></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/e/es/esli-vajfaj-ne-podhodit-k-robotu-pylesosu-tefal.html" class="related-card">Робот-пылесос Tefal не видит Wi-Fi: причины и решение</a></li><li><a href="/a/articles/o/op/opengl-i-opengl-skia.html" class="related-card">OpenGL и OpenGL Skia: Сравнение графических движков</a></li><li><a href="/a/articles/v/vi/vivo-y35-ustanovka-avrora-os.html" class="related-card">vivo y35 установка Aurora OS: полная инструкция</a></li><li><a href="/a/articles/k/ka/kak-peredat-procenty-na-ajfone.html" class="related-card">Как передать проценты на Айфоне: полная инструкция</a></li><li><a href="/a/articles/k/ka/kak-atributirovat-pak-ikonok-v-prilozhenii.html" class="related-card">Как атрибутировать пак иконок: полное руководство для Android</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/e/es/esli-vajfaj-ne-podhodit-k-robotu-pylesosu-tefal.html" class="related-bottom-card"><span class="related-bottom-title">Робот-пылесос Tefal не видит Wi-Fi: причины и решение</span><span class="related-bottom-desc">Почему робот-пылесос Tefal не подключается к Wi-Fi 2.4 ГГц? Инструкция по сбросу, настройке роутера </span></a><a href="/a/articles/o/op/opengl-i-opengl-skia.html" class="related-bottom-card"><span class="related-bottom-title">OpenGL и OpenGL Skia: Сравнение графических движков</span><span class="related-bottom-desc">Полный разбор OpenGL и Skia. Узнайте, чем отличается аппаратное ускорение от программной растеризаци</span></a><a href="/a/articles/v/vi/vivo-y35-ustanovka-avrora-os.html" class="related-bottom-card"><span class="related-bottom-title">vivo y35 установка Aurora OS: полная инструкция</span><span class="related-bottom-desc">Как установить Aurora OS на vivo y35? Подробный гайд, совместимость, риски и альтернативы для смартф</span></a><a href="/a/articles/k/ka/kak-peredat-procenty-na-ajfone.html" class="related-bottom-card"><span class="related-bottom-title">Как передать проценты на Айфоне: полная инструкция</span><span class="related-bottom-desc">Узнайте, как передать проценты на Айфоне через AirDrop, iMessage или FaceTime. Пошаговые способы обм</span></a><a href="/a/articles/k/ka/kak-atributirovat-pak-ikonok-v-prilozhenii.html" class="related-bottom-card"><span class="related-bottom-title">Как атрибутировать пак иконок: полное руководство для Android</span><span class="related-bottom-desc">Узнайте, как правильно атрибутировать пак иконок в приложении. Инструкция по XML-разметке, манифесту</span></a><a href="/a/articles/y/ya/yasin-t8000-instrukciya.html" class="related-bottom-card"><span class="related-bottom-title">Yasin T8000 инструкция: полная настройка, прошивка и коды</span><span class="related-bottom-desc">Полная инструкция для Yasin T8000: как прошить, настроить, войти в сервисное меню, коды ошибок и реш</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 tehpodskazka.vercel.app2</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 tehpodskazka.vercel.app2. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

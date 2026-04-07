@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Как проверить интернет на Mikrotik: методы и команды — tehpodskazka.vercel.app2</title>
+    <meta name="description" content="Полная инструкция по диагностике подключения на роутерах Mikrotik. Проверка DNS, Ping, трассировка и скрипты мониторинга в RouterOS.">
+    <link rel="canonical" href="/a/articles/d/de/detect-internet-mikrotik.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как проверить интернет на Mikrotik: методы и команды">
+    <meta property="og:description" content="Полная инструкция по диагностике подключения на роутерах Mikrotik. Проверка DNS, Ping, трассировка и скрипты мониторинга в RouterOS.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775560692">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>tehpodskazka.vercel.app2</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/svyaz-i-operatory/">Связь и Операторы</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как проверить интернет на Mikrotik: методы и команды</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Диагностика и проверка интернета на роутерах Mikrotik</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#базовая-проверка-доступности-через-ping-и-traceroute">Базовая проверка доступности через Ping и Traceroute</a></li><li><a href="#диагностика-проблем-с-dns-на-mikrotik">Диагностика проблем с DNS на Mikrotik</a></li><li><a href="#проверка-статуса-интерфейсов-и-pppoel2tp-соединений">Проверка статуса интерфейсов и PPPoE/L2TP соединений</a></li><li><a href="#использование-netwatch-для-автоматического-мониторинга">Использование Netwatch для автоматического мониторинга</a></li><li><a href="#скрипты-для-автоматической-переподключения-при-обрыве">Скрипты для автоматической переподключения при обрыве</a></li><li><a href="#анализ-логов-для-поиска-причин-разрывов">Анализ логов для поиска причин разрывов</a></li><li><a href="#детальные-вопросы-по-диагностике-faq">Детальные вопросы по диагностике (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Работа сетевого администратора или продвинутого домашнего пользователя часто сводится к решению одной главной проблемы: почему нет интернета? Когда речь заходит об оборудовании <em>Mikrotik</em>, диагностика требует не просто взгляда на индикаторы, а глубокого погружения в логику работы операционной системы <em>RouterOS</em>. Умение правильно определить точку обрыва связи — от физического кабеля до DNS-сервера провайдера — является фундаментальным навыком.</p>
+
+<p>Существует множество способов, позволяющих <strong>detect internet mikrotik</strong>, начиная от простых графических инструментов в WinBox и заканчивая сложными скриптами автоматического мониторинга. В этой статье мы разберем основные методы проверки доступности сети, которые помогут вам быстро локализовать проблему и восстановить соединение. Вы научитесь отличать проблемы провайдера от ошибок конфигурации вашего оборудования.</p>
+
+<p>Мы рассмотрим как ручные методы проверки через терминал, так и автоматизированные решения, которые могут самостоятельно переподключать канал связи при его обрыве. Понимание этих процессов позволит вам эффективно управлять сетевой инфраструктурой любого масштаба. Давайте разберем инструменты, которые всегда должны быть под рукой.</p>
+
+<h2 id="базовая-проверка-доступности-через-ping-и-traceroute">Базовая проверка доступности через Ping и Traceroute</h2>
+
+<p>Самым первым и очевидным инструментом диагностики является утилита <code>Ping</code>. В среде <em>RouterOS</em> она доступна как через графический интерфейс, так и через консоль. Для быстрой проверки перейдите в меню <code>Tools → Ping</code> и введите адрес надежного сервера, например, <code>8.8.8.8</code> или <code>1.1.1.1</code>. Если вы получаете ответы с минимальным временем отклика (RTT), значит, физический уровень и маршрутизация до глобальной сети работают корректно.</p>
+
+<p>Однако, если пинг не проходит, не стоит сразу паниковать. Необходимо проверить, доступен ли шлюз провайдера. Часто проблема кроется не в глобальном интернете, а в последнем узле перед вами. Используйте команду <code>traceroute</code> для визуализации пути пакета. Она покажет, на каком именно хопе (узле) обрывается соединение. Это критически важная информация для обращения в техническую поддержку провайдера.</p>
+
+<blockquote>
+<p>⚠️ Внимание: При диагностике через Ping учитывайте, что некоторые провайдеры могут блокировать ICMP-запросы на своих пограничных маршрутизаторах. Отсутствие ответа не всегда означает полный обрыв канала, иногда это просто настройка безопасности.</p>
+</blockquote>
+
+<p>Для более детального анализа используйте терминал. Введите команду <code>/ping 8.8.8.8 count=10</code>, чтобы отправить 10 пакетов и увидеть статистику потерь. Высокий процент потерь (packet loss) даже при наличии ответов свидетельствует о проблемах с качеством линии, что может вызывать разрывы VPN или лаги в играх.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой метод диагностики вы используете чаще всего?</strong><ul><li>WinBox Tools</li><li>Терминал (CLI)</li><li>Скрипты мониторинга</li><li>Сторонний софт (The Dude)</li></ul></div></div>
+
+<h2 id="диагностика-проблем-с-dns-на-mikrotik">Диагностика проблем с DNS на Mikrotik</h2>
+
+<p>Частой ситуацией является когда <code>Ping</code> по IP-адресам проходит успешно, но сайты в браузере не открываются. Это классический признак проблем с <strong>DNS</strong>. Роутер <em>Mikrotik</em> может иметь доступ к сети, но не знать, как преобразовать доменное имя в IP-адрес. Для проверки используйте утилиту <code>nslookup</code> или <code>dig</code> непосредственно в терминале роутера.</p>
+
+<p>Введите команду <code>/tool dns-query name=google.com</code>. Если вы получили в ответ IP-адрес, значит DNS работает. Если же вы видите таймаут или ошибку, необходимо проверить настройки DNS в разделе <code>IP → DNS</code>. Убедитесь, что там прописаны корректные серверы (например, от вашего провайдера или публичные <code>8.8.8.8</code>), и стоит галочка <code>Allow Remote Requests</code>, если DNS должен раздаваться клиентам локальной сети.</p>
+
+<p>Иногда проблема кроется в кэше DNS. Старые или ошибочные записи могут мешать нормальной работе. В таких случаях помогает очистка кэша командой <code>/ip dns cache flush</code>. После этой процедуры попробуйте снова открыть сайт. Если проблема повторяется периодически, имеет смысл настроить статические DNS записи или использовать альтернативные серверы имен.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте команду /ip dns print detail, чтобы увидеть, какие именно DNS-серверы были получены динамически от провайдера и какие прописаны статически. Приоритет всегда отдается статическим настройкам.</p></div>
+
+<h2 id="проверка-статуса-интерфейсов-и-pppoel2tp-соединений">Проверка статуса интерфейсов и PPPoE/L2TP соединений</h2>
+
+<p>Физический уровень и уровень канального соединения — это фундамент. Если интерфейс WAN (обычно <code>ether1</code> или <code>pppoe-out1</code>) находится в состоянии <code>down</code> или <code>disconnected</code>, никакие проверки выше по стеку не имеют смысла. В WinBox статус интерфейсов отображается в меню <code>Interfaces</code>. Зеленая стрелка означает активность, красная — обрыв.</p>
+
+<p>Для подключений типа <strong>PPPoE</strong>, <strong>L2TP</strong> или <strong>PPTP</strong> ситуация сложнее. Интерфейс может быть физически активен, но сессия не поднимается. Перейдите в меню <code>PPP → Interfaces</code> и посмотрите на статус вашего подключения. Двойной клик по интерфейсу откроет окно свойств, где во вкладке <code>Status</code> будет указана причина отказа, например, "no response from server" или "authentication failed".</p>
+
+<p>В терминале статус можно проверить командой <code>/interface print</code>. Обратите внимание на колонку <code>R</code> (Running). Если её нет, значит интерфейс не работает. Для PPP-клиентов полезна команда <code>/ppp active print</code>, которая покажет активные сессии. Если вы только что переподключились, но сессии нет, значит, соединение не установлено.</p>
+
+<div class="checklist-block"><h4>☑️ Диагностика PPPoE соединения</h4><label class="check-item"><input type="checkbox"><span>Проверить физический линк на WAN порту</span></label><label class="check-item"><input type="checkbox"><span>Убедиться в правильности логина и пароля</span></label><label class="check-item"><input type="checkbox"><span>Проверить MTU интерфейса</span></label><label class="check-item"><input type="checkbox"><span>Убедиться, что провайдер не привязал MAC-адрес</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="использование-netwatch-для-автоматического-мониторинга">Использование Netwatch для автоматического мониторинга</h2>
+
+<p>Ручная проверка хороша для разовых случаев, но для постоянного контроля состояния канала лучше использовать встроенный инструмент <strong>Netwatch</strong>. Он позволяет периодически пинговать заданный хост и выполнять действия при изменении статуса (Up/Down). Находится этот инструмент в меню <code>Tools → Netwatch</code>.</p>
+
+<p>Настройка Netwatch проста: вы добавляете новую запись, указываете хост для проверки (например, шлюз провайдера) и интервал опроса. В полях <code>Up Script</code> и <code>Down Script</code> прописываются действия. Например, при падении канала (<code>Down</code>) можно отправить уведомление администратору или попытаться перезапустить PPPoE-клиента.</p>
+
+<p>Важно правильно выбрать цель для пинга. Пинговать сам роутер провайдера часто бессмысленно, если он запрещает ICMP. Лучше пинговать надежный внешний IP, но с увеличенным интервалом, чтобы не нагружать канал. Также Netwatch может использоваться для переключения между основным и резервным каналом связи, что делает его мощным инструментом отказоустойчивости.</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Описание</th>
+<th>Рекомендуемое значение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host</td>
+<td>IP-адрес или домен для проверки</td>
+<td>8.8.8.8 или шлюз провайдера</td>
+</tr>
+<tr>
+<td>Interval</td>
+<td>Интервал между проверками</td>
+<td>10s - 60s (не чаще 5s)</td>
+</tr>
+<tr>
+<td>Timeout</td>
+<td>Время ожидания ответа</td>
+<td>3s - 5s</td>
+</tr>
+<tr>
+<td>Down Script</td>
+<td>Действие при обрыве</td>
+<td>Логирование или перезапуск</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="скрипты-для-автоматической-переподключения-при-обрыве">Скрипты для автоматической переподключения при обрыве</h2>
+
+<p>Когда стандартных средств недостаточно, на помощь приходят скрипты <em>RouterOS</em>. Вы можете создать сценарий, который будет анализировать состояние сети и принимать решения. Например, если интернет пропал, скрипт может попытаться disable/enable WAN интерфейс или PPPoE клиент. Это часто помогает "встряхнуть" зависшее соединение.</p>
+
+<p>Рассмотрим пример простой логики: скрипт проверяет доступность внешнего IP. Если проверка не проходит несколько раз подряд, выполняется команда переподключения. Для реализации счетчика неудачных попыток можно использовать глобальные переменные. Это позволяет избежать ложных срабатываний при кратковременных скачках пинга.</p>
+
+<pre><code>
+<p>:local target "8.8.8.8"</p>
+<p>:local gateway "pppoe-out1"</p>
+<p>:local failCount [/system scheduler get [find name="failCounter"] value-name=start-date]</p>
+
+<p>if ([/ping $target count=3 interval=1s] = 0) do={</p>
+<p>:set failCount ($failCount + 1)</p>
+<p>if ($failCount >= 3) do={</p>
+<p>/interface disable $gateway</p>
+<p>:delay 5s</p>
+<p>/interface enable $gateway</p>
+<p>:set failCount 0</p>
+<p>}</p>
+<p>} else={</p>
+<p>:set failCount 0</p>
+<p>}</p>
+</code></pre>
+
+<blockquote>
+<p>⚠️ Внимание: При编写 скриптов автоматической перезагрузки интерфейсов будьте осторожны. Слишком частые перезапросы могут привести к блокировке вашего аккаунта со стороны провайдера за подозрительную активность (DDoS-подобное поведение).</p>
+</blockquote>
+
+<p>Скрипты можно запускать по расписанию через <code>System → Scheduler</code> или привязывать к событиям Netwatch. Это создает гибкую систему самовосстановления сети. Важно тестировать скрипты в безопасной среде, чтобы не потерять удаленный доступ к роутеру в случае ошибки в логике.</p>
+
+<details class="faq-item"><summary>Как сохранить переменную счетчика?</summary><div class="faq-answer"><p>В RouterOS переменные не сохраняются между перезагрузками автоматически. Для хранения счетчика сбоев можно использовать файл на диске или значение в scheduler, как показано в примере выше, используя поле start-date как счетчик.</p></div></details>
+
+<h2 id="анализ-логов-для-поиска-причин-разрывов">Анализ логов для поиска причин разрывов</h2>
+
+<p>Если интернет пропадает периодически, и простые проверки не дают результата, необходимо обратиться к логам системы. Журналы <em>Mikrotik</em> хранят историю событий, ошибок авторизации PPP, изменения состояния интерфейсов и системных сообщений. Доступ к ним осуществляется через меню <code>Log</code> или команду <code>/log print</code>.</p>
+
+<p>Для эффективного поиска используйте фильтры. Например, чтобы увидеть только сообщения, связанные с PPP, введите <code>/log print where message~"ppp"</code>. Ищите ключевые слова: "terminated", "disconnect", "timeout", "authentication failed". Время возникновения ошибки в логе часто совпадает с моментом жалоб пользователей на отсутствие сети.</p>
+
+<p>Уровень детализации логов (Topics) можно настроить в разделе <code>System → Logging</code>. По умолчанию пишется не всё. Если вы ведете глубокую диагностику, добавьте правила логирования для конкретных категорий, таких как <code>ppp</code>, <code>dhcp</code>, <code>interface</code>. Однако помните, что чрезмерное логирование быстро заполняет буфер памяти роутера.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Логи — это главный источник истины при поиске периодических обрывов. Настройка правильных фильтров позволяет увидеть скрытые ошибки, которые не отображаются в статусе интерфейсов.</p></div>
+
+<h2 id="детальные-вопросы-по-диагностике-faq">Детальные вопросы по диагностике (FAQ)</h2>
+
+<details>
+<summary>Почему пинг до 8.8.8.8 идет, а сайты не открываются?</summary>
+<p>Скорее всего, проблема в DNS. Роутер успешно доставляет пакеты до сервера Google, но не может преобразовать доменное имя сайта (например, yandex.ru) в IP-адрес. Проверьте настройки DNS в разделе IP → DNS и убедитесь, что у клиентов прописан корректный DNS-сервер.</p>
+</details>
+
+<details>
+<summary>Как проверить скорость интернета непосредственно на роутере Mikrotik?</summary>
+<p>Встроенного полноценного спидтеста в RouterOS нет. Однако можно использовать инструмент <code>/tool bandwidth-test</code> для проверки скорости между двумя точками внутри вашей сети или до другого роутера Mikrotik. Для проверки скорости до провайдера лучше использовать внешний сервер с поддержкой CLI или загрузить файл известного размера через FTP/HTTP и замерить время.</p>
+</details>
+
+<details>
+<summary>Что делать, если статус PPPoE "connecting" висит бесконечно?</summary>
+<p>Это указывает на то, что запросы уходят, но ответа от сервера провайдера нет. Проверьте физическое подключение, убедитесь, что на порту WAN не горит красный индикатор. Попробуйте клонировать MAC-адрес компьютера, на котором ранее работало подключение. Также проверьте, не истек ли срок действия услуги или баланс.</p>
+</details>
+
+<details>
+<summary>Можно ли отправить email или SMS при обрыве интернета?</summary>
+<p>Да, это возможно. Для отправки Email потребуется настройка SMTP-клиента (<code>/tool email</code>) и использование скрипта в Netwatch или Scheduler. Для SMS потребуется подключенный 3G/4G модем или внешний GSM-шлюз, управляемый через скрипты. Это позволяет получать мгновенные уведомления о проблемах.</p>
+</details>
+
+<details>
+<summary>Как отличить проблему на стороне провайдера от проблемы роутера?</summary>
+<p>Подключите компьютер напрямую в кабель провайдера (минуя роутер) и настройте подключение. Если интернет не появился — проблема на стороне провайдера. Если появился — проблема в настройках или hardware роутера. Также помогает трассировка: если пакеты теряются на первом же хопе после вашего шлюза, это зона ответственности провайдера.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#базовая-проверка-доступности-через-ping-и-traceroute">Базовая проверка доступности через Ping и Traceroute</a></li><li><a href="#диагностика-проблем-с-dns-на-mikrotik">Диагностика проблем с DNS на Mikrotik</a></li><li><a href="#проверка-статуса-интерфейсов-и-pppoel2tp-соединений">Проверка статуса интерфейсов и PPPoE/L2TP соединений</a></li><li><a href="#использование-netwatch-для-автоматического-мониторинга">Использование Netwatch для автоматического мониторинга</a></li><li><a href="#скрипты-для-автоматической-переподключения-при-обрыве">Скрипты для автоматической переподключения при обрыве</a></li><li><a href="#анализ-логов-для-поиска-причин-разрывов">Анализ логов для поиска причин разрывов</a></li><li><a href="#детальные-вопросы-по-диагностике-faq">Детальные вопросы по диагностике (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/f/fl/fleks-internet-rf-64-megafon.html" class="related-card">Флекс интернет РФ: тариф 64 Мбит от Мегафона для FLEX</a></li><li><a href="/a/articles/k/ka/kak-vklyuchit-regulirovku-gromkosti-na-stb-rostelekom.html" class="related-card">Регулировка громкости на STB Ростелеком: решение проблем</a></li><li><a href="/a/articles/k/ka/kak-razobrat-internet-rozetku-schneider.html" class="related-card">Как разобрать интернет розетку Schneider: пошаговая инструкция</a></li><li><a href="/a/articles/k/ka/kak-svyazatsya-s-wink.html" class="related-card">Как связаться с Wink: все способы поддержки клиентов</a></li><li><a href="/a/articles/k/ka/kak-perezagruzit-televidenie-ot-mts.html" class="related-card">Как перезагрузить телевидение МТС: полная инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/f/fl/fleks-internet-rf-64-megafon.html" class="related-bottom-card"><span class="related-bottom-title">Флекс интернет РФ: тариф 64 Мбит от Мегафона для FLEX</span><span class="related-bottom-desc">Как подключить тариф 64 Мбит на Флекс интернет РФ через Мегафон. Настройка роутера, проверка скорост</span></a><a href="/a/articles/k/ka/kak-vklyuchit-regulirovku-gromkosti-na-stb-rostelekom.html" class="related-bottom-card"><span class="related-bottom-title">Регулировка громкости на STB Ростелеком: решение проблем</span><span class="related-bottom-desc">Почему не работает громкость на приставке Ростелеком? Полная инструкция: настройки HDMI-CEC, пультов</span></a><a href="/a/articles/k/ka/kak-razobrat-internet-rozetku-schneider.html" class="related-bottom-card"><span class="related-bottom-title">Как разобрать интернет розетку Schneider: пошаговая инструкция</span><span class="related-bottom-desc">Подробный гид по разборке и подключению розеток Schneider Electric. Схемы распиновки, особенности мо</span></a><a href="/a/articles/k/ka/kak-svyazatsya-s-wink.html" class="related-bottom-card"><span class="related-bottom-title">Как связаться с Wink: все способы поддержки клиентов</span><span class="related-bottom-desc">Нужно связаться с Wink? Узнайте актуальные номера телефонов, адреса почты и инструкции для техподдер</span></a><a href="/a/articles/k/ka/kak-perezagruzit-televidenie-ot-mts.html" class="related-bottom-card"><span class="related-bottom-title">Как перезагрузить телевидение МТС: полная инструкция</span><span class="related-bottom-desc">Узнайте, как правильно перезагрузить МТС ТВ. Решения проблем с зависанием, обновлением ПО и сбросом </span></a><a href="/a/articles/e/es/esli-vynut-simku-chto-budet-slyshat-zvonyaschij.html" class="related-bottom-card"><span class="related-bottom-title">Если вынуть симку: что услышит звонящий и куда денутся звонки</span><span class="related-bottom-desc">Что будет, если вынуть симку во время звонка? Узнайте, какие гудки услышит абонент, где сохраняются </span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 tehpodskazka.vercel.app2</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 tehpodskazka.vercel.app2. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

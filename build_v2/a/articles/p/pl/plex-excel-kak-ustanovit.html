@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Plex Excel: как установить и настроить плагин для библиотеки — tehpodskazka.vercel.app2</title>
+    <meta name="description" content="Подробная инструкция по установке плагина Plex Excel. Узнайте, как добавить управление библиотекой через таблицы, настроить API и решить типичные ошибки подключения.">
+    <link rel="canonical" href="/a/articles/p/pl/plex-excel-kak-ustanovit.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Plex Excel: как установить и настроить плагин для библиотеки">
+    <meta property="og:description" content="Подробная инструкция по установке плагина Plex Excel. Узнайте, как добавить управление библиотекой через таблицы, настроить API и решить типичные ошибки подключения.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775560692">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>tehpodskazka.vercel.app2</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/soft-i-prilozheniya/">Софт и Приложения</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Plex Excel: как установить и настроить плагин для библиотеки</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Plex Excel: как установить плагин для управления библиотекой</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#что-представляет-собой-интеграция-plex-и-excel">Что представляет собой интеграция Plex и Excel</a></li><li><a href="#подготовка-среды-для-работы-с-api-plex">Подготовка среды для работы с API Plex</a></li><li><a href="#методы-установки-и-настройки-подключения">Методы установки и настройки подключения</a></li><li><a href="#написание-и-запуск-скрипта-синхронизации">Написание и запуск скрипта синхронизации</a></li><li><a href="#работа-с-метаданными-через-таблицы">Работа с метаданными через таблицы</a></li><li><a href="#решение-типичных-проблем-и-ошибок">Решение типичных проблем и ошибок</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>В мире мультимедийных серверов <em>Plex Media Server</em> давно зарекомендовал себя как лидер, предоставляющий пользователям удобный доступ к фильмам, сериалам и музыке. Однако для продвинутых администраторов и энтузиастов стандартного веб-интерфейса иногда бывает недостаточно, особенно когда речь идет о массовом редактировании метаданных или сложной сортировке файлов. Именно здесь на сцену выходят специализированные инструменты интеграции, такие как связка <strong>Plex Excel</strong>, позволяющая управлять контентом через привычные электронные таблицы.</p>
+
+<p>Многие пользователи ошибочно полагают, что <em>Plex Excel</em> — это отдельное приложение, которое нужно скачивать и инсталлировать как обычную программу. На самом деле речь идет о комплексе скриптов, плагинов или API-интеграций, которые позволяют экспортировать базу данных сервера в формат <code>.xlsx</code> и импортировать изменения обратно. Такая гибкость открывает новые горизонты для тех, кто ведет учет тысяч файлов и хочет избежать ручной правки каждого названия или года выпуска через браузер.</p>
+
+<p>В этой статье мы детально разберем процесс настройки взаимодействия между вашим сервером и табличными редакторами. Вы узнаете, какие существуют методы реализации этой функции, от использования сторонних плагинов до написания собственных скриптов на Python. <strong>Глубокое понимание</strong> архитектуры <em>Plex API</em> станет ключом к успешной автоматизации вашей медиатеки.</p>
+
+<h2 id="что-представляет-собой-интеграция-plex-и-excel">Что представляет собой интеграция Plex и Excel</h2>
+<p>Интеграция медиасервера с табличными процессорами — это мощный инструмент для администрирования больших библиотек. По сути, <strong>Plex Excel</strong> позволяет выгрузить всю структуру вашей медиатеки, включая пути к файлам, названия, годы, рейтинги и даже информацию об актерах, в структурированном виде. После внесения правок в таблицу данные можно загрузить обратно, обновив метаданные на сервере без необходимости ручного ввода.</p>
+
+<p>Существует несколько подходов к реализации такой связки. Некоторые пользователи используют готовые плагины, которые добавляются в каталог расширений сервера, хотя официальная поддержка плагинов в новых версиях <em>Plex</em> была упразднена. Другие предпочитают использовать скрипты на базе <code>Python</code>, которые обращаются к локальному API сервера. Третий вариант подразумевает использование стороннего ПО для синхронизации баз данных, которое умеет работать с форматом <code>CSV</code> или <code>XLSX</code>.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Прямое редактирование внутренней базы данных SQLite сервера <em>Plex</em> без использования API или специальных инструментов может привести к полной потере метаданных и нестабильной работе системы. Всегда используйте безопасные методы экспорта и импорта.</p>
+</blockquote>
+
+<p>Ключевым преимуществом такого подхода является возможность применения сложных фильтров и формул, недоступных в стандартном интерфейсе. Например, вы можете быстро переименовать сотни файлов по определенному шаблону или найти дубликаты треков, используя функции <strong>Excel</strong>. Это особенно актуально для архивариусов, хранящих редкие записи или специфический контент, требующий тщательной категоризации.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой метод управления библиотекой вы предпочитаете?</strong><ul><li>Веб-интерфейс Plex</li><li>Сторонние приложения (Tautulli и др.)</li><li>Прямое редактирование файлов</li><li>Скрипты и API</li></ul></div></div>
+
+<h2 id="подготовка-среды-для-работы-с-api-plex">Подготовка среды для работы с API Plex</h2>
+<p>Прежде чем приступать к установке каких-либо инструментов для работы с таблицами, необходимо обеспечить правильный доступ к вашему серверу. Основой любой интеграции является <strong>Plex API</strong>, который требует наличия токена доступа. Без этого уникального идентификатора ни один внешний скрипт или плагин не сможет получить права на чтение и запись в вашу библиотеку.</p>
+
+<p>Для начала вам потребуется узнать IP-адрес вашего сервера и порт, на котором он работает. Стандартным портом обычно является <code>32400</code>. Также необходимо сгенерировать токен, который будет действовать как цифровой ключ. Это можно сделать через любой веб-браузер, войдя в свой аккаунт <em>Plex</em> и проверив сетевые запросы, либо воспользовавшись официальными документами для разработчиков.</p>
+
+<ul>
+<li>🔑 Получите ваш персональный токен доступа через страницу настроек аккаунта или инструменты разработчика браузера.</li>
+<li>🌐 Убедитесь, что порт <code>32400</code> открыт для локальной сети или проброшен, если вы планируете удаленное управление.</li>
+<li>💻 Установите последнюю версию <em>Plex Media Server</em> для корректной работы современных методов API.</li>
+<li>🛡️ Создайте резервную копию базы данных перед началом любых экспериментов с импортом данных.</li>
+</ul>
+
+<p>Важно понимать, что безопасность в данном процессе играет первостепенную роль. Токен доступа дает полные права на управление сервером, поэтому его нельзя передавать третьим лицам или использовать в непроверенных скриптах. <strong>Локальная сеть</strong> является наиболее безопасным окружением для проведения таких операций, минимизируя риски внешнего вмешательства.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Сохраните ваш токен доступа в надежном месте, например, в менеджере паролей. Никогда не публикуйте скриншоты с токеном в открытых источниках или на форумах поддержки.</p></div>
+
+<h2 id="методы-установки-и-настройки-подключения">Методы установки и настройки подключения</h2>
+<p>Поскольку официального плагина "Plex Excel" в классическом понимании не существует, под установкой подразумевается настройка инструментария, обеспечивающего эту функциональность. Наиболее распространенным и гибким решением является использование библиотеки <code>PlexAPI</code> для языка <em>Python</em> в связке с библиотеками для работы с таблицами, такими как <code>pandas</code> или <code>openpyxl</code>.</p>
+
+<p>Первым шагом является установка самого языка программирования <em>Python</em> на компьютер, с которого будет производиться управление. После установки необходимо использовать пакетный менеджер <code>pip</code> для загрузки необходимых модулей. Этот процесс требует внимательности, так как версии библиотек должны быть совместимы друг с другом.</p>
+
+<pre><code>pip install plexapi pandas openpyxl requests</code></pre>
+
+<p>Следующим этапом становится создание скрипта-посредника. Этот скрипт будет подключаться к серверу, запрашивать список медиафайлов и сохранять их в файл <code>.xlsx</code>. Аналогично он должен уметь читать измененный файл и отправлять команды обновления метаданных на сервер. Для новичков существуют готовые репозитории на <em>GitHub</em>, где энтузиасты выкладывают свои наработки.</p>
+
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Назначение</th>
+<th>Сложность установки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PlexAPI</td>
+<td>Связь с сервером Plex</td>
+<td>Низкая</td>
+</tr>
+<tr>
+<td>Pandas</td>
+<td>Обработка таблиц Excel</td>
+<td>Средняя</td>
+</tr>
+<tr>
+<td>Python Script</td>
+<td>Логика синхронизации</td>
+<td>Высокая</td>
+</tr>
+<tr>
+<td>CSV Exporter</td>
+<td>Простой экспорт без скриптов</td>
+<td>Низкая</td>
+</tr>
+</tbody>
+</table>
+
+<p>Альтернативой написанию собственного кода может стать использование специализированного ПО, такого как <em>Tautulli</em> (для статистики) или <em>WebTools</em>, которые имеют функции экспорта данных. Однако для двусторонней синхронизации (чтение и запись) чаще всего требуется кастомное решение. <strong>Гибкость</strong> такого подхода позволяет адаптировать процесс под любые, даже самые специфические требования пользователя.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка готовности к установке</h4><label class="check-item"><input type="checkbox"><span>Установлен Python 3.x+:Добавлены пути Python в переменные среды:Получен токен доступа Plex:Создана папка для скриптов и бэкапов</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 1</div></div>
+
+<h2 id="написание-и-запуск-скрипта-синхронизации">Написание и запуск скрипта синхронизации</h2>
+<p>Центральным элементом всей системы является скрипт, который управляет потоком данных. Он должен авторизоваться на сервере, используя ранее полученный токен, и выполнить запрос к конкретной библиотеке. Код должен быть написан так, чтобы корректно обрабатывать ошибки соединения и некорректные данные в таблице.</p>
+
+<p>Внутри скрипта прописывается логика маппинга полей: какой столбец в <em>Excel</em> соответствует какому атрибуту в <strong>Plex</strong>. Например, столбец "Title" должен обновлять название фильма, а "Year" — год выпуска. Ошибка в маппинге может привести к тому, что вместо названия фильма обновится его описание или рейтинг.</p>
+
+<blockquote>
+<p>⚠️ Внимание: При запуске скрипта на обновление метаданных убедитесь, что сервер <em>Plex</em> не выполняет в этот момент задач сканирования библиотеки или транскодирования, чтобы избежать конфликтов блокировок базы данных.</p>
+</blockquote>
+
+<p>Запускать такой скрипт можно как вручную через командную строку, так и автоматически по расписанию. Для автоматизации в операционных системах семейства <em>Windows</em> используется Планировщик задач, а в <em>Linux</em> и <em>macOS</em> — утилита <code>cron</code>. Это позволяет, например, раз в неделю выгружать отчеты или применять пакетные изменения, накопленные в таблице за неделю.</p>
+
+<details class="faq-item"><summary>Пример структуры команды для запуска</summary><div class="faq-answer"><p>Для запуска скрипта используйте команду 'python sync_library.py --library "Movies" --action export'. Аргументы позволяют гибко настраивать целевую библиотеку и направление синхронизации.</p></div></details>
+
+<h2 id="работа-с-метаданными-через-таблицы">Работа с метаданными через таблицы</h2>
+<p>После успешной настройки подключения и запуска скрипта экспорта, вы получите файл, содержащий структурированные данные вашей медиатеки. Работа с ним в <em>Excel</em> или аналогичных программах (LibreOffice Calc, Google Sheets) открывает возможности для мощной аналитики. Вы можете сортировать фильмы по размеру файла, находить треки без обложек или искать дубликаты по названию.</p>
+
+<p>При внесении изменений важно соблюдать форматирование ячеек. Даты должны быть в формате <code>ГГГГ-ММ-ДД</code>, числа — без лишних символов валюты или тысяч. Любое отклонение от ожидаемого формата может привести к тому, что скрипт импорта не сможет корректно распознать данные и пропустит запись или, что хуже, внесет ошибочную информацию.</p>
+
+<ul>
+<li>📊 Используйте фильтры в <em>Excel</em> для быстрого поиска контента с низким рейтингом или недостающими тегами.</li>
+<li>✏️ Массовое редактирование возможно через функцию "Найти и заменить", что удобно для исправления опечаток в именах актеров.</li>
+<li>🔄 После внесения всех правок сохраните файл в том же формате, не меняя структуру заголовков столбцов.</li>
+</ul>
+
+<p>Особое внимание стоит уделить полям, которые <strong>Plex</strong> считает критическими, например, GUID (глобальный уникальный идентификатор). Изменение GUID может привести к тому, что сервер посчитает файл новым и потеряет историю просмотров и прогресс. Поэтому при работе с таблицами лучше оперировать названиями и путями, если вы не уверены в своих действиях.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Самый безопасный способ массового редактирования — изменение только текстовых полей (название, описание), не затрагивая технические идентификаторы и пути к файлам.</p></div>
+
+<h2 id="решение-типичных-проблем-и-ошибок">Решение типичных проблем и ошибок</h2>
+<p>В процессе настройки и эксплуатации системы "Plex Excel" пользователи часто сталкиваются с рядом типичных проблем. Одной из самых распространенных является ошибка авторизации, когда сервер отклоняет запросы из-за неверного токена или истекшего сеанса. В этом случае требуется перегенерировать токен и обновить его в конфигурации скрипта.</p>
+
+<p>Другая частая проблема связана с кодировкой символов. Если в названиях фильмов или описаниях используются нелатинские символы (кириллица, иероглифы), при экспорте или импорте может возникать "каша" из символов. Решение кроется в указании правильной кодировки <code>UTF-8</code> при сохранении файлов <code>.csv</code> или при открытии их в <em>Excel</em>.</p>
+
+<p>Также возможны конфликты версий. Обновление самого <em>Plex Media Server</em> иногда вносит изменения в структуру API, что может привести к неработоспособности старых скриптов. В таких случаях необходимо обновлять используемые библиотеки <code>plexapi</code> до актуальной версии или вносить правки в код скрипта синхронизации.</p>
+
+<details>
+<summary>Что делать, если скрипт перестал находить файлы после переименования папок?</summary>
+<p>Если вы изменили структуру папок на диске, но не обновили пути в базе данных Plex, скрипт не сможет найти файлы. Необходимо сначала выполнить сканирование библиотеки через веб-интерфейс Plex, чтобы сервер обновил свои пути, и только затем проводить экспорт данных в Excel.</p>
+</details>
+
+<details>
+<summary>Можно ли использовать Google Таблицы вместо Excel?</summary>
+<p>Да, это возможно. Скрипт должен уметь работать с Google Sheets API или сохранять промежуточный файл в формате CSV, который совместим с Google Таблицами. Однако прямое редактирование онлайн-таблицы требует более сложной настройки прав доступа и использования облачных API.</p>
+</details>
+
+<details>
+<summary>Безопасно ли запускать такие скрипты на основном сервере?</summary>
+<p>Запуск скриптов на том же устройстве, где работает Plex, создает нагрузку на процессор и оперативную память. Для больших библиотек рекомендуется запускать скрипты синхронизации на отдельном ПК или в Docker-контейнере с ограниченными ресурсами, чтобы не прерывать воспроизведение медиа для других пользователей.</p>
+</details>
+
+<details>
+<summary>Как откатить изменения, если в таблицу были внесены ошибочные данные?</summary>
+<p>Единственный надежный способ отката — это наличие резервной копии базы данных Plex, сделанной перед импортом. Сам по себе Plex не имеет функции "Undo" для массовых изменений метаданных, поэтому бэкап файла базы данных (обычно находящегося в папке Application Support) критически важен.</p>
+</details>
+
+<details>
+<summary>Поддерживается ли работа с музыкальными библиотеками и подкастами?</summary>
+<p>Да, API Plex универсален и позволяет работать с любыми типами библиотек: Movies, TV Shows, Music, Photos. Однако структура метаданных для музыки (альбомы, треки, композиторы) отличается от кино, поэтому скрипт должен иметь отдельные профили маппинга для каждого типа контента.</p>
+</details>
+
+<p>В заключение стоит отметить, что связка <strong>Plex</strong> и <em>Excel</em> — это инструмент для продвинутых пользователей, требующий технической грамотности и осторожности. Правильная настройка позволяет превратить хаотичное хранилище файлов в идеально структурированный архив, управление которым занимает минуты вместо часов ручной работы.</p></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#что-представляет-собой-интеграция-plex-и-excel">Что представляет собой интеграция Plex и Excel</a></li><li><a href="#подготовка-среды-для-работы-с-api-plex">Подготовка среды для работы с API Plex</a></li><li><a href="#методы-установки-и-настройки-подключения">Методы установки и настройки подключения</a></li><li><a href="#написание-и-запуск-скрипта-синхронизации">Написание и запуск скрипта синхронизации</a></li><li><a href="#работа-с-метаданными-через-таблицы">Работа с метаданными через таблицы</a></li><li><a href="#решение-типичных-проблем-и-ошибок">Решение типичных проблем и ошибок</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/p/po/pochemu-vyletaet-prilozhenie-dlya-usb-dvr-registratora.html" class="related-card">Почему вылетает приложение USB DVR? Причины и решения</a></li><li><a href="/a/articles/k/ka/kak-ustanovit-yandeks-v-izbrannoe-na-ajfone.html" class="related-card">Как установить Яндекс в избранное на iPhone: пошаговая инструкция</a></li><li><a href="/a/articles/k/ka/kak-udalit-moi-melodii-s-zvuk-i-vibraciya.html" class="related-card">Как удалить мелодии с Звук и Вибрация: инструкция</a></li><li><a href="/a/articles/k/ka/kak-udalit-servicing-stack-100190414950.html" class="related-card">Удалить Servicing Stack 10.0.19041.4950: Полная инструкция</a></li><li><a href="/a/articles/h/ho/hoco-y20-prilozhenie-dlya-sinhronizacii.html" class="related-card">Hoco Y20: приложение для синхронизации и настройки</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/p/po/pochemu-vyletaet-prilozhenie-dlya-usb-dvr-registratora.html" class="related-bottom-card"><span class="related-bottom-title">Почему вылетает приложение USB DVR? Причины и решения</span><span class="related-bottom-desc">Разбираем, почему вылетает приложение USB DVR на Android. Ошибки кодеков, проблемы с питанием, разре</span></a><a href="/a/articles/k/ka/kak-ustanovit-yandeks-v-izbrannoe-na-ajfone.html" class="related-bottom-card"><span class="related-bottom-title">Как установить Яндекс в избранное на iPhone: пошаговая инструкция</span><span class="related-bottom-desc">Узнайте, как добавить Яндекс в избранное на айфоне через Safari. Полная инструкция по созданию ярлык</span></a><a href="/a/articles/k/ka/kak-udalit-moi-melodii-s-zvuk-i-vibraciya.html" class="related-bottom-card"><span class="related-bottom-title">Как удалить мелодии с Звук и Вибрация: инструкция</span><span class="related-bottom-desc">Пошаговая инструкция: как удалить мелодии с Звук и Вибрация на Android. Удаление рингтонов, очистка </span></a><a href="/a/articles/k/ka/kak-udalit-servicing-stack-100190414950.html" class="related-bottom-card"><span class="related-bottom-title">Удалить Servicing Stack 10.0.19041.4950: Полная инструкция</span><span class="related-bottom-desc">Нужно ли удалять Servicing Stack 10.0.19041.4950? Узнайте, как безопасно очистить систему от старых </span></a><a href="/a/articles/h/ho/hoco-y20-prilozhenie-dlya-sinhronizacii.html" class="related-bottom-card"><span class="related-bottom-title">Hoco Y20: приложение для синхронизации и настройки</span><span class="related-bottom-desc">Какое приложение использовать для Hoco Y20? Полный гид по настройке умных часов через приложение Fit</span></a><a href="/a/articles/a/ap/apkpure-ne-kachaet.html" class="related-bottom-card"><span class="related-bottom-title">APKPure не качает: 7 причин и решение проблемы</span><span class="related-bottom-desc">APKPure не скачивает приложения? Узнайте, почему зависла загрузка, как исправить ошибки DNS и сертиф</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 tehpodskazka.vercel.app2</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 tehpodskazka.vercel.app2. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

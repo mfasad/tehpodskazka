@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Как вернуть исходную версию Astra Linux: полный гид — tehpodskazka.vercel.app2</title>
+    <meta name="description" content="Пошаговая инструкция: откат Astra Linux к заводской версии через LVM, GRUB или LiveCD. Восстановление системы после сбоя обновлений.">
+    <link rel="canonical" href="/a/articles/a/as/astra-linux-kak-vernut-ishodnuyu-versiyu.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как вернуть исходную версию Astra Linux: полный гид">
+    <meta property="og:description" content="Пошаговая инструкция: откат Astra Linux к заводской версии через LVM, GRUB или LiveCD. Восстановление системы после сбоя обновлений.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775560692">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .mobile-only-nav { display: none; }
+    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>tehpodskazka.vercel.app2</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как вернуть исходную версию Astra Linux: полный гид</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Как вернуть исходную версию Astra Linux: инструкция</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#диагностика-текущего-состояния-системы">Диагностика текущего состояния системы</a></li><li><a href="#использование-резервных-копий-и-снапшотов-lvm">Использование резервных копий и снапшотов LVM</a></li><li><a href="#откат-через-меню-загрузчика-grub">Откат через меню загрузчика GRUB</a></li><li><a href="#полный-сброс-к-заводским-настройкам">Полный сброс к заводским настройкам</a></li><li><a href="#восстановление-конфигурационных-файлов">Восстановление конфигурационных файлов</a></li><li><a href="#частые-вопросы-и-проблемы-при-откате">Частые вопросы и проблемы при откате</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>Операционная система <em>Astra Linux</em> зарекомендовала себя как надежное решение для государственных и корпоративных структур, однако даже в самых стабильных средах возникают ситуации, требующие немедленного отката. Часто администраторы сталкиваются с необходимостью вернуть систему к исходному состоянию после неудачного обновления, конфликта драйверов или ошибочной настройки критических параметров безопасности. Восстановление работоспособности — это не просто переустановка, а тонкий процесс, требующий понимания архитектуры <strong>файловой системы</strong> и механизмов загрузки.</p>
+
+<p>Существует несколько проверенных методов возврата к заводским настройкам или предыдущей рабочей версии, каждый из которых зависит от доступности текущей системы и наличия резервных копий. Если <em>GRUB</em> все еще функционирует, задача решается за считанные минуты, тогда как полная неработоспособность требует подключения внешнего носителя. В любом случае, перед началом любых манипуляций необходимо оценить риски потери данных, так как некоторые методы подразумевают <strong>полный сброс</strong> пользовательских данных.</p>
+
+<p>В этой статье мы детально разберем алгоритмы действий для различных сценариев отказа, опираясь на официальные методики поддержки дистрибутива. Вы узнаете, как использовать встроенные инструменты <strong>LVM</strong> для отката снимков системы и как правильно интерпретировать логи загрузчика. Правильное выполнение последовательности действий позволит минимизировать время простоя и избежать необходимости полной переустановки ОС с нуля.</p>
+
+<h2 id="диагностика-текущего-состояния-системы">Диагностика текущего состояния системы</h2>
+<p>Прежде чем приступать к активным действиям по восстановлению, необходимо четко определить масштаб проблемы и текущую версию установленного ПО. Часто пользователи путают необходимость сброса настроек с требованием отката ядра, что приводит к лишним манипуляциям. Первым шагом всегда должна быть попытка входа в систему в режиме восстановления или через консоль, чтобы проверить целостность пакетов.</p>
+
+<p>Для получения точной информации о текущем состоянии используйте команду <code>cat /etc/astra_version</code>, которая выведет точную редакцию и номер сборки. Если система загружается, но работает некорректно, проверьте список установленных обновлений через <code>apt list --upgradable</code>, чтобы выявить последние изменения. В случае, когда система не загружается вообще, потребуется загрузочная флешка с образом <em>Astra Linux</em> той же версии, что была установлена изначально.</p>
+
+<p>Критически важно понимать, какой тип разметки диска используется: стандартная файловая система или логические тома <strong>LVM</strong>. От этого напрямую зависит выбор стратегии восстановления. Если на диске были созданы снапшоты (снимки) перед последними изменениями, процесс пройдет практически безболезненно для данных пользователя.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Попытка отката системы без предварительного резервного копирования важных данных может привести к их безвозвратной утрате. Убедитесь, что копия критичных файлов сохранена на внешнем носителе.</p>
+</blockquote>
+
+<p>Анализ логов загрузчика может подсказать, на каком этапе происходит сбой. Если ошибка возникает на этапе инициализации ядра, возможно, проблема в обновленном <strong>драйвере</strong> или модуле безопасности. В такой ситуации возврат к предыдущей версии ядра через меню GRUB часто является единственным необходимым действием.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой у вас сейчас доступ к системе?</strong><ul><li>Полный доступ к рабочему столу</li><li>Только консоль (TTY)</li><li>Система не загружается вообще</li><li>Загружается LiveCD</li></ul></div></div>
+
+<h2 id="использование-резервных-копий-и-снапшотов-lvm">Использование резервных копий и снапшотов LVM</h2>
+<p>Наиболее цивилизованный и быстрый способ вернуть <em>Astra Linux</em> к исходному состоянию — это использование заранее созданных снапшотов логических томов. Если ваша система размечена с использованием <strong>LVM</strong>, вы имеете возможность мгновенно откатить состояние файловой системы до точки времени, когда снимок был сделан. Это особенно актуально для серверных конфигураций, где важна целостность данных.</p>
+
+<p>Процесс восстановления из снапшота требует загрузки с LiveCD или перехода в режим восстановления. После активации необходимых модулей LVM, вы можете смонтировать том-снимок и заменить текущие данные. Команда <code>lvconvert --merge</code> позволяет объединить снапшот с исходным логическим томом, фактически откатывая все изменения, произведенные с момента создания копии.</p>
+
+<ul>
+<li> 📀 Загрузитесь с установочного носителя <em>Astra Linux</em> или LiveCD.</li>
+<li> 🔍 Инициализируйте LVM командой <code>vgscan</code> и активируйте тома через <code>vgchange -ay</code>.</li>
+<li> 🔄 Выполните слияние снапшота с основным томом для отката изменений.</li>
+<li> 🚀 Перезагрузите систему и проверьте работоспособность сервисов.</li>
+</ul>
+
+<p>Если же вы использовали стандартные инструменты резервного копирования, такие как <code>rsync</code> или <code>tar</code>, процесс займет больше времени. Вам потребуется вручную смонтировать резервную копию и скопировать файлы системных директорий, таких как <code>/bin</code>, <code>/etc</code>, <code>/lib</code> и <code>/usr</code>. При этом крайне важно сохранить права доступа и владельцев файлов, иначе система может стать неработоспособной из-за ошибок прав доступа.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка перед откатом LVM</h4><label class="check-item"><input type="checkbox"><span>Сделан бэкап важных данных</span></label><label class="check-item"><input type="checkbox"><span>Проверено свободное место на диске</span></label><label class="check-item"><input type="checkbox"><span>Определен имя снапшота</span></label><label class="check-item"><input type="checkbox"><span>Подготовлен загрузочный носитель</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>Стоит отметить, что откат базы данных (например, <em>PostgreSQL</em> или <em>1C</em>) вместе с файловой системой может привести к повреждению файлов транзакций, если база работала в момент создания снапшота. В таких случаях рекомендуется останавливать службы баз данных перед созданием точек восстановления или использовать специализированные средства бэкапа СУБД.</p>
+
+<h2 id="откат-через-меню-загрузчика-grub">Откат через меню загрузчика GRUB</h2>
+<p>Самый простой способ исправить ситуацию, когда система перестала загружаться после обновления, — использование предыдущей версии ядра. Загрузчик <strong>GRUB</strong> по умолчанию хранит конфигурации нескольких последних установленных ядер, что позволяет выбрать рабочую версию при старте компьютера. Этот метод не затрагивает пользовательские файлы и настройки приложений.</p>
+
+<p>Для доступа к меню загрузчика необходимо нажать клавишу <code>Shift</code> или <code>Esc</code> сразу после включения компьютера, до появления логотипа <em>Astra Linux</em>. В открывшемся списке выберите пункт «Advanced options for Astra Linux» (Дополнительные параметры), где будет представлен список доступных ядер. Выберите версию с более низким номером, помеченную как <strong>recovery mode</strong> или просто более раннюю стабильную сборку.</p>
+
+<p>Если система успешно загрузилась с предыдущим ядром, следует немедленно удалить проблемное обновление или драйвер, вызвавший конфликт. Используйте команду <code>apt autoremove</code> для очистки системы от ненужных пакетов, связанных с нерабочим ядром. После этого можно обновить конфигурацию GRUB командой <code>update-grub</code>, чтобы сделать загрузку рабочей версии приоритетной по умолчанию.</p>
+
+<table>
+<thead>
+<tr>
+<th>Действие</th>
+<th>Команда / Клавиша</th>
+<th>Результат</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Вызов меню GRUB</td>
+<td><code>Shift</code> или <code>Esc</code></td>
+<td>Отображение списка ОС и ядер</td>
+</tr>
+<tr>
+<td>Выбор ядра</td>
+<td>Навигация стрелками</td>
+<td>Загрузка выбранной версии</td>
+</tr>
+<tr>
+<td>Режим восстановления</td>
+<td>Выбор (recovery mode)</td>
+<td>Запуск с минимальным набором сервисов</td>
+</tr>
+<tr>
+<td>Обновление конфига</td>
+<td><code>update-grub</code></td>
+<td>Фиксация параметров загрузки</td>
+</tr>
+</tbody>
+</table>
+
+<p>В некоторых корпоративных сборках доступ к меню GRUB может быть ограничен паролем или скрыт настройками безопасности <strong>Пакета расширенных средств защиты</strong>. В таком случае потребуется физический доступ к консоли и наличие прав суперпользователя для редактирования файла <code>/etc/default/grub</code> или сброса пароля загрузчика.</p>
+
+<details class="faq-item"><summary>Что делать, если меню GRUB не появляется?</summary><div class="faq-answer"><p>Если меню не появляется автоматически, попробуйте удерживать клавишу Shift сразу после включения питания. На некоторых UEFI-системах может потребоваться быстрое нажатие клавиши Esc. Если это не помогает, возможно, таймаут загрузчика установлен в 0 секунд, и потребуется редактирование конфигурации через LiveCD.</p></div></details>
+
+<h2 id="полный-сброс-к-заводским-настройкам">Полный сброс к заводским настройкам</h2>
+<p>В ситуациях, когда программные ошибки затрагивают критические компоненты системы или были утеряны учетные данные администратора, единственным выходом остается полный сброс. <mark>Полный сброс уничтожает все пользовательские данные, настройки и установленные приложения, возвращая диск в состояние сразу после установки ОС.</mark> Этот метод радикален, но гарантирует чистоту системы.</p>
+
+<p>Если на компьютере установлен механизм быстрой переустановки (например, скрытый раздел восстановления), можно воспользоваться им. Однако в среде <em>Astra Linux</em> чаще всего под возвратом к заводским настройкам подразумевается чистая установка дистрибутива с форматированием системного раздела. Для этого потребуется установочный носитель с образом той же версии и редакции ОС, которая была развернута изначально.</p>
+
+<p>Процесс включает в себя загрузку с USB-накопителя, выбор режима установки и разметку дисков. На этапе выбора типа установки важно выбрать опцию «Стереть диск и установить Astra Linux» или вручную отформатировать корневой раздел <code>/</code>. Будьте предельно внимательны при выборе диска, чтобы не удалить данные с соседних разделов, если они содержат важную информацию.</p>
+
+<ul>
+<li> 💿 Подготовьте загрузочную флешку с ISO-образом <em>Astra Linux</em>.</li>
+<li> ⚙️ Загрузитесь с флешки и запустите установку.</li>
+<li> 🗑️ На этапе разметки выберите очистку целевого раздела.</li>
+<li> ✅ Завершите установку и настройте систему заново.</li>
+</ul>
+
+<p>После переустановки необходимо восстановить данные из резервной копии. Если вы использовали сетевые профили или централизованное хранение настроек, процесс первичной настройки пройдет значительно быстрее. Не забудьте сразу же установить все актуальные обновления безопасности, чтобы закрыть уязвимости, присутствовавшие в исходном образе дистрибутива.</p>
+
+<blockquote>
+<p>⚠️ Внимание: При полной переустановке системы сбрасываются не только файлы, но и аппаратные ключи защиты (если они программно привязаны к установке), что может потребовать повторной активации лицензий.</p>
+</blockquote>
+
+<h2 id="восстановление-конфигурационных-файлов">Восстановление конфигурационных файлов</h2>
+<p>Часто проблема кроется не в системных бинарных файлах, а в ошибочных настройках, внесенных в конфигурационные файлы. <em>Astra Linux</em>, как и большинство дистрибутивов на базе Debian, имеет механизм сохранения оригинальных конфигов при обновлении пакетов. При установке новой версии пакета старый конфиг может быть переименован с расширением <code>.dpkg-old</code> или <code>.dpkg-dist</code>.</p>
+
+<p>Для поиска таких файлов можно использовать утилиту <code>find</code> с поиском по расширениям в директории <code>/etc</code>. Например, команда <code>find /etc -name "*.dpkg-old"</code> покажет сохраненные копии. Сравнение текущего файла и сохраненного оригинала с помощью <code>diff</code> поможет понять, какие именно изменения привели к нестабильной работе.</p>
+
+<p>Если ручное восстановление не дает результата, можно переустановить конкретный пакет, содержащий проблемный конфиг, с опцией принудительного возврата настроек по умолчанию. Команда <code>apt install --reinstall -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" package_name</code> позволит заменить файлы конфигурации на стандартные без удаления самого пакета.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте утилиту etckeeper для автоматического отслеживания изменений в /etc через Git. Это позволит в любой момент откатить изменения конфигурационных файлов к предыдущему коммиту.</p></div>
+
+<p>Особое внимание следует уделить файлам, связанным с политикой безопасности <strong>Пакета расширенных средств защиты</strong>. Некорректное изменение уровней доступа или меток может заблокировать работу приложений. В таких случаях может потребоваться сброс политик безопасности к значениям по умолчанию с помощью специализированных утилит администрирования безопасности.</p>
+
+<h2 id="частые-вопросы-и-проблемы-при-откате">Частые вопросы и проблемы при откате</h2>
+<p>Процесс возврата системы к исходному состоянию может сталкиваться с различными техническими препятствиями. Ниже приведены ответы на наиболее распространенные вопросы, возникающие у администраторов при выполнении этих операций. Понимание нюансов поможет избежать типичных ошибок.</p>
+
+<p>Одной из частых проблем является несовместимость версий ядра и модулей безопасности. Если вы откатываете ядро, убедитесь, что соответствующие модули <em>A</div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#диагностика-текущего-состояния-системы">Диагностика текущего состояния системы</a></li><li><a href="#использование-резервных-копий-и-снапшотов-lvm">Использование резервных копий и снапшотов LVM</a></li><li><a href="#откат-через-меню-загрузчика-grub">Откат через меню загрузчика GRUB</a></li><li><a href="#полный-сброс-к-заводским-настройкам">Полный сброс к заводским настройкам</a></li><li><a href="#восстановление-конфигурационных-файлов">Восстановление конфигурационных файлов</a></li><li><a href="#частые-вопросы-и-проблемы-при-откате">Частые вопросы и проблемы при откате</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/c/ch/chto-takoe-wapi-na-ajfone-15-pro.html" class="related-card">Что такое WAPI на iPhone 15 Pro: функции и включение</a></li><li><a href="/a/articles/c/ch/chem-otlichaetsya-tema-ot-oboev.html" class="related-card">Чем тема отличается от обоев: полный разбор кастомизации</a></li><li><a href="/a/articles/k/ka/kak-sohranit-kartinku-v-yandeks-brauzere-na-ajfone.html" class="related-card">Как сохранить картинку в Яндекс Браузере на iPhone: инструкция</a></li><li><a href="/a/articles/h/hu/huayu-rm-l1130-8-kak-nastroit.html" class="related-card">Huayu RM L1130 8: полная инструкция по настройке пульта</a></li><li><a href="/a/articles/k/ka/kakcomubratcomdemo-rolik-na-televizope-hisense.html" class="related-card">Как убрать демо-ролик на телевизоре Hisense: полное руководство</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/c/ch/chto-takoe-wapi-na-ajfone-15-pro.html" class="related-bottom-card"><span class="related-bottom-title">Что такое WAPI на iPhone 15 Pro: функции и включение</span><span class="related-bottom-desc">Полный разбор WAPI на iPhone 15 Pro. Узнайте, как включить китайский стандарт Wi-Fi, в чем разница с</span></a><a href="/a/articles/c/ch/chem-otlichaetsya-tema-ot-oboev.html" class="related-bottom-card"><span class="related-bottom-title">Чем тема отличается от обоев: полный разбор кастомизации</span><span class="related-bottom-desc">Подробный анализ отличий тем от обоев. Узнайте, как элементы интерфейса влияют на батарею, функциона</span></a><a href="/a/articles/k/ka/kak-sohranit-kartinku-v-yandeks-brauzere-na-ajfone.html" class="related-bottom-card"><span class="related-bottom-title">Как сохранить картинку в Яндекс Браузере на iPhone: инструкция</span><span class="related-bottom-desc">Подробная инструкция, как сохранить изображение в Яндекс Браузере на Айфоне. Решения проблем, настро</span></a><a href="/a/articles/h/hu/huayu-rm-l1130-8-kak-nastroit.html" class="related-bottom-card"><span class="related-bottom-title">Huayu RM L1130 8: полная инструкция по настройке пульта</span><span class="related-bottom-desc">Подробное руководство по сопряжению, кодам и управлению приставкой Huayu RM L1130 8. Решение проблем</span></a><a href="/a/articles/k/ka/kakcomubratcomdemo-rolik-na-televizope-hisense.html" class="related-bottom-card"><span class="related-bottom-title">Как убрать демо-ролик на телевизоре Hisense: полное руководство</span><span class="related-bottom-desc">Подробная инструкция по отключению демонстрационного режима на телевизорах Hisense. Методы сброса че</span></a><a href="/a/articles/k/ka/kak-razreshit-ajfonu-poisk-printerov-v-seti-po-ip-adresu.html" class="related-bottom-card"><span class="related-bottom-title">Как подключить принтер к iPhone по IP: полная инструкция</span><span class="related-bottom-desc">Узнайте, как настроить поиск принтера по IP на iPhone. Решение проблем с AirPrint, ручная установка </span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 tehpodskazka.vercel.app2</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 tehpodskazka.vercel.app2. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>
