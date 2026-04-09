@@ -17,7 +17,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/a/static/css/style.css?v=1775569404">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -290,12 +290,51 @@
             .tag-btn { font-size: 0.8rem; padding: 6px 12px; }
         }
     </style>
+    <!--#include virtual="/ssi/head.html" -->
 </head>
 <body class="is-home">
+        <!--#include virtual="/ssi/body_top.html" -->
     <div class="reading-progress"></div>
     <style>
-    .mobile-only-nav { display: none; }
-    @media (max-width: 768px) { .mobile-only-nav { display: block; } }
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
     </style>
     <header class="site-header">
         <div class="container header-inner">
@@ -309,13 +348,20 @@
 <a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
 <a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
 <a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
-<a href="/a/category/striming-i-kino/" class="nav-link">🎬 Стриминг и Кино</a>
-<a href="/a/category/svyaz-i-operatory/" class="nav-link">📡 Связь и Операторы</a>
-<a href="/a/category/soft-i-prilozheniya/" class="nav-link mobile-only-nav">📲 Софт и Приложения</a>
-<a href="/a/category/audio-i-gadzhety/" class="nav-link mobile-only-nav">🎧 Аудио и Гаджеты</a>
-<a href="/a/category/akkaunty-i-bezopasnost/" class="nav-link mobile-only-nav">🔒 Аккаунты и Безопасность</a>
-<a href="/a/category/igry-i-razvlecheniya/" class="nav-link mobile-only-nav">🎮 Игры и Развлечения</a>
-<a href="/a/category/drugoe/" class="nav-link mobile-only-nav">📁 Другое</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
             </nav>
         </div>
     </header>
@@ -594,7 +640,7 @@
 
 
     <script>
-    function artUrl(s) { var l=s.toLowerCase(); return '/a/articles/'+l[0]+'/'+l.substring(0,Math.min(2,l.length))+'/'+s+'.html'; }
+    function artUrl(s, c) {  var l=s.toLowerCase(); return '/a/articles/'+l[0]+'/'+l.substring(0,Math.min(2,l.length))+'/'+s+'.html'; }
     (function() {
         document.getElementById('menuBtn')?.addEventListener('click', () => {
             document.getElementById('mainNav')?.classList.toggle('open');
@@ -617,7 +663,7 @@
                 var item = shuffled[0];
                 var card = document.getElementById('popularCard');
                 if (card && item) {
-                    card.href = artUrl(item.slug);
+                    card.href = artUrl(item.slug, item.catSlug || '');
                     document.getElementById('popularTitle').textContent = item.title;
                     document.getElementById('popularDesc').textContent = item.desc;
                     document.getElementById('popularIcon').textContent = item.icon;
@@ -628,7 +674,7 @@
                 if (recentContainer) {
                     const recentItems = shuffled.slice(1, 8);
                     recentContainer.innerHTML = recentItems.map(a => `
-                        <a href="${artUrl(a.slug)}" class="recent-card">
+                        <a href="${artUrl(a.slug, a.catSlug || '')}" class="recent-card">
                             <span class="recent-badge">новое</span>
                             <div class="recent-title">${a.title}</div>
                             <span class="recent-cat">${a.icon} ${a.cat}</span>
@@ -641,7 +687,7 @@
                 if (popContainer) {
                     const top15 = shuffled.slice(8, 23);
                     popContainer.innerHTML = top15.map(a => `
-                        <a href="${artUrl(a.slug)}" class="article-home-card">
+                        <a href="${artUrl(a.slug, a.catSlug || '')}" class="article-home-card">
                             <div class="article-home-title">${a.title}</div>
                             <div class="article-home-desc">${a.desc}</div>
                             <span class="article-home-tag">${a.icon} ${a.cat}</span>
@@ -713,7 +759,7 @@
                     chunkCache[prefix]=data.map(item=>({
                         s:item.s, t:(item.t||'').normalize('NFC'),
                         i:item.i||'📄',
-                        tl:(item.t||'').normalize('NFC').toLowerCase(),
+                        tl:(item.t||'').normalize('NFC').toLowerCase(), c:item.c||'',
                         sl:(item.s||'').toLowerCase()
                     }));
                     cb(chunkCache[prefix]);
@@ -733,9 +779,9 @@
                     dd.innerHTML = '<div class="sd-empty">🔍 Ничего не найдено</div>';
                 } else {
                     dd.innerHTML = results.map(item =>
-                        '<a href="' + artUrl(item.s) + '" class="sd-item"><div class="sd-icon">' + item.i +
+                        '<a href="' + artUrl(item.s, item.c) + '" class="sd-item"><div class="sd-icon">' + item.i +
                         '</div><div class="sd-info"><div class="sd-title">' + item.t +
-                        '</div><div class="sd-slug">' + artUrl(item.s) + '</div></div></a>'
+                        '</div><div class="sd-slug">' + artUrl(item.s, item.c) + '</div></div></a>'
                     ).join('');
                 }
                 dd.style.display = 'block'; activeIdx = -1;
@@ -758,5 +804,7 @@
         document.addEventListener('click', e => { if(!e.target.closest('.search-hero')) { dd.style.display='none'; activeIdx=-1; } });
     })();
     </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
 </body>
 </html>

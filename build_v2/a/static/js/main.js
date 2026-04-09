@@ -133,6 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             s: item.s,
                             t: title,
                             i: item.i || '📄',
+                            c: item.c || '',
                             tl: title.toLowerCase(),
                             sl: (item.s || '').toLowerCase()
                         };
@@ -168,7 +169,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     dd.innerHTML = '<div class="sd-empty">🔍 Ничего не найдено</div>';
                 } else {
                     dd.innerHTML = results.map(function(item) {
-                        return '<a href="/a/' + item.s + '.html" class="sd-item">' +
+                        var url = item.c
+                            ? '/a/' + item.c + '/' + item.s + '.html'
+                            : '/a/' + item.s + '.html';
+                        return '<a href="' + url + '" class="sd-item">' +
                             '<div class="sd-icon">' + item.i + '</div>' +
                             '<div class="sd-title">' + item.t + '</div>' +
                             '</a>';
