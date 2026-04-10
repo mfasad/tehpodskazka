@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Драйвер ext4 для Windows 10: установка и чтение разделов Linux — ТехПодсказка</title>
+    <meta name="description" content="Как открыть разделы ext4 в Windows 10? Обзор драйверов, программ и методов безопасного доступа к файловым системам Linux без потери данных.">
+    <link rel="canonical" href="/a/articles/d/dr/drajver-ext4-dlya-windows-10.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Драйвер ext4 для Windows 10: установка и чтение разделов Linux">
+    <meta property="og:description" content="Как открыть разделы ext4 в Windows 10? Обзор драйверов, программ и методов безопасного доступа к файловым системам Linux без потери данных.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/windows-i-pk/">Windows и ПК</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Драйвер ext4 для Windows 10: установка и чтение разделов Linux</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Драйвер ext4 для Windows 10: полный гайд по доступу к разделам Linux</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#почему-windows-не-видит-ext4-и-как-это-работает">Почему Windows не видит ext4 и как это работает</a></li><li><a href="#обзор-популярных-драйверов-и-утилит-для-доступа">Обзор популярных драйверов и утилит для доступа</a></li><li><a href="#инструкция-установка-и-настройка-ext2fsd">Инструкция: установка и настройка Ext2Fsd</a></li><li><a href="#использование-wsl-2-для-монтирования-дисков">Использование WSL 2 для монтирования дисков</a></li><li><a href="#сравнение-методов-доступа-к-данным">Сравнение методов доступа к данным</a></li><li><a href="#проблемы-совместимости-и-безопасность-данных">Проблемы совместимости и безопасность данных</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>Операционная система Windows доминирует на десктопах, но файловая система <strong>NTFS</strong>, которую она использует по умолчанию, не способна нативно читать или записывать данные на разделах с файловой системой <em>ext4</em>. Эта ситуация часто ставит пользователей в тупик, когда возникает необходимость скопировать файлы с Linux-сервера, внешнего жесткого диска или Raspberry Pi, подключенного к ПК. Стандартными средствами проводника Explorer увидеть такие диски невозможно, система их просто игнорирует или предлагает отформатировать.</p>
+
+<p>Для решения этой проблемы требуется сторонний программный слой, часто называемый в обиходе «драйвер ext4 для Windows 10». На самом деле, речь идет о файловых фильтрах или утилитах-трансляторах, которые позволяют ОС понимать структуру каталогов Linux. <strong>Безопасность данных</strong> при использовании таких инструментов стоит на первом месте, так как некорректная работа драйвера может привести к повреждению файловой таблицы.</p>
+
+<p>В этой статье мы разберем проверенные методы доступа, сравним бесплатные и платные решения, а также рассмотрим риски, связанные с записью данных на чужеродные разделы. Вы узнаете, как правильно смонтировать диск, чтобы избежать потери информации, и какие альтернативы существуют для разового копирования файлов.</p>
+
+<h2 id="почему-windows-не-видит-ext4-и-как-это-работает">Почему Windows не видит ext4 и как это работает</h2>
+<p>Фундаментальная несовместимость кроется в архитектуре файловых систем. Microsoft разрабатывает Windows с упором на <strong>NTFS</strong> и <em>FAT32/exFAT</em>, в то время как мир Linux, включая дистрибутивы вроде Ubuntu, Debian и Fedora, использует семейство <em>ext</em> (ext2, ext3, ext4). <strong>Ядро Windows</strong> не содержит встроенных модулей для интерпретации inode-ов, журналов транзакций и прав доступа Unix, которые критически важны для ext4.</p>
+
+<p>Когда вы подключаете диск с ext4, диспетчер устройств может распознать физическое наличие накопителя, но логический уровень остается недоступным. Попытка форматирования через стандартный интерфейс — это верный способ уничтожить все данные. Для корректной работы необходим промежуточный слой, который транслирует запросы файловой системы Windows в команды, понятные Linux-разделу.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Никогда не соглашайтесь на предложение Windows отформатировать диск, если вы видите сообщение о том, что диск не отформатирован, но знаете, что там хранятся данные Linux. Это приведет к безвозвратной потере информации.</p>
+</blockquote>
+
+<p>Существует два основных подхода к решению: использование специализированных драйверов, интегрирующихся в систему, и применение утилит для конвертации или извлечения данных. Первый вариант дает прозрачный доступ через «Мой компьютер», второй требует ручного экспорта файлов.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой у вас опыт работы с Linux-разделами в Windows?</strong><ul><li>Никогда не пробовал/ась</li><li>Использовал(а) WSL</li><li>Ставил(а) сторонние драйверы</li><li>Пользуюсь виртуальной машиной</li></ul></div></div>
+
+<h2 id="обзор-популярных-драйверов-и-утилит-для-доступа">Обзор популярных драйверов и утилит для доступа</h2>
+<p>Рынок программного обеспечения предлагает несколько решений, каждое из которых имеет свои особенности. Лидером уже много лет остается пакет <em>Ext2Fsd</em>, который является проектом с открытым исходным кодом. Он внедряет настоящий драйвер в систему, позволяя назначать буквы дисков разделам ext4. Однако, его поддержка в Windows 10 и 11 может быть нестабильной, требуя ручного вмешательства в реестр или отключения подписи драйверов.</p>
+
+<p>Альтернативой выступают коммерческие продукты, такие как <em>Paragon ExtFS</em> или <em>Ext2Fsd</em> в различных сборках. Они обеспечивают более высокий уровень стабильности и поддерживают современные функции, такие как <strong>журналирование</strong> и работа с большими объемами данных. Бесплатные версии часто ограничены только чтением, что является разумным компромиссом для безопасности.</p>
+
+<ul>
+<li>🔹 <strong>Ext2Fsd</strong>: бесплатный драйвер с открытым кодом, поддерживает чтение и запись, но сложен в настройке для новичков.</li>
+<li>🔹 <strong>Paragon ExtFS</strong>: платное решение с пробным периодом, отличается высокой скоростью и стабильностью, автоматически монтирует разделы.</li>
+<li>🔹 <strong>Linux Reader</strong>: утилита только для чтения, не требует установки драйверов, безопасна для неопытных пользователей, работает как проводник.</li>
+<li>🔹 <strong>WSL 2 (Windows Subsystem for Linux)</strong>: нативный метод от Microsoft для разработчиков, позволяющий монтировать диски через командную строку.</li>
+</ul>
+
+<p>Выбор инструмента зависит от ваших задач. Если нужно просто скопировать пару фотографий, sufficeit будет бесплатной программы для чтения. Для постоянной работы с двумя ОС лучше рассмотреть платные драйверы или настройку WSL.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если вам нужен доступ к файлам лишь эпизодически, используйте portable-версии программ вроде Linux Reader. Это избавит систему от установки лишних драйверов, которые могут конфликтовать при обновлении Windows.</p></div>
+
+<h2 id="инструкция-установка-и-настройка-ext2fsd">Инструкция: установка и настройка Ext2Fsd</h2>
+<p>Процесс установки драйвера <em>Ext2Fsd</em> требует внимательности, так как ошибка на этапе конфигурации может привести к тому, что диск останется невидимым. После загрузки установщика с официального репозитория, запустите его от имени администратора. В процессе инсталляции система безопасности Windows может выдать предупреждение о неизвестном издателе — это стандартная реакция на драйверы с открытым кодом без цифровой подписи Microsoft.</p>
+
+<p>Ключевой момент — настройка параметров монтирования. После установки необходимо запустить <code>Ext2 Volume Manager</code>. В списке устройств найдите свой Linux-раздел. Нажмите правой кнопкой мыши и выберите «Change Drive Letter». Здесь важно правильно указать букву и, что критически важно, снять галочку с опции автоматического монтирования, если вы не уверены в стабильности системы, чтобы избежать конфликтов при загрузке.</p>
+
+<div class="checklist-block"><h4>☑️ Чек-лист перед установкой драйвера</h4><label class="check-item"><input type="checkbox"><span>Сделайте резервную копию важных данных</span></label><label class="check-item"><input type="checkbox"><span>Отключите антивирус на время установки драйвера</span></label><label class="check-item"><input type="checkbox"><span>Убедитесь, что у вас есть права администратора</span></label><label class="check-item"><input type="checkbox"><span>Запомните букву диска до установки, чтобы не перепутать разделы</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>Для активации поддержки ext4 в старых версиях драйвера может потребоваться ручное редактирование реестра или запуск специального скрипта, который обычно лежит в папке с документами программы. После перезагрузки диск должен появиться в проводнике. Если этого не произошло, проверьте <strong>Диспетчер устройств</strong> на наличие устройств с восклицательным знаком.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Функция записи в ext4 через Ext2Fsd в Windows 10 может работать некорректно с журналами (journals). Принудительное включение записи без понимания рисков может привести к рассинхронизации файловой системы при следующем запуске Linux.</p>
+</blockquote>
+
+<details class="faq-item"><summary>Что делать, если драйвер не подписан?</summary><div class="faq-answer"><p>В Windows 10 и 11 действует строгая политика безопасности. Если драйвер не имеет цифровой подписи, система блокирует его загрузку. Для установки таких драйверов (как Ext2Fsd) необходимо временно отключить проверку подписи драйверов. Для этого зайдите в Параметры -> Обновление и безопасность -> Восстановление -> Особые варианты загрузки -> Перезагрузить сейчас. Затем выберите Поиск и устранение неисправностей -> Дополнительные параметры -> Параметры загрузки -> Перезагрузить. Нажмите F7 для отключения обязательной проверки подписи драйверов.</p></div></details>
+
+<h2 id="использование-wsl-2-для-монтирования-дисков">Использование WSL 2 для монтирования дисков</h2>
+<p>Современный и наиболее «родной» способ работы с Linux-разделами в Windows 10 (версии 2004 и выше) — использование подсистемы <strong>WSL 2</strong>. Этот метод не требует установки сторонних драйверов, так как используется настоящее ядро Linux, встроенное в Windows. Это обеспечивает максимальную совместимость и безопасность данных.</p>
+
+<p>Для начала работы необходимо установить WSL 2 через Microsoft Store или командную строку. После установки и обновления ядра Linux, вы можете смонтировать физический диск. Откройте PowerShell от имени администратора и используйте команду для обнаружения дисков:</p>
+
+<pre><code>wsl --list --verbose</code></pre>
+
+<p>Затем, чтобы смонтировать конкретный раздел, используется команда <code>mount</code> внутри WSL или специальная команда проброса диска. Например, для монтирования раздела можно использовать синтаксис:</p>
+
+<pre><code>wsl --mount \\.\PhysicalDrive1 --partition 1 --type ext4</code></pre>
+
+<p>После выполнения команды раздел станет доступен внутри файловой системы WSL по пути <code>/mnt/wsl/</code>. Оттуда вы можете копировать файлы в папку Windows или работать с ними напрямую через терминал. Этот метод идеален для разработчиков и системных администраторов.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>WSL 2 — это единственный метод, гарантирующий 100% целостность сложных структур ext4, включая расширенные атрибуты и права доступа, без риска повреждения данных со стороны Windows.</p></div>
+
+<h2 id="сравнение-методов-доступа-к-данным">Сравнение методов доступа к данным</h2>
+<p>Выбор инструмента зависит от частоты использования и уровня вашей технической подготовки. Драйверы уровня ядра дают удобство, но несут риски стабильности. Утилиты для чтения безопаснее, но менее функциональны. WSL 2 требует навыков командной строки, но提供最лучшую совместимость.</p>
+
+<table>
+<thead>
+<tr>
+<th>Метод</th>
+<th>Тип доступа</th>
+<th>Сложность</th>
+<th>Риск потери данных</th>
+<th>Стоимость</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ext2Fsd</td>
+<td>Чтение/Запись</td>
+<td>Высокая</td>
+<td>Средний</td>
+<td>Бесплатно</td>
+</tr>
+<tr>
+<td>Paragon ExtFS</td>
+<td>Чтение/Запись</td>
+<td>Низкая</td>
+<td>Низкий</td>
+<td>Платно</td>
+</tr>
+<tr>
+<td>Linux Reader</td>
+<td>Только чтение</td>
+<td>Низкая</td>
+<td>Минимальный</td>
+<td>Бесплатно</td>
+</tr>
+<tr>
+<td>WSL 2</td>
+<td>Чтение/Запись</td>
+<td>Средняя</td>
+<td>Минимальный</td>
+<td>Бесплатно</td>
+</tr>
+</tbody>
+</table>
+
+<p>Для разовых операций извлечения файлов лучше всего подходят программы вроде <em>Linux Reader</em> или <em>DiskInternals Linux Reader</em>. Они работают в режиме «только чтение», что исключает случайную порчу структуры файлов. Вы просто открываете программу, видите свои файлы и перетаскиваете их на диск Windows.</p>
+
+<h2 id="проблемы-совместимости-и-безопасность-данных">Проблемы совместимости и безопасность данных</h2>
+<p>Главная проблема при работе с ext4 из-под Windows — это игнорирование прав доступа и владельцев файлов (<strong>permissions</strong> и <em>ownership</em>). Файловая система NTFS использует ACL (списки управления доступом), которые принципиально отличаются от битов прав Unix (rwx). При копировании файлов на Windows эти метаданные часто теряются или транслируются неправильно.</p>
+
+<p>Кроме того, Windows агрессивно кэширует операции записи. Если драйвер ext4 не умеет правильно обрабатывать сброс кэша, при внезапном отключении питания или сбое системы файл может оказаться поврежденным. В Linux журналирование спасает от таких ситуаций, но драйверы для Windows часто упрощают этот механизм ради производительности.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Не используйте раздел ext4, смонтированный в Windows, для хранения временных файлов системы, логов или баз данных, которые одновременно используются Linux-машиной. Двойной доступ (dual access) к одному разделу с двух разных ОС одновременно запрещен и гарантированно приведет к коррупции данных.</p>
+</blockquote>
+
+<p>Если вы планируете часто обмениваться данными между Windows и Linux, рассмотрите создание отдельного раздела в формате <em>exFAT</em>. Эта файловая система нативно поддерживается обоими ОС, не имеет проблем с правами доступа для обычных файлов и работает быстро.</p>
+
+<details class="faq-item"><summary>Почему нельзя просто отключить журналирование ext4?</summary><div class="faq-answer"><p>Некоторые пользователи советуют отключить журналирование (uncommon feature) для ускорения работы или совместимости. Делать этого категорически нельзя. Журнал (journal) — это механизм защиты от сбоев. Без него при любом зависании вы потеряете не только несохраненные данные, но и структуру файловой системы, что потребует долгого восстановления через fsck.</p></div></details>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+<details>
+<summary>Можно ли установить ext4 как системный раздел для загрузки Windows?</summary>
+<p>Нет, Windows не умеет загружаться с раздела ext4. Загрузчик Windows (Boot Manager) и ядро ОС требуют файловую систему NTFS или FAT для работы системных файлов. Попытка установить Windows на ext4 невозможна без эмуляции, которая будет работать крайне медленно.</p>
+</details>
+
+<details>
+<summary>Безопасно ли использовать драйвер Ext2Fsd на Windows 11?</summary>
+<p>Использование Ext2Fsd на Windows 11 сопряжено с рисками. Из-за обновленной системы безопасности и требований к подписи драйверов, он может не запуститься без сложных манипуляций с групповыми политиками. Для Windows 11 предпочтительнее использовать WSL 2 или платные аналоги.</p>
+</details>
+
+<details>
+<summary>Как восстановить права доступа к файлам после копирования в Linux?</summary>
+<p>При копировании с ext4 на NTFS права доступа теряются. После возврата файлов обратно в Linux вам придется вручную восстановить владельца и права, используя команды <code>chown</code> и <code>chmod</code>. Автоматического сохранения этих атрибутов в NTFS не происходит.</p>
+</details>
+
+<details>
+<summary>Почему скорость копирования с ext4 в Windows низкая?</summary>
+<p>Скорость может быть низкой из-за особенностей трансляции файловых запросов, фрагментации или работы антивируса, который проверяет каждый читаемый файл. Кроме того, драйверы могут не использовать многопоточность в полной мере, как это делает нативный контроллер Linux.</p>
+</details>
+
+<details>
+<summary>Можно ли отформатировать флешку в ext4 для использования на Windows?</summary>
+<p>Технически можно, но без установленного драйвера Windows не увидит файлы на флешке. Для переносных накопителей, используемых на разных ОС, стандартом де-факто является <em>exFAT</em>, который не требует установки дополнительного ПО и поддерживает файлы размером более 4 ГБ.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#почему-windows-не-видит-ext4-и-как-это-работает">Почему Windows не видит ext4 и как это работает</a></li><li><a href="#обзор-популярных-драйверов-и-утилит-для-доступа">Обзор популярных драйверов и утилит для доступа</a></li><li><a href="#инструкция-установка-и-настройка-ext2fsd">Инструкция: установка и настройка Ext2Fsd</a></li><li><a href="#использование-wsl-2-для-монтирования-дисков">Использование WSL 2 для монтирования дисков</a></li><li><a href="#сравнение-методов-доступа-к-данным">Сравнение методов доступа к данным</a></li><li><a href="#проблемы-совместимости-и-безопасность-данных">Проблемы совместимости и безопасность данных</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/w/wi/windows-8-schelchki-pri-vosproizvedenii-zvuka.html" class="related-card">Щелчки при воспроизведении звука в Windows 8: устранение за 5 шагов</a></li><li><a href="/a/articles/d/de/demontazh-kompyuternoj-rozetki-video.html" class="related-card">Демонтаж компьютерной розетки: видео-инструкция и советы</a></li><li><a href="/a/articles/k/ka/kak-pereimenovat-uchyotnuyu-zapis-v-windows-11.html" class="related-card">Как переименовать учетную запись в Windows 11: все способы</a></li><li><a href="/a/articles/t/tp/tpn-c126-drajvery-dlya-windows-7.html" class="related-card">TPN-C126 драйверы Windows 7: полная инструкция по установке</a></li><li><a href="/a/articles/k/ka/kak-podklyuchit-dvd-privod-ot-noutbuka-k-kompyuteru-shema.html" class="related-card">Как подключить DVD привод ноутбука к ПК: схема и инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/w/wi/windows-8-schelchki-pri-vosproizvedenii-zvuka.html" class="related-bottom-card"><span class="related-bottom-title">Щелчки при воспроизведении звука в Windows 8: устранение за 5 шагов</span><span class="related-bottom-desc">Почему трещит звук в Windows 8? Полный гид по устранению щелчков, треска и прерываний аудио через на</span></a><a href="/a/articles/d/de/demontazh-kompyuternoj-rozetki-video.html" class="related-bottom-card"><span class="related-bottom-title">Демонтаж компьютерной розетки: видео-инструкция и советы</span><span class="related-bottom-desc">Как безопасно снять розетку RJ-45? Подробное руководство, видео-примеры демонтажа и типичные ошибки </span></a><a href="/a/articles/k/ka/kak-pereimenovat-uchyotnuyu-zapis-v-windows-11.html" class="related-bottom-card"><span class="related-bottom-title">Как переименовать учетную запись в Windows 11: все способы</span><span class="related-bottom-desc">Полная инструкция по смене имени пользователя в Windows 11. Разбор методов для локальных и Microsoft</span></a><a href="/a/articles/t/tp/tpn-c126-drajvery-dlya-windows-7.html" class="related-bottom-card"><span class="related-bottom-title">TPN-C126 драйверы Windows 7: полная инструкция по установке</span><span class="related-bottom-desc">Где скачать TPN-C126 драйверы для Windows 7? Руководство по установке, поиску ID оборудования и реше</span></a><a href="/a/articles/k/ka/kak-podklyuchit-dvd-privod-ot-noutbuka-k-kompyuteru-shema.html" class="related-bottom-card"><span class="related-bottom-title">Как подключить DVD привод ноутбука к ПК: схема и инструкция</span><span class="related-bottom-desc">Подробная схема подключения DVD привода от ноутбука к компьютеру через SATA или USB. Разбор пинов, п</span></a><a href="/a/articles/k/ka/kak-na-kompyutere-sdelat-skrinshot-ekrana-s-pomoschyu-klaviatury.html" class="related-bottom-card"><span class="related-bottom-title">Как сделать скриншот на клавиатуре: все способы для Windows</span><span class="related-bottom-desc">Подробный гид: как сделать скриншот экрана на компьютере с помощью клавиатуры. Сочетания клавиш Prin</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

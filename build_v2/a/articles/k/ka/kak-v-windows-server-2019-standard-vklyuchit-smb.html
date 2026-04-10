@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Как включить SMB в Windows Server 2019: полная инструкция — ТехПодсказка</title>
+    <meta name="description" content="Пошаговое руководство: активация протокола SMB 1.0 и 2.0/3.0 на Windows Server 2019 Standard. Настройка роли File Services, PowerShell и безопасность.">
+    <link rel="canonical" href="/a/articles/k/ka/kak-v-windows-server-2019-standard-vklyuchit-smb.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как включить SMB в Windows Server 2019: полная инструкция">
+    <meta property="og:description" content="Пошаговое руководство: активация протокола SMB 1.0 и 2.0/3.0 на Windows Server 2019 Standard. Настройка роли File Services, PowerShell и безопасность.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/windows-i-pk/">Windows и ПК</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как включить SMB в Windows Server 2019: полная инструкция</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Включение протокола SMB на Windows Server 2019: полное руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#анализ-текущего-состояния-протокола-smb">Анализ текущего состояния протокола SMB</a></li><li><a href="#активация-роли-файлового-сервера-через-диспетчер">Активация роли файлового сервера через диспетчер</a></li><li><a href="#настройка-smb-10-для-legacy-систем">Настройка SMB 1.0 для legacy-систем</a></li><li><a href="#управление-протоколом-через-powershell">Управление протоколом через PowerShell</a></li><li><a href="#настройка-общего-доступа-и-разрешений">Настройка общего доступа и разрешений</a></li><li><a href="#диагностика-и-безопасность-соединений">Диагностика и безопасность соединений</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>Современная серверная инфраструктура немыслима без надежного файлового обмена, и <strong>Windows Server 2019 Standard</strong> предоставляет мощнейшие инструменты для этого. Однако, сразу после чистой установки операционной системы администраторы часто сталкиваются с ситуацией, когда сетевые ресурсы не видны или подключения блокируются по умолчанию из соображений безопасности. Это штатное поведение системы, требующее ручной активации соответствующих компонентов.</p>
+<p>Протокол <em>Server Message Block</em> (SMB) является фундаментом для совместного доступа к файлам, принтерам и другим сетевым ресурсам в среде Windows. В отличие от клиентских версий ОС, на серверных редакциях многие службы отключены, чтобы минимизировать поверхность атаки. Вам предстоит пройти путь от проверки текущих версий протокола до финальной настройки политик безопасности, что обеспечит стабильную работу файлового сервера.</p>
+<p>В этой статье мы детально разберем, как правильно включить необходимые версии SMB, какие риски несет использование устаревших стандартов и как настроить роль файлового сервера профессионально. Мы рассмотрим как графический интерфейс, так и командную строку для максимальной гибкости управления.</p>
+
+<h2 id="анализ-текущего-состояния-протокола-smb">Анализ текущего состояния протокола SMB</h2>
+<p>Прежде чем вносить изменения в конфигурацию системы, необходимо провести аудит текущего состояния. <strong>Windows Server 2019</strong> по умолчанию поддерживает современные версии протокола, такие как SMB 2.0 и SMB 3.0, которые обеспечивают шифрование и высокую производительность. Однако legacy-оборудование или старые сетевые хранилища могут требовать присутствия SMB 1.0, который отключен по умолчанию из-за уязвимостей.</p>
+<p>Для быстрой проверки статуса можно воспользоваться встроенным модулем PowerShell. Это позволит получить точную информацию о том, какие именно версии активны в данный момент, без необходимости погружаться в глубокие настройки реестра или групповых политик. Такая диагностика является обязательным этапом перед любым вмешательством.</p>
+<p>Выполните следующую команду в PowerShell с правами администратора, чтобы увидеть детальную таблицу статусов:</p>
+<pre><code>Get-SmbServerConfiguration | Select EnableSMB1Protocol, EnableSMB2Protocol</code></pre>
+<p>Если результат показывает <code>False</code> для нужного вам параметра, значит, требуется активация. Обратите внимание, что включение <strong>SMBv1</strong> категорически не рекомендуется в сегментах сети с прямым доступом в интернет, так как этот протокол не поддерживает современные методы шифрования.</p>
+<blockquote>⚠️ Внимание: Перед включением SMB 1.0 убедитесь, что это действительно необходимо для работы специфического оборудования, так как данный протокол является основной мишенью для вирусов-шифровальщиков.</blockquote>
+<p>Используйте таблицу ниже для понимания различий между версиями протокола и их статусом по умолчанию:</p>
+<table>
+<thead>
+<tr>
+<th>Версия протокола</th>
+<th>Статус по умолчанию</th>
+<th>Безопасность</th>
+<th>Рекомендация</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SMB 1.0</td>
+<td>Отключен</td>
+<td>Низкая</td>
+<td>Не включать без острой нужды</td>
+</tr>
+<tr>
+<td>SMB 2.0</td>
+<td>Включен</td>
+<td>Средняя</td>
+<td>Использовать для совместимости</td>
+</tr>
+<tr>
+<td>SMB 3.0</td>
+<td>Включен</td>
+<td>Высокая</td>
+<td>Основной стандарт для Server 2019</td>
+</tr>
+<tr>
+<td>SMB 3.1.1</td>
+<td>Включен</td>
+<td>Максимальная</td>
+<td>Идеально для новых клиентов</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="активация-роли-файлового-сервера-через-диспетчер">Активация роли файлового сервера через диспетчер</h2>
+<p>Самый надежный и визуально понятный способ развернуть необходимые компоненты — использование <strong>Диспетчера серверов</strong>. Этот инструмент позволяет не просто включить протокол, но и установить полноценную роль файлового сервера со всеми зависимостями. Такой подход гарантирует, что будут добавлены все необходимые службы и брандмауэры получат правильные правила.</p>
+<p>Запустите <em>Server Manager</em> и перейдите к управлению ролями. Вам потребуется выбрать опцию добавления новых компонентов, где в списке доступных функций нужно найти ветку, связанную с файловыми службами. Процесс установки занимает несколько минут и не требует перезагрузки, если не меняются критические системные файлы.</p>
+<p>Последовательность действий в графическом интерфейсе выглядит следующим образом:</p>
+<ul>
+<li>🔹 Нажмите <code>Manage → Add Roles and Features</code> в верхнем меню диспетчера.</li>
+<li>🔹 В мастере установки выберите тип установки <strong>Role-based or feature-based installation</strong>.</li>
+<li>🔹 В списке ролей раскройте узел <code>File and Storage Services</code>, затем <code>File and iSCSI Services</code>.</li>
+<li>🔹 Установите флажок напротив <strong>File Server</strong> и убедитесь, что выбраны связанные компоненты.</li>
+</ul>
+<p>После завершения работы мастера система автоматически применит конфигурацию. В некоторых случаях может потребоваться активация дополнительных подкомпонентов, таких как <em>DFS Namespaces</em> или <em>BranchCache</em>, если ваша инфраструктура предполагает распределенное хранение данных.</p>
+<blockquote>⚠️ Внимание: Убедитесь, что на диске C: достаточно свободного места для установки файлов роли, иначе процесс может завершиться ошибкой на этапе применения изменений.</blockquote>
+<p>Для автоматизации процесса на множестве серверов удобно использовать PowerShell. Команда ниже выполняет аналогичные действия, что и графический мастер:</p>
+<pre><code>Install-WindowsFeature -Name FS-FileServer -IncludeManagementTools</code></pre>
+
+<div class="checklist-block"><h4>☑️ Проверка установки роли</h4><label class="check-item"><input type="checkbox"><span>Открыт Диспетчер серверов</span></label><label class="check-item"><input type="checkbox"><span>Выбрана роль File Server</span></label><label class="check-item"><input type="checkbox"><span>Установлены зависимости</span></label><label class="check-item"><input type="checkbox"><span>Статус установки "Success"</span></label><label class="check-item"><input type="checkbox"><span>Перезагрузка не требуется</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+
+<h2 id="настройка-smb-10-для-legacy-систем">Настройка SMB 1.0 для legacy-систем</h2>
+<p>Несмотря на наличие современных стандартов, в корпоративных сетях часто встречается оборудование, которое физически не способно работать ни с чем, кроме SMB 1.0. Это могут быть старые МФУ, сканеры или промышленные контроллеры. В таких случаях администратору приходится идти на компромисс между безопасностью и функциональностью, принудительно включая устаревший протокол.</p>
+<p>Включение происходит через панель управления Windows, так как это считается отдельным компонентом ОС, а не частью основной роли файлового сервера. Вам нужно попасть в классическое окно компонентов Windows, которое скрыто в современных версиях интерфейса. Это действие требует прав локального администратора.</p>
+<p>Чтобы найти нужный компонент, выполните следующие шаги:</p>
+<ul>
+<li>🔸 Откройте <code>Control Panel → Programs → Turn Windows features on or off</code>.</li>
+<li>🔸 В открывшемся окне найдите папку <strong>SMB 1.0/CIFS File Sharing Support</strong>.</li>
+<li>🔸 Раскройте список и выберите <em>SMB 1.0/CIFS Server</em> для возможности принимать подключения.</li>
+<li>🔸 Подтвердите действие и дождитесь поиска необходимых файлов.</li>
+</ul>
+<p>Критически важно понимать, что после включения этого компонента система потребует перезагрузки. Без перезагрузки изменения не вступят в силу, и сетевые ресурсы останутся недоступными для старых клиентов. Это системное ограничение, которое невозможно обойти.</p>
+<details class="faq-item"><summary>Почему SMB 1.0 опасен?</summary><div class="faq-answer"><p>Протокол SMB 1.0 не поддерживает шифрование данных при передаче и уязвим к атакам типа Man-in-the-Middle. Вирус WannaCry использовал именно дыры в этом протоколе для распространения.</p></div></details>
+<p>Если вы вынуждены использовать эту версию, изолируйте сервер в отдельный VLAN и настройте строгие правила файервола, разрешающие порты 445 и 139 только с доверенных IP-адресов оборудования.</p>
+
+<h2 id="управление-протоколом-через-powershell">Управление протоколом через PowerShell</h2>
+<p>Для опытных администраторов графический интерфейс может быть слишком медленным. <strong>PowerShell</strong> предоставляет глубокий контроль над параметрами SMB-сервера, позволяя менять настройки «на лету» без перезагрузки (за исключением включения SMB 1.0). Модуль <em>SmbShare</em> является основным инструментом для таких операций.</p>
+<p>С помощью команд можно не только включать или выключать протоколы, но и настраивать параметры безопасности, такие как требование подписи пакетов. Это особенно актуально для соответствия стандартам безопасности банковских или государственных организаций. Синтаксис команд интуитивно понятен и логичен.</p>
+<p>Рассмотрим основные команды управления:</p>
+<ul>
+<li>🔹 Включить SMB 2.0/3.0: <code>Set-SmbServerConfiguration -EnableSMB2Protocol $true</code></li>
+<li>🔹 Отключить SMB 1.0: <code>Set-SmbServerConfiguration -EnableSMB1Protocol $false</code></li>
+<li>🔹 Проверить текущие настройки: <code>Get-SmbServerConfiguration</code></li>
+</ul>
+<p>При выполнении команд система запросит подтверждение действия. Чтобы избежать паузы в скриптах автоматизации, используйте параметр <code>-Confirm:$false</code>. Это позволит выполнить настройку мгновенно, что удобно при развертывании конфигурации на десятках серверов одновременно.</p>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте параметр -WhatIf в конце команды PowerShell, чтобы увидеть, какие изменения будут внесены, без фактического применения настроек. Это отличный способ тестирования.</p></div>
+<p>Помните, что изменения, сделанные через PowerShell, имеют приоритет над настройками реестра. Если вы изменили параметр через консоль, а затем вручную поправили реестр, при следующей перезагрузке службы или сервера настройки PowerShell могут перезаписать ручные правки.</p>
+
+<h2 id="настройка-общего-доступа-и-разрешений">Настройка общего доступа и разрешений</h2>
+<p>Просто включить протокол недостаточно — необходимо создать точку входа для пользователей. На <strong>Windows Server 2019</strong> процесс создания шары (shared folder) объединяет файловые разрешения NTFS и сетевые разрешения SMB. Понимание разницы между ними критично для правильной работы системы безопасности.</p>
+<p>NTFS-права действуют локально и при любом способе доступа к файлу, тогда как Share-права работают только при подключении по сети. Best practice предполагает давать полные права на уровне общей папки (Full Control для Everyone) и детально настраивать доступ через вкладку Security (Безопасность) файловой системы.</p>
+<p>Алгоритм создания ресурса:</p>
+<ol>
+<li>Создайте папку на диске и задайте ей понятное имя, например <code>Departments</code>.</li>
+<li>Кликните правой кнопкой мыши, выберите <code>Properties → Sharing → Advanced Sharing</code>.</li>
+<li>Активируйте галочку <strong>Share this folder</strong> и задайте имя ресурса.</li>
+<li>Нажмите кнопку <code>Permissions</code> и удалите группу <em>Everyone</em>, добавив конкретные группы безопасности AD.</li>
+</ol>
+<p>Такой подход обеспечивает максимальную гибкость. Вы можете легко менять состав групп в Active Directory, не трогая настройки самого сервера. Пользователи будут получать доступ к ресурсам автоматически на основе членства в группах.</p>
+<blockquote>⚠️ Внимание: Никогда не оставляйте открытым общий доступ с полными правами для группы Everyone на продакшн-сервере, это прямая угроза утечки данных.</blockquote>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Сочетание NTFS и Share прав работает по принципу наименьшего значения: если на файле стоит запрет, а на шаре разрешение, доступ будет запрещен.</p></div>
+
+<h2 id="диагностика-и-безопасность-соединений">Диагностика и безопасность соединений</h2>
+<p>После настройки неизбежно встанет вопрос проверки работоспособности и мониторинга активных подключений. Встроенные средства <strong>Windows Server 2019</strong> позволяют в реальном времени видеть, кто подключен к серверу, какие файлы открыты и сколько данных передается. Это invaluable инструмент для troubleshooting.</p>
+<p>Для просмотра активных сессий используйте команду <code>Get-SmbSession</code> в PowerShell или оснастку <em>Computer Management → Shared Folders → Sessions</em>. Здесь можно увидеть IP-адрес клиента, имя пользователя и количество открытых файлов. При необходимости сессию можно принудительно разорвать, если пользователь заблокировал важный файл.</p>
+<p>Основные методы диагностики:</p>
+<ul>
+<li>🔸 Проверка доступности порта 445 командой <code>Test-NetConnection -Port 445</code>.</li>
+<li>🔸 Анализ логов в <em>Event Viewer → Applications and Services Logs → Microsoft → Windows → SMBServer</em>.</li>
+<li>🔸 Использование <code>netstat -an</code> для просмотра listening портов.</li>
+</ul>
+<p>Обратите внимание на логи безопасности. Если вы видите множество неудачных попыток входа, это может свидетельствовать о попытке брутфорс-атаки. В таких случаях полезно временно ограничить доступ по IP или включить блокировку учетных записей после нескольких неудачных попыток.</p>
+<p>Регулярный аудит открытых шар является обязательной процедурой. Раз в квартал проверяйте список всех расшаренных ресурсов и убеждайтесь, что забытые тестовые папки удалены, а доступ к ним закрыт.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой метод управления сервером вы предпочитаете?</strong><ul><li>Графический интерфейс (GUI)</li><li>PowerShell</li><li>Удаленное управление (RSAT)</li><li>Сторонние утилиты</li></ul></div></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+<details>
+<summary>Почему после включения SMB 1.0 сервер требует перезагрузки?</summary>
+<p>Компонент SMB 1.0 является глубоко интегрированным в ядро сетевой подсистемы Windows. Его драйверы загружаются при старте системы, поэтому динамическое подключение без перезагрузки невозможно. В отличие от него, SMB 2.0 и 3.0 могут переключаться на лету.</p>
+</details>
+<details>
+<summary>Можно ли полностью удалить SMB 1.0 из системы?</summary>
+<p>В Windows Server 2019 компонент SMB 1.0 можно не только отключить, но и удалить через PowerShell командой <code>Disable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol</code>. Однако делать это стоит только если вы абсолютно уверены, что в сети нет legacy-устройств.</p>
+</details>
+<details>
+<summary>Как заставить клиентов использовать только SMB 3.0?</summary>
+<p>Для повышения безопасности можно отключить более старые версии протокола на уровне сервера, принуждая клиентов использовать только шифрованный SMB 3.0. Это делается через реестр или групповые политики, параметр <code>SmbServerConfiguration</code>.</p>
+</details>
+<details>
+<summary>Где найти логи неудачных попыток подключения по SMB?</summary>
+<p>Информация хранится в журнале событий Windows. Откройте <code>Event Viewer</code>, перейдите в <code>Applications and Services Logs</code> -> <code>Microsoft</code> -> <code>Windows</code> -> <code>SMBServer</code>. Интерес представляют события с кодами, указывающими на ошибки аутентификации.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#анализ-текущего-состояния-протокола-smb">Анализ текущего состояния протокола SMB</a></li><li><a href="#активация-роли-файлового-сервера-через-диспетчер">Активация роли файлового сервера через диспетчер</a></li><li><a href="#настройка-smb-10-для-legacy-систем">Настройка SMB 1.0 для legacy-систем</a></li><li><a href="#управление-протоколом-через-powershell">Управление протоколом через PowerShell</a></li><li><a href="#настройка-общего-доступа-и-разрешений">Настройка общего доступа и разрешений</a></li><li><a href="#диагностика-и-безопасность-соединений">Диагностика и безопасность соединений</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/w/wi/windows-fotografii-fajl-exe.html" class="related-card">Приложение Фотографии Windows: где файл exe и как его найти</a></li><li><a href="/a/articles/o/or/oracle-vm-virtualbox-zavisaet-pri-ustanovke-windows.html" class="related-card">VirtualBox зависает при установке Windows: решение</a></li><li><a href="/a/articles/k/ka/kak-ispravit-periodicheskoe-otklyuchenie-bluetooth-v-windows-10-na-noutbuke.html" class="related-card">Bluetooth отключается в Windows 10: как исправить на ноутбуке</a></li><li><a href="/a/articles/v/vo/vosstanovit-zagruzchik-windows-10-programmoj-botice.html" class="related-card">Как восстановить загрузчик Windows 10: полное руководство Bootice</a></li><li><a href="/a/articles/k/ka/kak-sbezhat-s-linuksa-na-windows-bez-fleshki.html" class="related-card">Как сбежать с Linux на Windows без флешки: полный гид</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/w/wi/windows-fotografii-fajl-exe.html" class="related-bottom-card"><span class="related-bottom-title">Приложение Фотографии Windows: где файл exe и как его найти</span><span class="related-bottom-desc">Ищете файл exe приложения Фотографии в Windows 10 и 11? Узнайте точный путь к UWP-приложению, способ</span></a><a href="/a/articles/o/or/oracle-vm-virtualbox-zavisaet-pri-ustanovke-windows.html" class="related-bottom-card"><span class="related-bottom-title">VirtualBox зависает при установке Windows: решение</span><span class="related-bottom-desc">Oracle VM VirtualBox зависает при установке Windows? Узнайте причины зависания, методы отключения 3D</span></a><a href="/a/articles/k/ka/kak-ispravit-periodicheskoe-otklyuchenie-bluetooth-v-windows-10-na-noutbuke.html" class="related-bottom-card"><span class="related-bottom-title">Bluetooth отключается в Windows 10: как исправить на ноутбуке</span><span class="related-bottom-desc">Почему Bluetooth отключается в Windows 10 на ноутбуке? Полный гид по устранению периодических разрыв</span></a><a href="/a/articles/v/vo/vosstanovit-zagruzchik-windows-10-programmoj-botice.html" class="related-bottom-card"><span class="related-bottom-title">Как восстановить загрузчик Windows 10: полное руководство Bootice</span><span class="related-bottom-desc">Подробная инструкция по восстановлению загрузчика Windows 10 с помощью утилиты Bootice. Редактирован</span></a><a href="/a/articles/k/ka/kak-sbezhat-s-linuksa-na-windows-bez-fleshki.html" class="related-bottom-card"><span class="related-bottom-title">Как сбежать с Linux на Windows без флешки: полный гид</span><span class="related-bottom-desc">Узнайте, как удалить Linux и установить Windows без флешки. Пошаговая инструкция по установке ОС с ж</span></a><a href="/a/articles/k/ka/kak-otmenit-zaplanirovannoe-obnovlenie-windows.html" class="related-bottom-card"><span class="related-bottom-title">Как отменить обновление Windows: полное руководство</span><span class="related-bottom-desc">Подробная инструкция, как отменить запланированное обновление Windows 10 и 11. Методы остановки служ</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

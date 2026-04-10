@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Win 10 Home или Pro: как узнать версию и отличия — ТехПодсказка</title>
+    <meta name="description" content="Узнайте, какая у вас версия Windows 10: Home или Pro. Простые способы проверки через реестр, параметры и командную строку.">
+    <link rel="canonical" href="/a/articles/w/wi/win-10-home-ili-pro-kak-uznat.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Win 10 Home или Pro: как узнать версию и отличия">
+    <meta property="og:description" content="Узнайте, какая у вас версия Windows 10: Home или Pro. Простые способы проверки через реестр, параметры и командную строку.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Win 10 Home или Pro: как узнать версию и отличия</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Как узнать версию Windows 10: Home или Pro</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#использование-встроенного-окна-о-системе">Использование встроенного окна «О системе»</a></li><li><a href="#проверка-через-командную-строку-и-powershell">Проверка через командную строку и PowerShell</a></li><li><a href="#анализ-реестра-windows-для-точных-данных">Анализ реестра Windows для точных данных</a></li><li><a href="#сравнение-функционала-home-против-pro">Сравнение функционала: Home против Pro</a></li><li><a href="#возможности-удаленного-доступа-и-виртуализации">Возможности удаленного доступа и виртуализации</a></li><li><a href="#частые-вопросы-и-ответы-faq">Частые вопросы и ответы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Пользователи часто задаются вопросом о точной модификации установленной операционной системы, особенно при планировании апгрейда или установке специфического софта. Определить, <strong>Win 10 Home или Pro</strong> активна на вашем компьютере, необходимо для понимания доступного функционала и совместимости корпоративных инструментов. Многие даже не подозревают, что их текущая сборка ограничивает возможности удаленного управления или шифрования данных.</p>
+
+<p>Существует несколько быстрых методов идентификации редакции, не требующих глубоких знаний в области программирования. Мы рассмотрим штатные средства диагностики, работу с реестром и специализированные утилиты, которые выдадут точный результат за считанные секунды. Важно понимать разницу между этими версиями, так как от этого зависит возможность использования <em>BitLocker</em> или групповых политик.</p>
+
+<p>В этой статье мы детально разберем все нюансы, чтобы вы могли уверенно ориентироваться в своей системе. Вы научитесь не только находить информацию о версии, но и поймете, стоит ли переходить на более продвинутую редакцию для ваших задач. Давайте начнем с самых простых и доступных способов проверки.</p>
+
+<h2 id="использование-встроенного-окна-о-системе">Использование встроенного окна «О системе»</h2>
+
+<p>Самый очевидный и доступный метод — обращение к штатному интерфейсу операционной системы. Windows 10 предоставляет пользователям удобный панель управления, где собрана вся основная информация о конфигурации железа и программного обеспечения. Для доступа к этим данным достаточно нажать правой кнопкой мыши на значок «Этот компьютер» и выбрать пункт «Свойства».</p>
+
+<p>Открывшееся окно содержит исчерпывающие сведения, включая номер сборки, разрядность процессора и, что самое важное, редакцию ОС. Именно здесь вы увидите четкое указание: <strong>Windows 10 Home</strong> или <strong>Windows 10 Pro</strong>. Этот способ не требует ввода никаких команд и подходит даже для неопытных пользователей, которые боятся случайно изменить системные настройки.</p>
+
+<p>Альтернативный путь к той же информации лежит через меню «Параметры». Нажмите комбинацию клавиш <code>Win + I</code>, перейдите в раздел «Система» и прокрутите список в самый низ до вкладки «О системе». Здесь отображается аналогичная информация, представленная в более современном интерфейсе.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если окно свойств не открывается, попробуйте запустить команду «Выполнить» (Win+R) и ввести sysinfo, что откроет детальное окно сведений о системе.</p></div>
+
+<p>В некоторых корпоративных средах доступ к этим меню может быть ограничен администратором. В таком случае стоит воспользоваться другими методами, описанными ниже, которые часто обходят простые блокировки интерфейса.</p>
+
+<h2 id="проверка-через-командную-строку-и-powershell">Проверка через командную строку и PowerShell</h2>
+
+<p>Для тех, кто предпочитает скорость и точность текстовых команд, отличным решением станет использование командной строки. Этот метод дает мгновенный результат и работает даже в ситуациях, когда графический интерфейс системы работает нестабильно. Запустите терминал через поиск или сочетание <code>Win + X</code>, выбрав «Windows PowerShell» или «Командная строка».</p>
+
+<p>Введите команду <code>systeminfo</code> и нажмите Enter. Система начнет сбор данных, и через несколько секунд вы увидите длинный список параметров. Найдите строку «Название ОС» или «OS Name», где будет четко указано, <strong>Home</strong> или <strong>Pro</strong> версия установлена. Этот метод особенно полезен для системных администраторов, работающих с удаленными машинами.</p>
+
+<p>Более компактный вариант — использование утилиты <code>winver</code>. Нажмите <code>Win + R</code>, введите команду и нажмите Enter. Появится всплывающее окно с логотипом Windows и номером версии. Хотя здесь не всегда пишется слово Pro или Home, номер сборки часто указывает на конкретную редакцию, особенно в корпоративных сборках <em>Enterprise</em>.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка версии через консоль</h4><label class="check-item"><input type="checkbox"><span>Открыть командную строку</span></label><label class="check-item"><input type="checkbox"><span>Ввести systeminfo</span></label><label class="check-item"><input type="checkbox"><span>Найти строку OS Name</span></label><label class="check-item"><input type="checkbox"><span>Проверить редакцию</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>Еще один мощный инструмент — команда <code>wmic os get caption</code>. Она выводит только название операционной системы, избавляя от необходимости искать нужную строку в огромном массиве текста. Это идеальный вариант для быстрого скриптового контроля конфигурации парка компьютеров.</p>
+
+<h2 id="анализ-реестра-windows-для-точных-данных">Анализ реестра Windows для точных данных</h2>
+
+<p>Реестр Windows представляет собой централизованную базу данных настроек, где хранится информация о каждой установленной компоненте системы. Для опытных пользователей этот метод является наиболее достоверным, так как данные здесь обновляются в реальном времени и редко подвергаются кэшированию. Будьте осторожны при редактировании реестра, хотя чтение данных полностью безопасно.</p>
+
+<p>Откройте редактор реестра, введя <code>regedit</code> в окне «Выполнить». Перейдите по пути <code>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion</code>. В правой части окна найдите параметр <strong>ProductName</strong>. Его значение будет содержать точное название вашей редакции, например, «Windows 10 Pro» или «Windows 10 Home Single Language».</p>
+
+<p>Здесь же можно найти параметр <strong>ReleaseId</strong>, который указывает на версию обновления (например, 22H2). Это важно, так как функционал <em>Home</em> и <em>Pro</em> может незначительно отличаться в зависимости от года выпуска сборки. Знание точного пути в реестре позволяет создавать автоматические скрипты для аудита компьютеров.</p>
+
+<details class="faq-item"><summary>Скрытые параметры реестра</summary><div class="faq-answer"><p>В некоторых случаях параметр ProductName может быть изменен пользователем вручную, что приведет к ложному отображению версии. Для проверки подлинности используйте цифровую подпись системы.</p></div></details>
+
+<p>Использование реестра особенно актуально, когда стандартные методы отображения информации дают сбой или показывают усеченные данные. Это «истина в последней инстанции» для операционной системы.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой способ проверки вам ближе?</strong><ul><li>Через Параметры Windows</li><li>Через Командную строку</li><li>Через Реестр</li><li>Сторонние программы</li></ul></div></div>
+
+<h2 id="сравнение-функционала-home-против-pro">Сравнение функционала: Home против Pro</h2>
+
+<p>Понимание различий между редакциями критически важно для принятия решения о необходимости апгрейда. Базовая версия <strong>Home</strong> ориентирована на обычных пользователей, предоставляя все необходимые мультимедийные и игровые функции. Версия <strong>Pro</strong> добавляет инструменты для бизнеса, управления безопасностью и удаленного администрирования.</p>
+
+<p>Одним из ключевых отличий является наличие технологии шифрования <em>BitLocker</em>. В версии Home она отсутствует, что делает данные уязвимыми при краже физического носителя, если не используются сторонние решения. Pro-версия позволяет шифровать весь диск, обеспечивая защиту конфиденциальной информации даже при извлечении жесткого диска.</p>
+
+<p>Также версия Pro поддерживает работу с доменами Active Directory и групповыми политиками. Это позволяет централизованно управлять настройками безопасности, устанавливать ограничения на использование USB-устройств и контролировать обновления. Для домашнего пользователя эти функции избыточны, но для малого бизнеса они незаменимы.</p>
+
+<table>
+<thead>
+<tr>
+<th>Функция</th>
+<th>Windows 10 Home</th>
+<th>Windows 10 Pro</th>
+</tr>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Шифрование BitLocker</td>
+<td>Нет</td>
+<td>Есть</td>
+</tr>
+<tr>
+<td>Подключение к домену</td>
+<td>Нет</td>
+<td>Есть</td>
+</tr>
+<tr>
+<td>Удаленный рабочий стол (хост)</td>
+<td>Нет (только клиент)</td>
+<td>Есть</td>
+</tr>
+<tr>
+<td>Гипер-визор Hyper-V</td>
+<td>Нет</td>
+<td>Есть</td>
+</tr>
+</tbody>
+</table>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Для большинства домашних пользователей функционала версии Home более чем достаточно, переплачивать за Pro имеет смысл только при необходимости специфических бизнес-инструментов.</p></div>
+
+<h2 id="возможности-удаленного-доступа-и-виртуализации">Возможности удаленного доступа и виртуализации</h2>
+
+<p>Одной из самых заметных для продвинутых пользователей функций, доступных только в Pro-версии, является возможность выступать в качестве хоста для удаленного рабочего стола (RDP). В версии <strong>Home</strong> вы можете подключаться к другим компьютерам, но принять входящее подключение без стороннего софта (например, TeamViewer или AnyDesk) не получится.</p>
+
+<p>Встроенный гипервизор <em>Hyper-V</em> также является эксклюзивом профессиональной редакции. Он позволяет создавать изолированные виртуальные машины для тестирования ПО, запуска других ОС или безопасного анализа вирусов. Пользователи Home-версии вынуждены использовать сторонние решения вроде VirtualBox или VMware, которые могут работать медленнее.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Попытка активации Hyper-V на Windows Home через реестр или сторонние скрипты может привести к нестабильной работе системы и конфликтам драйверов. Используйте только официальные методы обновления.</p>
+</blockquote>
+
+<p>Для разработчиков и IT-специалистов наличие <strong>Windows Sandbox</strong> (песочницы) в версии Pro является огромным плюсом. Это легковесная среда для запуска подозрительных приложений, которая полностью очищается после завершения сеанса. В Home-версии такой изолированной среды «из коробки» нет.</p>
+
+<h2 id="частые-вопросы-и-ответы-faq">Частые вопросы и ответы (FAQ)</h2>
+
+<details>
+<summary>Можно ли обновить Windows 10 Home до Pro бесплатно?</summary>
+<p>Официально бесплатного пути нет, требуется покупка лицензии. Однако, если вы вводите ключ от старой версии Windows 7/8 Pro, система может активироваться как Windows 10 Pro. Также существует неофициальный метод активации цифровым ключом, но он работает не у всех.</p>
+</details>
+
+<details>
+<summary>Влияет ли версия Windows на производительность в играх?</summary>
+<p>Нет, игровая производительность в Home и Pro версиях идентична. Различия касаются только системных функций управления и безопасности, которые не затрагивают рендеринг графики или работу игровых движков.</p>
+</details>
+
+<details>
+<summary>Что такое Windows 10 Home Single Language?</summary>
+<p>Это урезанная версия Home, которая часто предустановлена на ноутбуках. Ее главная особенность — невозможность сменить язык интерфейса без полной переустановки системы. Функционально она аналогична обычной Home, но более ограничена в настройках локализации.</p>
+</details>
+
+<details>
+<summary>Нужен ли Pro для использования Docker?</summary>
+<p>Для полноценной работы Docker Desktop на Windows желательна версия Pro из-за зависимости от Hyper-V или WSL2. На Home-версии запуск возможен, но требует сложной настройки WSL2 и может работать менее стабильно или медленно.</p>
+</details>
+
+<p>Подводя итог, можно сказать, что выбор между Home и Pro зависит исключительно от ваших задач. Для игр, интернета и работы с документами достаточно базовой версии. Если же вам требуется шифрование, удаленное управление или виртуализация — <mark>только версия Pro</mark> предоставит необходимые инструменты.</p></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#использование-встроенного-окна-о-системе">Использование встроенного окна «О системе»</a></li><li><a href="#проверка-через-командную-строку-и-powershell">Проверка через командную строку и PowerShell</a></li><li><a href="#анализ-реестра-windows-для-точных-данных">Анализ реестра Windows для точных данных</a></li><li><a href="#сравнение-функционала-home-против-pro">Сравнение функционала: Home против Pro</a></li><li><a href="#возможности-удаленного-доступа-и-виртуализации">Возможности удаленного доступа и виртуализации</a></li><li><a href="#частые-вопросы-и-ответы-faq">Частые вопросы и ответы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/m/me/media-station-x-drm-play-error-4.html" class="related-card">Ошибка DRM Play Error 4 на Media Station X: Решение</a></li><li><a href="/a/articles/p/pa/palm-store-ili-fonemaster.html" class="related-card">Palm Store или Фонемастер: что выбрать для Android?</a></li><li><a href="/a/articles/a/al/alternativa-mi-home-dlya-robota-pylesosa.html" class="related-card">Альтернатива Mi Home для робота-пылесоса: лучшие приложения</a></li><li><a href="/a/articles/e/em/emag-programma-uchta-kak-rabotat.html" class="related-card">eMAG Програма УЧТ: как да работате и да спечелите</a></li><li><a href="/a/articles/a/ad/adres-prilozhenii-tinstaller-kakoj-nado-vvesti-v-prilozhenii-installer.html" class="related-card">Адрес для T-Installer: куда вводить IP и как подключить</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/m/me/media-station-x-drm-play-error-4.html" class="related-bottom-card"><span class="related-bottom-title">Ошибка DRM Play Error 4 на Media Station X: Решение</span><span class="related-bottom-desc">Столкнулись с ошибкой 4 в Media Station X? Узнайте причины сбоя DRM и пошаговые методы устранения пр</span></a><a href="/a/articles/p/pa/palm-store-ili-fonemaster.html" class="related-bottom-card"><span class="related-bottom-title">Palm Store или Фонемастер: что выбрать для Android?</span><span class="related-bottom-desc">Сравнение Palm Store и Фонемастер: функционал, безопасность, удаление вирусов. Узнайте, какой сервис</span></a><a href="/a/articles/a/al/alternativa-mi-home-dlya-robota-pylesosa.html" class="related-bottom-card"><span class="related-bottom-title">Альтернатива Mi Home для робота-пылесоса: лучшие приложения</span><span class="related-bottom-desc">Ищете замену приложению Mi Home? Обзор лучших альтернатив для управления роботом-пылесосом: функции,</span></a><a href="/a/articles/e/em/emag-programma-uchta-kak-rabotat.html" class="related-bottom-card"><span class="related-bottom-title">eMAG Програма УЧТ: как да работате и да спечелите</span><span class="related-bottom-desc">Пълно ръководство за eMAG Програма УЧТ. Разберете как да регистрирате касови апарати, да подавате да</span></a><a href="/a/articles/a/ad/adres-prilozhenii-tinstaller-kakoj-nado-vvesti-v-prilozhenii-installer.html" class="related-bottom-card"><span class="related-bottom-title">Адрес для T-Installer: куда вводить IP и как подключить</span><span class="related-bottom-desc">Полный гид по настройке T-Installer. Узнайте, какой IP-адрес ввести в приложении, как настроить порт</span></a><a href="/a/articles/r/rx/rx-560-4gb-drajvera.html" class="related-bottom-card"><span class="related-bottom-title">AMD Radeon RX 560 4GB драйвера: установка и обновление</span><span class="related-bottom-desc">Полное руководство по установке драйверов для видеокарты RX 560 4GB. Официальные ссылки, чистая уста</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

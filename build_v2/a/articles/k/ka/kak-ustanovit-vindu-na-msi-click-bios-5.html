@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Установка Windows на MSI Click BIOS 5: пошаговая инструкция — ТехПодсказка</title>
+    <meta name="description" content="Как установить Windows на материнской плате MSI с Click BIOS 5. Настройка UEFI, CSM, Secure Boot и разделов диска для чистой инсталляции ОС.">
+    <link rel="canonical" href="/a/articles/k/ka/kak-ustanovit-vindu-na-msi-click-bios-5.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Установка Windows на MSI Click BIOS 5: пошаговая инструкция">
+    <meta property="og:description" content="Как установить Windows на материнской плате MSI с Click BIOS 5. Настройка UEFI, CSM, Secure Boot и разделов диска для чистой инсталляции ОС.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/mobilnye-os/">Мобильные ОС</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Установка Windows на MSI Click BIOS 5: пошаговая инструкция</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Установка Windows на MSI Click BIOS 5: полное руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#подготовка-загрузочного-носителя-и-вход-в-bios">Подготовка загрузочного носителя и вход в BIOS</a></li><li><a href="#настройка-режима-загрузки-и-отключение-secure-boot">Настройка режима загрузки и отключение Secure Boot</a></li><li><a href="#конфигурация-дисковой-подсистемы-и-raid-режимов">Конфигурация дисковой подсистемы и RAID режимов</a></li><li><a href="#процесс-разметки-диска-и-форматирования">Процесс разметки диска и форматирования</a></li><li><a href="#установка-драйверов-и-первичная-настройка-системы">Установка драйверов и первичная настройка системы</a></li><li><a href="#решение-распространенных-проблем-при-установке">Решение распространенных проблем при установке</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>Процесс инсталляции операционной системы на компьютеры, базирующиеся на чипсетах от <em>Micro-Star International</em>, требует внимательного отношения к настройкам микрокода <em>UEFI</em>. Интерфейс <strong>Click BIOS 5</strong> значительно отличается от устаревших версий, предлагая графическую оболочку и расширенный функционал, который может сбить с толку неопытного пользователя. Правильная конфигурация параметров загрузки является критическим этапом, без которого система просто не увидит установочный носитель или откажется запускать установщик.</p>
+
+<p>Современные версии <em>BIOS</em> от <em>MSI</em> оптимизированы для работы с быстрыми накопителями <strong>NVMe</strong> и сложными схемами разделов <strong>GPT</strong>. Игнорирование особенностей архитектуры <em>UEFI</em> часто приводит к ошибкам на этапе выбора диска или после первой перезагрузки. В этом материале мы детально разберем каждый шаг, необходимый для успешной развертки <strong>Windows 10</strong> или <strong>Windows 11</strong>, исключив распространенные pitfalls и технические сбои.</p>
+
+<p>Перед началом манипуляций убедитесь, что у вас под рукой имеется загрузочная флешка с актуальным образом системы. Процесс настройки <em>Click BIOS 5</em> занимает немного времени, но требует точности в действиях. Мы рассмотрим не только стандартный путь установки, но и специфические настройки безопасности и совместимости, которые часто становятся камнем преткновения.</p>
+
+<h2 id="подготовка-загрузочного-носителя-и-вход-в-bios">Подготовка загрузочного носителя и вход в BIOS</h2>
+<p>Первым этапом станет создание корректного установочного介质. Для работы с <em>Click BIOS 5</em> настоятельно требуется использование стандарта <strong>UEFI</strong>, что подразумевает файловую систему <code>FAT32</code> на флеш-накопителе. Старые методы записи через <code>MBR</code> могут не работать или потребуют включения режима совместимости, что нежелательно для современных систем.</p>
+
+<p>Для входа в настройки микрокода необходимо нажать клавишу <code>Delete</code> сразу после включения питания компьютера. В некоторых случаях, особенно на ноутбуках или специфических платах, может потребоваться использование клавиши <code>F2</code>. Если система загружается слишком быстро, поможет функция <strong>Fast Boot</strong>, которую можно временно отключить через настройки <em>Windows</em> или удерживая клавишу <code>Shift</code> при выборе пункта «Перезагрузка».</p>
+
+<p>Интерфейс <em>Click BIOS 5</em> поддерживает управление мышью, что упрощает навигацию, однако использование клавиатуры часто бывает быстрее и надежнее. При первом запуске вы можете увидеть экран <strong>EZ Mode</strong>, который предоставляет базовую информацию о температуре и частоте компонентов. Нам же потребуется переключиться в расширенный режим, нажав кнопку <code>F7</code> или выбрав соответствующий пункт меню.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Если после входа в BIOS вы видите только упрощенный экран с крупными иконками, обязательно переключитесь в Advanced Mode (F7), иначе доступ к критическим настройкам загрузки будет ограничен.</p>
+</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте порт USB 2.0 (черного цвета) для подключения установочной флешки, так как драйверы USB 3.0 могут отсутствовать в базовом загрузчике BIOS до начала установки Windows.</p></div>
+
+<h2 id="настройка-режима-загрузки-и-отключение-secure-boot">Настройка режима загрузки и отключение Secure Boot</h2>
+<p>Ключевым моментом успешной установки является правильная конфигурация раздела <strong>Boot</strong>. В меню <code>Settings → Boot</code> необходимо найти параметр <strong>Boot Mode Select</strong>. Для установки современных версий Windows, особенно <em>Windows 11</em>, этот параметр должен быть установлен в значение <code>UEFI</code>. Режим <code>Legacy</code> или <code>CSM</code> следует использовать только в исключительных случаях, когда требуется работа со старым оборудованием.</p>
+
+<p>Параллельно с выбором режима загрузки следует обратить внимание на функцию <strong>Secure Boot</strong>. Эта технология защищает систему от запуска неавторизованного кода, но может блокировать установщик, если его цифровая подпись не распознана или если вы используете модифицированный образ. Находясь в разделе <code>Security</code> или <code>Boot</code>, найдите пункт <strong>Secure Boot</strong> и измените его состояние на <code>Disabled</code> на время инсталляции.</p>
+
+<p>Также стоит проверить приоритет устройств загрузки в пункте <strong>Boot Option Priorities</strong>. Ваша флешка должна стоять на первом месте в списке. В <em>Click BIOS 5</em> это часто выглядит как строка <code>Boot Option #1</code>, где нужно выбрать имя вашего USB-накопителя с префиксом <code>UEFI:</code>.</p>
+
+<ul>
+<li>🔌 Убедитесь, что в параметре <strong>CSM Support</strong> установлено значение <code>Disabled</code> для чистой UEFI-загрузки.</li>
+<li>🔒 Параметр <strong>Secure Boot</strong> должен быть временно отключен (<code>Disabled</code>) во избежание ошибок запуска.</li>
+<li>💾 В приоритете загрузки (<strong>Boot Option #1</strong>) выберите устройство с пометкой <code>UEFI</code>.</li>
+</ul>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой режим загрузки вы используете для установки Windows?</strong><ul><li>UEFI (рекомендуется)</li><li>Legacy / CSM</li><li>Не знаю</li><li>Dual Boot (Linux + Windows)</li></ul></div></div>
+
+<h2 id="конфигурация-дисковой-подсистемы-и-raid-режимов">Конфигурация дисковой подсистемы и RAID режимов</h2>
+<p>Одной из самых частых проблем при установке Windows на платы <em>MSI</em> является отсутствие видимости дисков в установщике. Это часто связано с режимом работы контроллера SATA. В меню <code>Settings → Advanced → Integrated Peripherals</code> или <code>Storage Configuration</code> необходимо проверить параметр <strong>SATA Mode</strong>. Для стандартной установки он должен быть переключен в режим <code>AHCI</code>.</p>
+
+<p>Если у вас установлен <strong>RAID</strong>-массив или используется технология <em>Intel RST</em>, система может не отображать отдельные диски без предустановленных драйверов. В таком случае потребуется загрузка драйверов контроллера с официального сайта производителя во время этапа выбора диска, однако для большинства пользователей режим <code>AHCI</code> является оптимальным решением.</p>
+
+<p>Также стоит обратить внимание на конфигурацию портов <strong>M.2</strong>. Некоторые слоты M.2 могут разделять пропускную способность с портами SATA. Если вы установили NVMe накопитель, некоторые SATA-порты могут автоматически отключаться. Информация об этом обычно содержится в инструкции к материнской плате, но визуально в BIOS это можно отследить в разделе <code>System Status</code>.</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Рекомендуемое значение</th>
+<th>Описание влияния</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SATA Mode</td>
+<td>AHCI</td>
+<td>Обеспечивает нативную поддержку дисков без необходимости дополнительных драйверов.</td>
+</tr>
+<tr>
+<td>CSM Support</td>
+<td>Disabled</td>
+<td>Отключаетlegacy-режим для ускорения загрузки и поддержки GPT.</td>
+</tr>
+<tr>
+<td>Secure Boot</td>
+<td>Disabled (временно)</td>
+<td>Разрешает запуск установщика с внешних носителей.</td>
+</tr>
+<tr>
+<td>TPM Device</td>
+<td>Enabled</td>
+<td>Необходимо для установки Windows 11 и работы функций безопасности.</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote>
+<p>⚠️ Внимание: Переключение режима SATA с RAID на AHCI (или наоборот) на уже установленной системе приведет к невозможности загрузки Windows (синий экран смерти). Меняйте этот параметр только перед чистой установкой.</p>
+</blockquote>
+
+<h2 id="процесс-разметки-диска-и-форматирования">Процесс разметки диска и форматирования</h2>
+<p>После успешной загрузки с флешки и выбора языка интерфейса начнется процесс установки. На этапе выбора типа установки обязательно выберите пункт <strong>Выборочная: только установка Windows (для опытных пользователей)</strong>. Обновление существующей версии часто приводит к накоплению системного мусора и ошибкам реестра, поэтому чистая установка предпочтительнее.</p>
+
+<p>Следующий шаг — работа с разделами диска. Если на диске ранее была установлена система, вы увидите множество разделов разного размера. Для чистой установки необходимо удалить все разделы на целевом диске, пока не останется одна строка <strong>Незанятое пространство на диске</strong>. Не бойтесь удалить системные разделы EFI или восстановления, если вы хотите полностью очистить диск.</p>
+
+<p>После удаления всех разделов выделите «Незанятое пространство» и нажмите кнопку <code>Создать</code>. Система сама предложит создать необходимые служебные разделы (EFI, MSR, основной). Нажмите <code>Применить</code> и дождитесь завершения процесса. Важно выбрать для установки именно основной раздел, который обычно имеет наибольший объем.</p>
+
+<div class="checklist-block"><h4>☑️ Контрольный список перед форматированием</h4><label class="check-item"><input type="checkbox"><span>Скопировать важные данные на внешний диск</span></label><label class="check-item"><input type="checkbox"><span>Убедиться в наличии драйверов сетевой карты</span></label><label class="check-item"><input type="checkbox"><span>Проверить заряд ноутбука (если применимо)</span></label><label class="check-item"><input type="checkbox"><span>Подготовить ключ активации Windows</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>В процессе форматирования может возникнуть ошибка, сообщающая, что Windows не может быть установлена на этот диск. Чаще всего это связано с несоответствием стиля разделов (<strong>GPT</strong> против <strong>MBR</strong>) и выбранного режима загрузки BIOS. Если вы настроили BIOS в режим UEFI, диск должен быть отформатирован в GPT. Удаление всех разделов, как описано выше, обычно решает эту проблему автоматически.</p>
+
+<h2 id="установка-драйверов-и-первичная-настройка-системы">Установка драйверов и первичная настройка системы</h2>
+<p>После завершения копирования файлов и перезагрузок система предложит выполнить первоначальную настройку. На этом этапе важно не пропустить установку драйверов чипсета, так как <em>Click BIOS 5</em> может не предоставлять полного набора драйверов для всех периферийных устройств через <em>Windows Update</em>. Особое внимание стоит уделить драйверам управления питанием и PCIe.</p>
+
+<p>Для материнских плат <em>MSI</em> существует утилита <strong>MSI Center</strong> (или <em>Dragon Center</em> для старых моделей), которая автоматически находит и устанавливает необходимые драйверы. Однако опытные пользователи предпочитают скачивать драйверы вручную с официального сайта, чтобы избежать установки лишнего программного обеспечения. Критически важны драйверы для <strong>LAN</strong> и <strong>Wi-Fi</strong> модулей.</p>
+
+<p>Не забудьте после установки всех драйверов и успешного запуска системы вернуться в BIOS и включить функцию <strong>Secure Boot</strong>, если вы используете <em>Windows 11</em> или заботитесь о безопасности. Также в <em>Click BIOS 5</em> можно активировать профиль <strong>XMP</strong> для оперативной памяти, чтобы она работала на заявленной производителем частоте, а не на базовой.</p>
+
+<details class="faq-item"><summary>Что делать, если пропал звук после установки?</summary><div class="faq-answer"><p>Часто Windows устанавливает универсальный драйвер High Definition Audio, который не работает корректно. Зайдите на сайт MSI, найдите свою модель платы в разделе Support -> Drivers и скачайте аудио-драйвер Realtek Audio Driver, затем перезагрузите компьютер.</p></div></details>
+
+<h2 id="решение-распространенных-проблем-при-установке">Решение распространенных проблем при установке</h2>
+<p>Даже при соблюдении всех инструкций могут возникнуть непредвиденные ситуации. Например, компьютер может циклически перезагружаться после установки. Это часто решается сбросом настроек BIOS в значение по умолчанию (<code>Load Optimized Defaults</code>) через меню <code>Save & Exit</code> или путем переподключения кабеля питания на несколько минут для сброса статического заряда.</p>
+
+<p>Другая частая проблема — отсутствие сети после установки. Если драйверы сетевой карты не встроены в образ Windows (что часто бывает с новыми платами <em>MSI</em> и Windows 10/11), вам понадобится второй компьютер или смартфон для загрузки драйвера <strong>LAN</strong>. Заранее позаботьтесь о наличии драйверов сетевой карты на флешке.</p>
+
+<p>Если установщик зависает на этапе «Запуск установки Windows», попробуйте отключить все лишние USB-устройства, оставив только клавиатуру и мышь. Также помогает отключение в BIOS функции <strong>Fast Boot</strong> и переключение порта USB для флешки на другой разъем, предпочтительно сзади системного блока, напрямую к материнской плате.</p>
+
+<blockquote>
+<p>⚠️ Внимание: При обновлении BIOS до последней версии перед установкой Windows будьте крайне осторожны с питанием. Прерывание процесса обновления BIOS приведет к выходу материнской платы из строя, и восстановление потребует программатора.</p>
+</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Самая частая причина ошибок установки — несовместимость стиля разделов диска (GPT/MBR) и режима загрузки BIOS (UEFI/Legacy). Удаление всех разделов на целевом диске решает 90% проблем.</p></div>
+
+<details>
+<summary>Почему установщик Windows не видит мой диск?</summary>
+<p>Чаще всего это происходит из-за режима работы контроллера SATA. Зайдите в BIOS, раздел Advanced -> Integrated Peripherals и переключите SATA Mode с RAID на AHCI. Если диск NVMe, убедитесь, что он исправен и виден в разделе System Status.</p>
+</details>
+
+<details>
+<summary>Нужно ли отключать Secure Boot для Windows 11?</summary>
+<p>Для установки Windows 11 Secure Boot должен быть включен. Однако, если вы используете нестандартное оборудование или модифицированный загрузчик, его можно временно отключить. После установки ОС обязательно верните параметр в состояние Enabled для соблюдения требований безопасности Microsoft.</p>
+</details>
+
+<details>
+<summary>Как активировать XMP профиль памяти в Click BIOS 5?</summary>
+<p>В главном меню EZ Mode или в разделе OC (Overclocking) найдите кнопку или переключатель с надписью A-XMP. Выберите профиль 1 или 2. Убедитесь, что частота памяти в строке DRAM Frequency изменилась на номинальную (например, 3200 MHz или выше).</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#подготовка-загрузочного-носителя-и-вход-в-bios">Подготовка загрузочного носителя и вход в BIOS</a></li><li><a href="#настройка-режима-загрузки-и-отключение-secure-boot">Настройка режима загрузки и отключение Secure Boot</a></li><li><a href="#конфигурация-дисковой-подсистемы-и-raid-режимов">Конфигурация дисковой подсистемы и RAID режимов</a></li><li><a href="#процесс-разметки-диска-и-форматирования">Процесс разметки диска и форматирования</a></li><li><a href="#установка-драйверов-и-первичная-настройка-системы">Установка драйверов и первичная настройка системы</a></li><li><a href="#решение-распространенных-проблем-при-установке">Решение распространенных проблем при установке</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/b/bi/bios-packard-bell-kak-obnovit.html" class="related-card">BIOS Packard Bell: как обновить и прошить материнскую плату</a></li><li><a href="/a/articles/k/ka/kak-otkalibrovat-kompas-na-androide-xiaomi.html" class="related-card">Как откалибровать компас на Xiaomi: полная инструкция</a></li><li><a href="/a/articles/o/os/oshibka-na-android-avto-11-kak-ustranit-polo-liftbek.html" class="related-card">Ошибка Android Auto 11 на Polo Liftback: как исправить</a></li><li><a href="/a/articles/k/ka/kak-sdelat-chtoby-vyzovy-v-vatsape-dublirovalis-v-spisok-vyzovov-na-telefone.html" class="related-card">Как отобразить звонки WhatsApp в списке вызовов Xiaomi</a></li><li><a href="/a/articles/k/ka/kak-vyklyuchit-avtoobnaruzhenie-uha-v-airpods-na-android.html" class="related-card">Как отключить автообнаружение уха AirPods на Android: Полная инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/b/bi/bios-packard-bell-kak-obnovit.html" class="related-bottom-card"><span class="related-bottom-title">BIOS Packard Bell: как обновить и прошить материнскую плату</span><span class="related-bottom-desc">Подробная инструкция, как обновить BIOS Packard Bell. Скачать прошивку, выполнить обновление через U</span></a><a href="/a/articles/k/ka/kak-otkalibrovat-kompas-na-androide-xiaomi.html" class="related-bottom-card"><span class="related-bottom-title">Как откалибровать компас на Xiaomi: полная инструкция</span><span class="related-bottom-desc">Узнайте, как правильно откалибровать компас на Android Xiaomi. Устраните ошибки навигации в Google К</span></a><a href="/a/articles/o/os/oshibka-na-android-avto-11-kak-ustranit-polo-liftbek.html" class="related-bottom-card"><span class="related-bottom-title">Ошибка Android Auto 11 на Polo Liftback: как исправить</span><span class="related-bottom-desc">Подробное руководство по устранению сбоя Android Auto на Skoda Polo 2023-2026. Решения для Polo Lift</span></a><a href="/a/articles/k/ka/kak-sdelat-chtoby-vyzovy-v-vatsape-dublirovalis-v-spisok-vyzovov-na-telefone.html" class="related-bottom-card"><span class="related-bottom-title">Как отобразить звонки WhatsApp в списке вызовов Xiaomi</span><span class="related-bottom-desc">Инструкция для Xiaomi: как включить отображение звонков WhatsApp в журнале вызовов MIUI. Решаем проб</span></a><a href="/a/articles/k/ka/kak-vyklyuchit-avtoobnaruzhenie-uha-v-airpods-na-android.html" class="related-bottom-card"><span class="related-bottom-title">Как отключить автообнаружение уха AirPods на Android: Полная инструкция</span><span class="related-bottom-desc">Узнайте, как выключить автообнаружение уха в AirPods на Android. Подробный гид по настройке датчиков</span></a><a href="/a/articles/k/ka/kak-zajti-v-linkedin-v-rossii-s-telefona-android.html" class="related-bottom-card"><span class="related-bottom-title">Как зайти в LinkedIn с телефона Андроид в России: актуальные методы 2026</span><span class="related-bottom-desc">Полная инструкция: как войти в LinkedIn на Android в РФ. Настройка VPN, DNS, выбор приложений и обхо</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

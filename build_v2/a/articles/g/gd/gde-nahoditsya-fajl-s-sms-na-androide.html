@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Где файл с СМС на Андроиде: поиск, пути и восстановление — ТехПодсказка</title>
+    <meta name="description" content="Узнайте точный путь к файлу с СМС на Андроиде, методы доступа через root-права, ADB и резервное копирование. Полная инструкция по работе с sms.db.">
+    <link rel="canonical" href="/a/articles/g/gd/gde-nahoditsya-fajl-s-sms-na-androide.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Где файл с СМС на Андроиде: поиск, пути и восстановление">
+    <meta property="og:description" content="Узнайте точный путь к файлу с СМС на Андроиде, методы доступа через root-права, ADB и резервное копирование. Полная инструкция по работе с sms.db.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/mobilnye-os/">Мобильные ОС</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Где файл с СМС на Андроиде: поиск, пути и восстановление</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Где находится файл с СМС на Андроиде: полный разбор структуры</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#системный-путь-к-базе-данных-сообщений">Системный путь к базе данных сообщений</a></li><li><a href="#методы-доступа-без-root-прав">Методы доступа без Root-прав</a></li><li><a href="#работа-с-файлами-через-root-доступ">Работа с файлами через Root-доступ</a></li><li><a href="#альтернативные-расположения-и-кэширование">Альтернативные расположения и кэширование</a></li><li><a href="#структура-базы-данных-sms">Структура базы данных SMS</a></li><li><a href="#восстановление-удаленных-сообщений">Восстановление удаленных сообщений</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Поиск точного расположения базы данных текстовых сообщений часто становится критически важным для пользователей, столкнувшихся с необходимостью восстановления утерянной переписки или переноса истории на новое устройство. Стандартный файловый менеджер, доступный обычному пользователю без прав суперпользователя, скрывает системные директории, где хранятся эти данные, в целях безопасности операционной системы. Понимание логической структуры хранения информации в <em>Android</em> позволяет не только находить нужный файл, но и грамотно создавать его резервные копии, избегая потери важных данных при перепрошивке или сбросе настроек.</p>
+
+<p>В подавляющем большинстве случаев искомый объект представляет собой базу данных <strong>SQLite</strong>, которая постоянно обновляется при поступлении новых сообщений. Доступ к этому файлу ограничен системными разрешениями, что делает невозможным его простое копирование через USB-кабель в режиме передачи файлов. Для работы с системными разделами потребуются специальные инструменты или получение расширенных прав доступа, о чем мы подробно поговорим в следующих разделах.</p>
+
+<p>Прежде чем приступать к манипуляциям с системными файлами, необходимо четко осознавать риски: любое некорректное вмешательство в работу баз данных мессенджеров может привести к полной потере истории переписки или нестабильной работе приложения «Сообщения». <strong>Резервное копирование</strong> перед любыми действиями является обязательным этапом, игнорирование которого может стать фатальным для ваших данных. Ниже мы рассмотрим технические детали расположения этих файлов и методы безопасной работы с ними.</p>
+
+<h2 id="системный-путь-к-базе-данных-сообщений">Системный путь к базе данных сообщений</h2>
+
+<p>Технически файл, содержащий все ваши входящие и исходящие SMS, а также MMS, расположен в защищенном разделе памяти устройства. Полный путь к нему выглядит как <code>/data/data/com.android.providers.telephony/databases/mmssms.db</code>. В некоторых версиях операционной системы или при использовании альтернативных прошивок имя файла может незначительно отличаться, например, <code>sms.db</code>, но структура директории обычно остается неизменной. Именно здесь <strong>SQLite</strong> хранит таблицы с номерами телефонов, текстом сообщений, временными метками и статусом доставки.</p>
+
+<p>Прямой доступ к папке <code>/data/data/</code> закрыт для обычных приложений и файловых менеджеров из соображений безопасности. Это предотвращает кражу персональных данных вредоносным ПО. Чтобы увидеть этот путь, устройству необходимы <strong>root-права</strong> (права суперпользователя) или использование отладочного моста <em>Android Debug Bridge (ADB)</em> с соответствующими разрешениями. Без этих инструментов пользователь видит лишь виртуальную файловую систему, скрытую от глубокого системного уровня.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Попытка вручную редактировать содержимое файла <code>mmssms.db</code> без знаний структуры SQLite гарантированно приведет к повреждению базы данных и исчезновению всех сообщений в приложении.</p>
+</blockquote>
+
+<p>Важно понимать, что путь может варьироваться в зависимости от производителя смартфона и версии <em>Android</em>. Например, на устройствах с сильно модифицированными оболочками от <em>Samsung</em> или <em>Xiaomi</em> некоторые системные приложения могут использовать собственные изолированные хранилища, хотя стандартный механизм телеком-провайдеров остается базовым. Для точного определения пути в вашем конкретном случае можно использовать файловые менеджеры с поддержкой root-доступа, такие как <em>Root Explorer</em> или <em>MIXplorer</em>.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте функцию поиска по файлам в root-менеджере, введя запрос "mmssms" или "sms.db", чтобы быстро найти актуальный файл базы данных на вашем конкретном устройстве.</p></div>
+
+<h2 id="методы-доступа-без-root-прав">Методы доступа без Root-прав</h2>
+
+<p>Если ваше устройство не имеет прав суперпользователя, прямой доступ к системному файлу невозможен, но существуют обходные пути для извлечения информации. Самый надежный и безопасный способ — использование встроенной функции резервного копирования <em>Google</em> или специализированных приложений, которые используют API системы для выгрузки данных в читаемом формате. Такие программы, как <em>SMS Backup & Restore</em>, создают копию сообщений в формате <strong>XML</strong>, которую можно сохранить на карту памяти или в облачное хранилище.</p>
+
+<p>Другим вариантом является использование отладки по USB и команды <em>ADB</em>. Этот метод требует включения режима разработчика на телефоне и установки драйверов на компьютер. С помощью команды <code>adb backup</code> можно попытаться создать резервную копию данных приложения провайдера телефонии, однако современные версии <em>Android</em> (начиная с 8.0 и выше) часто блокируют бэкап системных приложений даже через ADB без root-прав.</p>
+
+<ul>
+<li>📱 Использование облачных сервисов: автоматическая синхронизация через аккаунт Google позволяет восстановить СМС при первой настройке нового телефона.</li>
+<li>💻 Программы для ПК: специализированный софт вроде <em>Dr.Fone</em> или <em>AnyDroid</em> может сканировать устройство и выгружать сообщения в читаемом виде.</li>
+<li>📄 Экспорт в XML: приложения-помощники создают копию переписки, которую можно открыть в браузере или текстовом редакторе.</li>
+</ul>
+
+<p>Стоит отметить, что эффективность методов без root-прав сильно зависит от версии операционной системы. На новых версиях <em>Android</em> политика безопасности становится все строже, ограничивая доступ к данным других приложений. Поэтому для глубокой работы с файлами часто единственным решением остается получение прав суперпользователя или использование заводских инструментов отладки, если производитель оставил такую возможность.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Как вы предпочитаете сохранять важные СМС?</strong><ul><li>Через облако Google</li><li>С помощью сторонних приложений</li><li>Делают скриншоты</li><li>Никогда не сохраняю</li></ul></div></div>
+
+<h2 id="работа-с-файлами-через-root-доступ">Работа с файлами через Root-доступ</h2>
+
+<p>Наличие прав суперпользователя открывает полный доступ к файловой системе, позволяя не только копировать, но и редактировать системные базы данных. Для этого необходимо установить менеджер файлов с поддержкой root, например, <em>Root Explorer</em>, <em>Solid Explorer</em> или <em>FX File Explorer</em> с соответствующим плагином. После предоставления прав доступа вы сможете перейти по пути <code>/data/data/com.android.providers.telephony/databases/</code> и увидеть файл <code>mmssms.db</code>.</p>
+
+<p>При копировании файла Рекомендуется перед копированием либо остановить процесс «Телефон» или «Сообщения» в настройках приложений, либо просто скопировать файл, понимая, что он может содержать не совсем актуальные данные на момент последней синхронизации буфера. Копию лучше всего сохранять во внутреннюю память в папку <code>Download</code> или сразу передавать на компьютер.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка перед работой с Root</h4><label class="check-item"><input type="checkbox"><span>Установлен менеджер с root-доступом</span></label><label class="check-item"><input type="checkbox"><span>Сделана полная резервная копия системы</span></label><label class="check-item"><input type="checkbox"><span>Понятен риск блокировки устройства</span></label><label class="check-item"><input type="checkbox"><span>Есть доступ к компьютеру для сохранения файла</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>Редактирование файла требует знаний структуры баз данных <strong>SQLite</strong>. Для этого можно использовать десктопные программы вроде <em>DB Browser for SQLite</em>. Открыв скопированный файл <code>mmssms.db</code> на компьютере, вы увидите таблицы, где хранится текст сообщений. Однако любое изменение должно проводиться с соблюдением кодировки и форматов данных, иначе приложение перестанет отображать переписку.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Изменение файла базы данных на работающем устройстве без остановки соответствующего сервиса может привести к рассинхронизации данных и появлению ошибок в приложении сообщений.</p>
+</blockquote>
+
+<h2 id="альтернативные-расположения-и-кэширование">Альтернативные расположения и кэширование</h2>
+
+<p>Хотя основной файл находится в системном разделе, некоторые приложения могут создавать временные копии или кэш в доступных пользователю директориях. Например, при экспорте сообщений через стандартные средства или сторонние программы, файлы могут сохраняться в папке <code>/sdcard/SMS/</code> или <code>/sdcard/Android/data/[package_name]/files/</code>. Эти файлы обычно имеют расширение <strong>.xml</strong> или <strong>.json</strong> и предназначены для удобочитаемого хранения или переноса.</p>
+
+<p>Кроме того, на устройствах с установленной картой памяти <em>SD</em>, некоторые производители позволяют настроить сохранение медиа-вложений из MMS именно на внешний носитель. В этом случае в корне карты памяти или в папке <code>MMS</code> могут находиться папки с вложениями, хотя текстовая часть все равно останется в защищенной базе данных. Поиск таких файлов осуществляется через стандартный файловый менеджер по расширению файлов (jpg, png, amr).</p>
+
+<p>Важно различать файлы кэша и файлы данных. Кэш (<code>cache</code>) содержит временные данные для ускорения работы и может быть безопасно удален, тогда как файлы данных (<code>databases</code>) содержат вашу личную информацию. Путаница в этих директориях при попытке очистить место или восстановить данные может привести к неожиданным результатам.</p>
+
+<details class="faq-item"><summary>Почему путь может отличаться на разных телефонах?</summary><div class="faq-answer"><p>Производители Android-смартфонов часто вносят изменения в стандартную структуру файловых систем. Например, на некоторых моделях Huawei или Samsung путь может включать дополнительные уровни вложенности или иметь префикс, связанный с идентификатором пользователя (например, /data/user/0/ вместо /data/data/). Это связано с внедрением многопользовательского режима даже на личных устройствах.</p></div></details>
+
+<h2 id="структура-базы-данных-sms">Структура базы данных SMS</h2>
+
+<p>Понимание внутренней структуры файла <code>mmssms.db</code> помогает при восстановлении данных или анализе переписки. Файл представляет собой реляционную базу данных, состоящую из нескольких таблиц, связанных между собой. Основные таблицы включают <code>sms</code> (для текстовых сообщений), <code>mms</code> (для мультимедийных), <code>threads</code> (для группировки по диалогам) и <code>addresses</code> (для хранения номеров телефонов).</p>
+
+<p>Каждая запись в таблице <code>sms</code> содержит набор полей, описывающих сообщение: уникальный идентификатор (<code>_id</code>), адрес отправителя (<code>address</code>), тело сообщения (<code>body</code>), метку времени (<code>date</code>) и тип сообщения (<code>type</code>: входящее, исходящее, черновик). Знание этих параметров необходимо при написании SQL-запросов для выборки特定ной информации.</p>
+
+<table>
+<thead>
+<tr>
+<th>Название таблицы</th>
+<th>Описание содержимого</th>
+<th>Ключевые поля</th>
+</tr>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sms</code></td>
+<td>Основная таблица текстовых сообщений</td>
+<td><code>body</code>, <code>address</code>, <code>date</code></td>
+</tr>
+<tr>
+<td><code>mms</code></td>
+<td>Заголовки мультимедийных сообщений</td>
+<td><code>subject</code>, <code>date</code>, <code>m_size</code></td>
+</tr>
+<tr>
+<td><code>threads</code></td>
+<td>Группировка сообщений по диалогам</td>
+<td><code>recipient_ids</code>, <code>snippet</code></td>
+</tr>
+<tr>
+<td><code>part</code></td>
+<td>Части MMS (текст, картинки внутри MMS)</td>
+<td><code>text</code>, <code>_data</code> (путь к файлу)</td>
+</tr>
+<tr>
+<td><code>pdu</code></td>
+<td>Сырые данные протокола (редко используется)</td>
+<td><code>_data</code></td>
+</tr>
+</tbody>
+</table>
+
+<p>При анализе базы данных часто возникает необходимость связать таблицы <code>sms</code> и <code>threads</code>, чтобы понять, какому диалогу принадлежит сообщение. Поле <code>thread_id</code> в таблице сообщений ссылается на идентификатор в таблице потоков. Это позволяет приложениям выстраивать переписку в виде целостных диалогов, а не просто списка разрозненных сообщений.</p>
+
+<h2 id="восстановление-удаленных-сообщений">Восстановление удаленных сообщений</h2>
+
+<p>Вопрос восстановления удаленных СМС напрямую связан с тем, как файловая система <em>Android</em> обрабатывает удаление данных. Когда вы удаляете сообщение, операционная система не стирает физически байты из файла мгновенно; она лишь помечает место как свободное для записи новой информации. Теоретически, пока поверх не были записаны новые данные, восстановление возможно с помощью специализированного софта для анализа дисков.</p>
+
+<p>Однако на практике, из-за использования шифрования全盘 (FDE) или шифрования на уровне файлов (FBE) в современных версиях <em>Android</em>, прямой поиск «следов» в raw-памяти становится крайне сложным, если у вас нет заранее сделанной резервной копии. Шифрование делает нечитаемыми удаленные сегменты без ключа, который мог быть изменен или утерян.</p>
+
+<ul>
+<li>🔄 Резервная копия Google: самый простой способ — сбросить настройки телефона и восстановить данные из облака при первоначальной настройке.</li>
+<li>💾 Копия базы данных: если вы ранее копировали файл <code>mmssms.db</code>, его можно вернуть на место, заменив текущий файл (требуется root).</li>
+<li>🛠 Специализированный софт: программы для восстановления данных могут попытаться найти артефакты в памяти, но успех не гарантирован.</li>
+</ul>
+
+<blockquote>
+<p>⚠️ Внимание: При обнаружении потери важных сообщений немедленно переведите телефон в авиарежим и прекратите активное использование, чтобы предотвратить перезапись секторов памяти новыми данными.</p>
+</blockquote>
+
+<p>Эффективность восстановления также зависит от типа памяти устройства. Современные накопители <em>eMMC</em> и <em>UFS</em> используют механизмы выравнивания износа (TRIM), которые могут физически очищать удаленные блоки данных довольно быстро после удаления файла или освобождения места. Это делает восстановление данных через несколько дней или недель после удаления практически невозможным без профессионального оборудования.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Единственный гарантированный способ восстановления СМС — это регулярное создание резервных копий базы данных до момента потери информации.</p></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Можно ли найти файл СМС без прав Root?</summary>
+<p>Найти сам системный файл <code>mmssms.db</code> в оригинальном расположении без прав Root невозможно из-за ограничений безопасности <em>Android</em>. Однако вы можете получить содержимое этого файла в виде копии (XML, CSV, PDF) с помощью специальных приложений, которые используют разрешенные API для чтения сообщений и их экспорта в доступную папку.</p>
+</details>
+
+<details>
+<summary>Где хранятся СМС: на SIM-карте или в памяти телефона?</summary>
+<p>На современных смартфонах под управлением <em>Android</em> сообщения по умолчанию хранятся во внутренней памяти устройства в базе данных. SIM-карта имеет очень ограниченный объем памяти и обычно используется только для хранения контактов или нескольких старых СМС, если пользователь явно не выбрал опцию сохранения на карту при получении.</p>
+</details>
+
+<details>
+<summary>Как открыть файл mmssms.db на компьютере?</summary>
+<p>Файл <code>mmssms.db</code> является базой данных формата <strong>SQLite</strong>. Для его просмотра на компьютере вам потребуется программа-клиент для SQLite, например, бесплатная утилита <em>DB Browser for SQLite</em>. Просто скопируйте файл на ПК, откройте его через эту программу, и вы сможете浏览ровать таблицы и экспортировать данные.</p>
+</details>
+
+<details>
+<summary>Безопасно ли редактировать файл СМС вручную?</summary>
+<p>Ручное редактирование крайне опасно. База данных имеет сложную структуру связей и контрольных сумм. Любая ошибка при правке hex-кода или SQL-запроса может привести к тому, что приложение «Сообщения» перестанет запускаться или удалит всю историю. Всегда работайте только с копией файла.</p>
+</details>
+
+<details>
+<summary>Почему после восстановления СМС не отображаются?</summary>
+<p>Это может происходить по нескольким причинам: файл базы данных поврежден, версия приложения не совместима со структурой БД, или файл был помещен не в ту директорию. Также часто проблема решается очисткой кэша приложения «Сообщения» и перезагрузкой устройства после восстановления файла.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#системный-путь-к-базе-данных-сообщений">Системный путь к базе данных сообщений</a></li><li><a href="#методы-доступа-без-root-прав">Методы доступа без Root-прав</a></li><li><a href="#работа-с-файлами-через-root-доступ">Работа с файлами через Root-доступ</a></li><li><a href="#альтернативные-расположения-и-кэширование">Альтернативные расположения и кэширование</a></li><li><a href="#структура-базы-данных-sms">Структура базы данных SMS</a></li><li><a href="#восстановление-удаленных-сообщений">Восстановление удаленных сообщений</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-na-magnitole-android-sdelat-chto-ona-ne-vyklyuchalas-chasto-perezagruzka.html" class="related-card">Андроид магнитола выключается сама: как отключить перезагрузку</a></li><li><a href="/a/articles/k/ka/kak-podklyuchit-shar-cvetovoj-k-telefonu.html" class="related-card">Как подключить шар цветовой к телефону: полное руководство</a></li><li><a href="/a/articles/k/ka/kak-otmenit-zayavku-na-remont-kvartirnogo-telefona-v-rostelekome.html" class="related-card">Как отменить заявку на ремонт телефона Ростелеком: пошагово</a></li><li><a href="/a/articles/k/ka/kak-sdelat-yutub-poverh-vseh-okon-na-telefone-android-besplatno.html" class="related-card">YouTube поверх окон на Андроид: бесплатные способы 2026</a></li><li><a href="/a/articles/i/ig/igry-dlya-android-s-vore-little-school-girls.html" class="related-card">Игры для Android с Vore Little School Girls: обзор жанра</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-na-magnitole-android-sdelat-chto-ona-ne-vyklyuchalas-chasto-perezagruzka.html" class="related-bottom-card"><span class="related-bottom-title">Андроид магнитола выключается сама: как отключить перезагрузку</span><span class="related-bottom-desc">Магнитола Android постоянно перезагружается? Узнайте, как настроить таймеры сна, проверить питание и</span></a><a href="/a/articles/k/ka/kak-podklyuchit-shar-cvetovoj-k-telefonu.html" class="related-bottom-card"><span class="related-bottom-title">Как подключить шар цветовой к телефону: полное руководство</span><span class="related-bottom-desc">Подробная инструкция, как настроить цветовой шар (RGB) на смартфоне. Решение проблем с Bluetooth, пр</span></a><a href="/a/articles/k/ka/kak-otmenit-zayavku-na-remont-kvartirnogo-telefona-v-rostelekome.html" class="related-bottom-card"><span class="related-bottom-title">Как отменить заявку на ремонт телефона Ростелеком: пошагово</span><span class="related-bottom-desc">Узнайте, как быстро отменить заявку на ремонт квартирного телефона в Ростелекоме через личный кабине</span></a><a href="/a/articles/k/ka/kak-sdelat-yutub-poverh-vseh-okon-na-telefone-android-besplatno.html" class="related-bottom-card"><span class="related-bottom-title">YouTube поверх окон на Андроид: бесплатные способы 2026</span><span class="related-bottom-desc">Узнайте, как запустить YouTube поверх других приложений на Android бесплатно. Проверенные методы, на</span></a><a href="/a/articles/i/ig/igry-dlya-android-s-vore-little-school-girls.html" class="related-bottom-card"><span class="related-bottom-title">Игры для Android с Vore Little School Girls: обзор жанра</span><span class="related-bottom-desc">Обзор нишевых игр для Android. Особенности жанра Vore, рейтинги безопасности и популярные тайтлы про</span></a><a href="/a/articles/t/te/tema-dlya-android-ambrella.html" class="related-bottom-card"><span class="related-bottom-title">Тема Umbrella для Android: установка, настройка и защита</span><span class="related-bottom-desc">Как скачать и установить тему Umbrella на Android. Инструкция по настройке лаунчеров, виджетов и ико</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

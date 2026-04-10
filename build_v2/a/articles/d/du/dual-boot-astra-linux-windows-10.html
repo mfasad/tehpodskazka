@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Dual Boot Astra Linux и Windows 10: полная инструкция — ТехПодсказка</title>
+    <meta name="description" content="Как установить Astra Linux рядом с Windows 10. Настройка загрузчика, разметка диска и решение проблем с UEFI в пошаговом руководстве.">
+    <link rel="canonical" href="/a/articles/d/du/dual-boot-astra-linux-windows-10.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Dual Boot Astra Linux и Windows 10: полная инструкция">
+    <meta property="og:description" content="Как установить Astra Linux рядом с Windows 10. Настройка загрузчика, разметка диска и решение проблем с UEFI в пошаговом руководстве.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/windows-i-pk/">Windows и ПК</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Dual Boot Astra Linux и Windows 10: полная инструкция</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Как установить Astra Linux рядом с Windows 10: руководство по Dual Boot</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#подготовка-оборудования-и-проверка-совместимости">Подготовка оборудования и проверка совместимости</a></li><li><a href="#создание-загрузочного-носителя-и-настройка-bios">Создание загрузочного носителя и настройка BIOS</a></li><li><a href="#разметка-диска-критический-этап-установки">Разметка диска: критический этап установки</a></li><li><a href="#процесс-установки-и-базовая-конфигурация">Процесс установки и базовая конфигурация</a></li><li><a href="#настройка-загрузчика-grub-и-управление-системами">Настройка загрузчика GRUB и управление системами</a></li><li><a href="#решение-типичных-проблем-и-доступ-к-данным">Решение типичных проблем и доступ к данным</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>Современные требования информационной безопасности и необходимость использования специализированного отечественного программного обеспечения часто ставят перед пользователями задачу организации <strong>двойной загрузки</strong> на одном компьютере. Сочетание операционной системы <em>Astra Linux</em> с привычной <em>Windows 10</em> позволяет решать профессиональные задачи в защищенном контуре, сохраняя доступ к привычным играм и мультимедийному контенту. Установка двух систем на один диск требует внимательности, но при правильном подходе этот процесс не вызывает сложностей даже у неопытных пользователей.</p>
+
+<p>Ключевым моментом здесь является корректная подготовка <strong>разметки диска</strong> и настройка <em>UEFI/BIOS</em>. Ошибки на этапе планирования структуры разделов могут привести к потере данных или неработоспособности загрузчика. В этом руководстве мы детально разберем каждый шаг, от создания загрузочной флешки до тонкой настройки <code>GRUB</code>, чтобы вы могли безопасно запустить <strong>Dual Boot</strong> конфигурацию.</p>
+
+<p>Стоит сразу отметить, что <em>Astra Linux</em> обладает высокой совместимостью с современным железом, но требует соблюдения определенной последовательности действий при установке после Windows. <mark>Порядок установки критичен: сначала всегда ставится Windows 10, и только потом Linux, чтобы избежать проблем с загрузчиком.</mark> Если у вас уже установлена Windows, это идеальный сценарий для начала работы.</p>
+
+<h2 id="подготовка-оборудования-и-проверка-совместимости">Подготовка оборудования и проверка совместимости</h2>
+<p>Перед началом любых манипуляций с дисками необходимо убедиться, что ваше оборудование готово к работе с <strong>защищенными ОС</strong>. <em>Astra Linux</em> предъявляет минимальные требования к ресурсам, однако для комфортной работы с графическим окружением <em>Fly</em> или <em>KDE</em> рекомендуется иметь не менее 4 ГБ оперативной памяти. Проверьте, включен ли в BIOS режим <code>UEFI</code>, так как современные версии дистрибутива ориентированы именно на этот стандарт загрузки.</p>
+
+<p>Важным этапом является создание резервной копии важных данных. Любые операции с <strong>таблицей разделов</strong> несут в себе потенциальный риск. Также убедитесь, что у вас есть доступ к интернету для загрузки актуальных образов системы и драйверов. Для установки вам потребуется USB-накопитель объемом не менее 8 ГБ.</p>
+
+<ul>
+<li>🔍 Проверьте свободное место на диске: для комфортной работы <em>Astra Linux</em> желательно зарезервировать минимум 30-40 ГБ.</li>
+<li>💾 Скачайите актуальный ISO-образ с официального сайта разработчика, выбрав версию <strong>Special Edition</strong> или <em>Common Edition</em> в зависимости от ваших задач.</li>
+<li>⚙️ Убедитесь, что в BIOS отключена опция <code>Secure Boot</code> или настроена на работу с Linux-дистрибутивами, хотя <em>Astra Linux</em> часто имеет подписанные загрузчики.</li>
+</ul>
+
+<blockquote>
+<p>⚠️ Внимание: Если на вашем диске включено шифрование <em>BitLocker</em> в Windows 10, обязательно создайте резервную копию ключа восстановления перед изменением структуры разделов, иначе доступ к данным Windows может быть утерян.</p>
+</blockquote>
+
+<p>Процесс проверки совместимости драйверов лучше всего проводить в режиме LiveCD. Это позволяет загрузиться с флешки без установки и проверить работу Wi-Fi адаптера, звуковой карты и видеодрайвера. Если в режиме Live все работает корректно, то и после установки проблем не возникнет.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой уровень опыта работы с Linux у вас?</strong><ul><li>Начинающий (первый раз ставлю)</li><li>Любитель (ставил Ubuntu/Mint)</li><li>Опытный пользователь</li><li>Системный администратор</li></ul></div></div>
+
+<h2 id="создание-загрузочного-носителя-и-настройка-bios">Создание загрузочного носителя и настройка BIOS</h2>
+<p>Для записи образа на флешку в среде Windows удобнее всего использовать утилиту <em>Rufus</em> или <em>Etcher</em>. При записи образа <em>Astra Linux</em> в <em>Rufus</em> следует выбрать схему раздела <code>GPT</code> и целевую систему <code>UEFI (non CSM)</code>. Это гарантирует, что установщик правильно распознает файловую систему и подготовит EFI-раздел.</p>
+
+<p>После записи образа необходимо войти в настройки BIOS/UEFI вашего компьютера. Обычно для этого при загрузке нужно нажать клавиши <code>F2</code>, <code>Del</code> или <code>F10</code>. В разделе <code>Boot</code> приоритет загрузки следует выставить на ваш USB-накопитель. Также рекомендуется отключить опцию <strong>Fast Boot</strong>, чтобы система успевала корректно инициализировать внешние устройства.</p>
+
+<pre><code># Пример команды для проверки целостности образа (в Linux-терминале перед записью)
+<p>sha256sum astra-linux-1.7.8.iso</code></pre></p>
+
+<p>Некоторые пользователи сталкиваются с тем, что установщик не видит жесткий диск. В таких случаях в BIOS нужно переключить режим работы контроллера SATA с <code>RAID</code> или <code>RST</code> на <code>AHCI</code>. <strong>Важно:</strong> изменение этого параметра на уже установленной Windows без подготовки может привести к её неработоспособности (синий экран смерти), поэтому делайте это только если понимаете риски или ставите систему на чистый диск.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте порт USB 2.0 для подключения флешки, если при загрузке возникают ошибки инициализации USB 3.0, хотя современные ядра Astra Linux обычно лишены этой проблемы.</p></div>
+
+<h2 id="разметка-диска-критический-этап-установки">Разметка диска: критический этап установки</h2>
+<p>Самый ответственный момент — это разметка дискового пространства. Установщик <em>Astra Linux</em> предлагает автоматическую установку рядом с Windows, но для полного контроля и стабильности <strong>Dual Boot</strong> лучше выбрать ручной режим разметки. Вам нужно будет найти раздел с файловой системой <code>NTFS</code>, который занимает большую часть диска, и "откусить" от него свободное место.</p>
+
+<p>Для корректной работы системы необходимо создать несколько разделов. Основному разделу с файловой системой <code>ext4</code> нужно выделить корневую точку монтирования <code>/</code>. Отдельно рекомендуется создать раздел подкачки <code>swap</code>, размер которого обычно равен объему оперативной памяти, хотя при наличии большого объема RAM это не всегда строго обязательно.</p>
+
+<table>
+<thead>
+<tr>
+<th>Тип раздела</th>
+<th>Файловая система</th>
+<th>Точка монтирования</th>
+<th>Рекомендуемый размер</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Системный</td>
+<td>ext4</td>
+<td>/</td>
+<td>30-50 ГБ</td>
+</tr>
+<tr>
+<td>Пользовательский</td>
+<td>ext4</td>
+<td>/home</td>
+<td>Остальное место</td>
+</tr>
+<tr>
+<td>Подкачка</td>
+<td>swap</td>
+<td>-</td>
+<td>4-8 ГБ</td>
+</tr>
+<tr>
+<td>Загрузчик</td>
+<td>fat32 (EFI)</td>
+<td>/boot/efi</td>
+<td>Не менять (существующий)</td>
+</tr>
+</tbody>
+</table>
+
+<p>При ручной разметке крайне важно не отформатировать EFI-раздел Windows, который обычно имеет размер около 100-500 МБ и файловую систему FAT32. В установщике нужно просто указать точку монтирования <code>/boot/efi</code> для этого раздела, сняв галочку с форматирования. Это позволит <strong>GRUB</strong> встать в очередь загрузки вместе с <em>Windows Boot Manager</em>.</p>
+
+<div class="checklist-block"><h4>☑️ Чек-лист перед форматированием</h4><label class="check-item"><input type="checkbox"><span>Скопированы важные данные</span></label><label class="check-item"><input type="checkbox"><span>Известен пароль от BitLocker</span></label><label class="check-item"><input type="checkbox"><span>Определен EFI раздел</span></label><label class="check-item"><input type="checkbox"><span>Выделено место под /home</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<blockquote>
+<p>⚠️ Внимание: Будьте предельно осторожны при выборе диска для установки загрузчика. Указывайте EFI-раздел, а не весь диск целиком (например, /dev/sda1, а не /dev/sda), чтобы не перезаписать таблицу разделов.</p>
+</blockquote>
+
+<h2 id="процесс-установки-и-базовая-конфигурация">Процесс установки и базовая конфигурация</h2>
+<p>После подтверждения разметки начнется копирование файлов. В процессе установки <em>Astra Linux</em> попросит задать пароль для суперпользователя <code>root</code> и создать обычного пользователя. Запомните эти данные, так как без них вы не сможете вносить изменения в систему. Пароль root в <strong>Special Edition</strong> может требовать соблюдения сложной политики безопасности.</p>
+
+<p>На этапе выбора программного обеспечения можно выбрать графическое окружение. По умолчанию используется легковесный <em>Fly</em>, который отлично оптимизирован, но пользователи Windows часто предпочитают более привычный интерфейс, похожий на <em>KDE</em> или <em>GNOME</em>, если они доступны в выбранном репозитории. Для начала лучше оставить стандартный набор, чтобы гарантировать стабильность.</p>
+
+<p>Установщик также предложит настроить сетевое подключение. Если вы находитесь в корпоративной сети, могут потребоваться дополнительные настройки прокси. Для домашней сети обычно достаточно автоматического получения адреса по <code>DHCP</code>. После завершения установки система предложит перезагрузиться.</p>
+
+<details class="faq-item"><summary>Что делать, если система не видит сетевую карту?</summary><div class="faq-answer"><p>Если после установки отсутствует сеть, скорее всего, не установлен проприетарный драйвер. В Astra Linux используйте команду "modprobe" для поиска устройства или подключитесь через USB-модем/телефон для установки драйверов из репозитория.</p></div></details>
+
+<p>Первая загрузка может занять больше времени, чем обычно, так как происходит первоначальная настройка окружения. Если вы увидели меню выбора операционной системы, значит, <strong>загрузчик</strong> установлен корректно. Теперь можно переходить к тонкой настройке.</p>
+
+<h2 id="настройка-загрузчика-grub-и-управление-системами">Настройка загрузчика GRUB и управление системами</h2>
+<p>После первой установки <em>Astra Linux</em> меню <code>GRUB</code> становится главным. Однако иногда случается так, что Windows не отображается в списке. Для исправления этого нужно обновить конфигурацию загрузчика. Откройте терминал в Astra Linux и используйте утилиту <code>update-grub</code>, которая автоматически просканирует диски на наличие других ОС.</p>
+
+<pre><code>sudo update-grub</code></pre>
+
+<p>Если автоматическое обнаружение не сработало, возможно, потребуется установить пакет <code>os-prober</code>. В некоторых версиях дистрибутивов он не установлен по умолчанию. После установки пакета повторите команду обновления конфигурации. Это добавит запись <em>Windows Boot Manager</em> в меню загрузки.</p>
+
+<p>Для изменения времени ожидания выбора системы или порядка загрузки можно отредактировать файл конфигурации <code>/etc/default/grub</code>. Найдите параметр <code>GRUB_TIMEOUT</code> и измените его значение на желаемое количество секунд. После редактирования файла обязательно выполните команду обновления конфигурации снова.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Порядок загрузки в BIOS должен стоять на "Astra Linux" или "GRUB", чтобы вы могли выбирать между системами при каждом включении компьютера.</p></div>
+
+<p>В случае, если обновления Windows перезапишут MBR или EFI-загрузчик, не паникуйте. Вам понадобится загрузочная флешка с <em>Astra Linux</em>. Загрузившись в Live-режиме, можно использовать утилиту <code>boot-repair</code> или вручную смонтировать разделы и переустановить <strong>GRUB</strong> командой <code>grub-install</code>.</p>
+
+<h2 id="решение-типичных-проблем-и-доступ-к-данным">Решение типичных проблем и доступ к данным</h2>
+<p>Одной из частых задач при использовании <strong>Dual Boot</strong> является доступ к файлам Windows из-под Linux. Файловая система <code>NTFS</code> отлично читается в <em>Astra Linux</code>. Однако, если в Windows включена функция "Быстрый запуск" (Fast Startup), диск может быть заблокирован для записи. Чтобы избежать ошибок, отключите эту функцию в настройках электропитания Windows.</p>
+
+<p>Проблемы с драйверами видеокарты <em>NVIDIA</em> также встречаются нередко. В <em>Astra Linux</em> рекомендуется использовать драйверы из репозитория, которые прошли сертификацию ФСТЭК, но для максимальной производительности в играх под Wine или в Windows иногда требуется установка проприетарных драйверов. Делайте это только если вы уверены в своих действиях, так как обновления ядра могут ломать работу проприетарных модулей.</p>
+
+<ul>
+<li>🛠 Для монтирования разделов Windows используйте файловый менеджер или команду <code>mount -t ntfs-3g</code>.</li>
+<li>🔄 Синхронизация времени: Windows и Linux используют разные методы хранения времени (локальное против UTC). Чтобы время не сбивалось при переключении, в Linux выполните команду: <code>timedatectl set-local-rtc 1 --adjust-system-clock</code>.</li>
+<li>🔒 Шифрование: если вы используете шифрование <code>LUKS</code> для раздела Linux, убедитесь, что у вас есть резервная копия заголовка шифрования.</li>
+</ul>
+
+<blockquote>
+<p>⚠️ Внимание: Никогда не проводите дефрагментацию раздела Linux (ext4) средствами Windows и не проверяйте диск NTFS утилитой chkdsk из-под Linux без размонтирования — это приведет к повреждению файловой системы.</p>
+</blockquote>
+
+<p>Стабильность работы связки <em>Astra Linux</em> и <em>Windows 10</em> во многом зависит от регулярного обслуживания обеих систем. Обновляйте ядро Linux для поддержки нового оборудования и устанавливайте патчи безопасности Windows. При правильной настройке <strong>Dual Boot</strong> становится мощным инструментом, объединяющим безопасность и универсальность.</p>
+
+<details class="faq-item"><summary>Как удалить Linux, оставив Windows?</summary><div class="faq-answer"><p>Загрузитесь с установочной флешки Windows, запустите восстановление загрузчика (bootrec /fixmbr), затем удалите разделы Linux через Управление дисками в Windows.</p></div></details>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Можно ли установить Astra Linux на диск с динамической разметкой Windows?</summary>
+<p>Нет, установщик <em>Astra Linux</em>, как и большинство дистрибутивов Linux, требует базовой (Basic) разметки диска. Для установки необходимо конвертировать диск в GPT или MBR базовый тип, что может повлечь потерю данных, поэтому требуется полная резервная копия.</p>
+</details>
+
+<details>
+<summary>Что делать, если после установки Linux пропал звук в Windows?</summary>
+<p>Иногда драйверы аудио конфликтуют или состояние оборудования "залипает". Попробуйте выполнить полную перезагрузку компьютера (не "Завершение работы", а именно "Перезагрузка" из меню Windows), чтобы сбросить состояние контроллера звука.</p>
+</details>
+
+<details>
+<summary>Безопасно ли использовать Dual Boot для работы с гостайной?</summary>
+<p>Сам по себе Dual Boot не обеспечивает изоляцию уровней секретности. Для работы с гостайней в <em>Astra Linux Special Edition</em> должны быть соблюдены требования по аппаратному обеспечению, отсутствию беспроводных модулей (если не сертифицированы) и настроены метки безопасности. Наличие Windows на том же физическом диске может нарушить требования по защите от утечек, поэтому для реальной работы с гостайной рекомендуется использовать отдельный физический компьютер.</p>
+</details>
+
+<details>
+<summary>Как восстановить загрузчик Windows, если GRUB перестал работать?</summary>
+<p>Вам потребуется загрузочная флешка с Windows 10. После загрузки с нее выберите "Восстановление системы" -> "Поиск и устранение неисправностей" -> "Командная строка" и выполните команду <code>bootrec /fixboot</code> и <code>bootrec /fixmbr</code>. Это вернет загрузку Windows, но скроет Linux.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#подготовка-оборудования-и-проверка-совместимости">Подготовка оборудования и проверка совместимости</a></li><li><a href="#создание-загрузочного-носителя-и-настройка-bios">Создание загрузочного носителя и настройка BIOS</a></li><li><a href="#разметка-диска-критический-этап-установки">Разметка диска: критический этап установки</a></li><li><a href="#процесс-установки-и-базовая-конфигурация">Процесс установки и базовая конфигурация</a></li><li><a href="#настройка-загрузчика-grub-и-управление-системами">Настройка загрузчика GRUB и управление системами</a></li><li><a href="#решение-типичных-проблем-и-доступ-к-данным">Решение типичных проблем и доступ к данным</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-posmotret-harakteristiki-videokarty-na-windows-10.html" class="related-card">Как посмотреть характеристики видеокарты на Windows 10: 7 способов</a></li><li><a href="/a/articles/t/tp/tp-link-archer-t4u-plus-drajver-drajver-dlya-windows7.html" class="related-card">TP-Link Archer T4U Plus драйвер для Windows 7: установка и настройка</a></li><li><a href="/a/articles/k/ka/kak-umenshit-ping-v-setevyh-igrah-na-windows-11.html" class="related-card">Как уменьшить пинг в играх на Windows 11: полное руководство</a></li><li><a href="/a/articles/a/ap/apple-time-capsule-upravlenie-s-os-windows.html" class="related-card">Apple Time Capsule и Windows: полное руководство по настройке</a></li><li><a href="/a/articles/b/bo/bootcamp-voznikla-problema-pri-chtenie-iso-fajla-windows-10.html" class="related-card">BootCamp не видит образ Windows 10: решение ошибки ISO</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-posmotret-harakteristiki-videokarty-na-windows-10.html" class="related-bottom-card"><span class="related-bottom-title">Как посмотреть характеристики видеокарты на Windows 10: 7 способов</span><span class="related-bottom-desc">Узнайте модель, объем памяти и драйверы GPU. Подробный гид: Диспетчер задач, dxdiag, диспетчер устро</span></a><a href="/a/articles/t/tp/tp-link-archer-t4u-plus-drajver-drajver-dlya-windows7.html" class="related-bottom-card"><span class="related-bottom-title">TP-Link Archer T4U Plus драйвер для Windows 7: установка и настройка</span><span class="related-bottom-desc">Полное руководство по установке драйвера TP-Link Archer T4U Plus на Windows 7. Скачать, настроить и </span></a><a href="/a/articles/k/ka/kak-umenshit-ping-v-setevyh-igrah-na-windows-11.html" class="related-bottom-card"><span class="related-bottom-title">Как уменьшить пинг в играх на Windows 11: полное руководство</span><span class="related-bottom-desc">Узнайте, как снизить пинг и убрать лаги в сетевых играх на Windows 11. Проверенные методы настройки </span></a><a href="/a/articles/a/ap/apple-time-capsule-upravlenie-s-os-windows.html" class="related-bottom-card"><span class="related-bottom-title">Apple Time Capsule и Windows: полное руководство по настройке</span><span class="related-bottom-desc">Как управлять Apple Time Capsule с Windows? Настройка сети, доступ к файлам, сброс и использование у</span></a><a href="/a/articles/b/bo/bootcamp-voznikla-problema-pri-chtenie-iso-fajla-windows-10.html" class="related-bottom-card"><span class="related-bottom-title">BootCamp не видит образ Windows 10: решение ошибки ISO</span><span class="related-bottom-desc">Возникла проблема при чтении файла ISO Windows 10 в BootCamp? Узнайте причины сбоя, способы исправле</span></a><a href="/a/articles/k/ka/kak-podklyuchit-dvd-pleer-k-monitoru-ot-kompyutera-cherez-tyulpany.html" class="related-bottom-card"><span class="related-bottom-title">Как подключить DVD плеер к монитору через тюльпаны: Инструкция</span><span class="related-bottom-desc">Подробная инструкция, как подключить DVD плеер к компьютерному монитору через тюльпаны. Решаем пробл</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Настройка безопасности Windows 10 через GPO: полное руководство — ТехПодсказка</title>
+    <meta name="description" content="Пошаговая инструкция по настройке групповых политик (GPO) в Windows 10. Блокировка USB, запрет программ и защита системы.">
+    <link rel="canonical" href="/a/articles/n/na/nastrojka-bezopasnosti-os-windows-10-cherez-gpo.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Настройка безопасности Windows 10 через GPO: полное руководство">
+    <meta property="og:description" content="Пошаговая инструкция по настройке групповых политик (GPO) в Windows 10. Блокировка USB, запрет программ и защита системы.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/windows-i-pk/">Windows и ПК</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Настройка безопасности Windows 10 через GPO: полное руководство</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Профессиональная настройка безопасности Windows 10 через GPO</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#доступ-к-редактору-и-базовая-структура-политик">Доступ к редактору и базовая структура политик</a></li><li><a href="#управление-исполняемыми-файлами-и-скриптами">Управление исполняемыми файлами и скриптами</a></li><li><a href="#контроль-внешних-устройств-и-портов">Контроль внешних устройств и портов</a></li><li><a href="#аудит-и-мониторинг-событий-безопасности">Аудит и мониторинг событий безопасности</a></li><li><a href="#усиление-парольной-политики-и-блокировка">Усиление парольной политики и блокировка</a></li><li><a href="#сетевая-безопасность-и-протоколы">Сетевая безопасность и протоколы</a></li><li><a href="#сводная-таблица-ключевых-политик-безопасности">Сводная таблица ключевых политик безопасности</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>Защита корпоративного периметра или персонального рабочего места начинается не с покупки дорогого антивируса, а с грамотной конфигурации операционной системы. <strong>Групповые политики</strong> (Group Policy) представляют собой мощнейший инструмент администрирования, встроенный непосредственно в операционную систему Windows 10 Pro и Enterprise. Именно через этот механизм системные администраторы могут централизованно управлять тысячами компьютеров, внедряя единые стандарты безопасности и блокируя потенциально опасные действия пользователей.</p>
+<p>Использование редактора локальной групповой политики позволяет детально контролировать поведение ОС, отключая ненужные службы и ограничивая доступ к критическим функциям. В отличие от реестра, где одна ошибка может привести к нестабильности, <em>gpedit.msc</em> предоставляет структурированный и безопасный интерфейс для внесения изменений. Понимание принципов работы этих политик является фундаментальным навыком для любого специалиста по информационной безопасности.</p>
+<p>В данной статье мы рассмотрим ключевые аспекты харденинга (усиления защиты) системы, которые необходимо внедрить в первую очередь. Вы научитесь блокировать выполнение нежелательного кода, ограничивать доступ к съемным носителям и настраивать сложные правила паролей. Это не просто теоретическое руководство, а практический мануал для реального укрепления периметра безопасности.</p>
+
+<h2 id="доступ-к-редактору-и-базовая-структура-политик">Доступ к редактору и базовая структура политик</h2>
+<p>Для начала работы необходимо запустить оснастку управления групповыми политиками. В Windows 10 редакций Pro и Enterprise это делается через команду <code>gpedit.msc</code>, вводимую в диалоговом окне "Выполнить". Открывшееся окно разделено на две логические части: конфигурация компьютера и конфигурация пользователя. <strong>Конфигурация компьютера</strong> применяется при загрузке системы независимо от того, кто вошел в систему, что делает её идеальной для глобальных настроек безопасности.</p>
+<p>Вторая ветка, <strong>Конфигурация пользователя</strong>, вступает в силу после авторизации конкретного человека и позволяет гибко настраивать окружение рабочей среды. Навигация осуществляется через древовидную структуру, где политики группируются по функциональному признаку: административные шаблоны, параметры безопасности, скрипты. Важно понимать иерархию применения: локальные политики применяются первыми, затем доменные, если компьютер состоит в домене.</p>
+<blockquote>
+<p>⚠️ Внимание: Внесение изменений в раздел "Конфигурация компьютера" требует прав администратора и может повлиять на работу всех пользователей данного устройства. Всегда тестируйте новые правила на тестовой машине перед массовым внедрением.</p>
+</blockquote>
+<p>Опытные администраторы часто используют экспорт текущих настроек в файл, чтобы иметь возможность быстро откатить изменения в случае конфликта программ. Для этого можно использовать командную строку и утилиту <code>secedit</code>, которая позволяет анализировать и сравнивать текущую конфигурацию с эталонным шаблоном безопасности. Такой подход минимизирует риски человеческой ошибки при ручной настройке сотен параметров.</p>
+
+<h2 id="управление-исполняемыми-файлами-и-скриптами">Управление исполняемыми файлами и скриптами</h2>
+<p>Одной из самых критичных задач является предотвращение запуска вредоносного программного обеспечения. Механизм AppLocker или более простые правила выполнения программ позволяют создать белый список разрешенных приложений. Вы можете запретить запуск исполняемых файлов из временных папок, таких как <code>C:\Users\*\AppData\Local\Temp</code>, где чаще всего оказываются вирусы, скачанные из интернета.</p>
+<p>Настройка осуществляется через путь "Конфигурация компьютера" → "Конфигурация Windows" → "Параметры безопасности" → "Политики управления приложениями". Здесь можно создать правило, которое по умолчанию запрещает запуск всего, что не входит в исключительный список. Это радикальная, но极其 эффективная мера, которая сводит риск заражения через социнженерию практически к нулю.</p>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте хеши файлов для создания правил, чтобы запретить конкретную версию программы, даже если пользователь переименует исполняемый файл.</p></div>
+<p>Дополнительно стоит обратить внимание на блокировку скриптов PowerShell и командной строки для обычных пользователей. Злоумышленники часто используют легитимные системные улиты для проведения атак типа "Living off the Land". Ограничение прав на выполнение скриптов значительно усложняет жизнь нападающим.</p>
+<ul>
+<li>🔒 Запретите выполнение файлов из папки "Загрузки" для всех пользователей, кроме администраторов.</li>
+<li>🛡️ Внедрите правило, разрешающее запуск программ только из директории <code>C:\Program Files</code> и <code>C:\Windows</code>.</li>
+<li>🚫 Отключите возможность запуска скриптов PowerShell в режиме без ограничения прав (Constrained Language Mode).</li>
+<li>📁 Блокируйте запуск исполняемых файлов с сетевых ресурсов, если в этом нет прямой производственной необходимости.</li>
+</ul>
+
+<h2 id="контроль-внешних-устройств-и-портов">Контроль внешних устройств и портов</h2>
+<p>Физический доступ к портам USB представляет собой серьезную угрозу утечки данных или занесения вирусов. Через редактор групповых политик можно гибко управлять доступом к съемным запоминающим устройствам. Вы можете полностью запретить чтение и запись, разрешить только чтение (для копирования отчетов, но запрета выноса данных) или разрешить работу только с устройствами, имеющими特定的 вендор-ID.</p>
+<p>Настройка находится по пути: "Конфигурация компьютера" → "Административные шаблоны" → "Система" → "Доступ к съемным запоминающим устройствам". Здесь можно активировать политику "Съемные диски: Запретить чтение" или "Запретить запись". Это позволяет реализовать модель безопасности, при которой пользователь может зарядить телефон, но не сможет скопировать на него базу данных клиентов.</p>
+<div class="attention-box attention-info"><div><strong>📊 Как вы контролируете USB-порты в организации?</strong><ul><li>Полностью запрещены</li><li>Разрешены только мыши/клавиатуры</li><li>Контроль через whitelist ID</li><li>Никакого контроля, это неудобно</li></ul></div></div>
+<p> Однако для максимальной безопасности стоит рассмотреть возможность блокировки установки новых драйверов устройств, что предотвратит подключение специализированных устройств для кражи данных, таких как <em>USB Rubber Ducky</em>.</p>
+<blockquote>
+<p>⚠️ Внимание: Перед внедрением запрета на запись убедитесь, что у пользователей есть альтернативные каналы для передачи легитимных данных, например, защищенное сетевое хранилище, иначе это парализует рабочие процессы.</p>
+</blockquote>
+
+<h2 id="аудит-и-мониторинг-событий-безопасности">Аудит и мониторинг событий безопасности</h2>
+<p>Без правильного логирования все настройки безопасности теряют смысл, так как вы не сможете отследить инцидент. Windows 10 позволяет детально настраивать аудит событий через раздел "Локальные политики" → "Политика аудита". Необходимо включить отслеживание успешных и неуспешных попыток входа в систему, доступа к файлам и изменения политик безопасности.</p>
+<p>Критически важным является включение аудита изменений в самих групповых политиках. Если злоумышленник попытается изменить правила, чтобы получить привилегии, система должна зафиксировать это событие. Логи следует направлять на удаленный сервер, чтобы даже при компрометации локальной машины история действий сохранилась.</p>
+<details class="faq-item"><summary>Где хранятся логи безопасности?</summary><div class="faq-answer"><p>По умолчанию журналы событий Windows хранятся в файлах.evtx в директории C:\Windows\System32\winevt\Logs. Для анализа больших объемов данных рекомендуется использовать утилиты вроде Event Viewer или сторонние SIEM-системы.</p></div></details>
+<p>Настройка размера лого также производится через GPO. По умолчанию журналы могут переполняться и перезаписываться, что приведет к потере ценной информации об атаке. Увеличьте максимальный размер журнала безопасности и настройте политику архивирования при переполнении, чтобы данные сохранялись для последующего форензик-анализа.</p>
+
+<h2 id="усиление-парольной-политики-и-блокировка">Усиление парольной политики и блокировка</h2>
+<p>Слабые пароли остаются одной из главных причин взломов. Через групповые политики можно задать жесткие требования к сложности паролей, которые будут применяться ко всем локальным учетным записям. В отличие доменной среды, где политики паролей применяются centrally, на локальном уровне настройки также эффективны для защиты от брутфорса.</p>
+<p>Параметры находятся в разделе "Параметры безопасности" → "Политики паролей". Здесь можно задать минимальную длину, требование использования символов разных регистров и цифр, а также историю паролей, чтобы пользователи не могли использовать последние 5-10 придуманных комбинаций. Также важна настройка блокировки учетной записи после определенного числа неудачных попыток ввода.</p>
+<div class="checklist-block"><h4>☑️ Проверка парольной политики</h4><label class="check-item"><input type="checkbox"><span>Минимальная длина 12 символов</span></label><label class="check-item"><input type="checkbox"><span>Требование спецсимволов</span></label><label class="check-item"><input type="checkbox"><span>Блокировка после 5 попыток</span></label><label class="check-item"><input type="checkbox"><span>Смена пароля каждые 90 дней</span></label><label class="check-item"><input type="checkbox"><span>Запрет простых паролей</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+<p>Дополнительно стоит обратить внимание на политику блокировки экрана. Настройка тайм-аута экрана и обязательного запроса пароля при выходе из спящего режима предотвращает несанкционированный доступ к рабочему столу, если сотрудник отошел от компьютера. Это элементарное, но часто игнорируемое правило физической безопасности.</p>
+
+<h2 id="сетевая-безопасность-и-протоколы">Сетевая безопасность и протоколы</h2>
+<p>Сетевой стек Windows 10 содержит множество устаревших протоколов и служб, которые могут стать вектором атаки. Через GPO можно отключить поддержку старых версий SMB (например, SMBv1), которые уязвимы для эксплойтов типа WannaCry. Также рекомендуется настроить брандмауэр Windows, запретив входящие подключения по умолчанию для всех профилей сети.</p>
+<p>В разделе "Административные шаблоны" → "Сеть" можно управлять параметрами DNS, отключать IPv6, если он не используется, и запрещать установку драйверов принтеров через интернет. Эти меры снижают поверхность атаки и уменьшают риск того, что вредоносный код проникнет в систему через сетевые сервисы.</p>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Отключение ненужных сетевых протоколов и служб — один из самых эффективных способов уменьшить поверхность атаки без потери функциональности для обычных задач.</p></div>
+<p>Особое внимание следует уделить настройкам протокола LLMNR и NetBIOS. Эти протоколы часто используются для горизонтального перемещения внутри сети атакующими. Их отключение через групповые политики является стандартом современной безопасности (Hardening) и рекомендуется всеми ведущими практиками защиты информации.</p>
+
+<h2 id="сводная-таблица-ключевых-политик-безопасности">Сводная таблица ключевых политик безопасности</h2>
+<p>Для удобства администрирования ниже приведена таблица с основными рекомендациями по настройке. Эти параметры являются базовым минимумом для защищенной системы.</p>
+<table>
+<thead>
+<tr>
+<th>Политика</th>
+<th>Рекомендуемое значение</th>
+<th>Расположение в GPO</th>
+<th>Влияние</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Блокировка USB</td>
+<td>Запрет записи</td>
+<td>Административные шаблоны / Система</td>
+<td>Защита от утечки данных</td>
+</tr>
+<tr>
+<td>Сложность пароля</td>
+<td>Включено, мин. 12 симв.</td>
+<td>Параметры безопасности / Пароли</td>
+<td>Защита от подбора</td>
+</tr>
+<tr>
+<td>Аудит входа</td>
+<td>Успех и Отказ</td>
+<td>Параметры безопасности / Аудит</td>
+<td>Мониторинг доступа</td>
+</tr>
+<tr>
+<td>SMB v1</td>
+<td>Отключено</td>
+<td>Административные шаблоны / Сеть</td>
+<td>Защита от сетевых атак</td>
+</tr>
+<tr>
+<td>Блокировка экрана</td>
+<td>5 минут, пароль обязателен</td>
+<td>Панель управления / Персонализация</td>
+<td>Физическая защита</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+<details>
+<summary>Как применить изменения GPO немедленно без перезагрузки?</summary>
+<p>Для немедленного применения настроек откройте командную строку с правами администратора и введите команду <code>gpupdate /force</code>. После завершения процесса некоторые политики, требующие перезагрузки или перелогинивания, могут заработать только после соответствующего действия, но большинство применится мгновенно.</p>
+</details>
+<details>
+<summary>Можно ли настроить GPO на Windows 10 Home?</summary>
+<p>По умолчанию редактор групповых политик (<code>gpedit.msc</code>) в домашней версии Windows 10 отсутствует. Однако его можно добавить вручную, скопировав файлы из версии Pro, или использовать правку реестра для эмуляции некоторых функций, хотя это менее надежно и не поддерживается Microsoft официально.</p>
+</details>
+<details>
+<summary>Что делать, если после применения политик перестали работать программы?</summary>
+<p>Необходимо проанализировать журнал событий или временно отключить недавно примененную политику. Для сброса всех локальных политик к заводским настройкам можно использовать команду <code>RD /S /Q "%WinDir%\System32\GroupPolicy"</code> и <code>RD /S /Q "%WinDir%\System32\GroupPolicyUsers"</code>, после чего выполнить <code>gpupdate /force</code>.</p>
+</details>
+<details>
+<summary>Как экспортировать настройки GPO для переноса на другой ПК?</summary>
+<p>Локальные групповые политики хранятся в папке <code>C:\Windows\System32\GroupPolicy</code>. Копирование содержимого этой папки (включая скрытые файлы) на другой компьютер позволяет перенести настройки, однако рекомендуется использовать официальные инструменты миграции или скрипты для избежания ошибок путей.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#доступ-к-редактору-и-базовая-структура-политик">Доступ к редактору и базовая структура политик</a></li><li><a href="#управление-исполняемыми-файлами-и-скриптами">Управление исполняемыми файлами и скриптами</a></li><li><a href="#контроль-внешних-устройств-и-портов">Контроль внешних устройств и портов</a></li><li><a href="#аудит-и-мониторинг-событий-безопасности">Аудит и мониторинг событий безопасности</a></li><li><a href="#усиление-парольной-политики-и-блокировка">Усиление парольной политики и блокировка</a></li><li><a href="#сетевая-безопасность-и-протоколы">Сетевая безопасность и протоколы</a></li><li><a href="#сводная-таблица-ключевых-политик-безопасности">Сводная таблица ключевых политик безопасности</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-vklyuchit-smb2-windows-server-2003.html" class="related-card">Как включить SMB2 на Windows Server 2003: Инструкция</a></li><li><a href="/a/articles/x/xe/xenia-poshagovyj-zapusk-windows-10.html" class="related-card">Xenia и Windows 10: пошаговый запуск эмулятора Xbox 360</a></li><li><a href="/a/articles/k/ka/kak-peremestit-korzinu-na-drugoj-disk-windows-10.html" class="related-card">Как переместить корзину на другой диск Windows 10: полная инструкция</a></li><li><a href="/a/articles/k/ka/kak-sbezhat-s-linuksa-na-windows-bez-fleshki.html" class="related-card">Как сбежать с Linux на Windows без флешки: полный гид</a></li><li><a href="/a/articles/b/ba/batareya-dlya-sony-vaio-pcg-71311v-raspinovka.html" class="related-card">Распиновка батареи Sony Vaio PCG-71311V: схема и диагностика</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-vklyuchit-smb2-windows-server-2003.html" class="related-bottom-card"><span class="related-bottom-title">Как включить SMB2 на Windows Server 2003: Инструкция</span><span class="related-bottom-desc">Подробный гид по активации протокола SMB2 на Windows Server 2003. Узнайте о рисках, совместимости и </span></a><a href="/a/articles/x/xe/xenia-poshagovyj-zapusk-windows-10.html" class="related-bottom-card"><span class="related-bottom-title">Xenia и Windows 10: пошаговый запуск эмулятора Xbox 360</span><span class="related-bottom-desc">Подробная инструкция по настройке Xenia на Windows 10. Узнайте, как запустить игры Xbox 360, устрани</span></a><a href="/a/articles/k/ka/kak-peremestit-korzinu-na-drugoj-disk-windows-10.html" class="related-bottom-card"><span class="related-bottom-title">Как переместить корзину на другой диск Windows 10: полная инструкция</span><span class="related-bottom-desc">Узнайте, как переместить папку Корзина на другой диск в Windows 10. Пошаговая инструкция по изменени</span></a><a href="/a/articles/k/ka/kak-sbezhat-s-linuksa-na-windows-bez-fleshki.html" class="related-bottom-card"><span class="related-bottom-title">Как сбежать с Linux на Windows без флешки: полный гид</span><span class="related-bottom-desc">Узнайте, как удалить Linux и установить Windows без флешки. Пошаговая инструкция по установке ОС с ж</span></a><a href="/a/articles/b/ba/batareya-dlya-sony-vaio-pcg-71311v-raspinovka.html" class="related-bottom-card"><span class="related-bottom-title">Распиновка батареи Sony Vaio PCG-71311V: схема и диагностика</span><span class="related-bottom-desc">Подробная распиновка аккумулятора для Sony Vaio PCG-71311V. Схема контактов, напряжения, поиск неисп</span></a><a href="/a/articles/l/lp/lpt-v-windows-7-x64.html" class="related-bottom-card"><span class="related-bottom-title">LPT порт в Windows 7 x64: настройка и драйверы принтера</span><span class="related-bottom-desc">Полное руководство по активации, настройке и диагностике LPT порта в Windows 7 x64. Решение проблем </span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

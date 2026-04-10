@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Как вернуть приложение Камера в Windows 10: полное руководство — ТехПодсказка</title>
+    <meta name="description" content="Пропала камера на ноутбуке? Узнайте, как вернуть приложение Камера в Windows 10 через PowerShell, настройки и реестр. Решаем проблему за 5 минут.">
+    <link rel="canonical" href="/a/articles/k/ka/kak-vernut-prilozhenie-kamera-v-windows-10.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как вернуть приложение Камера в Windows 10: полное руководство">
+    <meta property="og:description" content="Пропала камера на ноутбуке? Узнайте, как вернуть приложение Камера в Windows 10 через PowerShell, настройки и реестр. Решаем проблему за 5 минут.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/windows-i-pk/">Windows и ПК</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как вернуть приложение Камера в Windows 10: полное руководство</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Как вернуть приложение Камера в Windows 10: пошаговое восстановление</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#диагностика-проблемы-и-проверка-оборудования">Диагностика проблемы и проверка оборудования</a></li><li><a href="#настройки-конфиденциальности-и-доступа">Настройки конфиденциальности и доступа</a></li><li><a href="#сброс-и-переустановка-приложения-через-параметры">Сброс и переустановка приложения через Параметры</a></li><li><a href="#восстановление-через-powershell">Восстановление через PowerShell</a></li><li><a href="#работа-с-реестром-и-групповыми-политиками">Работа с реестром и групповыми политиками</a></li><li><a href="#обновление-драйверов-и-служб">Обновление драйверов и служб</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>Внезапное исчезновение стандартного приложения «Камера» в операционной системе <em>Windows 10</em> может застать врасплох любого пользователя, особенно когда необходимо срочно провести видеоконференцию или отсканировать документ. Эта проблема часто возникает после неудачного обновления системы, сбоя в работе встроенных компонентов или действий вредоносного ПО, которое блокирует доступ к оборудованию. Вместо привычного интерфейса съемки пользователь видит лишь черный экран или сообщение об ошибке поиска устройства.</p>
+
+<p>Ситуация усугубляется тем, что многие пользователи не представляют свою жизнь без встроенных инструментов <strong>Microsoft</strong>, а переустановка всей операционной системы ради одного приложения выглядит как избыточная и трудоемкая мера. К счастью, в большинстве случаев программный сбой можно исправить вручную, используя встроенные средства диагностики и командную строку. Восстановление функциональности веб-камеры возможно без привлечения стороннего софта, если действовать последовательно и внимательно.</p>
+
+<p>В данной статье мы подробно разберем все эффективные методы, которые помогут реанимировать пропавший компонент системы. Мы рассмотрим как простые шаги по проверке настроек конфиденциальности, так и более сложные процедуры сброса через <code>PowerShell</code>. Следуя инструкциям, вы сможете вернуть работоспособность своему оборудованию и снова пользоваться видеосвязью в кратчайшие сроки.</p>
+
+<h2 id="диагностика-проблемы-и-проверка-оборудования">Диагностика проблемы и проверка оборудования</h2>
+<p>Прежде чем приступать к сложным манипуляциям с системными файлами, необходимо исключить банальные физические причины отсутствия изображения. Часто пользователи забывают, что на многих современных ноутбуках и внешних веб-камерах существует механический переключатель конфиденциальности. Это может быть маленький ползунок рядом с объективом или комбинация клавиш на клавиатуре, которая полностью отключает питание модуля.</p>
+
+<p>Также стоит проверить, видит ли вообще операционная система подключенное устройство на уровне драйверов. Если в диспетчере устройств камера отображается с желтым восклицательным знаком или вовсе отсутствует в списке, проблема может крыться в аппаратном сбое или отсутствии драйверов. В таком случае восстановление приложения не поможет, пока не будет налажена базовая связь между <strong>ОС</strong> и «железом».</p>
+
+<blockquote>⚠️ Внимание: Если вы используете стационарный компьютер с внешней USB-камерой, попробуйте подключить её в другой порт. Иногда порты USB 3.0 могут конфликтовать со старыми моделями камер, и переключение на порт USB 2.0 решает проблему.</blockquote>
+
+<p>Для быстрой проверки статуса устройства можно воспользоваться диспетчером устройств. Нажмите правой кнопкой мыши на кнопку «Пуск» и выберите соответствующий пункт в меню. Найдите раздел «Камеры» или «Устройства обработки изображений». Если устройство там есть, но не работает, попробуйте обновить драйвер или удалить устройство, а затем перезагрузить компьютер для автоматической повторной установки.</p>
+
+<ul>
+<li>🔍 Проверьте наличие физического ползунка-заглушки на объективе вашей веб-камеры.</li>
+<li>🔌 Убедитесь, что USB-кабель плотно вставлен в разъем и не имеет видимых повреждений.</li>
+<li>💡 Нажмите комбинацию клавиш для включения камеры (часто это Fn + одна из клавиш F1-F12 с изображением фотоаппарата).</li>
+<li>🖥️ Проверьте диспетчер устройств на наличие ошибок в разделе «Камеры».</li>
+</ul>
+
+<div class="checklist-block"><h4>☑️ Первичная диагностика</h4><label class="check-item"><input type="checkbox"><span>Проверен физический переключатель на камере</span></label><label class="check-item"><input type="checkbox"><span>Камера отображается в Диспетчере устройств</span></label><label class="check-item"><input type="checkbox"><span>Драйвер установлен без ошибок</span></label><label class="check-item"><input type="checkbox"><span>USB-порт исправен</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="настройки-конфиденциальности-и-доступа">Настройки конфиденциальности и доступа</h2>
+<p>Одной из самых распространенных причин, по которой приложение «Камера» не запускается или показывает черный экран, являются строгие настройки конфиденциальности <em>Windows 10</em>. После крупных обновлений система может автоматически ограничивать доступ программ к видеоустройствам в целях безопасности пользователя. Это означает, что даже если драйверы установлены корректно, программный запрет не даст приложению получить видеопоток.</p>
+
+<p>Чтобы исправить это, необходимо перейти в параметры системы. Откройте меню «Пуск» и нажмите на шестеренку, чтобы войти в «Параметры». Далее проследуйте по пути <code>Конфиденциальность → Камера</code>. Здесь вы увидите глобальный переключатель «Разрешить приложениям доступ к камере». Он должен быть включен. Ниже находится список конкретных приложений, где также нужно найти «Камеру» и активировать доступ.</p>
+
+<p>Иногда бывает так, что антивирусное ПО сторонних производителей перехватывает управление веб-камерой. Если в настройках Windows все разрешено, но камера не работает, проверьте интерфейс вашего антивируса. Многие решения, такие как <em>Kaspersky</em> или <em>ESET</em>, имеют собственный модуль защиты веб-камеры, который может блокировать доступ без явного уведомления пользователя.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если вы используете корпоративный компьютер, настройки доступа к камере могут блокироваться групповыми политиками администратора. В этом случае обратитесь в IT-отдел вашей организации.</p></div>
+
+<h2 id="сброс-и-переустановка-приложения-через-параметры">Сброс и переустановка приложения через Параметры</h2>
+<p>Если настройки доступа корректны, но приложение все равно не работает, возможно, повреждены его внутренние файлы или кэш. В <em>Windows 10</em> предусмотрена удобная функция сброса встроенных приложений, которая позволяет вернуть им заводские настройки без полной переустановки системы. Это первый программный шаг, который следует предпринять после проверки оборудования.</p>
+
+<p>Для выполнения сброса откройте «Параметры» и перейдите в раздел «Приложения». В списке «Приложения и возможности» найдите «Камера». Кликните по названию и выберите «Дополнительные параметры». Прокрутите вниз до блока «Сброс» и нажмите соответствующую кнопку. Система предупредит, что данные приложения будут удалены, но для стандартной камеры это не критично, так как она не хранит пользовательские файлы в своей структуре.</p>
+
+<p>В некоторых случаях простой сброс не помогает, и требуется полная переустановка компонента. В том же меню дополнительных параметров должна быть кнопка «Удалить». Если её нет или она неактивна, придется воспользоваться PowerShell, о чем пойдет речь в следующем разделе. После удаления попробуйте найти приложение «Камера» в магазине <em>Microsoft Store</em> и установить его заново.</p>
+
+<ul>
+<li>🔄 Нажмите кнопку «Сброс» в дополнительных параметрах приложения «Камера».</li>
+<li>🗑️ Если доступно, используйте кнопку «Удалить» для полной деинсталляции.</li>
+<li>🛍️ Проверьте наличие обновлений для приложения в Microsoft Store.</li>
+<li>📂 Убедитесь, что на системном диске достаточно свободного места для работы приложения.</li>
+</ul>
+
+<h2 id="восстановление-через-powershell">Восстановление через PowerShell</h2>
+<p>Наиболее эффективным и радикальным методом возврата стандартных приложений является использование командной оболочки <strong>PowerShell</strong>. Этот инструмент позволяет принудительно зарегистрировать все встроенные компоненты Windows, включая «Камеру», заново. Данный метод особенно актуален, если приложение было удалено случайно или перестало отображаться в списке установленных программ.</p>
+
+<p>Для запуска процедуры необходимо открыть PowerShell от имени администратора. Нажмите правой кнопкой мыши на кнопку «Пуск» и выберите «Windows PowerShell (администратор)» или «Терминал Windows (администратор)». В открывшемся окне введите команду для повторной регистрации всех приложений. Будьте внимательны при вводе, так как ошибки в синтаксисе могут привести к некорректному выполнению скрипта.</p>
+
+<pre><code>Get-AppxPackage -AllUsers | Foreach {Add-AppxPackage -DisableDevelopmentMode -Register "$($_.InstallLocation)\AppXManifest.xml"}</code></pre>
+
+<p>Выполнение этой команды может занять некоторое время, в процессе чего на экране будут появляться строки кода и возможные ошибки красного цвета. Не пугайтесь их, это нормальное поведение системы при попытке перерегистрации уже установленных или отсутствующих компонентов. Главное — дождаться окончания процесса и появления новой строки ввода.</p>
+
+<blockquote>⚠️ Внимание: Во время выполнения скрипта не закрывайте окно PowerShell и не выключайте компьютер. Прерывание процесса может привести к повреждению других системных приложений.</blockquote>
+
+<details class="faq-item"><summary>Что делать, если PowerShell выдает ошибку доступа?</summary><div class="faq-answer"><p>Иногда антивирус или политики безопасности блокируют выполнение скриптов. В этом случае попробуйте временно отключить антивирус или ввести команду Set-ExecutionPolicy Unrestricted перед основным скриптом, но помните о рисках безопасности.</p></div></details>
+
+<h2 id="работа-с-реестром-и-групповыми-политиками">Работа с реестром и групповыми политиками</h2>
+<p>Для продвинутых пользователей, которым не помогли стандартные методы, существует возможность правки системного реестра. Ошибочные записи в реестре могут блокировать запуск определенных служб, связанных с мультимедиа. Однако работа с реестром требует крайней осторожности, так как неверное изменение ключей может дестабилизировать работу всей операционной системы.</p>
+
+<p>Чтобы проверить настройки, нажмите <code>Win + R</code>, введите <code>regedit</code> и нажмите Enter. Перейдите по пути <code>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\webcam</code>. Здесь должен быть параметр <code>Value</code> со значением <code>Allow</code>. Если стоит <code>Deny</code>, измените его. Это разрешит системе использовать веб-камеру на глобальном уровне.</p>
+
+<p>Также стоит проверить групповые политики, если у вас версия <em>Windows 10 Pro</em> или <em>Enterprise</em>. Нажмите <code>Win + R</code>, введите <code>gpedit.msc</code>. Пройдите по пути: <code>Конфигурация компьютера → Административные шаблоны → Компоненты Windows → Конфиденциальность приложений</code>. Найдите политику «Разрешить приложениям Windows доступ к камере» и убедитесь, что она включена или не настроена.</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Расположение</th>
+<th>Необходимое значение</th>
+<th>Влияние</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Value</td>
+<td>Реестр (webcam)</td>
+<td>Allow</td>
+<td>Глобальное разрешение доступа</td>
+</tr>
+<tr>
+<td>Доступ к камере</td>
+<td>Групповые политики</td>
+<td>Включено / Не задано</td>
+<td>Разрешение для приложений</td>
+</tr>
+<tr>
+<td>DriverDate</td>
+<td>Диспетчер устройств</td>
+<td>Актуальная дата</td>
+<td>Проверка версии драйвера</td>
+</tr>
+<tr>
+<td>Service</td>
+<td>Службы (camsvc)</td>
+<td>Работает</td>
+<td>Запуск службы камеры</td>
+</tr>
+</tbody>
+</table>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой метод вам помог больше всего?</strong><ul><li>Сброс в Параметрах</li><li>Команда PowerShell</li><li>Редактор реестра</li><li>Переустановка драйверов</li></ul></div></div>
+
+<h2 id="обновление-драйверов-и-служб">Обновление драйверов и служб</h2>
+<p>Фундаментом работы любого оборудования являются драйверы. Даже если приложение «Камера» исправно, без корректного драйвера оно не сможет передать изображение с матрицы на экран. <strong>Windows 10</strong> обычно автоматически находит необходимые драйверы, но иногда системный кэш обновлений содержит ошибочные версии или конфликтующие файлы.</p>
+
+<p>Рекомендуется посетить официальный сайт производителя вашего ноутбука или материнской платы. Найдите модель своего устройства в разделе поддержки и скачайте драйвер для камеры именно для вашей версии Windows. Установка «родного» драйвера часто решает проблемы, которые не удается устранить стандартными средствами системы.</p>
+
+<p>Кроме того, стоит проверить службу, отвечающую за работу камеры. Нажмите <code>Win + R</code>, введите <code>services.msc</code>. Найдите службу <code>Windows Camera Frame Server</code>. Убедитесь, что тип запуска установлен в «Автоматически», а сама служба запущена. Если она остановлена, нажмите кнопку «Запустить».</p>
+
+<ul>
+<li>📥 Скачайте драйвер с официального сайта производителя устройства.</li>
+<li>🚫 В диспетчере устройств выберите «Удалить устройство» и поставьте галочку «Удалить программы драйверов».</li>
+<li>🔄 Перезагрузите компьютер для автоматической установки чистого драйвера.</li>
+<li>⚙️ Проверьте статус службы Windows Camera Frame Server.</li>
+</ul>
+
+<blockquote>⚠️ Внимание: При удалении драйвера в диспетчере устройств обязательно поставьте галочку «Удалить программы драйверов для этого устройства», чтобы система не восстановила ошибочную версию автоматически.</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Комплексный подход, включающий проверку драйверов, служб и системных файлов, гарантирует решение проблемы в 99% случаев без переустановки Windows.</p></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+<details>
+<summary>Почему после обновления Windows пропала камера?</summary>
+<p>Обновления системы часто содержат новые драйверы или изменения в политиках безопасности, которые могут конфликтовать с установленным оборудованием. Также в процессе обновления могли повредиться системные файлы приложения «Камера».</p>
+</details>
+
+<details>
+<summary>Можно ли использовать камеру телефона вместо веб-камеры на ПК?</summary>
+<p>Да, существуют приложения-эмуляторы (например, DroidCam или Iriun), которые позволяют транслировать изображение с камеры смартфона на компьютер через USB или Wi-Fi, заменяя штатную веб-камеру.</p>
+</details>
+
+<details>
+<summary>Что делать, если камера работает в Skype, но не работает в браузере?</summary>
+<p>Скорее всего, проблема в настройках конфиденциальности браузера. Зайдите в настройки браузера, раздел «Конфиденциальность и безопасность» → «Настройки сайтов» → «Камера» и разрешите доступ для нужного ресурса.</p>
+</details>
+
+<details>
+<summary>Как проверить, не заблокирована ли камера антивирусом?</summary>
+<p>Откройте интерфейс вашего антивируса, найдите раздел «Защита веб-камеры» или «Контроль устройств». Если функция активна, добавьте свое приложение для видеосвязи в список исключений или временно отключите защиту для проверки.</p>
+</details>
+
+<details>
+<summary>Нужно ли переустанавливать Windows, если ничего не помогает?</summary>
+<p>Переустановка системы — крайняя мера. Перед этим попробуйте создать нового пользователя Windows и проверить работу камеры под его профилем. Если там все работает, проблема в повреждении профиля основного пользователя.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#диагностика-проблемы-и-проверка-оборудования">Диагностика проблемы и проверка оборудования</a></li><li><a href="#настройки-конфиденциальности-и-доступа">Настройки конфиденциальности и доступа</a></li><li><a href="#сброс-и-переустановка-приложения-через-параметры">Сброс и переустановка приложения через Параметры</a></li><li><a href="#восстановление-через-powershell">Восстановление через PowerShell</a></li><li><a href="#работа-с-реестром-и-групповыми-политиками">Работа с реестром и групповыми политиками</a></li><li><a href="#обновление-драйверов-и-служб">Обновление драйверов и служб</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-v-5-civilizacii-igrat-na-odnom-kompyutere.html" class="related-card">Как играть в Civilization 5 на одном компьютере: гид по Hotseat</a></li><li><a href="/a/articles/o/ot/ottplayerkak-udalit-plejlist-na-win10.html" class="related-card">Как удалить плейлист в OttPlayer на Windows 10</a></li><li><a href="/a/articles/u/us/usb-vid-13d3-pid-3304-rev-0001-windows-10-x64-skachat.html" class="related-card">USB VID 13D3 PID 3304 Rev 0001: Драйвер для Windows 10 x64</a></li><li><a href="/a/articles/k/ka/kak-posmotret-papku-knox-na-kompyutere.html" class="related-card">Как посмотреть папку Knox на компьютере: доступ к данным</a></li><li><a href="/a/articles/p/po/polosy-pri-zagruzke-windows-10.html" class="related-card">Полосы при загрузке Windows 10: причины и устранение</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-v-5-civilizacii-igrat-na-odnom-kompyutere.html" class="related-bottom-card"><span class="related-bottom-title">Как играть в Civilization 5 на одном компьютере: гид по Hotseat</span><span class="related-bottom-desc">Полное руководство, как играть в Цивилизацию 5 на одном ПК. Настройка Hotseat, управление игроками, </span></a><a href="/a/articles/o/ot/ottplayerkak-udalit-plejlist-na-win10.html" class="related-bottom-card"><span class="related-bottom-title">Как удалить плейлист в OttPlayer на Windows 10</span><span class="related-bottom-desc">Подробная инструкция по удалению плейлистов в OttPlayer на ПК. Очистка истории, сброс настроек и реш</span></a><a href="/a/articles/u/us/usb-vid-13d3-pid-3304-rev-0001-windows-10-x64-skachat.html" class="related-bottom-card"><span class="related-bottom-title">USB VID 13D3 PID 3304 Rev 0001: Драйвер для Windows 10 x64</span><span class="related-bottom-desc">Решение проблемы USB VID 13D3 PID 3304 Rev 0001 в Windows 10 x64. Скачать драйвер, устранить ошибку </span></a><a href="/a/articles/k/ka/kak-posmotret-papku-knox-na-kompyutere.html" class="related-bottom-card"><span class="related-bottom-title">Как посмотреть папку Knox на компьютере: доступ к данным</span><span class="related-bottom-desc">Узнайте, как получить доступ к файлам Samsung Knox на ПК. Подробная инструкция по настройке Secure F</span></a><a href="/a/articles/p/po/polosy-pri-zagruzke-windows-10.html" class="related-bottom-card"><span class="related-bottom-title">Полосы при загрузке Windows 10: причины и устранение</span><span class="related-bottom-desc">Экран покрывается полосами при загрузке Windows 10? Разбираем причины: драйверы, кабель, матрица или</span></a><a href="/a/articles/f/fu/fujitsu-531-ustanovka-windows-s-fleshki.html" class="related-bottom-card"><span class="related-bottom-title">Установка Windows на Fujitsu Lifebook 531: пошаговая инструкция</span><span class="related-bottom-desc">Подробный гид по установке Windows на ноутбук Fujitsu Lifebook U531 с флешки. Подготовка драйверов, </span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

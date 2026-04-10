@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Magisk Hide не работает: приложения не запускаются, решения — ТехПодсказка</title>
+    <meta name="description" content="Почему Magisk Hide не скрывает рут? Решения для банковских приложений, SafetyNet и Zygisk. Полная инструкция по настройке DenyList и скрытию прав.">
+    <link rel="canonical" href="/a/articles/m/ma/magisk-hide-prilozheniya-ne-zapuskayutsya.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Magisk Hide не работает: приложения не запускаются, решения">
+    <meta property="og:description" content="Почему Magisk Hide не скрывает рут? Решения для банковских приложений, SafetyNet и Zygisk. Полная инструкция по настройке DenyList и скрытию прав.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Magisk Hide не работает: приложения не запускаются, решения</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Magisk Hide не работает: почему приложения не запускаются и как это исправить</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#почему消失了-magisk-hide-и-что-такое-denylist">Почему消失了 Magisk Hide и что такое DenyList</a></li><li><a href="#пошаговая-настройка-zygisk-и-списка-исключений">Пошаговая настройка Zygisk и списка исключений</a></li><li><a href="#проблема-с-определением-zygisk-в-приложениях">Проблема с определением Zygisk в приложениях</a></li><li><a href="#использование-модулей-для-полного-скрытия-рут">Использование модулей для полного скрытия рут</a></li><li><a href="#диагностика-через-приложение-momo">Диагностика через приложение Momo</a></li><li><a href="#альтернативные-причины-блокировки-приложений">Альтернативные причины блокировки приложений</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Ситуация, когда после установки прав суперпользователя банковские приложения перестают запускаться или игры вроде Pokémon GO выдают ошибку о нарушении целостности системы, знакома многим энтузиастам Android. Раньше штатный модуль <strong>Magisk Hide</strong> эффективно решал эту проблему, скрывая наличие рут-прав от требовательных приложений. Однако с выходом новых версий Magisk функционал претерпел кардинальные изменения, и привычные методы перестали работать.</p>
+
+<p>Теперь процесс скрытия требует более тонкой настройки через <em>Zygisk</em> и список исключений <strong>DenyList</strong>. Если вы столкнулись с тем, что приложения не запускаются, а Google Pay или банковский софт блокируют доступ, значит, система детектирования Google Play Services успешно определила модификации. В этом материале мы разберем актуальные способы обхода блокировок и вернем полную функциональность вашему устройству.</p>
+
+<h2 id="почему消失了-magisk-hide-и-что-такое-denylist">Почему消失了 Magisk Hide и что такое DenyList</h2>
+
+<p>Начиная с версии 24.0, разработчик Magisk Джон Ву принял решение удалить классический модуль Magisk Hide из ядра проекта. Это было сделано для упрощения кодовой базы и повышения стабильности, так как старые методы скрытия становились все менее эффективными против обновляемых механизмов проверки Google. Вместо единого переключателя теперь используется архитектура <strong>Zygisk</strong>, которая внедряется в процесс Zygote — родительский процесс для всех приложений Android.</p>
+
+<p>На смену старому списку скрытия пришел <strong>DenyList</strong>. Принцип его работы заключается в том, что вы явно указываете Magisk, каким именно приложениям нужно предоставлять среду без рут-прав. В отличие от прошлого, где нужно было скрывать сам Magisk, теперь вы говорите системе: "Для этого приложения притворись, что рута нет". Если приложение по-прежнему видит права доступа, значит, оно не добавлено в этот список или процесс скрытия не активирован корректно.</p>
+
+<details class="faq-item"><summary>История изменений Magisk Hide</summary><div class="faq-answer"><p>В старых версиях Magisk Hide работал путем монтирования tmpfs и скрытия файлов magiskinit. Новый подход через Zygisk инжектит код непосредственно в процесс приложения при его запуске, что делает скрытие более надежным, но требует включения Zygisk в настройках.</p></div></details>
+
+<p>Важно понимать, что простое включение Zygisk не заработает автоматически для всех программ. Вам необходимо вручную пройти по пути <code>Настройки Magisk → Настройки → DenyList</code> и отметить галочками все компоненты проблемного приложения. Часто пользователи забывают, что у банковских приложений есть несколько фоновых процессов, и помечают только основной APK.</p>
+
+<h2 id="пошаговая-настройка-zygisk-и-списка-исключений">Пошаговая настройка Zygisk и списка исключений</h2>
+
+<p>Первым шагом к решению проблемы является активация Zygisk. Без этого компонента современные методы скрытия не функционируют. Откройте приложение Magisk, нажмите на шестеренку настроек в правом верхнем углу и найдите пункт <strong>Zygisk</strong>. Переключите тумблер в активное положение. После этого устройство потребует перезагрузки. Не игнорируйте этот шаг, так как изменения вступают в силу только после полного цикла включения.</p>
+
+<p>После перезагрузки снова зайдите в настройки Magisk. Теперь вам доступен пункт <strong>DenyList</strong> (Список запрета). Нажмите на него. Вы увидите список всех установленных приложений. Ваша задача — найти приложение, которое не запускается (например, СберБанк или Tinkoff), и раскрыть его ветку. Необходимо поставить галочку не только на основное приложение, но и на все связанные процессы, если они отображаются.</p>
+
+<div class="checklist-block"><h4>☑️ Чек-лист активации скрытия рут</h4><label class="check-item"><input type="checkbox"><span>Включить Zygisk в настройках Magisk:Перезагрузить устройство:Открыть DenyList и найти приложение:Поставить галочку на все процессы приложения:Перезагрузить устройство повторно</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 1</div></div>
+
+<p>Существует важный нюанс: если вы используете Android 10 и ниже, механизм может называться иначе или требовать дополнительных действий. Также убедитесь, что в настройках Magisk включена опция <strong>Enforce DenyList</strong> (Принудительный список запрета). Без этой опции список будет существовать, но применяться не будет. Именно комбинация Zygisk + DenyList + Enforce заменяет старый Magisk Hide.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если после включения Zygisk перестал работать модуль LSPosed или Xposed, убедитесь, что вы установили версию модуля, совместимую с Zygisk, а не с Riru.</p></div>
+
+<h2 id="проблема-с-определением-zygisk-в-приложениях">Проблема с определением Zygisk в приложениях</h2>
+
+<p>Даже после правильной настройки DenyList некоторые продвинутые приложения могут по-прежнему определять наличие Zygisk через проверку загруженных библиотек или анализ памяти. Механизм <strong>Zygisk</strong> оставляет следы в процессах, которые детектируются антифрод-системами. Для решения этой проблемы разработчики создали модуль <em>Zygisk Hide</em> или используют встроенные функции маскировки в новых сборках.</p>
+
+<p>В последних версиях Magisk появилась опция <strong>Hide the Magisk app</strong> (Скрыть приложение Magisk). Она переименовывает пакет менеджера Magisk на случайное имя и меняет его идентификатор. Это необходимо, так как многие приложения просто проверяют наличие пакета с именем <code>com.topjohnwu.magisk</code>. Если приложение находит такой пакет, оно блокируется. Переименование часто решает проблему мгновенно.</p>
+
+<blockquote>
+<p>⚠️ Внимание: После переименования приложения Magisk иконка на рабочем столе может исчезнуть или переместиться. Ищите новое имя в общем списке приложений. Также настоятельно рекомендуется сделать резервную копию данных перед этой операцией, хотя процесс обычно безопасен.</p>
+</blockquote>
+
+<p>Если переименование не помогает, возможно, приложение сканирует наличие файлов в директории <code>/data/adb</code> или проверяет наличие специфических процессов. В таких случаях требуется использование дополнительных модулей, таких как <em>Shamiko</em>. Этот модуль работает в связке с Zygisk, но скрывает сам факт внедрения Zygisk в процессы, делая систему "чище" для проверяющих утилит.</p>
+
+<h2 id="использование-модулей-для-полного-скрытия-рут">Использование модулей для полного скрытия рут</h2>
+
+<p>Модуль <strong>Shamiko</strong> стал стандартом де-факто для обхода детекта. Он позволяет использовать функционал DenyList, но при этом скрывает наличие самого Zygisk от приложений, не входящих в список исключений. Для его работы нужно включить Zygisk в настройках Magisk, но <strong>выключить</strong> опцию "Enforce DenyList". Shamiko сам управляет списком, и включение нативного принуждения может вызвать конфликт.</p>
+
+<p>Установка модулей производится через вкладку "Модули" в приложении Magisk. Скачайте ZIP-архив Shamiko с проверенного источника (например, GitHub или каналы разработчиков в Telegram) и установите его через кнопку "Установить из хранилища". После установки и перезагрузки модуль автоматически применит правила. Приложения, добавленные в DenyList, будут видеть чистую систему, а остальные получат доступ к руту, если это необходимо.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой метод скрытия вы использовали ранее?</strong><ul><li>Классический Magisk Hide (старые версии):Модуль Universal SafetyNet Fix:Модуль Shamiko:Не использовал, рут не скрывал</li></ul></div></div>
+
+<p>Еще одним популярным инструментом является модуль <em>Play Integrity Fix</em> (ранее известный как Universal SafetyNet Fix). Он необходим для прохождения проверок Google Play Integrity API, которые заменили старый SafetyNet. Без этого модуля даже при скрытом руте вы можете не пройти проверку в Google Wallet или некоторых играх. Модуль подменяет отпечатки устройства (fingerprints) на сертифицированные, взятые с других устройств.</p>
+
+<table>
+<thead>
+<tr>
+<th>Модуль/Функция</th>
+<th>Цель использования</th>
+<th>Требует перезагрузки</th>
+<th>Конфликтность</th>
+</tr>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Zygisk</strong></td>
+<td>Основа для внедрения кода</td>
+<td>Да</td>
+<td>Низкая</td>
+</tr>
+<tr>
+<td><strong>DenyList</strong></td>
+<td>Выбор приложений для скрытия</td>
+<td>Нет</td>
+<td>Низкая</td>
+</tr>
+<tr>
+<td><strong>Shamiko</strong></td>
+<td>Скрытие факта использования Zygisk</td>
+<td>Да</td>
+<td>Средняя (с другими хуками)</td>
+</tr>
+<tr>
+<td><strong>Play Integrity Fix</strong></td>
+<td>Прохождение проверок Google</td>
+<td>Да</td>
+<td>Высокая (нужны актуальные отпечатки)</td>
+</tr>
+</tr>
+</tbody>
+</table>
+
+<h2 id="диагностика-через-приложение-momo">Диагностика через приложение Momo</h2>
+
+<p>Для проверки эффективности ваших настроек существует специализированное приложение <em>Momo</em>. Оно сканирует устройство на наличие следов рут-прав, модифицированного загрузчика, нестандартных настроек системы и известных модулей Magisk. Если Momo показывает красные предупреждения, значит, банковские приложения также смогут их увидеть.</p>
+
+<p>Запустите Momo и дождитесь окончания сканирования. Приложение выдаст список обнаруженных угроз. Если вы видите пункты, связанные с Magisk, Zygisk или измененными системными разделами, вам необходимо скорректировать настройки. Часто Momo подсвечивает наличие отладки по USB или включенных меню разработчика, которые также могут триггерить защиту.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Не полагайтесь только на результат теста SafetyNet в приложении Magisk. Он показывает лишь базовую целостность. Momo проводит гораздо более глубокий анализ и лучше отражает реальную ситуацию с видимостью рут-прав для современных приложений.</p>
+</blockquote>
+
+<p>Если Momo обнаруживает следы, попробуйте отключить отладку по USB (<code>ADB Debugging</code>) перед запуском банковских приложений. Также проверьте, не установлены ли у вас другие менеджеры рут-прав или остатки старых версий SuperSU, которые могут конфликтовать. Чистота системы — залог успешного скрытия.</p>
+
+<h2 id="альтернативные-причины-блокировки-приложений">Альтернативные причины блокировки приложений</h2>
+
+<p>Иногда проблема кроется не в самом Magisk, а в статусе загрузчика. Многие банковские приложения и сервисы Google отказываются работать, если <strong>Bootloader</strong> разблокирован, даже если рут-права идеально скрыты. Проверить это можно через команды fastboot или в инженерном меню. К сожалению, на некоторых устройствах (особенно Sony, Xiaomi, Motorola) блокировка загрузчика обратно невозможна без потери данных или невозможна вовсе.</p>
+
+<p>Другой причиной может быть наличие модифицированного <em>recovery</em> (TWRP, OrangeFox). Некоторые приложения детектируют нестандартный раздел восстановления. В таких случаях помогает переименование или удаление recovery, либо использование методов скрытия, специфичных для вашего устройства. Также стоит проверить, не установлены ли в систему модифицированные шрифты или темы, меняющие системные файлы.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Разблокированный загрузчик часто является более серьезным триггером для блокировок, чем сам факт наличия рут-прав. Скрыть разблокированный бутлоадер программными методами крайне сложно или невозможно.</p></div>
+
+<p>Не забывайте про сетевые проверки. Некоторые приложения требуют соединения с серверами Google для проверки сертификатов. Если у вас установлен AdBlock на уровне хоста (например, через модуль Magisk), он может блокировать домены проверки Google, что приведет к ложному определению проблем с безопасностью. Попробуйте временно отключить блокировщики рекламы.</p>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Можно ли полностью скрыть рут на Android 13/14?</summary>
+<p>Да, это возможно, но требует использования связки Magisk + Zygisk + Shamiko + актуальный Play Integrity Fix. На новых версиях Android защита усилена, поэтому важно следить за обновлениями модулей. Однако, если загрузчик разблокирован аппаратно, некоторые приложения (например, Google Wallet в отдельных регионах) могут не заработать.</p>
+</details>
+
+<details>
+<summary>Почему после обновления Magisk перестали работать банки?</summary>
+<p>При обновлении Magisk настройки Zygisk или DenyList могли сброситься, либо новая версия изменила сигнатуры, которые детектируются приложениями. Необходимо заново проверить настройки Zygisk, убедиться, что DenyList заполнен, и при необходимости обновить модули Shamiko и Play Integrity Fix.</p>
+</details>
+
+<details>
+<summary>Безопасно ли использовать банковские приложения с рут-правами?</summary>
+<p>Если рут-права качественно скрыты (Momo не видит угроз), риск минимален. Однако теоретическая возможность уязвимости остается, так как вы даете приложениям повышенные привилегии. Используйте рут осознанно и не устанавливайте сомнительные модули из непроверенных источников.</p>
+</details>
+
+<details>
+<summary>Нужно ли удалять Magisk Hide перед установкой Zygisk?</summary>
+<p>В современных версиях Magisk (24+) Magisk Hide удален разработчиками. Если у вас старая версия, лучше сделать полную перепрошивку чистой версии Magisk, чтобы избежать конфликтов остаточных файлов. Zygisk является штатной заменой и не требует удаления старых компонентов вручную, если вы обновляетесь штатно.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#почему消失了-magisk-hide-и-что-такое-denylist">Почему消失了 Magisk Hide и что такое DenyList</a></li><li><a href="#пошаговая-настройка-zygisk-и-списка-исключений">Пошаговая настройка Zygisk и списка исключений</a></li><li><a href="#проблема-с-определением-zygisk-в-приложениях">Проблема с определением Zygisk в приложениях</a></li><li><a href="#использование-модулей-для-полного-скрытия-рут">Использование модулей для полного скрытия рут</a></li><li><a href="#диагностика-через-приложение-momo">Диагностика через приложение Momo</a></li><li><a href="#альтернативные-причины-блокировки-приложений">Альтернативные причины блокировки приложений</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-ubrat-plavayuschuyu-knopku-kasperskogo-s-ekrana.html" class="related-card">Как убрать плавающую кнопку Касперского с экрана: все методы</a></li><li><a href="/a/articles/k/ke/keli-xk3118-podklyuchenie-com-port.html" class="related-card">Keli XK3118 подключение COM-порта: инструкция и настройка</a></li><li><a href="/a/articles/k/ka/kak-otklyuchit-dzen-bez-reklamy.html" class="related-card">Как отключить Дзен на Яндекс Браузере без рекламы: полная инструкция</a></li><li><a href="/a/articles/z/za/zachem-na-syaomi-not-13-szadi-dve-knopki.html" class="related-card">Две кнопки сзади Xiaomi Redmi Note 13: зачем они нужны?</a></li><li><a href="/a/articles/k/ka/kak-sdelat-russkij-shrift-na-realme-c21y.html" class="related-card">Как сделать русский шрифт на Realme C21Y: инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-ubrat-plavayuschuyu-knopku-kasperskogo-s-ekrana.html" class="related-bottom-card"><span class="related-bottom-title">Как убрать плавающую кнопку Касперского с экрана: все методы</span><span class="related-bottom-desc">Подробная инструкция: как отключить или удалить плавающую кнопку Kaspersky на Android. Решения для S</span></a><a href="/a/articles/k/ke/keli-xk3118-podklyuchenie-com-port.html" class="related-bottom-card"><span class="related-bottom-title">Keli XK3118 подключение COM-порта: инструкция и настройка</span><span class="related-bottom-desc">Полное руководство по настройке Keli XK3118 через COM-порт. Схема распиновки, параметры скорости, др</span></a><a href="/a/articles/k/ka/kak-otklyuchit-dzen-bez-reklamy.html" class="related-bottom-card"><span class="related-bottom-title">Как отключить Дзен на Яндекс Браузере без рекламы: полная инструкция</span><span class="related-bottom-desc">Подробная инструкция по удалению ленты Дзен из Яндекс Браузера. Как отключить рекламу и рекомендации</span></a><a href="/a/articles/z/za/zachem-na-syaomi-not-13-szadi-dve-knopki.html" class="related-bottom-card"><span class="related-bottom-title">Две кнопки сзади Xiaomi Redmi Note 13: зачем они нужны?</span><span class="related-bottom-desc">Узнайте, зачем на Xiaomi Redmi Note 13 две кнопки сзади. Разбор функции второй кнопки, настройки кас</span></a><a href="/a/articles/k/ka/kak-sdelat-russkij-shrift-na-realme-c21y.html" class="related-bottom-card"><span class="related-bottom-title">Как сделать русский шрифт на Realme C21Y: инструкция</span><span class="related-bottom-desc">Подробное руководство: как изменить шрифт на Realme C21Y на русский. Настройка отображения текста, ш</span></a><a href="/a/articles/z/za/zachem-dve-dyrki-na-chehlah.html" class="related-bottom-card"><span class="related-bottom-title">Зачем две дырки на чехлах: скрытые функции и мифы</span><span class="related-bottom-desc">Почему на чехлах для смартфонов две дырки? Разбираем мифы, скрытые магниты MagSafe и реальную пользу</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

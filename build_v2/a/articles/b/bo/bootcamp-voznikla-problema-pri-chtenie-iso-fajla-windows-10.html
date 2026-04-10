@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>BootCamp не видит образ Windows 10: решение ошибки ISO — ТехПодсказка</title>
+    <meta name="description" content="Возникла проблема при чтении файла ISO Windows 10 в BootCamp? Узнайте причины сбоя, способы исправления загрузчика и методы обхода ограничений macOS.">
+    <link rel="canonical" href="/a/articles/b/bo/bootcamp-voznikla-problema-pri-chtenie-iso-fajla-windows-10.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="BootCamp не видит образ Windows 10: решение ошибки ISO">
+    <meta property="og:description" content="Возникла проблема при чтении файла ISO Windows 10 в BootCamp? Узнайте причины сбоя, способы исправления загрузчика и методы обхода ограничений macOS.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/windows-i-pk/">Windows и ПК</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">BootCamp не видит образ Windows 10: решение ошибки ISO</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Ошибка BootCamp: что делать, если возникла проблема при чтении ISO файла Windows 10</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#диагностика-источника-проблемы-файл-или-система">Диагностика источника проблемы: файл или система?</a></li><li><a href="#проблемы-совместимости-версий-macos-и-windows">Проблемы совместимости версий macOS и Windows</a></li><li><a href="#методы-обхода-ограничений-через-терминал">Методы обхода ограничений через Терминал</a></li><li><a href="#ручное-создание-загрузочного-носителя">Ручное создание загрузочного носителя</a></li><li><a href="#использование-стороннего-софта-для-записи-iso">Использование стороннего софта для записи ISO</a></li><li><a href="#устранение-ошибок-файловой-системы-и-прав-доступа">Устранение ошибок файловой системы и прав доступа</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Установка второй операционной системы на компьютеры Apple с процессорами Intel часто становится необходимым шагом для работы со специализированным ПО или игр. Однако пользователи регулярно сталкиваются с ситуацией, когда <strong>BootCamp Assistant</strong> отказывается продолжать работу, выдавая сообщение о невозможности прочитать установочный файл. Эта ошибка может возникнуть на любом этапе: от выбора образа до начала копирования файлов на новый раздел диска.</p>
+
+<p>Причин такого поведения системы может быть множество, начиная от банального повреждения скачанного файла и заканчивая скрытыми ограничениями версии macOS. Часто проблема кроется в том, что <em>Apple</em> искусственно ограничивает поддержку старых версий Windows, делая стандартный путь установки невозможным без применения обходных путей. Понимание природы сбоя — это уже половина решения, позволяющая избежать потери данных.</p>
+
+<p>В этой статье мы детально разберем алгоритмы диагностики и методы исправления ситуации, когда <strong>BootCamp</strong> игнорирует ваш ISO-образ. Мы рассмотрим как штатные средства диагностики, так и продвинутые методы работы с терминалом, которые позволяют обойти встроенные блокировки системы.</p>
+
+<h2 id="диагностика-источника-проблемы-файл-или-система">Диагностика источника проблемы: файл или система?</h2>
+
+<p>Первым делом необходимо исключить вероятность того, что сам установочный образ Windows 10 поврежден при загрузке. Неполная загрузка или сбой сети могут привести к нарушению целостности структуры файлов, что <strong>Ассистент Boot Camp</strong> расценивает как фатальную ошибку. Проверка контрольной суммы файла является обязательным этапом перед любыми манипуляциями с разделами диска.</p>
+
+<p>Также стоит обратить внимание на версию операционной системы macOS, установленную на вашем Mac. Новые версии, такие как <em>Catalina</em>, <em>Big Sur</em> или <em>Monterey</em>, имеют измененную структуру безопасности и часто не содержат драйверов для Windows 10 в стандартном комплекте. Это приводит к тому, что утилита просто не может найти необходимый профиль поддержки для создаваемой системы.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Попытка принудительной установки несовместимой версии Windows на новейшие модели Mac может привести к неработоспособности трекпада, тачскрина или модуля Wi-Fi после установки.</p>
+</blockquote>
+
+<p>Еще одним критическим фактором является наличие свободного места на диске. Если раздел macOS заполнен почти полностью, <strong>BootCamp</strong> не сможет создать временные файлы или выделить необходимый буфер для распаковки образа. Убедитесь, что у вас есть как минимум 64 ГБ свободного пространства, хотя для комфортной работы рекомендуется зарезервировать 128 ГБ и более.</p>
+
+<ul>
+<li>🔍 Проверьте целостность скачанного ISO-файла через Терминал, сравнив хэш-сумму с оригиналом на сайте Microsoft.</li>
+<li>💾 Убедитесь, что файл лежит на внутреннем диске Mac, а не на внешнем USB-накопителе или сетевом ресурсе.</li>
+<li>📉 Освободите место на диске, удалив временные файлы и кэш приложений перед запуском установки.</li>
+<li>🔄 Перезагрузите компьютер в безопасном режиме, чтобы исключить влияние сторонних расширений ядра.</li>
+</ul>
+
+<div class="attention-box attention-info"><div><strong>📊 На каком этапе возникает ошибка?</strong><ul><li>Выбор ISO файла</li><li>Создание раздела</li><li>Копирование файлов</li><li>Завершение установки</li></ul></div></div>
+
+<h2 id="проблемы-совместимости-версий-macos-и-windows">Проблемы совместимости версий macOS и Windows</h2>
+
+<p>С каждым обновлением macOS компания <em>Apple</em> пересматривает список поддерживаемых конфигураций. Если вы используете относительно новую версию macOS, встроенный ассистент может попросту «не знать» о существовании определенных сборок Windows 10. Это особенно актуально для образов, которые не были загружены непосредственно через интерфейс программы.</p>
+
+<p>Существует понятие «профиля поддержки», который содержит необходимые драйверы для конкретного железа Mac. Когда <strong>BootCamp Assistant</strong> не находит профиль для выбранной версии Windows, он прерывает процесс. В таких случаях система часто предлагает скачать только те версии, которые официально одобрены, игнорируя локальные файлы.</p>
+
+<p>Пользователи часто пытаются использовать старые ISO-образы, выпущенные несколько лет назад. Однако за это время архитектура загрузчика <strong>UEFI</strong> и требования к безопасности могли измениться. Образ, созданный до выхода определенных обновлений безопасности Microsoft, может быть отвергнут современными версиями macOS как потенциально небезопасный или некорректный.</p>
+
+<table>
+<thead>
+<tr>
+<th>Версия macOS</th>
+<th>Поддержка Windows 10</th>
+<th>Нюансы установки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>macOS Mojave</td>
+<td>Полная</td>
+<td>Работает со всеми официальными ISO</td>
+</tr>
+<tr>
+<td>macOS Catalina</td>
+<td>Ограниченная</td>
+<td>Требует свежих образов 1903 и новее</td>
+</tr>
+<tr>
+<td>macOS Big Sur</td>
+<td>Частичная</td>
+<td>Проблемы с драйверами Bluetooth и Wi-Fi</td>
+</tr>
+<tr>
+<td>macOS Monterey+</td>
+<td>Критическая</td>
+<td>Часто требует ручного внедрения драйверов</td>
+</tr>
+</tbody>
+</table>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте официальный инструмент Media Creation Tool от Microsoft для создания ISO, так как он автоматически скачивает самую актуальную сборку, совместимую с текущими стандартами безопасности.</p></div>
+
+<h2 id="методы-обхода-ограничений-через-терминал">Методы обхода ограничений через Терминал</h2>
+
+<p>Когда графический интерфейс отказывается сотрудничать, на помощь приходит командная строка. Использование Терминала позволяет обойти проверки совместимости и запустить процесс установки в обход стандартных ограничений <strong>BootCamp Assistant</strong>. Этот метод требует внимательности, но часто является единственным рабочим решением для сложных случаев.</p>
+
+<p>Для начала необходимо найти скрытый контент-пак, который содержит необходимые драйверы. В новых версиях macOS он может не подгружаться автоматически. Мы можем принудительно указать системе путь к ресурсам или запустить установку в режиме, игнорирующем проверку версии.</p>
+
+<pre><code>cd /System/Library/Installation/Packages
+<p>sudo softwareupdate --download-all</code></pre></p>
+
+<p>После подготовки окружения можно попробовать запустить ассистент с флагами, которые игнорируют проверку модели компьютера или версии ОС. Однако будьте осторожны: запуск с ключами отладки может привести к установке системы без базовых драйверов.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Работа в Терминале требует точности. Ввод неверной команды может привести к изменению прав доступа к системным файлам или потере данных.</p>
+</blockquote>
+
+<p>Один из эффективных способов — создание загрузочного USB-накопителя вручную, минуя встроенный инструмент создания разделов. Вы можете использовать утилиту <code>diskutil</code> для разметки диска и <code>asr</code> для копирования образа, после чего запустить установку отдельно. Это дает полный контроль над процессом.</p>
+
+<ul>
+<li>🛠 Используйте команду <code>diskutil list</code> для точного определения идентификатора вашего диска перед разметкой.</li>
+<li>📂 Скопируйте содержимое ISO-образа на отформатированный USB-накопитель вручную через Finder или Терминал.</li>
+<li>⚙️ Запустите <strong>BootCamp</strong> только для установки драйверов после того, как Windows будет установлена.</li>
+<li>🔐 Отключите FileVault перед началом манипуляций, чтобы избежать конфликтов блокировки диска.</li>
+</ul>
+
+<details class="faq-item"><summary>Секретный флаг для старых моделей</summary><div class="faq-answer"><p>Для некоторых моделей Mac работает запуск ассистента с параметром --legacy, что позволяет устанавливать Windows 7 и 8, но требует особой осторожности.</p></div></details>
+
+<h2 id="ручное-создание-загрузочного-носителя">Ручное создание загрузочного носителя</h2>
+
+<p>Если встроенные механизмы macOS продолжают выдавать ошибку чтения, наиболее надежным вариантом становится полностью ручное создание загрузочной флешки. Этот метод исключает влияние программных багов <strong>BootCamp</strong> и позволяет использовать любые ISO-образы, даже те, что система считает неподходящими.</p>
+
+<p>Вам потребуется USB-накопитель объемом не менее 16 ГБ (лучше 32 ГБ и выше). Важно, чтобы флешка была отформатирована в файловой системе <strong>ExFAT</strong> или <strong>FAT32</strong>, так как EFI-раздел Mac требует именно такой формат для корректной инициализации загрузчика Windows.</p>
+
+<p>Процесс копирования файлов на Mac можно выполнить через терминал, смонтировав образ и перенеся файлы. Однако проще всего использовать сторонние утилиты, которые специализируются на создании загрузочных носителей, такие как <em>UUByte ISO Editor</em> или <em>TransMac</em>. Они берут на себя сложную работу по разметке и записи загрузочных секторов.</p>
+
+<div class="checklist-block"><h4>☑️ Чек-лист создания флешки</h4><label class="check-item"><input type="checkbox"><span>Отформатировать USB в FAT32</span></label><label class="check-item"><input type="checkbox"><span>Скачать чистый ISO Windows 10</span></label><label class="check-item"><input type="checkbox"><span>Записать образ через терминал или утилиту</span></label><label class="check-item"><input type="checkbox"><span>Извлечь флешку безопасно</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>После создания носителя вставьте его в порт USB (желательно напрямую в корпус Mac, без хабов) и перезагрузите компьютер, зажав клавишу <code>Option</code> (Alt). Выберите EFI Boot с вашей флешки и следуйте инструкциям установщика Windows. Драйверы <strong>BootCamp</strong> можно будет установить уже внутри работающей Windows.</p>
+
+<h2 id="использование-стороннего-софта-для-записи-iso">Использование стороннего софта для записи ISO</h2>
+
+<p>Когда штатные средства macOS бессильны, на арену выходят специализированные инструменты. Программное обеспечение от сторонних разработчиков часто не имеет тех ограничений, которые накладывает <em>Apple</em> на свою утилиту BootCamp. Они позволяют создавать совместимые разделы и записывать образы, игнорируя проверки сигнатур.</p>
+
+<p>Одним из популярных решений является использование виртуальных машин или инструментов эмуляции для предварительной подготовки диска. Например, можно развернуть образ в <em>Parallels Desktop</em> или <em>VMware Fusion</em>, а затем использовать их инструменты для миграции или создания загрузочных ключей. Это обходной путь, но он работает в 99% случаев.</p>
+
+<p>Также существуют утилиты, которые модифицируют сам ISO-файл, добавляя в него необходимые драйверы <strong>BootCamp</strong> еще до начала установки. Это решает проблему отсутствия драйверов USB или сети в процессе инсталляции Windows, что часто бывает причиной зависания на черном экране.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Использование стороннего ПО для модификации системных образов Windows может нарушить цифровую подпись Microsoft, что приведет к блокировке активации или обновлений.</p>
+</blockquote>
+
+<p>Не стоит забывать и о возможности использования <strong>Windows To Go</strong>, если ваша цель — не полная замена macOS, а периодическая работа в Windows. Этот метод позволяет запускать полноценную Windows с внешней SSD-диска, полностью минуя проблемы с разметкой внутреннего накопителя Mac.</p>
+
+<ul>
+<li>🚀 Используйте <em>WinToUSB</em> для развертывания системы на внешний SSD-накопитель с высокой скоростью чтения.</li>
+<li>🔌 Подключайте внешние диски только в порты Thunderbolt 3/4 для обеспечения достаточной пропускной способности.</li>
+<li>💾 Убедитесь, что внешний диск отформатирован в GPT, а не в MBR, для совместимости с EFI.</li>
+<li>⚡ Не извлекайте внешний диск во время работы Windows, чтобы избежать повреждения файловой системы.</li>
+</ul>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Использование внешней SSD-диски с Windows 10/11 через USB-C — это часто более стабильное и безопасное решение, чем разбиение внутреннего диска Mac.</p></div>
+
+<h2 id="устранение-ошибок-файловой-системы-и-прав-доступа">Устранение ошибок файловой системы и прав доступа</h2>
+
+<p>Иногда проблема кроется не в образе и не в совместимости, а в правах доступа к файлам на вашем Mac. Если файл ISO был перемещен из другой учетной записи или скачан с нарушением протоколов безопасности, система может блокировать его чтение утилитой <strong>BootCamp</strong>.</p>
+
+<p>Проверьте права доступа к файлу через меню «Свойства» (Get Info). Убедитесь, что ваш пользователь имеет права на чтение и запись. Также стоит проверить, не стоит ли флаг «Только чтение» на самом файле образа. Сбросить права можно через Терминал командой <code>chmod</code>, но это требует аккуратности.</p>
+
+<p>Еще одна возможная причина — ошибки на диске. Утилита <strong>First Aid</strong> в Дисковой утилите (Disk Utility) может найти и исправить логические ошибки файловой системы APFS или HFS+, которые мешают корректному чтению больших файлов. Запуск этой проверки — обязательный шаг перед повторной попыткой установки.</p>
+
+<p>Если ничего не помогает, попробуйте создать нового пользователя в macOS с правами администратора и запустить процесс установки из-под его учетной записи. Это исключит влияние пользовательских настроек, конфликтов профилей и кэшированных данных в домашней папке основного пользователя.</p>
+
+<details>
+<summary>Почему BootCamp не видит ISO файл Windows 10, скачанный с сайта Microsoft?</summary>
+<p>Часто проблема в том, что файл был скачан браузером в фоновом режиме и еще не загружен полностью, либо файл имеет расширение .part. Также новые образы могут иметь структуру, которую старые версии BootCamp не распознают без обновленных профилей поддержки.</p>
+</details>
+
+<details>
+<summary>Можно ли использовать ISO образ Windows 11 в BootCamp?</summary>
+<p>Официально — нет, <em>Apple</em> не поддерживает Windows 11 на Intel Mac через BootCamp из-за требований TPM 2.0. Однако технически установка возможна с использованием модифицированных образов или реестровых правок, но стабильность работы не гарантируется.</p>
+</details>
+
+<details>
+<summary>Что делать, если установка зависает на этапе "Получение программных компонентов"?</summary>
+<p>Это классическая ошибка отсутствия драйверов USB или сети. Решение — использование ISO-образа более новой версии Windows 10 (2004 и выше) или ручное внедрение драйверов BootCamp в образ перед установкой.</p>
+</details>
+
+<details>
+<summary>Нужно ли удалять раздел BootCamp перед повторной попыткой?</summary>
+<p>Да, если предыдущая попытка создала раздел, но прервалась, его необходимо удалить через Дисковую утилиту или сам Ассистент BootCamp, чтобы освободить место и сбросить таблицу разделов в исходное состояние.</p>
+</details>
+
+<details>
+<summary>Как восстановить macOS, если установка Windows повредила загрузчик?</summary>
+<p>Необходимо загрузиться в режим восстановления (Recovery Mode) нажав <code>Cmd + R</code> при старте, выбрать «Дисковую утилиту» и проверить целостность диска, или переустановить macOS поверх текущей системы без удаления данных.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#диагностика-источника-проблемы-файл-или-система">Диагностика источника проблемы: файл или система?</a></li><li><a href="#проблемы-совместимости-версий-macos-и-windows">Проблемы совместимости версий macOS и Windows</a></li><li><a href="#методы-обхода-ограничений-через-терминал">Методы обхода ограничений через Терминал</a></li><li><a href="#ручное-создание-загрузочного-носителя">Ручное создание загрузочного носителя</a></li><li><a href="#использование-стороннего-софта-для-записи-iso">Использование стороннего софта для записи ISO</a></li><li><a href="#устранение-ошибок-файловой-системы-и-прав-доступа">Устранение ошибок файловой системы и прав доступа</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/z/za/zabyl-parol-ot-kompyutera-windows-11.html" class="related-card">Забыл пароль от Windows 11: как войти в систему</a></li><li><a href="/a/articles/d/dr/drive-displayport-windows-10.html" class="related-card">Драйвер DisplayPort для Windows 10: установка и решение проблем</a></li><li><a href="/a/articles/k/ka/kak-vyjti-iz-svoego-yutub-na-drugom-kompyutere.html" class="related-card">Как выйти из YouTube на другом компьютере: полная инструкция</a></li><li><a href="/a/articles/g/gd/gde-vzyat-komponentu-smb-dlya-windows-7.html" class="related-card">Где взять компоненту SMB для Windows 7: установка и настройка</a></li><li><a href="/a/articles/v/vk/vklyuchit-zaprosto-igrovoj-rezhim-v-windows-7.html" class="related-card">Как включить игровой режим в Windows 7: полная инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/z/za/zabyl-parol-ot-kompyutera-windows-11.html" class="related-bottom-card"><span class="related-bottom-title">Забыл пароль от Windows 11: как войти в систему</span><span class="related-bottom-desc">Полное руководство: что делать, если забыли пароль от Windows 11. Сброс через Microsoft, командную с</span></a><a href="/a/articles/d/dr/drive-displayport-windows-10.html" class="related-bottom-card"><span class="related-bottom-title">Драйвер DisplayPort для Windows 10: установка и решение проблем</span><span class="related-bottom-desc">Полное руководство по установке драйвера DisplayPort в Windows 10. Как обновить, где скачать и что д</span></a><a href="/a/articles/k/ka/kak-vyjti-iz-svoego-yutub-na-drugom-kompyutere.html" class="related-bottom-card"><span class="related-bottom-title">Как выйти из YouTube на другом компьютере: полная инструкция</span><span class="related-bottom-desc">Пошаговое руководство, как удаленно завершить сеанс YouTube на чужом устройстве. Управление аккаунто</span></a><a href="/a/articles/g/gd/gde-vzyat-komponentu-smb-dlya-windows-7.html" class="related-bottom-card"><span class="related-bottom-title">Где взять компоненту SMB для Windows 7: установка и настройка</span><span class="related-bottom-desc">Полная инструкция по активации SMB 1.0 в Windows 7. Узнайте, где скачать протокол, как включить комп</span></a><a href="/a/articles/v/vk/vklyuchit-zaprosto-igrovoj-rezhim-v-windows-7.html" class="related-bottom-card"><span class="related-bottom-title">Как включить игровой режим в Windows 7: полная инструкция</span><span class="related-bottom-desc">Узнайте, как включить игровой режим в Windows 7, отключив лишние службы и оптимизировав реестр. Полн</span></a><a href="/a/articles/w/wi/windows-11-kak-ubrat-nekotorye-znachki-s-paneli-upravleniya-zvukom.html" class="related-bottom-card"><span class="related-bottom-title">Windows 11: как убрать значки с панели управления звуком</span><span class="related-bottom-desc">Инструкция по скрытию лишних иконок в микшере громкости Windows 11. Убираем системные значки и настр</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

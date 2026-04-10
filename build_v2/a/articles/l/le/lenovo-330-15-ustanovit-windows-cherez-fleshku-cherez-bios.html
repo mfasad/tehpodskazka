@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Lenovo 330 15: Установка Windows с флешки через BIOS — ТехПодсказка</title>
+    <meta name="description" content="Подробная инструкция, как установить Windows 10/11 на ноутбук Lenovo 330 15. Настройка BIOS, создание загрузочной флешки и решение ошибок.">
+    <link rel="canonical" href="/a/articles/l/le/lenovo-330-15-ustanovit-windows-cherez-fleshku-cherez-bios.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Lenovo 330 15: Установка Windows с флешки через BIOS">
+    <meta property="og:description" content="Подробная инструкция, как установить Windows 10/11 на ноутбук Lenovo 330 15. Настройка BIOS, создание загрузочной флешки и решение ошибок.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/mobilnye-os/">Мобильные ОС</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Lenovo 330 15: Установка Windows с флешки через BIOS</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Установка Windows на Lenovo 330 15 через BIOS: Полное руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#подготовка-загрузочного-носителя-и-выбор-версии-windows">Подготовка загрузочного носителя и выбор версии Windows</a></li><li><a href="#вход-в-bios-и-навигация-по-интерфейсу-lenovo">Вход в BIOS и навигация по интерфейсу Lenovo</a></li><li><a href="#критически-важные-настройки-bios-для-установки">Критически важные настройки BIOS для установки</a></li><li><a href="#процесс-разметки-диска-и-инсталляции-системы">Процесс разметки диска и инсталляции системы</a></li><li><a href="#установка-драйверов-и-финальная-настройка-lenovo">Установка драйверов и финальная настройка Lenovo</a></li><li><a href="#решение-типичных-ошибок-при-загрузке-и-установке">Решение типичных ошибок при загрузке и установке</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Переустановка операционной системы на ноутбуке <em>Lenovo IdeaPad 330 15</em> часто становится необходимым шагом для восстановления быстродействия или очистки устройства от накопленного программного мусора. Многие пользователи сталкиваются с трудностями при попытке загрузиться с USB-накопителя, так как современные модели требуют специфической настройки параметров <strong>UEFI</strong> и <strong>Secure Boot</strong>. Правильная подготовка загрузочного носителя и точная конфигурация <code>BIOS</code> являются ключевыми факторами успешной инсталляции без ошибок.</p>
+
+<p>Процесс не требует глубоких технических знаний, если следовать алгоритму действий последовательно и внимательно. Ошибки на этапе выбора режима загрузки или разметки диска могут привести к тому, что установщик просто не увидит ваш накопитель. В этом материале мы разберем все нюансы работы с firmware ноутбука и приведем актуальные методы решения распространенных проблем, характерных именно для серии <em>330</em>.</p>
+
+<h2 id="подготовка-загрузочного-носителя-и-выбор-версии-windows">Подготовка загрузочного носителя и выбор версии Windows</h2>
+
+<p>Первым шагом является создание корректного загрузочного образа, так как стандартное копирование файлов ISO на флешку не позволит запустить установку. Для ноутбуков <em>Lenovo 330 15</em> критически важно правильно выбрать схему разделов: <strong>GPT</strong> для режима UEFI или <strong>MBR</strong> для Legacy. Использование неподходящей схемы приведет к ошибке "Windows cannot be installed to this disk" в самом начале процесса.</p>
+
+<p>Рекомендуется использовать специализированный софт, например, <em>Rufus</em> или <em>Media Creation Tool</em> от Microsoft. При настройке в <em>Rufus</em> обязательно выберите схему раздела <code>GPT</code> и целевую систему <code>UEFI (non CSM)</code>, так как это нативный режим работы для данной модели. Файловая система должна быть <strong>NTFS</strong> или <strong>FAT32</strong>, причем для Windows 10 и 11 предпочтительнее NTFS во избежание проблем с файлами размером более 4 Гб.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Перед началом создания загрузочной флешки убедитесь, что на ней нет важных данных, так как процесс форматирования полностью уничтожит всю информацию на накопителе.</p>
+</blockquote>
+
+<p>Важно также проверить целостность скачанного образа операционной системы. Поврежденный при скачивании файл ISO может вызвать хаотичные ошибки в середине установки или бесконечную перезагрузку. Если вы используете лицензионный ключ, подготовьте его заранее, хотя в большинстве случаев активация на <em>Lenovo</em> происходит автоматически благодаря привязке цифровой лицензии к материнской плате.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте USB-порт 2.0 (черного цвета) вместо 3.0 (синего) для установки, если возникнут проблемы с определением накопителя на этапе загрузки, так как драйверы USB 3.0 могут отсутствовать в базовом образе установщика.</p></div>
+
+<h2 id="вход-в-bios-и-навигация-по-интерфейсу-lenovo">Вход в BIOS и навигация по интерфейсу Lenovo</h2>
+
+<p>Для доступа к настройкам микропрограммы на ноутбуках <em>IdeaPad</em> существует несколько способов, и выбор правильного метода зависит от состояния устройства. Стандартным методом является многократное нажатие клавиши <code>F2</code> сразу после включения питания. Однако, если система загружается слишком быстро или клавиатура не успевает опроситься, этот способ может не сработать с первого раза.</p>
+
+<p>Альтернативный и более надежный вариант для модели <em>330 15</em> — использование специальной кнопки <strong>Novo Button</strong>. Она представляет собой маленькое отверстие или клавишу со стрелкой, расположенную на боковой грани корпуса или рядом с кнопкой питания. Нажатие этой кнопки на выключенном ноутбуке запускает <code>Novo Button Menu</code>, где нужно выбрать пункт <em>BIOS Setup</em>. Это гарантирует вход в настройки даже при полностью неработающей операционной системе.</p>
+
+<p>Интерфейс BIOS на этих моделях может быть графическим или текстовым, в зависимости от версии прошивки. Навигация осуществляется клавишами <code>стрелок</code>, а выбор параметров — клавишей <code>Enter</code>. Не спешите менять все настройки подряд; ваша цель — найти разделы, отвечающие за загрузку (<strong>Boot</strong>) и безопасность (<strong>Security</strong>). Часто пользователи теряются в меню <code>Exit</code>, случайно сбрасывая изменения, поэтому будьте внимательны при перемещении.</p>
+
+<ul>
+<li>🔍 Клавиша <code>F2</code> — основной вход при загрузке.</li>
+<li>🔍 Кнопка <code>Novo</code> — аварийный вход через специальное меню.</li>
+<li>🔍 Клавиша <code>F12</code> — вызов_BOOT Menu_ для разового выбора устройства.</li>
+<li>🔍 Клавиша <code>Fn + F2</code> — альтернативный вариант, если функциональные клавиши переназначены.</li>
+</ul>
+
+<h2 id="критически-важные-настройки-bios-для-установки">Критически важные настройки BIOS для установки</h2>
+
+<p>После входа в интерфейс необходимо изменить ряд параметров, чтобы компьютер согласился загрузиться с вашего USB-накопителя. Первым делом перейдите на вкладку <code>Security</code> и найдите пункт <strong>Secure Boot</strong>. Его необходимо переключить в положение <code>Disabled</code>. Блокировка безопасной загрузки препятствует запуску любых операционных систем, не имеющих цифровой подписи Microsoft, что часто случается с самостоятельно созданными сборками Windows.</p>
+
+<p>Далее переходим на вкладку <code>Boot</code>. Здесь следует найти параметр <strong>Boot Mode</strong> и убедиться, что выбран режим <code>UEFI</code>. Переключение в <code>Legacy Support</code> возможно, но не рекомендуется для Windows 10/11, так как это ограничит размер диска 2 ТБ и снизит скорость работы. Также проверьте, чтобы ваш USB-накопитель был поднят в приоритете загрузки или хотя бы отображался в списке <code>Boot Priority Order</code>.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой режим загрузки вы предпочитаете?</strong><ul><li>Только UEFI</li><li>Legacy (CSM)</li><li>Auto</li><li>Не знаю, ставлю как есть</li></ul></div></div>
+
+<p>Не забудьте сохранить изменения перед выходом. Для этого перейдите на вкладку <code>Exit</code> и выберите пункт <code>Exit Saving Changes</code> или просто нажмите клавишу <code>F10</code>. Ноутбук перезагрузится, и если флешка подключена, должен начаться процесс загрузки установщика. Если этого не произошло, повторите вход и проверьте, правильно ли определен накопитель в списке устройств.</p>
+
+<blockquote>
+<p>⚠️ Внимание: После отключения Secure Boot некоторые версии BIOS могут потребовать сброса ключей безопасности через пункт "Reset to Setup Mode" или "Restore Factory Keys", если загрузка все равно блокируется.</p>
+</blockquote>
+
+<h2 id="процесс-разметки-диска-и-инсталляции-системы">Процесс разметки диска и инсталляции системы</h2>
+
+<p>Когда появится экран выбора языка, выберите нужный и нажмите "Установить". На этапе выбора типа установки обязательно укажите <strong>Выборочная: только Windows</strong>. Это позволит вручную управлять разделами диска. В открывшемся списке вы увидите разделы вашего жесткого диска. Для чистой установки необходимо удалить все существующие разделы до состояния "Незанятое пространство на диске".</p>
+
+<p>После удаления разделов выберите незанятое пространство и нажмите "Создать". Система сама предложит создать необходимые служебные разделы (EFI, MSR, Recovery). Если установщик пишет, что "Невозможно создать новый раздел", это часто указывает на то, что в BIOS не отключен режим Legacy или флешка отформатирована неправильно. Убедитесь, что диск имеет стиль разделов <strong>GPT</strong>.</p>
+
+<div class="checklist-block"><h4>☑️ Чек-лист перед форматированием</h4><label class="check-item"><input type="checkbox"><span>Скопировать важные фото на облако</span></label><label class="check-item"><input type="checkbox"><span>Сохранить пароли от браузера</span></label><label class="check-item"><input type="checkbox"><span>Записать лицензионные ключи программ</span></label><label class="check-item"><input type="checkbox"><span>Проверить заряд батареи</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>Дальнейший процесс проходит автоматически: копирование файлов, установка компонентов и первичная настройка. Ноутбук <em>Lenovo 330 15</em> может несколько раз перезагрузиться. Важно не вынимать флешку до первого появления экрана приветствия ("Привет" или выбор региона), иначе цикл установки может начаться заново.</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Рекомендуемое значение</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Secure Boot</td>
+<td>Disabled</td>
+<td>Отключает проверку цифровой подписи загрузчика</td>
+</tr>
+<tr>
+<td>Boot Mode</td>
+<td>UEFI</td>
+<td>Современный стандарт загрузки, обязателен для GPT</td>
+</tr>
+<tr>
+<td>CSM Support</td>
+<td>No / Disabled</td>
+<td>Модуль поддержки Legacy, мешает чистой UEFI загрузке</td>
+</tr>
+<tr>
+<td>USB Boot</td>
+<td>Enabled</td>
+<td>Разрешает загрузку с внешних накопителей</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="установка-драйверов-и-финальная-настройка-lenovo">Установка драйверов и финальная настройка Lenovo</h2>
+
+<p>После успешной установки Windows 10 или 11 система автоматически установит базовые драйверы, но для полноценной работы <em>Lenovo 330 15</em> требуется специфическое ПО. В первую очередь необходимо установить драйверы управления питанием и чипсета, которые часто отсутствуют в стандартном наборе Microsoft. Без них ноутбук может некорректно работать с тачпадом, клавиатурой или спать вместо выключения.</p>
+
+<p>Официальным источником является утилита <em>Lenovo Vantage</em>, доступная в Microsoft Store, или раздел поддержки на сайте производителя. Автоматическое сканирование системы подберет точные версии драйверов для вашей конкретной модификации материнской платы и видеокарты. Особое внимание уделите драйверам <strong>Intel Management Engine</strong> и графического адаптера, так как они напрямую влияют на производительность.</p>
+
+<details class="faq-item"><summary>Что делать, если не работает тачпад?</summary><div class="faq-answer"><p>Часто после установки Windows тачпад не реагирует. Зайдите в Диспетчер устройств, найдите устройство с восклицательным знаком или "HID-compliant mouse", обновите драйвер автоматически. Если не помогло — скачайте драйвер Touchpad (обычно Elan или Synaptics) с сайта Lenovo.</p></div></details>
+
+<p>Также стоит проверить обновления BIOS через официальную утилиту. Производители периодически выпускают новые версии прошивок, исправляющие ошибки работы вентиляторов, улучшающие совместимость с памятью или закрывающие уязвимости безопасности. Обновление BIOS — процедура рискованная, поэтому убедитесь, что ноутбук подключен к зарядному устройству.</p>
+
+<h2 id="решение-типичных-ошибок-при-загрузке-и-установке">Решение типичных ошибок при загрузке и установке</h2>
+
+<p>Одной из самых частых проблем является сообщение "No bootable device found" после установки. Это означает, что загрузочный сектор <strong>EFI</strong> не был корректно записан или порядок загрузки в BIOS сбился. Проверьте в разделе <code>Boot</code>, появился ли там пункт <code>Windows Boot Manager</code>. Если он есть, переместите его на первое место. Если нет — возможно, потребуется восстановить загрузчик через командную строку установщика.</p>
+
+<p>Другая распространенная ошибка — "A required CD/DVD drive device driver is missing". Она возникает, если установщик не видит контроллер диска. В случае с <em>Lenovo 330</em> это редко связано с драйверами SATA, чаще проблема в неисправном USB-порте или самой флешке. Попробуйте переподключить накопитель в другой порт или использовать другой дистрибутив Windows.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Если экран установки черный или курсор мыши не двигается, попробуйте нажать сочетание клавиш <code>Shift + F10</code> для вызова командной строки и проверки процессов, либо обновите BIOS до последней версии перед установкой.</p>
+</blockquote>
+
+<p>В случае зависания на логотипе Lenovo после установки, попробуйте сбросить настройки BIOS в默认ные (<code>Load Setup Defaults</code>) и заново настроить только отключение Secure Boot. Иногда конфликтуют настройки энергосбережения, поэтому в разделе <code>Configuration</code> стоит проверить статус <strong>Intel Smart Connect</strong> или подобных технологий и при необходимости отключить их.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>90% проблем с установкой на Lenovo 330 15 решаются правильным сочетанием: Схема раздела GPT + Режим UEFI + Отключенный Secure Boot.</p></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Можно ли установить Windows 7 на Lenovo 330 15?</summary>
+<p>Технически это возможно, но крайне не рекомендуется. Модель оснащена процессорами Intel 8-го поколения и новее, которые официально не поддерживают Windows 7. Вам придется вручную интегрировать драйверы USB 3.0 в образ системы, иначе клавиатура и мышь не заработают. Кроме того, могут возникнуть проблемы с драйверами видеокарты и тачпада.</p>
+</details>
+
+<details>
+<summary>Как войти в BIOS, если клавиша F2 не работает?</summary>
+<p>Используйте кнопку <em>Novo Button</em> (маленькое отверстие на корпусе). Нажмите ее скрепкой на выключенном ноутбуке. В появившемся меню выберите <code>BIOS Setup</code>. Это аппаратный метод входа, который работает даже при отсутствии операционной системы.</p>
+</details>
+
+<details>
+<summary>Нужно ли форматировать диск в NTFS или FAT32 для флешки?</summary>
+<p>Для режима UEFI, который используется по умолчанию, файловая система флешки должна быть <strong>FAT32</strong>. Однако, так как образ Windows 10/11 часто превышает 4 Гб, программы вроде <em>Rufus</em> используют специальный метод записи или разбивают файл <code>install.wim</code>. Простое форматирование в NTFS может не заработать в чистом UEFI без включенного CSM.</p>
+</details>
+
+<details>
+<summary>Где найти драйверы, если после установки нет интернета?</summary>
+<p>Заранее скачайте пакет драйверов WLAN (Wi-Fi) и LAN (Ethernet) для вашей модели на другом устройстве. Сохраните их на ту же установочную флешку. После установки Windows запустите installer драйвера Wi-Fi, и ноутбук получит доступ к сети для загрузки остальных обновлений.</p>
+</details>
+
+<details>
+<summary>Почему ноутбук не видит жесткий диск при установке?</summary>
+<p>Проверьте настройки SATA в BIOS (режим <code>AHCI</code> вместо <code>Compatibility</code> или <code>RST</code>). Также убедитесь, что диск не скрыт или не имеет ошибок файловой системы. В редких случаях требуется отключить кабель HDD внутри корпуса и подключить заново, если диск съемный.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#подготовка-загрузочного-носителя-и-выбор-версии-windows">Подготовка загрузочного носителя и выбор версии Windows</a></li><li><a href="#вход-в-bios-и-навигация-по-интерфейсу-lenovo">Вход в BIOS и навигация по интерфейсу Lenovo</a></li><li><a href="#критически-важные-настройки-bios-для-установки">Критически важные настройки BIOS для установки</a></li><li><a href="#процесс-разметки-диска-и-инсталляции-системы">Процесс разметки диска и инсталляции системы</a></li><li><a href="#установка-драйверов-и-финальная-настройка-lenovo">Установка драйверов и финальная настройка Lenovo</a></li><li><a href="#решение-типичных-ошибок-при-загрузке-и-установке">Решение типичных ошибок при загрузке и установке</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-proverit-u-cheloveka-ajfon-ili-android.html" class="related-card">Как проверить у человека айфон или андроид: все методы</a></li><li><a href="/a/articles/k/ka/kak-skachat-izvestiya-ru-na-telefon-besplatno.html" class="related-card">Как скачать Известия на телефон: бесплатная установка</a></li><li><a href="/a/articles/r/ro/root-prava-na-android-magnitolu-vega-q68.html" class="related-card">Root права на магнитолу Vega Q68: полная инструкция</a></li><li><a href="/a/articles/i/ig/igra-futbol-kotoraya-podderzhivaet-upravlenie-kontrollerom-na-android.html" class="related-card">Футбол на Android с геймпадом: лучшие игры и настройка</a></li><li><a href="/a/articles/v/vi/virtualnyj-android-s-rut-pravami.html" class="related-card">Виртуальный Андроид с Root: создание эмулятора для тестов</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-proverit-u-cheloveka-ajfon-ili-android.html" class="related-bottom-card"><span class="related-bottom-title">Как проверить у человека айфон или андроид: все методы</span><span class="related-bottom-desc">Узнайте, как определить операционную систему смартфона собеседника. Простые способы узнать iPhone ил</span></a><a href="/a/articles/k/ka/kak-skachat-izvestiya-ru-na-telefon-besplatno.html" class="related-bottom-card"><span class="related-bottom-title">Как скачать Известия на телефон: бесплатная установка</span><span class="related-bottom-desc">Узнайте, как бесплатно скачать приложение Известия ру на телефон Android и iPhone. Официальные спосо</span></a><a href="/a/articles/r/ro/root-prava-na-android-magnitolu-vega-q68.html" class="related-bottom-card"><span class="related-bottom-title">Root права на магнитолу Vega Q68: полная инструкция</span><span class="related-bottom-desc">Как получить root права на Android магнитолу Vega Q68. Подробное руководство, риски, установка ADB и</span></a><a href="/a/articles/i/ig/igra-futbol-kotoraya-podderzhivaet-upravlenie-kontrollerom-na-android.html" class="related-bottom-card"><span class="related-bottom-title">Футбол на Android с геймпадом: лучшие игры и настройка</span><span class="related-bottom-desc">Обзор топовых футбольных симуляторов на Android, поддерживающих управление контроллером. Инструкции </span></a><a href="/a/articles/v/vi/virtualnyj-android-s-rut-pravami.html" class="related-bottom-card"><span class="related-bottom-title">Виртуальный Андроид с Root: создание эмулятора для тестов</span><span class="related-bottom-desc">Как получить рут-права на виртуальном Андроиде. Создание эмулятора Genymotion, Android-x86 или Docke</span></a><a href="/a/articles/k/ka/kak-iboto-k-telefonu-podklyuchit-robot-pylesos-iboto-smsrt-l830sw-aqua.html" class="related-bottom-card"><span class="related-bottom-title">Как подключить iBoto Smart L830S Aqua к Wi-Fi и приложению</span><span class="related-bottom-desc">Пошаговая инструкция: как настроить робот-пылесос iBoto Smart L830S Aqua. Решение проблем с подключе</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

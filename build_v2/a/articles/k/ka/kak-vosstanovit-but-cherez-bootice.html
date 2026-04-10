@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Как восстановить загрузчик через Bootice: полное руководство — ТехПодсказка</title>
+    <meta name="description" content="Подробная инструкция по восстановлению MBR и загрузочных записей Windows с помощью утилиты Bootice. Ремонт системы без переустановки.">
+    <link rel="canonical" href="/a/articles/k/ka/kak-vosstanovit-but-cherez-bootice.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как восстановить загрузчик через Bootice: полное руководство">
+    <meta property="og:description" content="Подробная инструкция по восстановлению MBR и загрузочных записей Windows с помощью утилиты Bootice. Ремонт системы без переустановки.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как восстановить загрузчик через Bootice: полное руководство</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Восстановление загрузчика Windows через Bootice: пошаговый алгоритм</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#подготовка-загрузочной-среды-и-запуск-утилиты">Подготовка загрузочной среды и запуск утилиты</a></li><li><a href="#диагностика-диска-и-выбор-целевого-устройства">Диагностика диска и выбор целевого устройства</a></li><li><a href="#восстановление-master-boot-record-mbr">Восстановление Master Boot Record (MBR)</a></li><li><a href="#настройка-partition-boot-record-pbr-и-файловой-системы">Настройка Partition Boot Record (PBR) и файловой системы</a></li><li><a href="#редактирование-меню-загрузки-bcd">Редактирование меню загрузки BCD</a></li><li><a href="#особенности-работы-с-uefi-и-gpt-дисками">Особенности работы с UEFI и GPT дисками</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Ситуация, когда операционная система внезапно отказывается загружаться, заставляя пользователя наблюдать лишь черный экран с загадочными кодами ошибок, является одной из самых стрессовых для владельца ПК. Часто причина кроется не в физической поломке жесткого диска или повреждении системных файлов Windows, а в нарушении структуры загрузочной записи. Именно <strong>Master Boot Record</strong> (MBR) или <strong>Boot Sector</strong> (PBR) содержат критически важные данные о том, с какого раздела и каким образом должен начинаться процесс инициализации ОС. Если эти сектора повреждены вирусом, сбоем электропитания или ошибкой при работе с разделами диска, компьютер просто не знает, куда двигаться дальше.</p>
+<p>Для решения этой проблемы существует мощнейший инструмент под названием <em>Bootice</em>, который позволяет проводить глубокую диагностику и ручное редактирование загрузочных секторов дисков. В отличие от стандартных средств восстановления Windows, которые часто предлагают лишь автоматический и не всегда успешный ремонт, эта утилита дает полный контроль над структурой диска. Вы сможете вручную переписать MBR, восстановить PBR или даже отредактировать меню мультизагрузки <em>BCD</em>, вернув системе возможность нормального запуска без потери данных.</p>
+<p>Работа с низкоуровневыми секторами диска требует предельной внимательности и понимания того, что именно вы делаете. Любое неверное действие при записи в служебные области накопителя может привести к полной неработоспособности раздела или всего диска. Однако, если следовать четкому алгоритму действий и понимать назначение каждого параметра, процесс восстановления занимает считанные минуты и позволяет избежать трудоемкой переустановки операционной системы. Далее мы детально разберем каждый этап работы с программой.</p>
+
+<h2 id="подготовка-загрузочной-среды-и-запуск-утилиты">Подготовка загрузочной среды и запуск утилиты</h2>
+<p>Поскольку операционная система в текущий момент не загружается, запустить исполняемый файл <em>Bootice.exe</em> непосредственно из-под неработающей Windows не получится. Вам потребуется создать загрузочную флешку или диск с образом <em>WinPE</em> (Windows Preinstallation Environment) или использовать полноценную установочную флешку с Windows 10/11. Именно в этой среде, где файловая система доступна для чтения, но сама ОС еще не запущена, можно безопасно манипулировать загрузочными записями. Популярными сборками являются <em>Sergei Strelec</em> или <em>WinPE 10-8</em>, которые содержат весь необходимый набор инструментов.</p>
+<p>После загрузки с внешнего носителя необходимо найти файл программы. Обычно он уже включен в состав большинства сборок WinPE и находится в меню "Пуск" в разделе "Утилиты" или на рабочем столе. Если вы используете чистый образ, скопируйте портативную версию <em>Bootice</em> на флешку заранее. Запуск программы не требует установки, так как это портативное приложение. При первом запуске может появиться окно предупреждения о правах администратора — согласитесь с ним, чтобы получить доступ к дискам.</p>
+<p>Интерфейс программы может показаться аскетичным, но он содержит все необходимые функции. Главное окно сразу предлагает выбрать целевое устройство из выпадающего списка. <strong>Внимательно</strong> изучите список доступных дисков, чтобы случайно не выбрать не тот накопитель, особенно если в системе подключено несколько физических HDD или SSD. Ошибка в выборе диска на этом этапе может привести к потере данных на рабочем разделе.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка перед началом работ</h4><label class="check-item"><input type="checkbox"><span>Загружена система WinPE с внешнего носителя</span></label><label class="check-item"><input type="checkbox"><span>Подключена флешка с файлом Bootice (если его нет в WinPE)</span></label><label class="check-item"><input type="checkbox"><span>Определен правильный физический диск в списке</span></label><label class="check-item"><input type="checkbox"><span>Понятна разница между MBR и PBR</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<blockquote>
+<p>⚠️ Внимание: Перед началом любых операций с загрузочными записями настоятельно рекомендуется сделать полный бэкап важных данных на внешний носитель, если есть техническая возможность доступа к файлам через проводник в среде WinPE.</p>
+</blockquote>
+
+<h2 id="диагностика-диска-и-выбор-целевого-устройства">Диагностика диска и выбор целевого устройства</h2>
+<p>Первым шагом в процессе восстановления является правильная идентификация проблемного накопителя. В главном окне программы в разделе <code>Target Disk</code> отображается список всех подключенных физических устройств. Вам нужно ориентироваться на объем диска и модель, чтобы выбрать именно тот, на котором установлена операционная система. Если вы выберете флешку, с которой загружаетесь, или пустой внешний HDD, операция не принесет результата, а в худшем случае повредит их загрузочную запись.</p>
+<p>После выбора диска становится активным блок кнопок для работы с <strong>MBR</strong> (Master Boot Record). Это первый сектор жесткого диска, который считывается BIOS или UEFI при старте компьютера. Именно здесь хранится таблица разделов и код, передающий управление загрузчику операционной системы. Если этот сектор поврежден, компьютер будет выдавать ошибки вроде "Missing operating system" или "Invalid partition table".</p>
+<p>Для начала работы нажмите кнопку <code>Contents</code> (Содержимое), чтобы визуально оценить состояние таблицы разделов. В открывшемся окне вы увидите список всех разделов на диске, их типы файловых систем и статус активности. Активный раздел помечается флагом <em>Active</em> или буквой "A". Именно с активного раздела обычно происходит загрузка. Если ни один раздел не помечен как активный, система не будет знать, где искать файлы для старта.</p>
+<ul>
+<li>🔍 Проверьте, что в списке отображается правильный объем диска, соответствующий вашему системному накопителю.</li>
+<li>🔍 Убедитесь, что в таблице разделов виден системный раздел (обычно NTFS) и он имеет статус "Active".</li>
+<li>🔍 Обратите внимание на тип таблицы разделов: MBR или GPT, так как от этого зависит метод восстановления.</li>
+<li>🔍 Запомните букву диска, присвоенную системному разделу в среде WinPE, она может отличаться от привычной "C".</li>
+</ul>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>В среде WinPE буквы дисков могут быть смещены. Системный раздел Windows может отображаться как D: или E:. Всегда проверяйте содержимое папок через проводник, чтобы не ошибиться.</p></div>
+
+<h2 id="восстановление-master-boot-record-mbr">Восстановление Master Boot Record (MBR)</h2>
+<p>Если диагностика показала, что таблица разделов пуста или повреждена, либо вы получили соответствующую ошибку при загрузке, необходимо восстановить MBR. Для этого в главном окне программы после выбора диска нажмите кнопку <code>MBR</code>. Откроется новое окно с несколькими вариантами действий. Самый распространенный и безопасный метод для большинства случаев — выбор опции <strong>Windows NT 6.x MBR</strong>. Этот код совместим с современными версиями Windows, начиная от Vista и заканчивая Windows 11.</p>
+<p>В открывшемся окне выберите радиокнопку <code>Windows NT 6.x MBR</code> и нажмите кнопку <code>Install / Upgrade</code>. Программа запросит подтверждение операции, так как она предполагает прямую запись в служебный сектор диска. После подтверждения вы увидите сообщение об успешном завершении операции. Это действие перезаписывает загрузочный код, но <strong>не затрагивает</strong> таблицу разделов или данные пользователя, поэтому ваши файлы остаются в целости.</p>
+<p>Существуют и другие варианты, например, <em>GRUB4DOS</em> или <em>syslinux</em>, которые используются для создания мультизагрузочных конфигураций или работы с Linux-системами. Однако для стандартного восстановления работоспособности Windows они не требуются и могут даже усложнить процесс загрузки, если будут установлены неправильно. После установки MBR окно можно закрыть, но процесс восстановления еще не завершен, так как нужно обновить и загрузочный сектор раздела.</p>
+
+<details class="faq-item"><summary>В чем разница между MBR и GPT?</summary><div class="faq-answer"><p>MBR (Master Boot Record) — это старый стандарт разметки, поддерживающий диски до 2 ТБ и до 4 основных разделов. GPT (GUID Partition Table) — современный стандарт, пришедший на смену MBR, поддерживающий огромные объемы и работающий в паре с UEFI. Bootice умеет работать с обоими типами, но кнопки называются по-разному: MBR для старых систем, PBR для секторов разделов в обоих случаях.</p></div></details>
+
+<h2 id="настройка-partition-boot-record-pbr-и-файловой-системы">Настройка Partition Boot Record (PBR) и файловой системы</h2>
+<p>После успешной записи MBR необходимо перейти к восстановлению загрузочной записи самого раздела, где установлена ОС. Эта запись называется <strong>PBR</strong> (Partition Boot Record) или VBR (Volume Boot Record). Для перехода к этому этапу вернитесь в главное окно Bootice и нажмите кнопку <code>PBR</code>. В отличие от MBR, который един для всего диска, PBR уникален для каждого раздела.</p>
+<p>В открывшемся окне в выпадающем списке <code>Current Partition Boot Record Type</code> нужно выбрать тип файловой системы вашего системного раздела. Для современных версий Windows это почти всегда <em>NTFS</em>. Если у вас старая система, это может быть <em>FAT32</em>. После выбора типа файловой системы станет активна кнопка <code>Install / Upgrade</code>. Нажмите её, чтобы записать стандартный загрузчик, соответствующий выбранной файловой системе.</p>
+<p>Эта операция восстанавливает код, который позволяет BIOS понять, как читать файлы с данного конкретного раздела. Без корректного PBR компьютер, даже имея правильную MBR, не сможет перейти к загрузчику Windows. Как и в предыдущем случае, процесс занимает долю секунды и завершается сообщением об успехе. Теперь базовая структура загрузки восстановлена, но для запуска Windows 7, 8, 10 или 11 часто требуется еще один шаг — проверка BCD.</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>MBR (Master Boot Record)</th>
+<th>PBR (Partition Boot Record)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Расположение</td>
+<td>Первый сектор физического диска</td>
+<td>Первый сектор логического раздела</td>
+</tr>
+<tr>
+<td>Функция</td>
+<td>Поиск активного раздела и передача управления</td>
+<td>Загрузка кода файловой системы и ядра ОС</td>
+</tr>
+<tr>
+<td>Зависимость</td>
+<td>Не зависит от файловой системы</td>
+<td>Зависит от типа ФС (NTFS, FAT32)</td>
+</tr>
+<tr>
+<td>Кнопка в Bootice</td>
+<td>MBR</td>
+<td>PBR</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote>
+<p>⚠️ Внимание: При выборе типа PBR убедитесь, что вы выбрали именно NTFS для системных разделов Windows. Выбор неправильного типа (например, FAT) сделает раздел нечитаемым для загрузчика.</p>
+</blockquote>
+
+<h2 id="редактирование-меню-загрузки-bcd">Редактирование меню загрузки BCD</h2>
+<p>Для операционных систем семейства Windows NT (начиная с Vista) критически важным элементом является хранилище конфигурации загрузки <strong>BCD</strong> (Boot Configuration Data). Именно в этом файле прописаны пути к ядру системы, параметры запуска и меню выбора ОС. Если MBR и PBR в порядке, но BCD поврежден или отсутствует, вы увидите ошибку "Bootmgr is missing" или черный экран. В главном окне Bootice нажмите кнопку <code>BCD Edit</code>.</p>
+<p>Откроется окно редактора. В верхней части выберите режим <code>Smart Edit</code> (Умное редактирование) и убедитесь, что выбран текущий системный диск. В списке загрузочных записей должна быть строка с названием вашей Windows. Если список пуст, нажмите кнопку <code>Add</code> (Добавить) и выберите <strong>Windows Boot Manager</strong>. Вам потребуется указать путь к файлу <code>\Windows\system32\winload.efi</code> (для UEFI) или <code>\Windows\system32\winload.exe</code> (для BIOS).</p>
+<p>Особое внимание уделите полю <code>Boot disk</code> и <code>Boot partition</code>. Они должны указывать на тот раздел, где физически расположены файлы Windows. В среде WinPE буквы дисков могут быть изменены, поэтому лучше ориентироваться на объем раздела и метку тома. После внесения изменений обязательно нажмите кнопку <code>Save current system settings</code> или <code>Apply</code>, чтобы сохранить конфигурацию в файл BCD на диске.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какая ошибка была у вас при загрузке?</strong><ul><li>Bootmgr is missing</li><li>Black screen (Черный экран)</li><li>Invalid partition table</li><li>NTLDR is missing</li><li>Другая</li></ul></div></div>
+
+<h2 id="особенности-работы-с-uefi-и-gpt-дисками">Особенности работы с UEFI и GPT дисками</h2>
+<p>Современные компьютеры используют интерфейс <em>UEFI</em> вместо устаревшего BIOS и таблицу разделов <strong>GPT</strong> вместо MBR. В таких системах процесс загрузки отличается: вместо поиска кода в первом секторе диска, UEFI обращается к скрытому разделу <em>EFI System Partition</em> (ESP), отформатированному в FAT32. В Bootice работа с такими дисками имеет свои нюансы, хотя базовые принципы остаются схожими.</p>
+<p>При выборе GPT-диска в списке устройств, кнопка <code>MBR</code> может быть неактивна или работать иначе, так как GPT использует защитный MBR. Основное внимание следует уделить разделу ESP. В режиме редактирования BCD убедитесь, что путь к загрузчику ведет к файлу <code>\EFI\Microsoft\Boot\bootmgfw.efi</code> на разделе ESP. Именно этот файл является стартовым для UEFI-систем.</p>
+<p>Если автоматическое восстановление не помогает, можно вручную пересоздать запись в BCD, указав правильный EFI-файл. Также в UEFI-системах важно проверить настройки самого BIOS/UEFI: порядок загрузки (Boot Priority) должен стоять таким, чтобы первым загружался "Windows Boot Manager", а не просто имя жесткого диска. Bootice помогает подготовить файлы, но порядок опроса устройств задается в firmware материнской платы.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Для UEFI систем критически важно наличие скрытого раздела FAT32 (EFI System Partition) и корректной записи bootmgfw.efi в BCD. Без этого система не стартует, даже если файлы Windows целы.</p></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Можно ли использовать Bootice на компьютерах с Mac (Apple Silicon или Intel)?</summary>
+<p>Нет, Bootice предназначена исключительно для архитектуры x86/x64 и операционных систем семейства Windows. Компьютеры Mac используют другие механизмы загрузки (EFI специфичной реализации или Apple Silicon BootROM), и использование этой утилиты на них невозможно и опасно.</p>
+</details>
+
+<details>
+<summary>Что делать, если после восстановления MBR компьютер пишет "Operating System not found"?</summary>
+<p>Это означает, что MBR исправна, но ни один раздел не помечен как активный, или активный раздел не содержит работающей ОС. Вернитесь в Bootice, нажмите <code>Contents</code>, выберите системный раздел и нажмите <code>Set Active</code>. Если это не помогло, проблема может быть в повреждении файлов самой Windows.</p>
+</details>
+
+<details>
+<summary>Безопасно ли использовать функцию "Backup" в Bootice?</summary>
+<p>Да, функция резервного копирования MBR и PBR абсолютно безопасна и крайне полезна. Она сохраняет 512 байт (или больше для GPT) в файл на другом диске. Рекомендуется делать это превентивно на рабочем компьютере, чтобы в случае сбоя можно было быстро восстановить оригинальную запись кнопкой "Restore".</p>
+</details>
+
+<details>
+<summary>Поможет ли Bootice, если жесткий диск издает щелкающие звуки?</summary>
+<p>Нет. Bootice работает с логической структурой данных. Щелкающие звуки свидетельствуют о физической поломке механической части жесткого диска. В этом случае программные методы бессильны и могут добить устройство. Требуется замена диска и восстановление данных в специализированной лаборатории.</p>
+</details>
+
+<details>
+<summary>Нужно ли переустанавливать Windows после использования Bootice?</summary>
+<p>В 95% случаев переустановка не требуется. Цель использования Bootice — именно восстановить загрузчик без потери данных и переустановки системы. Если после всех манипуляций Windows не загружается, возможно, повреждены системные файлы, и тогда потребуется лечение через консоль восстановления или переустановка.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#подготовка-загрузочной-среды-и-запуск-утилиты">Подготовка загрузочной среды и запуск утилиты</a></li><li><a href="#диагностика-диска-и-выбор-целевого-устройства">Диагностика диска и выбор целевого устройства</a></li><li><a href="#восстановление-master-boot-record-mbr">Восстановление Master Boot Record (MBR)</a></li><li><a href="#настройка-partition-boot-record-pbr-и-файловой-системы">Настройка Partition Boot Record (PBR) и файловой системы</a></li><li><a href="#редактирование-меню-загрузки-bcd">Редактирование меню загрузки BCD</a></li><li><a href="#особенности-работы-с-uefi-и-gpt-дисками">Особенности работы с UEFI и GPT дисками</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/i/ir/irbis-17-nbc-2000-ne-zagruzhaetsya.html" class="related-card">Irbis 17 NBC 2000 не включается: решения и ремонт</a></li><li><a href="/a/articles/a/al/all-pw-svdhkvdl34-girlx-vid-6-4.html" class="related-card">Расшифровка пароля svd$hkvdl34## и код girlx vid 6-4</a></li><li><a href="/a/articles/k/ka/kak-navsegda-iedem-samostoyatelno-vojti-kabinet.html" class="related-card">Как войти в iedem: вход в личный кабинет навсегда</a></li><li><a href="/a/articles/s/so/solidworks-2023-zakryt-ip.html" class="related-card">SolidWorks 2023: Как закрыть IP-соединения и настроить защиту</a></li><li><a href="/a/articles/i/in/instrukciya-opisanie-dv3t2-portativnyj-dvd.html" class="related-card">Портативный DVD DV3T2: Полная инструкция и описание функций</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/i/ir/irbis-17-nbc-2000-ne-zagruzhaetsya.html" class="related-bottom-card"><span class="related-bottom-title">Irbis 17 NBC 2000 не включается: решения и ремонт</span><span class="related-bottom-desc">Irbis 17 NBC 2000 не загружается? Узнайте, как исправить зависание BIOS, сбросить CMOS и восстановит</span></a><a href="/a/articles/a/al/all-pw-svdhkvdl34-girlx-vid-6-4.html" class="related-bottom-card"><span class="related-bottom-title">Расшифровка пароля svd$hkvdl34## и код girlx vid 6-4</span><span class="related-bottom-desc">Полный разбор кода girlx vid 6-4 и пароля svd$hkvdl34##. Инструкция по доступу к скрытым файлам, нас</span></a><a href="/a/articles/k/ka/kak-navsegda-iedem-samostoyatelno-vojti-kabinet.html" class="related-bottom-card"><span class="related-bottom-title">Как войти в iedem: вход в личный кабинет навсегда</span><span class="related-bottom-desc">Подробная инструкция: как войти в личный кабинет iedem самостоятельно. Решение проблем с доступом, с</span></a><a href="/a/articles/s/so/solidworks-2023-zakryt-ip.html" class="related-bottom-card"><span class="related-bottom-title">SolidWorks 2023: Как закрыть IP-соединения и настроить защиту</span><span class="related-bottom-desc">Инструкция по блокировке IP-адресов в SolidWorks 2023 для защиты данных. Настройка брандмауэра, откл</span></a><a href="/a/articles/i/in/instrukciya-opisanie-dv3t2-portativnyj-dvd.html" class="related-bottom-card"><span class="related-bottom-title">Портативный DVD DV3T2: Полная инструкция и описание функций</span><span class="related-bottom-desc">Подробное руководство пользователя для DV3T2. Настройка, управление кнопками, работа с USB и кодекам</span></a><a href="/a/articles/k/ka/kak-podkyuchit-translyaciyu-ekrana-chere-wifi-direct-na-potstavke-sberboks.html" class="related-bottom-card"><span class="related-bottom-title">Подключение экрана к Сбербокс через Wi-Fi Direct: полная инструкция</span><span class="related-bottom-desc">Как вывести изображение на Сбербокс без роутера? Подробный гид по настройке Wi-Fi Direct, Miracast и</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

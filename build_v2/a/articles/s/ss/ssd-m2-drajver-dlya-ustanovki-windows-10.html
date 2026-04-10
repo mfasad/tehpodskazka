@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>SSD M.2 драйвер для Windows 10: установка и решение проблем — ТехПодсказка</title>
+    <meta name="description" content="Нужен ли SSD M.2 драйвер для Windows 10? Полный гид по установке NVMe контроллеров, исправлению ошибок 0x0000007B и настройке AHCI режима без потери данных.">
+    <link rel="canonical" href="/a/articles/s/ss/ssd-m2-drajver-dlya-ustanovki-windows-10.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="SSD M.2 драйвер для Windows 10: установка и решение проблем">
+    <meta property="og:description" content="Нужен ли SSD M.2 драйвер для Windows 10? Полный гид по установке NVMe контроллеров, исправлению ошибок 0x0000007B и настройке AHCI режима без потери данных.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/windows-i-pk/">Windows и ПК</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">SSD M.2 драйвер для Windows 10: установка и решение проблем</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>SSD M.2 драйвер для Windows 10: полный гид по установке</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#почему-установщик-windows-10-не-видит-ssd-m2">Почему установщик Windows 10 не видит SSD M.2</a></li><li><a href="#где-скачать-актуальные-драйверы-для-контроллера">Где скачать актуальные драйверы для контроллера</a></li><li><a href="#подготовка-загрузочной-флешки-с-драйверами">Подготовка загрузочной флешки с драйверами</a></li><li><a href="#пошаговая-установка-драйвера-в-процессе-инсталляции">Пошаговая установка драйвера в процессе инсталляции</a></li><li><a href="#настройка-biosuefi-для-работы-с-m2-nvme">Настройка BIOS/UEFI для работы с M.2 NVMe</a></li><li><a href="#решение-распространенных-ошибок-при-установке">Решение распространенных ошибок при установке</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Современные компьютеры и ноутбуки все чаще оснащаются накопителями формата <em>M.2</em>, которые обеспечивают колоссальную скорость работы по сравнению с классическими HDD. Однако при попытке установить операционную систему <strong>Windows 10</strong> пользователи часто сталкиваются с неприятной ситуацией: установщик просто не видит подключенный диск. Это вызывает панику, особенно если под рукой нет другого накопителя для записи системы.</p>
+
+<p>Проблема кроется в отсутствии необходимых <strong>драйверов</strong> контроллера хранилища в базовом образе установочной флешки. В отличие от старых интерфейсов SATA, современные протоколы вроде <em>NVMe</em> или специфические настройки <strong>RAID</strong> требуют наличия специального программного обеспечения для инициализации устройства. Без этого компонента система слепая и не может распознать физическое наличие вашего быстрого SSD.</p>
+
+<p>В этой статье мы детально разберем, почему это происходит, где брать актуальные драйверы и как правильно внедрить их в процесс установки. Вы узнаете, как избежать форматирования диска впустую и какие настройки <strong>BIOS/UEFI</strong> критически важны для корректной работы накопителя. Понимание этих нюансов сэкономит вам часы troubleshooting и нервы.</p>
+
+<h2 id="почему-установщик-windows-10-не-видит-ssd-m2">Почему установщик Windows 10 не видит SSD M.2</h2>
+
+<p>Основная причина отсутствия диска в списке доступных для установки кроется в архитектуре современных чипсетов. Производители материнских плат, такие как <em>ASUS</em>, <em>MSI</em> или <em>Gigabyte</em>, часто используют проприетарные контроллеры или включают режимы работы, которые не поддерживаются стандартным набором драйверов <strong>Microsoft</strong>. Особенно это характерно для процессоров Intel 11-го поколения и новее, где технология <em>Intel RST</em> (Rapid Storage Technology) активирована по умолчанию.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Попытка переустановить драйверы уже после установки Windows в неправильном режиме работы контроллера (переключение между AHCI и RAID) может привести к тому, что система перестанет загружаться с ошибкой <code>INACCESSIBLE_BOOT_DEVICE</code>.</p>
+</blockquote>
+
+<p>Кроме того, сам протокол <strong>NVMe</strong>, хотя и поддерживается Windows 10 "из коробки" начиная с определенных сборок, может требовать более свежих версий драйверов для стаб-ильной работы на предсерийном или очень новом оборудовании. Если ваш SSD от <em>Samsung</em>, <em>WD</em> или <em>Kingston</em> не определяется, скорее всего, установщику не хватает именно файла драйвера контроллера хранилища, а не самого диска.</p>
+
+<p>Важно различать физическую неисправность и программную проблему. Если диск не виден даже в BIOS, то никакие драйверы не помогут — проверяйте плотность посадки платы в слот <code>M.2</code>. Если же в BIOS диск отображается, но в установщике Windows его нет — это на 99% вопрос совместимости драйверов.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Сталкивались ли вы с проблемой невидимого диска при установке Windows?</strong><ul><li>Да, драйверов не было</li><li>Нет, все определилось сразу</li><li>Диск был поврежден физически</li><li>Использовал другой компьютер для установки</li></ul></div></div>
+
+<h2 id="где-скачать-актуальные-драйверы-для-контроллера">Где скачать актуальные драйверы для контроллера</h2>
+
+<p>Поиск правильного драйвера — ключевой этап. Не стоит полагаться на универсальные сборники драйверов с сомнительных ресурсов. Единственный надежный источник — официальный сайт производителя вашей материнской платы или ноутбука. Вам нужен раздел поддержки (Support) для вашей конкретной модели, где следует искать файлы с пометкой <strong>SATA</strong>, <strong>RAID</strong> или <strong>Storage</strong>.</p>
+
+<p>Для пользователей процессоров Intel критически важным является пакет <em>Intel Rapid Storage Technology (IRST)</em>. Именно он содержит драйверы для контроллеров, которые часто блокируют видимость диска в установщике. Для AMD систем ситуация аналогична, но искать нужно драйверы <strong>AMD Chipset Drivers</strong>, включающие модули <em>NVMe</em> или <strong>SATA Controller</strong>.</p>
+
+<ul>
+<li>📥 Зайдите на сайт производителя ноутбука (например, <em>Lenovo</em>, <em>Dell</em>, <em>HP</em>) и введите сервисный номер устройства.</li>
+<li>💾 Найдите раздел "Драйверы хранилища" (Storage Driver) и скачайте версию для <strong>Windows 10</strong> (даже если ставите 11, драйвер 10-ки часто подходит).</li>
+<li>📂 Обратите внимание: вам нужна не исполняемая программа (.exe), а архив с драйверами (.zip) или возможность извлечь файлы из exe-архива.</li>
+</ul>
+
+<p>Часто производители упаковывают драйверы в самораспаковывающиеся архивы. Чтобы получить файлы для установки (.inf, .sys, .cat), запустите скачанный exe-файл и прервите установку, либо используйте архиватор вроде <em>7-Zip</em> для раскрытия содержимого. Искомые файлы обычно лежат в папках с названиями вроде <code>f6flpy</code>, <code>VMD</code> или <code>IRST</code>.</p>
+
+<details class="faq-item"><summary>Где искать файлы .inf внутри exe-архива?</summary><div class="faq-answer"><p>Часто производители прячут драйверы глубоко в структуре папок. Попробуйте создать пустую папку, запустить установщик драйвера, выбрать путь сохранения в эту папку, дождаться появления файлов и нажать "Отмена" перед финальной установкой. Или просто откройте exe-архив через WinRAR как обычный архив.</p></div></details>
+
+<h2 id="подготовка-загрузочной-флешки-с-драйверами">Подготовка загрузочной флешки с драйверами</h2>
+
+<p>После того как вы раздобыли необходимые файлы, их нужно правильно подготовить. Стандартная процедура создания загрузочной флешки через <em>Rufus</em> или <strong>Media Creation Tool</strong> не включает сторонние драйверы. Вам потребуется скопировать распакованные файлы драйвера на ту же флешку, с которой будет производиться установка Windows, или на отдельный USB-накопитель.</p>
+
+<p>Структура папок на флешке должна быть понятной, чтобы вы не запутались в момент установки. Рекомендуется создать папку с именем <code>Drivers</code> в корне накопителя, а внутри нее организовать подпапки по производителям, например, <code>Intel_IRST</code> или <code>AMD_Chipset</code>. Это упростит навигацию, когда установщик попросить указать путь к драйверу.</p>
+
+<div class="checklist-block"><h4>☑️ Чек-лист подготовки драйверов</h4><label class="check-item"><input type="checkbox"><span>Скачан архив с официального сайта</span></label><label class="check-item"><input type="checkbox"><span>Файлы распакованы (получены .inf, .sys)</span></label><label class="check-item"><input type="checkbox"><span>Папка с драйверами скопирована на установочную флешку</span></label><label class="check-item"><input type="checkbox"><span>Структура папок проверена и понятна</span></label><label class="check-item"><input type="checkbox"><span>Флешка с Windows 10 готова к работе</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+
+<p>Важно убедиться, что на флешке достаточно свободного места. Образ Windows 10 занимает около 4-5 ГБ, а современные драйверы могут весить от 50 до 200 МБ в распакованном виде. Если вы используете флешку малого объема, убедитесь, что файлы драйверов не вытеснят критически важные установочные файлы.</p>
+
+<h2 id="пошаговая-установка-драйвера-в-процессе-инсталляции">Пошаговая установка драйвера в процессе инсталляции</h2>
+
+<p>Наступает самый ответственный момент. После загрузки компьютера с USB-накопителя и выбора языка, вы увидите экран, где предлагается нажать кнопку "Установить". Пройдя начальные шаги, вы попадете на этап выбора типа установки. Здесь нужно выбрать <strong>Выборочная: только установка Windows (для опытных пользователей)</strong>.</p>
+
+<p>На экране, где должен отображаться список разделов, вы, скорее всего, увидите пустоту или сообщение "Нам не удалось найти ни одного драйвера". В этот момент нажмите кнопку <code>Загрузить драйвер</code> (Load Driver). Система попросит указать путь к папке. Нажмите "Обзор" и найдите папку с драйверами, которую вы подготовили ранее.</p>
+
+<table>
+<thead>
+<tr>
+<th>Действие</th>
+<th>Описание</th>
+<th>Результат</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Нажатие "Обзор"</td>
+<td>Открытие файловой системы установщика</td>
+<td>Доступ к файлам на USB</td>
+</tr>
+<tr>
+<td>Выбор папки</td>
+<td>Указание пути к папке с .inf файлом</td>
+<td>Система анализирует совместимость</td>
+</tr>
+<tr>
+<td>Выбор драйвера</td>
+<td>В списке появится совместимый контроллер</td>
+<td>Готовность к установке</td>
+</tr>
+<tr>
+<td>Кнопка "Далее"</td>
+<td>Запуск инсталляции драйвера</td>
+<td>Появление разделов диска</td>
+</tr>
+</tbody>
+</table>
+
+<p>После указания папки, в списке появится доступный драйвер. Выберите модель вашего контроллера (например, <em>Intel RST VMD Controller</em>) и нажмите "Далее". Процесс установки займет несколько секунд. Как только он завершится, окно закроется, и в списке разделов мгновенно появятся ваши диски, включая SSD M.2.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Если после установки драйвера диск появился, но его размер отображается некорректно или он помечен как "Незанятое пространство", не спешите создавать разделы. Убедитесь, что вы выбрали правильный диск, если их несколько, чтобы не удалить данные на соседнем HDD.</p>
+</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Успешная установка драйвера контроллера хранилища делает видимым физический диск для операционной системы, позволяя продолжить разметку и установку файлов Windows.</p></div>
+
+<h2 id="настройка-biosuefi-для-работы-с-m2-nvme">Настройка BIOS/UEFI для работы с M.2 NVMe</h2>
+
+<p>Прежде чем винить драйверы, стоит заглянуть в настройки <strong>BIOS/UEFI</strong>. Часто проблема решается изменением режима работы контроллера SATA/NVMe. Для большинства пользовательских сценариев оптимальным и совместимым режимом является <strong>AHCI</strong>. Однако, на многих ноутбуках по умолчанию включен режим <em>RAID</em> или <strong>Intel VMD</strong>, который требует обязательного наличия драйвера при установке.</p>
+
+<p>Чтобы изменить настройки, войдите в BIOS (обычно клавиши <code>F2</code>, <code>Del</code> или <code>F10</code> при старте). Найдите раздел, связанный с конфигурацией дисков. Он может называться <code>SATA Configuration</code>, <code>Storage Configuration</code> или <code>VMD Setup Menu</code>. Если вы не планируете создавать RAID-массивы, переключите режим с <em>RAID</em> на <strong>AHCI</strong>.</p>
+
+<ul>
+<li>🔍 Найдите опцию <code>VMD Controller</code> и установите значение <strong>Disabled</strong>. Это часто заставляет контроллер работать в стандартном режиме NVMe, который Windows 10 видит без дополнительных драйверов.</li>
+<li>💾 Убедитесь, что режим <strong>CSM</strong> (Compatibility Support Module) выключен, если вы используете диск M.2 NVMe. Эти диски требуют режима загрузки <strong>UEFI</strong>.</li>
+<li>⚙️ Проверьте, включена ли опция <code>NVMe Configuration</code> в разделе Peripherals или Advanced.</li>
+</ul>
+
+<p>Изменение этих настроек может потребовать переустановки Windows, если система уже была установлена в другом режиме. Однако, если вы только ставите систему, правильная настройка BIOS позволит избежать возни с драйверами вовсе. Windows 10 отлично работает с NVMe в режиме AHCI без стороннего ПО.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если вы переключили режим SATA в BIOS с RAID на AHCI на уже установленной Windows, система может не загрузиться. В этом случае поможет правка реестра или безопасный режим, но проще переустановить систему начисто в правильном режиме.</p></div>
+
+<h2 id="решение-распространенных-ошибок-при-установке">Решение распространенных ошибок при установке</h2>
+
+<p>Даже при наличии драйверов могут возникать специфические ошибки. Код ошибки <code>0x80070057</code> часто указывает на проблемы с разметкой диска или поврежденный установочный образ. В таком случае рекомендуется полностью удалить все разделы на целевом SSD M.2 через командную строку установщика (Shift+F10) и утииту <code>diskpart</code>.</p>
+
+<p>Другая частая проблема — ошибка <code>0x0000007B</code> (INACCESSIBLE_BOOT_DEVICE) сразу после установки или перезагрузки. Это классический симптом mismatch драйверов хранилища. Решение одно: вернуться к шагу настройки BIOS и проверить режим работы SATA/NVMe, либо повторно внедрить правильный драйвер <em>IRST</em> или <strong>NVMe Controller</strong>.</p>
+
+<p>Если установщик видит диск, но отказывается создавать разделы, сообщая о невозможности создания новой системной раздела, проверьте стиль разметки. Для UEFI систем диск должен быть отформатирован в стиле <strong>GPT</strong>. Если диск имеет стиль <em>MBR</em>, его необходимо конвертировать, что приведет к потере данных на нем.</p>
+
+<details>
+<summary>Что делать, если драйвер не устанавливается и выдает ошибку?</summary>
+<p>Если при попытке установки драйвера появляется сообщение об ошибке, проверьте архитектуру драйвера. Для 64-битной Windows 10 нужен 64-битный драйвер. Также попробуйте вручную указать файл с расширением <code>.inf</code> через кнопку "Обзор", не полагаясь на автоматический поиск. Иногда помогает удаление старых версий драйверов из списка, если они там есть.</p>
+</details>
+
+<details>
+<summary>Можно ли использовать драйверы от Windows 11 для Windows 10?</summary>
+<p>В большинстве случаев ядра драйверов для Windows 10 и 11 идентичны, особенно для компонентов чипсета и хранилища. Драйвер, помеченный как "Windows 11", часто успешно работает на Windows 10. Однако приоритет всегда отдавайте версии, маркированной именно для вашей ОС.</p>
+</details>
+
+<details>
+<summary>Нужен ли отдельный драйвер для SSD Samsung или WD?</summary>
+<p>Для базовой работы и установки Windows отдельные драйверы от Samsung (NVMe Driver) или WD обычно не требуются, достаточно стандартного драйвера Microsoft NVMe. Однако установка фирменного ПО после инсталляции ОС может улучшить производительность и управление температурой накопителя.</p>
+</details>
+
+<details>
+<summary>Почему после установки драйвера диск пропал снова?</summary>
+<p>Это может происходить при обновлении BIOS или сбросе настроек материнской платы. Также причиной может быть конфликт версий драйверов. Попробуйте удалить устройство в диспетчере устройств (если система загрузилась) и обновить конфигурацию оборудования, либо повторите процедуру загрузки драйвера при установке.</p>
+</details>
+
+<details>
+<summary>Влияет ли версия BIOS на видимость M.2 диска?</summary>
+<p>Да, старые версии BIOS могут некорректно инициализировать новые модели SSD M.2 NVMe. Если ничего не помогает, проверьте сайт производителя материнской платы на наличие обновлений BIOS, в описании которых упоминается "Improve NVMe compatibility" или "Update Intel ME firmware".</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#почему-установщик-windows-10-не-видит-ssd-m2">Почему установщик Windows 10 не видит SSD M.2</a></li><li><a href="#где-скачать-актуальные-драйверы-для-контроллера">Где скачать актуальные драйверы для контроллера</a></li><li><a href="#подготовка-загрузочной-флешки-с-драйверами">Подготовка загрузочной флешки с драйверами</a></li><li><a href="#пошаговая-установка-драйвера-в-процессе-инсталляции">Пошаговая установка драйвера в процессе инсталляции</a></li><li><a href="#настройка-biosuefi-для-работы-с-m2-nvme">Настройка BIOS/UEFI для работы с M.2 NVMe</a></li><li><a href="#решение-распространенных-ошибок-при-установке">Решение распространенных ошибок при установке</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/u/us/usb-vid-048d-pid-1336-rev-0100-windows-10-64-skachat-drajver.html" class="related-card">VID 048D PID 1336: Драйвер для Windows 10 64-bit</a></li><li><a href="/a/articles/k/ka/kak-ustanovit-windows-na-astra-linuks-ne-udalyaya-linuks.html" class="related-card">Как установить Windows на Astra Linux: пошаговый гид</a></li><li><a href="/a/articles/k/ka/kak-otklyuchit-nastrojku-kompyutera-dlya-slabovidyaschih.html" class="related-card">Как отключить настройки для слабовидящих на Windows и Android</a></li><li><a href="/a/articles/k/ka/kak-zapustit-gotika-3-na-windows-10.html" class="related-card">Как запустить Gothic 3 на Windows 10: Полный гайд по исправлению ошибок</a></li><li><a href="/a/articles/k/ka/kak-podklyuchit-naushniki-bloody-g260p-k-kompyuteru.html" class="related-card">Как подключить наушники Bloody G260P к ПК: полная инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/u/us/usb-vid-048d-pid-1336-rev-0100-windows-10-64-skachat-drajver.html" class="related-bottom-card"><span class="related-bottom-title">VID 048D PID 1336: Драйвер для Windows 10 64-bit</span><span class="related-bottom-desc">Как установить драйвер VID 048D PID 1336 REV 0100 на Windows 10 64-bit. Скачать чипсет, настроить HI</span></a><a href="/a/articles/k/ka/kak-ustanovit-windows-na-astra-linuks-ne-udalyaya-linuks.html" class="related-bottom-card"><span class="related-bottom-title">Как установить Windows на Astra Linux: пошаговый гид</span><span class="related-bottom-desc">Узнайте, как установить Windows на Astra Linux, сохранив данные. Подробная инструкция по разметке ди</span></a><a href="/a/articles/k/ka/kak-otklyuchit-nastrojku-kompyutera-dlya-slabovidyaschih.html" class="related-bottom-card"><span class="related-bottom-title">Как отключить настройки для слабовидящих на Windows и Android</span><span class="related-bottom-desc">Подробная инструкция по отключению режимов высокой контрастности и экранного диктора. Решаем проблем</span></a><a href="/a/articles/k/ka/kak-zapustit-gotika-3-na-windows-10.html" class="related-bottom-card"><span class="related-bottom-title">Как запустить Gothic 3 на Windows 10: Полный гайд по исправлению ошибок</span><span class="related-bottom-desc">Подробная инструкция: как запустить Gothic 3 на Windows 10. Решаем проблемы с вылетами, черным экран</span></a><a href="/a/articles/k/ka/kak-podklyuchit-naushniki-bloody-g260p-k-kompyuteru.html" class="related-bottom-card"><span class="related-bottom-title">Как подключить наушники Bloody G260P к ПК: полная инструкция</span><span class="related-bottom-desc">Подробный гид по подключению гарнитуры Bloody G260P. Настройка драйверов, устранение шума микрофона </span></a><a href="/a/articles/v/vi/vindovs-uznat-nomer-seti-kompyutera-cherez-komandnuyu-stroku.html" class="related-bottom-card"><span class="related-bottom-title">Windows: как узнать номер сети и IP через командную строку</span><span class="related-bottom-desc">Пошаговая инструкция для Windows 10/11: определяем номер сети, IP-адрес и настройки адаптера через c</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

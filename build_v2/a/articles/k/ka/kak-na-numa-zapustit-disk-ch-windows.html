@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Как запустить Windows с диска NUMA: пошаговая инструкция — ТехПодсказка</title>
+    <meta name="description" content="Подробное руководство по запуску операционной системы Windows с внешнего диска на NUMA-архитектуре. Настройка BIOS, создание загрузчика и оптимизация.">
+    <link rel="canonical" href="/a/articles/k/ka/kak-na-numa-zapustit-disk-ch-windows.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как запустить Windows с диска NUMA: пошаговая инструкция">
+    <meta property="og:description" content="Подробное руководство по запуску операционной системы Windows с внешнего диска на NUMA-архитектуре. Настройка BIOS, создание загрузчика и оптимизация.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/windows-i-pk/">Windows и ПК</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как запустить Windows с диска NUMA: пошаговая инструкция</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Запуск Windows с диска на NUMA-архитектуре: полное руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#подготовка-оборудования-и-анализ-numa-топологии">Подготовка оборудования и анализ NUMA-топологии</a></li><li><a href="#создание-специализированного-загрузочного-носителя">Создание специализированного загрузочного носителя</a></li><li><a href="#настройка-biosuefi-для-работы-с-numa">Настройка BIOS/UEFI для работы с NUMA</a></li><li><a href="#процесс-установки-и-разметки-диска">Процесс установки и разметки диска</a></li><li><a href="#оптимизация-windows-для-numa-архитектуры">Оптимизация Windows для NUMA-архитектуры</a></li><li><a href="#диагностика-и-устранение常见问题">Диагностика и устранение常见问题</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>Современные серверные платформы и высокопроизводительные рабочие станции часто строятся на базе <strong>NUMA-архитектуры</strong> (Non-Uniform Memory Access), что кардинально меняет подход к установке и запуску операционных систем. Обычный пользователь может столкнуться с трудностями при попытке загрузить <em>Windows</em> с внешнего накопителя или специфического раздела на таком оборудовании, так как стандартные методы часто игнорируют особенности распределения памяти между узлами процессора.</p>
+<p>В этой статье мы детально разберем процесс подготовки загрузочного носителя, настройки <strong>BIOS/UEFI</strong> и модификации реестра для корректной работы системы в среде с неоднородным доступом к памяти. Вы узнаете, как избежать падений производительности и ошибок <strong>BSOD</strong>, связанных с неправильным распределением потоков выполнения.</p>
+<p>Прежде чем приступить к практическим шагам, необходимо понимать, что запуск <em>Windows</em> в таком режиме требует тщательной подготовки файловой системы и правильного выбора режима работы контроллера дисков. Игнорирование этих нюансов может привести к тому, что система просто не увидит загрузочный раздел или будет работать крайне нестабильно.</p>
+
+<h2 id="подготовка-оборудования-и-анализ-numa-топологии">Подготовка оборудования и анализ NUMA-топологии</h2>
+<p>Первым критически важным этапом является глубокое понимание топологии вашего сервера или рабочей станции. Архитектура <strong>NUMA</strong> подразумевает наличие нескольких узлов процессора, каждый из которых имеет собственную локальную память, доступ к которой осуществляется быстрее, чем к памяти соседних узлов. Для успешного запуска <em>Windows</em> с диска необходимо заранее определить, к какому именно узлу физически подключен ваш накопитель.</p>
+<p>Использование специализированных утилит для анализа топологии позволяет избежать ситуации, когда операционная система загружается, но работает медленно из-за постоянных обращений через межпроцессорную шину. Часто администраторы упускают этот момент, полагаясь на автоматические настройки, что в условиях высокой нагрузки приводит к существенным задержкам.</p>
+<blockquote>⚠️ Внимание: Попытка запуска системы без предварительного анализа привязки дисков к узлам NUMA может привести к деградации производительности до 40% и нестабильной работе критических приложений.</blockquote>
+<p>Для получения детальной информации о текущей конфигурации можно использовать встроенные средства диагностики или сторонний софт. Важно зафиксировать номера узлов и соответствующие им диапазоны памяти.</p>
+<ul>
+<li>🔍 Используйте утилиту <code>numactl --hardware</code> в среде Linux для первичного сканирования перед установкой.</li>
+<li>📊 Проверьте документацию материнской платы для уточнения схемы распайки портов SATA/NVMe.</li>
+<li>💾 Убедитесь, что диск, с которого планируется запуск, отформатирован в файловой системе <strong>NTFS</strong> с таблицей разделов <strong>GPT</strong>.</li>
+</ul>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если вы используете виртуализацию, убедитесь, что режим проброса диска (Passthrough) активирован и виртуальный контроллер также настроен с учетом NUMA-亲和ности.</p></div>
+
+<h2 id="создание-специализированного-загрузочного-носителя">Создание специализированного загрузочного носителя</h2>
+<p>Стандартные средства создания загрузочных флешек часто не учитывают специфику серверного оборудования. Для запуска <em>Windows</em> на NUMA-системах рекомендуется использовать образы версий <strong>Windows Server</strong> или профессиональных редакций <em>Windows 10/11</strong>, так как они содержат необходимый набор драйверов и инструментов управления памятью.</p>
+<p>Процесс записи образа должен выполняться с соблюдением целостности данных, поэтому использование проверенных утилит является обязательным требованием. Некачественно записанный загрузчик может вызвать ошибки на ранних этапах инициализации ядра, особенно при работе с многопроцессорными конфигурациями.</p>
+<p>Особое внимание следует уделить выбору режима загрузки: для современных систем с поддержкой <strong>UEFI</strong> legacy-режим (CSM) должен быть отключен, чтобы обеспечить корректную работу с большими объемами памяти и безопасной загрузкой.</p>
+<div class="checklist-block"><h4>☑️ Подготовка загрузочной флешки</h4><label class="check-item"><input type="checkbox"><span>Скачать оригинальный ISO-образ Windows:Использовать утилиту Rufus или Ventoy:Выбрать схему разделов GPT и целевую систему UEFI:Записать образ и проверить контрольную сумму</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 1</div></div>
+<p>После создания носителя рекомендуется провести его тестирование на совместимой машине, чтобы исключить дефекты самой флешки или ошибками при записи. Это сэкономит время при дальнейшей отладке на целевом оборудовании.</p>
+
+<h2 id="настройка-biosuefi-для-работы-с-numa">Настройка BIOS/UEFI для работы с NUMA</h2>
+<p>Вход в настройки firmware является ключевым моментом, где определяется успех всей операции. В разделе конфигурации процессора часто скрыты параметры, влияющие на работу <strong>NUMA</strong>, такие как "Node Interleaving". Для оптимальной работы <em>Windows</em> этот параметр обычно должен быть отключен (Disabled), чтобы операционная система сама управляла распределением ресурсов.</p>
+<p>Также необходимо проверить настройки контроллера дисков: режим работы должен быть установлен в <strong>AHCI</strong> или <strong>RAID</strong> (если используется массив), но не в IDE-совместимый режим, который может ограничивать производительность и функциональность. В некоторых серверных BIOS требуется явно указать приоритет загрузки для конкретного PCIe-слота, к которому подключен NVMe-накопитель.</p>
+<table>
+<thead>
+<tr>
+<th>Параметр BIOS</th>
+<th>Рекомендуемое значение</th>
+<th>Влияние на запуск</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Node Interleaving</td>
+<td>Disabled</td>
+<td>Позволяет ОС видеть отдельные узлы памяти</td>
+</tr>
+<tr>
+<td>Secure Boot</td>
+<td>Enabled (с ключами MS)</td>
+<td>Гарантирует целостность загрузчика</td>
+</tr>
+<tr>
+<td>CSM Support</td>
+<td>Disabled</td>
+<td>Обязательно для загрузки с GPT дисков</td>
+</tr>
+<tr>
+<td>X2APIC</td>
+<td>Enabled</td>
+<td>Необходимо для систем с большим кол-вом ядер</td>
+</tr>
+</tbody>
+</table>
+<p>Не забывайте сохранять изменения перед выходом, используя клавишу <code>F10</code> или выбирая пункт "Save & Exit". После перезагрузки система должна увидеть ваш загрузочный диск в списке доступных устройств.</p>
+<blockquote>⚠️ Внимание: Изменение параметра X2APIC на уже установленной системе без переустановки драйверов может привести к невозможности загрузки Windows.</blockquote>
+
+<h2 id="процесс-установки-и-разметки-диска">Процесс установки и разметки диска</h2>
+<p>При запуске установки <em>Windows</em> с подготовленного носителя важно внимательно следить за этапом выбора диска. Если на целевом накопителе есть данные, их следует удалить, создав чистую структуру разделов. Для серверных сред с NUMA часто рекомендуется выделять отдельный небольшой раздел для системных файлов, чтобы минизировать фрагментацию критических структур.</p>
+<p>Установщик операционной системы автоматически определит конфигурацию оборудования, но в редких случаях может потребоваться ручная подгрузка драйверов контроллера хранения. Это особенно актуально для редких RAID-контроллеров или новейших NVMe-дисков, драйверы для которых еще не включены в стандартный образ <em>Windows</em>.</p>
+<p>В процессе копирования файлов система будет формировать загрузочные записи, учитывая текущую топологию памяти. Прерывание этого процесса крайне нежелательно, так как может повредить таблицу файловой системы.</p>
+<details class="faq-item"><summary>Что делать, если установщик не видит диск?</summary><div class="faq-answer"><p>В этом случае необходимо нажать кнопку "Загрузить драйвер" и указать путь к драйверам контроллера хранения (SATA/RAID/NVMe), совместимым с вашей версией Windows. Драйверы обычно доступны на сайте производителя материнской платы или контроллера.</p></div></details>
+<p>После завершения копирования файлов и первой перезагрузки важно не извлекать установочный носитель до полного перехода к графическому интерфейсу первоначальной настройки.</p>
+
+<h2 id="оптимизация-windows-для-numa-архитектуры">Оптимизация Windows для NUMA-архитектуры</h2>
+<p>После успешного запуска <em>Windows</em> и входа в систему необходимо выполнить ряд настроек для максимальной эффективности. Операционная система по умолчанию старается балансировать потоки, но в специфических сценариях требуется ручная干预ция через реестр или групповые политики. Ключевым моментом является настройка распределения прерываний и потоков исполнения.</p>
+<p>Использование командной строки с правами администратора позволяет внедрить изменения, которые трудно реализовать через графический интерфейс. Например, можно задать приоритет процессам, критичным к задержкам памяти, обеспечив их выполнение на том же узле NUMA, где расположены их данные.</p>
+<pre><code>bcdedit /set numacore 1</code></pre>
+<p>Данная команда (условная, зависит от версии ОС и контекста) иллюстрирует принцип работы с загрузчиком. Однако более тонкая настройка производится через параметры реестра в ветке <code>HKLM\SYSTEM\CurrentControlSet\Control\Session Manager</code>.</p>
+<ul>
+<li>🚀 Активируйте профиль электропитания "Высокая производительность" для отключения энергосберегающих состояний процессора.</li>
+<li>🛠 Используйте утилиту <code>Process Lasso</code> или аналогичную для закрепления процессов за конкретными ядрами (CPU Affinity).</li>
+<li>📈 Мониторьте распределение памяти через <strong>Диспетчер задач</strong> на вкладке "Производительность", наблюдая за активностью узлов.</li>
+</ul>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Правильная настройка affinity процессов позволяет снизить латентность памяти до 3-5 нс, что критично для баз данных и вычислительных задач.</p></div>
+
+<h2 id="диагностика-и-устранение常见问题">Диагностика и устранение常见问题</h2>
+<p>Даже при соблюдении всех инструкций могут возникнуть ситуации, когда система ведет себя непредсказуемо. Типичными симптомами проблем с NUMA являются периодические зависания, резкие скачки пинга в сети или аномально низкая скорость дисковых операций. В таких случаях первым шагом должен стать анализ журналов событий <em>Windows</strong>.</p>
+<p>Часто проблема кроется в несовместимости драйверов чипсета с текущей версией ядра. Обновление BIOS и драйверов до последних стабильных версий с сайта производителя решает большинство конфликтов оборудования. Также стоит проверить целостность системных файлов.</p>
+<blockquote>⚠️ Внимание: При диагностике используйте только доверенные утилиты. Сторонние "оптимизаторы" могут нарушить тонкие настройки реестра, сделанные для работы с NUMA.</blockquote>
+<p>Если система перестала загружаться после внесений изменений в реестр, попробуйте запустить восстановление системы или использовать загрузочную флешку для сброса параметров через командную строку.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 С какой основной проблемой вы столкнулись при настройке?</strong><ul><li>Система не видит диск:Ошибки BSOD при загрузке:Низкая производительность:Не работает сеть после установки</li></ul></div></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+<details>
+<summary>Можно ли запустить обычную Windows 10 Home на NUMA-системе?</summary>
+<p>Технически запустить можно, но редакция Home не имеет полноценных инструментов управления группами процессоров и памятью, что сделает работу на многопроцессорной системе неэффективной. Рекомендуется использовать версии Pro или Server.</p>
+</details>
+<details>
+<summary>Влияет ли отключение Hyper-Threading на работу NUMA?</summary>
+<p>Да, отключение гиперпоточности может изменить логическую топологию, видимую операционной системе, что потребует перенастройки affinity процессов. В некоторых случаях это даже повышает стабильность работы специфического ПО.</p>
+</details>
+<details>
+<summary>Нужно ли переформатировать диск, если я меняю материнскую плату на другую NUMA-систему?</summary>
+<p>Не обязательно, но крайне желательно. Разная топология узлов памяти и контроллеров прерываний может вызвать конфликты драйверов. Чистая установка гарантирует отсутствие скрытых ошибок в реестре.</p>
+</details>
+<details>
+<summary>Как проверить, работает ли мой диск в режиме NVMe или SATA?</summary>
+<p>Откройте <code>Диспетчер устройств</code> и найдите раздел "Контроллеры запоминающих устройств". Также скорость можно косвенно оценить через встроенный бенчмарк или утилиту <code>CrystalDiskMark</code>.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#подготовка-оборудования-и-анализ-numa-топологии">Подготовка оборудования и анализ NUMA-топологии</a></li><li><a href="#создание-специализированного-загрузочного-носителя">Создание специализированного загрузочного носителя</a></li><li><a href="#настройка-biosuefi-для-работы-с-numa">Настройка BIOS/UEFI для работы с NUMA</a></li><li><a href="#процесс-установки-и-разметки-диска">Процесс установки и разметки диска</a></li><li><a href="#оптимизация-windows-для-numa-архитектуры">Оптимизация Windows для NUMA-архитектуры</a></li><li><a href="#диагностика-и-устранение常见问题">Диагностика и устранение常见问题</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/b/be/belyj-ekran-smerti-windows-10-kak-ispravit.html" class="related-card">Белый экран смерти Windows 10: причины и способы устранения</a></li><li><a href="/a/articles/d/dr/drajvery-ot-win7-na-win10.html" class="related-card">Драйверы от Win7 на Win10: установка и совместимость</a></li><li><a href="/a/articles/m/mi/mi-tw-earphones-2-basic-windows-7-drivers.html" class="related-card">Mi TW Earphones 2 Basic на Windows 7: драйверы и настройка</a></li><li><a href="/a/articles/w/wi/windows-11-ne-vidit-setevoj-printer.html" class="related-card">Windows 11 не видит сетевой принтер: решение проблемы</a></li><li><a href="/a/articles/d/di/dialog-ap-540-kak-podklyuchit-51k-kompyuteru.html" class="related-card">Dialog AP-540: как подключить 5.1 к компьютеру и настроить звук</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/b/be/belyj-ekran-smerti-windows-10-kak-ispravit.html" class="related-bottom-card"><span class="related-bottom-title">Белый экран смерти Windows 10: причины и способы устранения</span><span class="related-bottom-desc">Почему появляется белый экран смерти Windows 10 и как исправить ошибку. Полное руководство по диагно</span></a><a href="/a/articles/d/dr/drajvery-ot-win7-na-win10.html" class="related-bottom-card"><span class="related-bottom-title">Драйверы от Win7 на Win10: установка и совместимость</span><span class="related-bottom-desc">Подробная инструкция по установке драйверов Windows 7 на Windows 10. Решение проблем совместимости, </span></a><a href="/a/articles/m/mi/mi-tw-earphones-2-basic-windows-7-drivers.html" class="related-bottom-card"><span class="related-bottom-title">Mi TW Earphones 2 Basic на Windows 7: драйверы и настройка</span><span class="related-bottom-desc">Полное руководство по подключению Mi TW Earphones 2 Basic к Windows 7. Установка драйверов, решение </span></a><a href="/a/articles/w/wi/windows-11-ne-vidit-setevoj-printer.html" class="related-bottom-card"><span class="related-bottom-title">Windows 11 не видит сетевой принтер: решение проблемы</span><span class="related-bottom-desc">Почему Windows 11 не видит сетевой принтер? Полная инструкция: драйверы, настройки SMB, порты TCP/IP</span></a><a href="/a/articles/d/di/dialog-ap-540-kak-podklyuchit-51k-kompyuteru.html" class="related-bottom-card"><span class="related-bottom-title">Dialog AP-540: как подключить 5.1 к компьютеру и настроить звук</span><span class="related-bottom-desc">Подробная инструкция по подключению акустики 5.1 Dialog AP-540 к ПК. Настройка драйверов Realtek, пр</span></a><a href="/a/articles/s/si/sistemnaya-oshibka-8646-sbros-parolya-windows-10.html" class="related-bottom-card"><span class="related-bottom-title">Ошибка 8646 при сбросе пароля Windows 10: решение</span><span class="related-bottom-desc">Системная ошибка 8646 Windows 10 блокирует сброс пароля? Узнайте причины, методы обхода через реестр</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

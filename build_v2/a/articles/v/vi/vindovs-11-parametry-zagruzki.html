@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Параметры загрузки Windows 11: вход и настройка — ТехПодсказка</title>
+    <meta name="description" content="Как открыть параметры загрузки Windows 11. Полная инструкция по входу через BIOS, UEFI и командную строку. Решение ошибок.">
+    <link rel="canonical" href="/a/articles/v/vi/vindovs-11-parametry-zagruzki.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Параметры загрузки Windows 11: вход и настройка">
+    <meta property="og:description" content="Как открыть параметры загрузки Windows 11. Полная инструкция по входу через BIOS, UEFI и командную строку. Решение ошибок.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Параметры загрузки Windows 11: вход и настройка</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Параметры загрузки Windows 11: полный гид по настройке</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#назначение-и-возможности-меню-загрузки">Назначение и возможности меню загрузки</a></li><li><a href="#способы-входа-через-интерфейс-операционной-системы">Способы входа через интерфейс операционной системы</a></li><li><a href="#использование-командной-строки-для-управления-загрузкой">Использование командной строки для управления загрузкой</a></li><li><a href="#метод-прерывания-загрузки-и-вход-через-bios">Метод прерывания загрузки и вход через BIOS</a></li><li><a href="#обзор-основных-режимов-загрузки-и-их-применение">Обзор основных режимов загрузки и их применение</a></li><li><a href="#решение-распространенных-проблем-и-ошибок">Решение распространенных проблем и ошибок</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Операционная система <em>Windows 11</em> предоставляет пользователям расширенный инструментарий для управления процессом запуска компьютера, который значительно отличается от привычных многим настроек предшественниц. Глубокое понимание того, как функционируют <strong>параметры загрузки</strong>, позволяет не только ускорить включение устройства, но и эффективно решать критические проблемы, когда система отказывается работать штатно. В современных реалиях, где программные сбои могут возникнуть из-за некорректного обновления драйверов или конфликтов оборудования, знание этих механизмов становится обязательным навыком для любого уверенного пользователя.</p>
+
+<p>Доступ к специализированным режимам работы часто необходим для диагностики аппаратной части или восстановления целостности системных файлов после вирусной атаки. Вместо того чтобы паниковать при появлении «синего экрана смерти», грамотный специалист использует специальные опции, позволяющие загрузить только базовые компоненты <strong>операционной системы</strong>. Это дает возможность удалить вредоносное ПО или откатить изменения, которые привели к нестабильности, сохраняя при этом личные данные пользователя.</p>
+
+<p>В данной статье мы детально разберем все доступные способы входа в меню выбора режима работы, а также проанализируем назначение каждого пункта. Вы узнаете, чем отличается <em>Безопасный режим</em> от режима с поддержкой сети, и в каких ситуациях следует применять отладку. Полученные знания помогут вам взять полный контроль над своим компьютером и минимизировать время простоя в случае непредвиденных технических трудностей.</p>
+
+<h2 id="назначение-и-возможности-меню-загрузки">Назначение и возможности меню загрузки</h2>
+
+<p>Интерфейс выбора параметров представляет собой упрощенное текстовое или графическое меню, которое операционная система отображает до полной инициализации графической оболочки. Основной целью этого инструмента является предоставление доступа к диагностическим и восстановительным функциям, которые недоступны при штатной работе <strong>Windows 11</strong>. Здесь пользователь может запретить загрузку сторонних драйверов, запустить проверку памяти или активировать ведение журнала событий для последующего анализа причин сбоя.</p>
+
+<p>Одной из ключевых функций является возможность выбора конкретной конфигурации оборудования или программного обеспечения для старта. Это особенно актуально после установки новых компонентов, которые могут конфликтовать с существующей системой. <mark>В Windows 11 классическое текстовое меню F8 по умолчанию скрыто и заменяется современным интерфейсом восстановления, что требует знания альтернативных методов доступа.</mark> Понимание различий между устаревшим BIOS и современным <em>UEFI</em> критически важно, так как скорость загрузки современных накопителей часто не позволяет использовать традиционные методы прерывания старта.</p>
+
+<p>Использование этих инструментов позволяет изолировать программные ошибки от аппаратных неисправностей. Если компьютер стабильно работает в режиме минимальной конфигурации, проблема с высокой долей вероятности кроется в программном обеспечении или драйверах. В противном случае, когда даже базовые функции недоступны, стоит задуматься о проверке физического состояния жесткого диска или оперативной памяти.</p>
+
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> Изменение настроек загрузчика (BCD) через командную строку без точного понимания синтаксиса может привести к полной невозможности запуска операционной системы. Всегда создавайте точку восстановления перед внесением правок в системные файлы.</p>
+</blockquote>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой метод входа в меню восстановления вы используете чаще всего?</strong><ul><li>Через Параметры Windows</li><li>Зажимая Shift при перезагрузке</li><li>Через установочную флешку</li><li>Через прерывание загрузки (3 раза)</li><li>Не пользуюсь этим</li></ul></div></div>
+
+<h2 id="способы-входа-через-интерфейс-операционной-системы">Способы входа через интерфейс операционной системы</h2>
+
+<p>Наиболее безопасный и предсказуемый способ попасть в меню дополнительных возможностей — использование штатных средств графического интерфейса <em>Windows 11</em>. Этот метод идеален, когда система работает стабильно, но требуется перезагрузка в специальном режиме для установки обновлений или диагностики. Для этого необходимо перейти в раздел «Параметры», выбрать вкладку «Система» и найти пункт «Восстановление».</p>
+
+<p>В открывшемся окне нас интересует опция «Расширенные параметры запуска». После нажатия кнопки «Перезагрузить сейчас» компьютер выключится и запустится в среде предварительной загрузки. Альтернативный путь лежит через меню «Пуск»: зажмите клавишу <code>Shift</code> на клавиатуре и, не отпуская её, нажмите кнопку питания и выберите «Перезагрузка». Этот метод работает быстрее и не требует прохождения через глубокие настройки.</p>
+
+<p>Третий вариант доступен через окно «Выполнить», которое вызывается комбинацией <code>Win + R</code>. В поле ввода необходимо набрать команду:</p>
+
+<pre><code>shutdown /r /o /f /t 00</code></pre>
+
+<p>Выполнение данной команды принудительно закроет все открытые приложения и инициирует перезагрузку с переходом в среду восстановления. Это удобно, когда нужно быстро получить доступ к инструментам диагностики, не блуждая по меню настроек. Все эти методы гарантированно приводят к экрану выбора действия, где нужно перейти в раздел «Поиск и устранение неисправностей» -> «Дополнительные параметры» -> «Параметры загрузки».</p>
+
+<div class="checklist-block"><h4>☑️ Алгоритм входа через Параметры</h4><label class="check-item"><input type="checkbox"><span>Открыть Пуск и выбрать Параметры</span></label><label class="check-item"><input type="checkbox"><span>Перейти в раздел Система</span></label><label class="check-item"><input type="checkbox"><span>Выбрать пункт Восстановление</span></label><label class="check-item"><input type="checkbox"><span>Нажать Перезагрузить сейчас в блоке Расширенные параметры</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="использование-командной-строки-для-управления-загрузкой">Использование командной строки для управления загрузкой</h2>
+
+<p>Для продвинутых пользователей и системных администраторов доступен более гибкий инструмент управления конфигурацией загрузки — утилита <code>bcdedit</code>. Она позволяет не только временно изменить порядок загрузки, но и создавать новые записи, удалять старые или менять таймауты ожидания выбора операционной системы. Работа с этим инструментом требует запуска терминала с правами администратора, так как изменения затрагивают критически важные системные файлы.</p>
+
+<p>Чтобы принудительно включить меню выбора параметров при следующей перезагрузке, можно использовать команду, которая устанавливает соответствующий флаг в загрузчике. Введите в командную строку:</p>
+
+<pre><code>bcdedit /set {current} bootmenupolicy legacy</code></pre>
+
+<p>Эта команда возвращает классическое текстовое меню, которое активируется клавишей <code>F8</code> во время старта. Однако в <em>Windows 11</em> с интерфейсом UEFI этот метод может работать некорректно или быть полностью заблокированным производителем материнской платы. Для возврата к стандартному поведению используется команда <code>bcdedit /set {current} bootmenupolicy standard</code>.</p>
+
+<p>Также через командную строку можно настроить безопасный режим как постоянный параметр запуска, что иногда требуется для отладки драйверов. Команда <code>bcdedit /set {current} safeboot minimal</code> заставит систему всегда загружаться в безопасном режиме. <strong>Важно:</strong> после завершения работ необходимо отменить это действие командой <code>bcdedit /deletevalue {current} safeboot</code>, иначе компьютер не сможет запуститься в обычном режиме.</p>
+
+<table>
+<thead>
+<tr>
+<th>Команда</th>
+<th>Описание действия</th>
+<th>Влияние на систему</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>shutdown /r /o</code></td>
+<td>Перезагрузка в среду восстановления</td>
+<td>Безопасно, временное действие</td>
+</tr>
+<tr>
+<td><code>bcdedit /set ... legacy</code></td>
+<td>Активация старого меню F8</td>
+<td>Изменяет поведение загрузчика</td>
+</tr>
+<tr>
+<td><code>bcdedit /set safeboot</code></td>
+<td>Постоянный безопасный режим</td>
+<td>Требует ручной отмены после работ</td>
+</tr>
+<tr>
+<td><code>bootrec /fixmbr</code></td>
+<td>Восстановление загрузочной записи</td>
+<td>Критично при повреждении MBR/GPT</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="метод-прерывания-загрузки-и-вход-через-bios">Метод прерывания загрузки и вход через BIOS</h2>
+
+<p>Если операционная система повреждена настолько, что не может запуститься даже до экрана входа, или интерфейс полностью не реагирует, применяются методы «жесткого» входа. Механизм автоматического восстановления <em>Windows 11</em> срабатывает, если процесс загрузки прерывается три раза подряд. Для этого нужно нажать кнопку питания сразу после появления логотипа производителя, дождаться выключения и повторить процедуру.</p>
+
+<p>После третьего прерывания система поймет, что возникла критическая ошибка, и перейдет в режим «Автоматическое восстановление». Отсюда можно попасть в раздел «Дополнительные параметры» и далее в «Параметры загрузки». Этот метод эффективен, но требует осторожности, чтобы не повредить файловую систему внезапным отключением питания во время активной записи данных.</p>
+
+<p>Еще один путь лежит через настройки BIOS или UEFI материнской платы. На некоторых моделях ноутбуков и ПК существует отдельная опция в Boot Menu, позволяющая выбрать «Safe Mode» или запустить диагностический инструмент. Вход в BIOS обычно осуществляется нажатием клавиш <code>F2</code>, <code>Del</code> или <code>F10</code> сразу после включения компьютера. В разделе Boot Priority можно выбрать загрузку с установочного носителя, который также содержит все необходимые инструменты восстановления.</p>
+
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> Частое принудительное прерывание работы компьютера путем отключения питания может привести к физическому износу жесткого диска (HDD) и потере данных. Используйте этот метод только в крайних случаях, когда другие способы недоступны.</p>
+</blockquote>
+
+<details class="faq-item"><summary>Почему клавиша F8 не работает в Windows 11?</summary><div class="faq-answer"><p>В старых версиях Windows (7, XP) меню дополнительных вариантов загрузки вызывалось клавишей F8. В Windows 10 и 11 этот метод по умолчанию отключен разработчиками ради ускорения процесса загрузки (Fast Boot). Система загружается настолько быстро, что временное окно для перехвата нажатия клавиши составляет доли секунды. Вернуть функционал можно через реестр или командную строку, но это увеличит время старта компьютера на несколько секунд.</p></div></details>
+
+<h2 id="обзор-основных-режимов-загрузки-и-их-применение">Обзор основных режимов загрузки и их применение</h2>
+
+<p>После перехода в раздел «Параметры загрузки» и нажатия кнопки «Перезагрузить», пользователю будет представлен список из девяти вариантов действий, пронумерованных от 1 до 9. Каждый из них предназначен для решения специфических задач. <strong>Безопасный режим</strong> (пункты 4, 5, 6) загружает только минимальный набор драйверов и служб, необходимых для работы ОС. Это позволяет удалить вирусы, которые маскируются под системные процессы, или деинсталлировать проблемное программное обеспечение.</p>
+
+<p>Режим «Безопасный режим с загрузкой сетевых драйверов» (пункт 5) необходим, когда для устранения проблемы требуется доступ к интернету. Например, если нужно скачать антивирусные базы, обновить драйвер видеокарты или воспользоваться удаленным рабочим столом. Обычный безопасный режим (пункт 4) сетевые адаптеры не активирует, что обеспечивает более высокий уровень изоляции системы от внешних угроз.</p>
+
+<p>Особого внимания заслуживает режим «Включить низкое разрешение видео» (пункт 3). Он полезен в ситуациях, когда установлены неверные настройки монитора или драйвер видеокарты работает некорректно, из-за чего изображение на экране искажено или отсутствует вовсе. Также существует опция ведения журнала загрузки, которая сохраняет список всех загружаемых драйверов в файл <code>ntbtlog.txt</code>, что помогает выявить конкретный модуль, вызывающий сбой.</p>
+
+<ul>
+<li>🔍 <strong>Безопасный режим</strong> — базовая диагностика без сторонних драйверов.</li>
+<li>🌐 <strong>С сетевыми драйверами</strong> — для доступа к интернету и корпоративной сети.</li>
+<li>🛠️ <strong>Режим отладки</strong> — для разработчиков и системных администраторов.</li>
+<li>📉 <strong>Низкое разрешение</strong> — исправление проблем с видеодрайвером.</li>
+</ul>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если вы не уверены, какой именно драйвер вызывает конфликт, начните с обычного Безопасного режима. Если система работает стабильно, постепенно включайте службы в диспетчере задач, чтобы найти виновника.</p></div>
+
+<h2 id="решение-распространенных-проблем-и-ошибок">Решение распространенных проблем и ошибок</h2>
+
+<p>Часто пользователи сталкиваются с ситуацией, когда вход в меню загрузки невозможен из-за циклической перезагрузки или зависания на логотипе. В таких случаях может помочь отключение функции «Быстрый запуск» в панели управления электропитанием, если есть возможность туда попасть. Также стоит проверить приоритет загрузочных устройств в BIOS, убедившись, что системный диск стоит на первом месте.</p>
+
+<p>Ошибки, связанные с повреждением загрузчика (например, <code>0xc0000001</code> или <code>0xc000000e</code>), решаются через командную строку в среде восстановления. Использование утилит <code>bootrec /fixboot</code> и <code>bootrec /rebuildbcd</code> позволяет пересоздать конфигурацию загрузки. Если эти методы не помогают, может потребоваться полная переустановка системы или восстановление из резервной копии образа.</p>
+
+<p>Не стоит игнорировать сообщения о сбоях при загрузке, так как они могут сигнализировать о скором выходе из строя накопителя. Регулярная проверка диска командой <code>chkdsk</code> и мониторинг SMART-параметров помогут предотвратить внезапную потерю данных. Помните, что программные методы восстановления бессильны против физической деградации памяти или механических повреждений硬盘.</p>
+
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> Если после входа в безопасный режим проблема исчезает, но возвращается в обычном режиме, причина кроется в автозагрузке программ или службах. Используйте диспетчер задач для анализа списка автозапуска.</p>
+</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Успешная диагностика зависит от правильного выбора режима: для удаления вирусов нужен изолированный режим, а для поиска драйверов — режим с сетью.</p></div>
+
+<details>
+<summary>Как permanently отключить запрос пароля при загрузке в безопасном режиме?</summary>
+<p>По умолчанию безопасный режим требует ввода пароля администратора. Чтобы изменить это поведение, можно использовать утилиту конфигурации системы (msconfig). Во вкладке «Загрузка» выберите текущую ОС, установите флажок «Безопасный режим» и сохраните изменения. Однако для полного отказа от пароля потребуется изменение политик безопасности через <code>secpol.msc</code> или реестр, что снижает общий уровень защиты системы.</p>
+</details>
+
+<details>
+<summary>Можно ли запустить безопасный режим без экрана и клавиатуры?</summary>
+<p>Если у вас нет возможности взаимодействовать с интерфейсом, но есть удаленный доступ (например, через TeamViewer, настроенный как служба), вы можете инициировать перезагрузку в специальный режим удаленно. Однако, если драйверы удаленного доступа не загружаются в безопасном режиме по умолчанию, вы потеряете соединение. В таких случаях используется режим «Безопасный режим с командной строкой» или предварительная настройка реестра для разрешения удаленного подключения в safe mode.</p>
+</details>
+
+<details>
+<summary>Что делать, если меню параметров загрузки пустое или неактивное?</summary>
+<p>Если кнопка «Параметры загрузки» неактивна или список пуст, это свидетельствует о повреждении хранилища данных конфигурации загрузки (BCD). Необходимо использовать загрузочную флешку с Windows 11, выбрать «Восстановление системы» и в командной строке выполнить команду <code>bootrec /rebuildbcd</code>. Это пересоздаст меню выбора операционных систем и вернет доступ к функциям восстановления.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#назначение-и-возможности-меню-загрузки">Назначение и возможности меню загрузки</a></li><li><a href="#способы-входа-через-интерфейс-операционной-системы">Способы входа через интерфейс операционной системы</a></li><li><a href="#использование-командной-строки-для-управления-загрузкой">Использование командной строки для управления загрузкой</a></li><li><a href="#метод-прерывания-загрузки-и-вход-через-bios">Метод прерывания загрузки и вход через BIOS</a></li><li><a href="#обзор-основных-режимов-загрузки-и-их-применение">Обзор основных режимов загрузки и их применение</a></li><li><a href="#решение-распространенных-проблем-и-ошибок">Решение распространенных проблем и ошибок</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/z/zt/zte-zxv10-b866-ne-zagruzhaetsya-posle-obnovleniya-po.html" class="related-card">ZTE ZXV10 B866 не загружается после обновления ПО: решение</a></li><li><a href="/a/articles/v/vo/vosstanovit-podarki-vk.html" class="related-card">Как восстановить подарки ВК: пошаговая инструкция</a></li><li><a href="/a/articles/s/se/setedit-set-value-ru-ru-adb.html" class="related-card">SetEdit и ADB: Установка скрытых значений на Android TV</a></li><li><a href="/a/articles/g/ga/galaksi-s23-ultra-spolzaet-zaschitnaya-plenka-prichina.html" class="related-card">S23 Ultra: почему сползает пленка и как исправить?</a></li><li><a href="/a/articles/c/ca/call-recorder-automatic-kak-najti-soedinitel.html" class="related-card">Call Recorder Automatic: как найти соединитель и подключить</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/z/zt/zte-zxv10-b866-ne-zagruzhaetsya-posle-obnovleniya-po.html" class="related-bottom-card"><span class="related-bottom-title">ZTE ZXV10 B866 не загружается после обновления ПО: решение</span><span class="related-bottom-desc">ZTE ZXV10 B866 не включается после обновления? Полный гид по восстановлению прошивки, сбросу и реани</span></a><a href="/a/articles/v/vo/vosstanovit-podarki-vk.html" class="related-bottom-card"><span class="related-bottom-title">Как восстановить подарки ВК: пошаговая инструкция</span><span class="related-bottom-desc">Узнайте, можно ли восстановить удаленные подарки в ВК. Полная инструкция по возврату подарков через </span></a><a href="/a/articles/s/se/setedit-set-value-ru-ru-adb.html" class="related-bottom-card"><span class="related-bottom-title">SetEdit и ADB: Установка скрытых значений на Android TV</span><span class="related-bottom-desc">Полное руководство по настройке скрытых параметров Android TV через SetEdit и ADB. Команды ru-ru, из</span></a><a href="/a/articles/g/ga/galaksi-s23-ultra-spolzaet-zaschitnaya-plenka-prichina.html" class="related-bottom-card"><span class="related-bottom-title">S23 Ultra: почему сползает пленка и как исправить?</span><span class="related-bottom-desc">Узнайте точные причины, почему на Galaxy S23 Ultra сползает защитная пленка. Эффективные методы реше</span></a><a href="/a/articles/c/ca/call-recorder-automatic-kak-najti-soedinitel.html" class="related-bottom-card"><span class="related-bottom-title">Call Recorder Automatic: как найти соединитель и подключить</span><span class="related-bottom-desc">Ищем соединитель call recorder automatic на плате Android. Инструкция по поиску контактов, схемам ра</span></a><a href="/a/articles/i/iz/izmenit-nastrojki-gammy-monitora-s-komandnoj-stroki.html" class="related-bottom-card"><span class="related-bottom-title">Изменить настройки гаммы монитора с командной строки: полное руководство</span><span class="related-bottom-desc">Узнайте, как изменить настройки гаммы монитора с командной строки в Windows, Linux и macOS. Точная к</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

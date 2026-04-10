@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Где папка Vendor на Андроиде: поиск, доступ и назначение — ТехПодсказка</title>
+    <meta name="description" content="Подробный гид по системной папке Vendor на Android. Как найти раздел, получить root-права, безопасно модифицировать файлы и избежать ошибок при работе с ADB.">
+    <link rel="canonical" href="/a/articles/g/gd/gde-papka-vendor-na-androide.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Где папка Vendor на Андроиде: поиск, доступ и назначение">
+    <meta property="og:description" content="Подробный гид по системной папке Vendor на Android. Как найти раздел, получить root-права, безопасно модифицировать файлы и избежать ошибок при работе с ADB.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/mobilnye-os/">Мобильные ОС</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Где папка Vendor на Андроиде: поиск, доступ и назначение</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Где находится папка Vendor на Андроиде: полный разбор</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#назначение-и-структура-раздела-vendor">Назначение и структура раздела Vendor</a></li><li><a href="#физическое-расположение-в-файловой-системе">Физическое расположение в файловой системе</a></li><li><a href="#методы-доступа-через-adb-и-терминал">Методы доступа через ADB и терминал</a></li><li><a href="#работа-с-файловыми-менеджерами-с-root-доступом">Работа с файловыми менеджерами с Root-доступом</a></li><li><a href="#модификация-файлов-и-возможные-риски">Модификация файлов и возможные риски</a></li><li><a href="#сравнение-доступа-в-разных-версиях-android">Сравнение доступа в разных версиях Android</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Поиск системных директорий в операционной системе <em>Android</em> часто становится необходимостью для продвинутых пользователей, стремящихся к глубокой кастомизации своего устройства. Вопрос о том, где папка вендор на андроиде, возникает у тех, кто планирует вносить изменения в драйверы, заменять системные шрифты или удалять неудаляемый стандартными методами софт. Эта директория является критически важной частью архитектуры системы, содержащей специфичные для производителя бинарные файлы и библиотеки.</p>
+
+<p>В отличие от пользовательских данных, доступ к этому разделу по умолчанию закрыт для обычных приложений и файловых менеджеров. <strong>Системная безопасность</strong> требует наличия особых привилегий, чтобы предотвратить случайное повреждение ОС. Понимание структуры разделов памяти помогает не только в модификации, но и в диагностике проблем при загрузке устройства.</p>
+
+<p>Далее мы подробно разберем физическое и логическое расположение этого каталога, методы доступа к нему через компьютер и мобильные инструменты, а также риски, связанные с вмешательством в работу системных файлов. <em>Точное знание</em> пути и назначения файлов позволит избежать превращения смартфона в «кирпич».</p>
+
+<h2 id="назначение-и-структура-раздела-vendor">Назначение и структура раздела Vendor</h2>
+
+<p>Раздел <code>/vendor</code> был выделен в отдельную partition начиная с версии <em>Android 8.0 Oreo</em> в рамках проекта Project Treble. До этого момента все проприетарные файлы находились в разделе <code>/system</code>, что затрудняло обновление операциной системы без пересборки драйверов от производителя железа. Теперь <strong>аппаратно-зависимый код</strong> изолирован, что позволяет обновлять Android независимо от конкретных реализаций производителя чипсета.</p>
+
+<p>Внутри этой директории хранятся бинарные файлы, необходимые для работы конкретного оборудования: камер, модулей связи, сенсоров отпечатков пальцев и звуковых кодеков. Именно здесь расположены библиотеки <code>.so</code> (shared objects), которые связывают абстрактный уровень Android с физическим «железом» вашего смартфона. Любое изменение здесь может привести к неработоспособности отдельных модулей или полному отказу системы.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Прямое редактирование файлов в разделе vendor без создания полной резервной копии может привести к циклической перезагрузке устройства (bootloop).</p>
+</blockquote>
+
+<p>Структура папок внутри <code>/vendor</code> напоминает стандартную Unix-подобную файловую систему. Здесь можно встретить подкаталоги <code>bin</code> (исполняемые файлы), <code>lib</code> (библиотеки), <code>etc</code> (конфигурационные файлы) и <code>firmware</code> (микрокод). <strong>Логическая изоляция</strong> позволяет разработчикам кастомных прошивок легче адаптировать их под разные устройства, заменяя лишь часть, отвечающую за «железо».</p>
+
+<details class="faq-item"><summary>Технические детали Project Treble</summary><div class="faq-answer"><p>Разделение системы на системный интерфейс (System Interface) и реализацию поставщика (Vendor Implementation) позволило ускорить выход обновлений безопасности. Ранее Google зависел от производителей чипов, которые должны были адаптировать свои драйверы под новую версию Android. Теперь интерфейс стабилен, и обновляется только системный блок, а vendor-раздел остается совместимым в рамках мажорной версии.</p></div></details>
+
+<h2 id="физическое-расположение-в-файловой-системе">Физическое расположение в файловой системе</h2>
+
+<p>Для пользователя, ищущего ответ на вопрос где папка вендор на андроиде, важно понимать разницу между видимой файловой системой и реальными разделами памяти. В корневой директории <code>/</code> (root), которая доступна только с правами суперпользователя, путь выглядит как <code>/vendor</code>. Однако это лишь точка монтирования, виртуальный адрес, по которому система обращается к реальному разделу накопителя.</p>
+
+<p>Физически данные могут располагаться на отдельном разделе <code>/dev/block/mmcblkXpY</code> или быть частью образа <code>vendor.img</code> в составе прошивки. В современных устройствах с внедрением <strong>динамических разделов</strong> (Dynamic Partitions) ситуация усложняется: vendor может находиться внутри супер-раздела, что делает прямое монтирование через ADB без разблокированного загрузчика невозможным.</p>
+
+<p>Пользовательские файловые менеджеры, даже с root-доступом, часто показывают содержимое уже смонтированной файловой системы. Чтобы увидеть реальный путь к блочному устройству, необходимо использовать терминал. Команда <code>mount | grep vendor</code> покажет, откуда именно подтягивается этот раздел в текущей сессии. <em>Адресация памяти</em> может различаться в зависимости от производителя процессора (<em>Snapdragon</em>, <em>MediaTek</em>, <em>Exynos</em>).</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Путь /vendor в корневой директории является лишь точкой монтирования, а физическое расположение данных зависит от разметки памяти конкретного устройства и версии Android.</p></div>
+
+<h2 id="методы-доступа-через-adb-и-терминал">Методы доступа через ADB и терминал</h2>
+
+<p>Наиболее надежным способом изучения содержимого системных папок является использование отладки по USB и инструментария <strong>Android Debug Bridge</strong>. Для начала работы необходимо активировать режим разработчика в настройках телефона и включить отладку по USB. После подключения к компьютеру и авторизации соединения, вы получаете доступ к командной строке устройства.</p>
+
+<p>Войдя в оболочку через команду <code>adb shell</code>, вы оказываетесь в контексте пользователя <code>shell</code>. По умолчанию доступ к <code>/vendor</code> может быть ограничен только на чтение, а в некоторых случаях — полностью закрыт. Для просмотра списка файлов используйте команду <code>ls -l /vendor</code>. Если устройство не рутировано, вы увидите сообщение об отказе в доступе (Permission denied) при попытке записи.</p>
+
+<p>Для глубокого анализа можно использовать следующие команды:</p>
+<ul>
+<li>📱 <code>ls -R /vendor</code> — рекурсивный вывод всех вложенных директорий и файлов.</li>
+<li>💾 <code>df -h</code> — отображение занятого места и типа файловой системы раздела vendor.</li>
+<li>🔍 <code>find /vendor -name "*.so"</code> — поиск всех библиотек в директории.</li>
+<li>📝 <code>cat /vendor/build.prop</code> (если существует) — просмотр свойств сборки вендора.</li>
+</ul>
+
+<p>Если требуется скопировать файл с устройства на компьютер, используется команда <code>adb pull /vendor/path/to/file C:/Destination/</code>. Обратите внимание, что для копирования системных файлов часто требуются права root, которые можно получить временно через <code>adb root</code> (на инженерных сборках) или постоянно через магистральные утилиты вроде <em>Magisk</em>.</p>
+
+<div class="checklist-block"><h4>☑️ Подготовка к работе с ADB</h4><label class="check-item"><input type="checkbox"><span>Установлены драйверы ADB на ПК:Включена отладка по USB на смартфоне:Проверено соединение командой adb devices:Установлен пакет platform-tools:</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 1</div></div>
+
+<h2 id="работа-с-файловыми-менеджерами-с-root-доступом">Работа с файловыми менеджерами с Root-доступом</h2>
+
+<p>Для тех, кто предпочитает графический интерфейс командной строке, существуют мощные файловые менеджеры, такие как <em>MT Manager</em>, <em>Solid Explorer</em> или <em>Root Explorer</em>. Эти приложения умеют запрашивать права суперпользователя и монтировать разделы в режиме чтения-записи (R/W). Без получения прав <strong>root-доступа</strong> ни один файловый менеджер не позволит даже открыть содержимое папки vendor.</p>
+
+<p>После предоставления прав приложению, необходимо найти кнопку переключения состояния файловой системы (обычно вверху экрана или в меню). Пока раздел смонтирован как <code>Read-Only</code> (RO), любые попытки изменить файлы будут безуспешны. Переключив в режим <code>Read-Write</code> (RW), вы получаете полный контроль. Будьте предельно осторожны: случайное удаление критического файла может остановить загрузку ОС.</p>
+
+<p>При работе через файловый менеджер удобно использовать встроенные функции:</p>
+<ul>
+<li>🛡️ Создание бэкапа папки перед редактированием.</li>
+<li>✏️ Встроенный HEX-редактор для правки бинарных файлов.</li>
+<li>🔐 Изменение прав доступа (chmod/chown) для исполняемых файлов.</li>
+<li>📤 Возможность «на лету» заменять файлы в системных разделах.</li>
+</ul>
+
+<blockquote>
+<p>⚠️ Внимание: Некоторые антивирусные программы и системы защиты (например, Samsung Knox) могут реагировать на монтирование системных разделов в режим записи как на атаку, блокируя работу банковских приложений.</p>
+</blockquote>
+
+<h2 id="модификация-файлов-и-возможные-риски">Модификация файлов и возможные риски</h2>
+
+<p>Зачем пользователи лезут в <code>/vendor</code>? Чаще всего это делается для замены системных шрифтов, изменения логотипа при загрузке (bootlogo), правки конфигурации звука (<code>mixer_paths.xml</code>) или удаления рекламных сервисов производителя. Однако <strong>модификация системных файлов</strong> — это всегда баланс между желаемым функционалом и стабильностью работы.</p>
+
+<p>Одной из распространенных ошибок является нарушение целостности подписей или изменение размера файлов, что приводит к ошибкам контрольных сумм. Система Android проверяет целостность раздела vendor при загрузке (Verified Boot). Если хэш-сумма не совпадает с эталонной, устройство может отказаться загружаться или перейдет в режим восстановления.</p>
+
+<p>Основные риски вмешательства:</p>
+<ul>
+<li>🚫 <strong>Bootloop</strong> — бесконечный цикл перезагрузки из-за ошибки в драйвере.</li>
+<li>📉 Деградация производительности при некорректных настройках энергосбережения.</li>
+<li>🔇 Отказ работы модулей связи или камеры после замены библиотек.</li>
+<li>🔒 Блокировка устройства сервисами безопасности производителя.</li>
+</ul>
+
+<p>Всегда сохраняйте оригинальные файлы с именами вроде <code>filename.bak</code> или <code>filename.orig</code> в той же директории или на внешнем носителе. Это позволит быстро откатить изменения через рекавери или терминал, если что-то пойдет не так. <em>Резервное копирование</em> — единственная страховка от потери данных.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какова ваша цель работы с системными файлами?</strong><ul><li>Удаление рекламы:Улучшение звука:Замена шрифтов:Эксперименты и изучение:Другое</li></ul></div></div>
+
+<h2 id="сравнение-доступа-в-разных-версиях-android">Сравнение доступа в разных версиях Android</h2>
+
+<p>С выходом новых версий операционной системы Google постепенно закручивает гайки безопасности. Если на <em>Android 7 Nougat</em> доступ к системным разделам можно было получить относительно легко, то на <em>Android 12, 13 и 14</em> внедрены дополнительные уровни защиты. Раздел <code>/vendor</code> теперь часто монтируется с флагами, запрещающими исполнение кода или запись даже для root-пользователя без специальных манипуляций.</p>
+
+<p>В таблице ниже приведено сравнение возможностей доступа в зависимости от версии ОС:</p>
+
+<table>
+<thead>
+<tr>
+<th>Версия Android</th>
+<th>Доступ без Root</th>
+<th>Статус по умолчанию</th>
+<th>Особенности защиты</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Android 7-8</td>
+<td>Нет</td>
+<td>Read-Only</td>
+<td>Базовая проверка подписей</td>
+</tr>
+<tr>
+<td>Android 9-10</td>
+<td>Нет</td>
+<td>Read-Only</td>
+<td>Project Treble, изоляция vendor</td>
+</tr>
+<tr>
+<td>Android 11-12</td>
+<td>Нет</td>
+<td>Read-Only</td>
+<td>Scoped Storage, усиленный SELinux</td>
+</tr>
+<tr>
+<td>Android 13-14</td>
+<td>Нет</td>
+<td>Read-Only</td>
+<td>Динамические разделы, GKI (Generic Kernel Image)</td>
+</tr>
+</tbody>
+</table>
+
+<p>На новых версиях <em>Android</em> часто требуется разблокировка загрузчика (Unlock Bootloader), что само по себе стирает все данные пользователя. Кроме того, механизмы <strong>GKI (Generic Kernel Image)</strong> делают ядро более универсальным, но жестче контролируют взаимодействие с vendor-разделом, требуя строгого соответствия интерфейсов.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Перед разблокировкой загрузчика обязательно развяжите аккаунты Google и Samsung/Xiaomi/Mi, иначе можете столкнуться с блокировкой FRP (Factory Reset Protection).</p></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Можно ли удалить папку vendor полностью?</summary>
+<p>Нет, удаление этого раздела приведет к неработоспособности устройства. В нем содержатся критические драйверы для процессора, экрана и модема. Без них телефон не сможет даже пройти начальную стадию загрузки (bootloader).</p>
+</details>
+
+<details>
+<summary>Почему я не вижу папку vendor в обычном файловом менеджере?</summary>
+<p>Папка <code>/vendor</code> является системной и скрыта от обычных приложений в целях безопасности. Для ее отображения необходимы root-права и специальный файловый менеджер, умеющий работать с системными разделами.</p>
+</details>
+
+<details>
+<summary>Безопасно ли менять файлы в /vendor для улучшения звука?</summary>
+<p>Это рискованно. Замена файлов конфигурации звука (например, <code>mixer_paths.xml</code>) может привести к хрипам динамиков, полной потере звука или перезагрузкам. Всегда делайте бэкап оригинального файла перед внесением изменений.</p>
+</details>
+
+<details>
+<summary>Как вернуть доступ только на чтение после изменений?</summary>
+<p>В файловых менеджерах с root-доступом обычно есть кнопка переключения Mount R/O (смонтировать только для чтения). Нажатие этой кнопки перемонтирует раздел, защитив его от случайных записей и повысив стабильность системы.</p>
+</details>
+
+<details>
+<summary>Влияет ли модификация vendor на работу банковских приложений?</summary>
+<p>Да, изменение системных файлов может нарушить целостность системы, что_detected сервисами Google Play Integrity или Samsung Knox. Это приведет к отказу банковских приложений и сервисов бесконтактной оплаты.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#назначение-и-структура-раздела-vendor">Назначение и структура раздела Vendor</a></li><li><a href="#физическое-расположение-в-файловой-системе">Физическое расположение в файловой системе</a></li><li><a href="#методы-доступа-через-adb-и-терминал">Методы доступа через ADB и терминал</a></li><li><a href="#работа-с-файловыми-менеджерами-с-root-доступом">Работа с файловыми менеджерами с Root-доступом</a></li><li><a href="#модификация-файлов-и-возможные-риски">Модификация файлов и возможные риски</a></li><li><a href="#сравнение-доступа-в-разных-версиях-android">Сравнение доступа в разных версиях Android</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-zaparolit-fleshku-na-androide.html" class="related-card">Как запаролить флешку на Андроиде: полные методы защиты</a></li><li><a href="/a/articles/k/ka/kak-nastroit-radio-v-kitajskoj-magnitole-android-avtolos.html" class="related-card">Как настроить радио в китайской магнитоле Андроид: инструкция</a></li><li><a href="/a/articles/a/an/android-magnitola-podklyuchenie-vtorogo-ekrana.html" class="related-card">Подключение второго экрана к Android-магнитоле: полное руководство</a></li><li><a href="/a/articles/k/ka/kak-otkalibrovat-kompas-na-androide-xiaomi.html" class="related-card">Как откалибровать компас на Xiaomi: полная инструкция</a></li><li><a href="/a/articles/v/vo/vopros-honor-9s-kak-ubrat-rekomendovannye-yarlyki-s-eerana-prilozhenij.html" class="related-card">Как убрать рекомендованные ярлыки на Honor 9S: полная инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-zaparolit-fleshku-na-androide.html" class="related-bottom-card"><span class="related-bottom-title">Как запаролить флешку на Андроиде: полные методы защиты</span><span class="related-bottom-desc">Узнайте, как запаролить флешку на Андроиде через шифрование USB OTG или создание защищенных контейне</span></a><a href="/a/articles/k/ka/kak-nastroit-radio-v-kitajskoj-magnitole-android-avtolos.html" class="related-bottom-card"><span class="related-bottom-title">Как настроить радио в китайской магнитоле Андроид: инструкция</span><span class="related-bottom-desc">Пошаговое руководство: как настроить радио в китайской магнитоле на Андроид. Решаем проблемы с FM, R</span></a><a href="/a/articles/a/an/android-magnitola-podklyuchenie-vtorogo-ekrana.html" class="related-bottom-card"><span class="related-bottom-title">Подключение второго экрана к Android-магнитоле: полное руководство</span><span class="related-bottom-desc">Как подключить второй экран к Android-магнитоле. Настройка дублирования, устранение помех и выбор пр</span></a><a href="/a/articles/k/ka/kak-otkalibrovat-kompas-na-androide-xiaomi.html" class="related-bottom-card"><span class="related-bottom-title">Как откалибровать компас на Xiaomi: полная инструкция</span><span class="related-bottom-desc">Узнайте, как правильно откалибровать компас на Android Xiaomi. Устраните ошибки навигации в Google К</span></a><a href="/a/articles/v/vo/vopros-honor-9s-kak-ubrat-rekomendovannye-yarlyki-s-eerana-prilozhenij.html" class="related-bottom-card"><span class="related-bottom-title">Как убрать рекомендованные ярлыки на Honor 9S: полная инструкция</span><span class="related-bottom-desc">Пошаговое руководство, как отключить рекомендации приложений и папки на Honor 9S. Ускорьте работу ла</span></a><a href="/a/articles/k/ka/kak-nastroit-internet-na-telefone-poco-x3-pro-inzhenernye-nastrojki.html" class="related-bottom-card"><span class="related-bottom-title">Инженерные настройки POCO X3 Pro: как настроить интернет и APN</span><span class="related-bottom-desc">Подробная инструкция по настройке интернета на POCO X3 Pro через инженерное меню. Решаем проблемы с </span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

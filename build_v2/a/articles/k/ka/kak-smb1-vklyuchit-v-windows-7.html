@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Как включить SMB1 в Windows 7: полная инструкция — ТехПодсказка</title>
+    <meta name="description" content="Подробное руководство по активации протокола SMB 1.0 в Windows 7. Настройка доступа к сетевым папкам, устранение ошибок и безопасность.">
+    <link rel="canonical" href="/a/articles/k/ka/kak-smb1-vklyuchit-v-windows-7.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как включить SMB1 в Windows 7: полная инструкция">
+    <meta property="og:description" content="Подробное руководство по активации протокола SMB 1.0 в Windows 7. Настройка доступа к сетевым папкам, устранение ошибок и безопасность.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/windows-i-pk/">Windows и ПК</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как включить SMB1 в Windows 7: полная инструкция</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Как включить SMB1 в Windows 7: подробное руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#проверка-текущей-конфигурации-сети">Проверка текущей конфигурации сети</a></li><li><a href="#активация-компонента-smb-10-через-панель-управления">Активация компонента SMB 1.0 через Панель управления</a></li><li><a href="#настройка-через-командную-строку-и-powershell">Настройка через командную строку и PowerShell</a></li><li><a href="#регулировка-параметров-групповой-политики">Регулировка параметров групповой политики</a></li><li><a href="#устранение-типичных-ошибок-подключения">Устранение типичных ошибок подключения</a></li><li><a href="#вопросы-безопасности-и-риски-использования">Вопросы безопасности и риски использования</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Современные операционные системы по умолчанию используют защищенные протоколы обмена данными, однако legacy-оборудование, такое как старые сетевые хранилища <em>NAS</em> или принтеры, часто требует устаревших стандартов. Владельцам <strong>Windows 7</strong> frequently сталкиваются с невозможностью открыть общие папки на таких устройствах из-за отключенного компонента <strong>SMB 1.0</strong>. Это не является ошибкой системы, а скорее следствием эволюции стандартов кибербезопасности, где Microsoft постепенно отказывается от уязвимых технологий.</p>
+
+<p>Активация этого компонента необходима для обеспечения совместимости с периферией, выпущенной более десяти лет назад, когда протокол <em>Server Message Block</em> версии 1.0 был основным стандартом индустрии. Процесс включения не требует глубоких знаний программирования, но предполагает точное следование инструкциям во избежание конфликтов сетевых служб. Правильная настройка позволит вашему компьютеру снова «видеть» сетевые диски и принтеры в локальной сети.</p>
+
+<p>Стоит отметить, что использование устаревших протоколов несет определенные риски, если компьютер имеет прямой выход в глобальную сеть без защиты файрвола. Поэтому перед внесением изменений в системные компоненты важно убедиться, что вы находитесь в доверенной домашней или корпоративной сети. Ниже мы рассмотрим все этапы активации, начиная от проверки текущих параметров и заканчивая troubleshooting типичных ошибок.</p>
+
+<h2 id="проверка-текущей-конфигурации-сети">Проверка текущей конфигурации сети</h2>
+
+<p>Прежде чем вносить изменения в реестр или системные компоненты, необходимо диагностировать текущее состояние сетевых служб. Часто пользователи пытаются включить службу, которая уже активна, но заблокирована правилами брандмауэра или антивируса. Для начала следует открыть панель управления и перейти в раздел <code>Центр управления сетями и общим доступом</code>, где отображается базовый статус подключений.</p>
+
+<p>Далее нужно проверить, включено ли сетевое обнаружение, так как без него протокол <strong>SMB</strong> не сможет транслировать имена компьютеров в списке окружения. В окне параметров текущей сети убедитесь, что выбран профиль «Домашняя» или «Рабочая», а не «Общественная», которая ограничивает видимость устройства. Если профиль установлен неверно, система может блокировать входящие запросы на подключение к общим ресурсам.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Изменение профиля сети с «Общественная» на «Домашняя» снижает уровень защиты от внешних атак в публичных точках доступа Wi-Fi, поэтому делайте это только в доверенном окружении.</p>
+</blockquote>
+
+<p>Также стоит проверить работу службы <em>Workstation</em>, которая отвечает за создание и поддержку клиентских сетевых подключений. Если эта служба остановлена или отключена, никакие манипуляции с протоколами не дадут результата. Запустить её можно через консоль управления службами, введя команду <code>services.msc</code> в диалоговом окне «Выполнить».</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой тип сетевого оборудования вы используете?</strong><ul><li>Старый NAS (QNAP/Synology)</li><li>Сетевой принтер</li><li>Другой компьютер с Windows XP/Vista</li><li>Медиаплеер (Dune/Popcorn)</li><li>Не знаю точно</li></ul></div></div>
+
+<h2 id="активация-компонента-smb-10-через-панель-управления">Активация компонента SMB 1.0 через Панель управления</h2>
+
+<p>Основной и наиболее безопасный способ включить необходимый протокол заключается в использовании штатного интерфейса управления компонентами Windows. Этот метод гарантирует, что все зависимые библиотеки будут загружены корректно, а реестр обновлен соответствующими ключами. Для доступа к нужному меню откройте «Пуск», перейдите в «Панель управления» и выберите пункт «Программы и компоненты».</p>
+
+<p>В левой части открывшегося окна найдите ссылку «Включение или отключение компонентов Windows». Система запросит права администратора, после чего отобразится список доступных модулей с чекбоксами. Вам потребуется найти в списке ветку «Поддержка общего доступа к файлам SMB 1.0/CIFS» и раскрыть её, чтобы увидеть вложенные элементы.</p>
+
+<ul>
+<li>📂 <strong>Клиент SMB 1.0/CIFS</strong> — позволяет вашему компьютеру подключаться к другим устройствам, использующим старый протокол.</li>
+<li>💾 <strong>Сервер SMB 1.0/CIFS</strong> — позволяет другим устройствам подключаться к общим папкам вашего компьютера (включать только если это действительно нужно).</li>
+<li>🔍 <strong>Автоматическое удаление сервера SMB 1.0</strong> — функция, которая может отключить серверную часть после периода неактивности.</li>
+</ul>
+
+<p>Для решения проблемы с доступом к сетевым хранилищам достаточно установить галочку напротив пункта «Клиент». Если же вы планируете расшаривать папки с этого компьютера для очень старых устройств, потребуется также активировать «Сервер». После выставления отметок нажмите «ОК» и дождитесь завершения поиска и установки файлов, что может занять несколько минут.</p>
+
+<div class="checklist-block"><h4>☑️ Чек-лист активации компонента</h4><label class="check-item"><input type="checkbox"><span>Открыть Панель управления</span></label><label class="check-item"><input type="checkbox"><span>Перейти в Программы и компоненты</span></label><label class="check-item"><input type="checkbox"><span>Выбрать Включение компонентов Windows</span></label><label class="check-item"><input type="checkbox"><span>Отметить Клиент SMB 1.0</span></label><label class="check-item"><input type="checkbox"><span>Перезагрузить ПК</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+
+<p>По завершении установки система обязательно потребует перезагрузки для инициализации драйверов сетевого стека. Игнорирование этого требования приведет к тому, что изменения не вступят в силу, и ошибка доступа сохранится. После перезагрузки можно сразу же проверить доступность сетевых ресурсов.</p>
+
+<h2 id="настройка-через-командную-строку-и-powershell">Настройка через командную строку и PowerShell</h2>
+
+<p>Для системных администраторов или продвинутых пользователей существует альтернативный метод активации через командную строку, который часто бывает быстрее и позволяет автоматизировать процесс. Использование утилиты <strong>Dism</strong> (Deployment Image Servicing and Management) дает прямой доступ к управлению компонентами операциной системы без необходимости блуждания по меню.</p>
+
+<p>Что воспользоваться этим методом, запустите командную строку от имени администратора. Это критически важно, так как обычные права пользователя не позволят внести изменения в системные компоненты. Введите следующую команду для включения клиентской части протокола:</p>
+
+<pre><code>dism /online /enable-feature /featurename:SMB1Protocol-Client /all</code></pre>
+
+<p>Если требуется активировать и серверную часть для предоставления доступа к своим файлам, используйте дополнительную команду:</p>
+
+<pre><code>dism /online /enable-feature /featurename:SMB1Protocol-Server /all</code></pre>
+
+<blockquote>
+<p>⚠️ Внимание: При выполнении команд в PowerShell или CMD убедитесь, что антивирусное ПО не блокирует внесение изменений в системные файлы, так как это может прервать процесс установки.</p>
+</blockquote>
+
+<p>После успешного выполнения команд вы увидите сообщение об операции с кодом завершения 0. Это означает, что компонент активирован, но, как и в случае с графическим интерфейсом, требуется перезагрузка. Преимущество данного метода заключается в возможности быстро проверить статус компонента командой <code>dism /online /get-features</code>, отфильтровав список по слову SMB.</p>
+
+<h2 id="регулировка-параметров-групповой-политики">Регулировка параметров групповой политики</h2>
+
+<p>В корпоративных средах или в случаях, когда стандартные методы не работают, может потребоваться редактирование локальной групповой политики. Этот инструмент позволяет управлять конфигурацией <strong>Windows 7</strong> на более глубоком уровне, принудительно включая или запрещая определенные行为 поведения сетевых клиентов.</p>
+
+<p>Для доступа к редактору нажмите <code>Win + R</code> и введите <code>gpedit.msc</code>. Навигационный путь к нужным настройкам выглядит следующим образом: «Конфигурация компьютера» → «Административные шаблоны» → «Сеть» → «Рабочая станция Lanman». Здесь нас интересует параметр, разрешающий или запрещающий небезопасные гостевые входы.</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр политики</th>
+<th>Рекомендуемое значение</th>
+<th>Описание влияния</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Включить небезопасные гостевые входы</td>
+<td>Включено</td>
+<td>Разрешает подключение к устройствам без пароля</td>
+</tr>
+<tr>
+<td>Требовать подписи SMB</td>
+<td>Отключено</td>
+<td>Необходимо для совместимости со старыми NAS</td>
+</tr>
+<tr>
+<td>Отправлять пароль в открытом виде</td>
+<td>Включено</td>
+<td>Требуется для очень старых принтеров</td>
+</tr>
+</tbody>
+</table>
+
+<p>Изменение этих параметров может потребоваться, если устройство в сети не поддерживает современные методы аутентификации. Однако следует помнить, что снижение требований безопасности делает систему более уязвимой для атак типа «человек посередине» в локальной сети. Используйте эти настройки только если вы полностью доверяете всем устройствам, подключенным к вашему коммутатору или роутеру.</p>
+
+<details class="faq-item"><summary>Почему политика может не применяться?</summary><div class="faq-answer"><p>Политика может не примениться, если в реестре присутствуют конфликтующие записи или если компьютер является частью домена, где настройки контролируются сервером. В домашней сети обычно достаточно перезагрузки.</p></div></details>
+
+<h2 id="устранение-типичных-ошибок-подключения">Устранение типичных ошибок подключения</h2>
+
+<p>Даже после включения компонента <strong>SMB 1.0</strong> пользователи могут столкнуться с ошибкой «0x80004005» или сообщением о том, что сетевой путь не найден. Часто проблема кроется в службах поддержки, которые не запустились автоматически вместе с основным протоколом. В первую очередь проверьте службу «Публикация ресурсов обнаружения функции», которая должна работать в автоматическом режиме.</p>
+
+<p>Еще одной распространенной причиной является блокировка портов брандмауэром Windows или сторонним антивирусом. Протокол SMB использует TCP порт 445 для прямого подключения и порты 137-139 для совместимости с NetBIOS. Убедитесь, что в правилах входящих подключений создано исключение для «Общего доступа к файлам и принтерам».</p>
+
+<ul>
+<li>🔥 Проверьте, не блокирует ли антивирус сетевой трафик на порту 445.
+<p>*   🔄 Попробуйте сбросить сетевые настройки командой <code>netsh winsock reset</code> в командной строке.</p>
+<p>*   💻 Убедитесь, что имена компьютеров в сети уникальны и не содержат кириллицы, что иногда вызывает проблемы в смешанных средах.</li></p>
+</ul>
+
+<p>Если устройство видно в сети, но запрашивает пароль, хотя учетная запись гостя не требуется, попробуйте добавить учетные данные вручную через Панель управления в разделе «Диспетчер учетных данных». Укажите IP-адрес устройства, логин и пароль (или оставьте поле пустым для гостевого доступа), чтобы Windows не пыталась использовать текущие credentials пользователя.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если вы изменили настройки, но компьютер все равно не видит сеть, попробуйте временно отключить IPv6 в свойствах сетевого адаптера — это часто решает проблемы с приоритизацией протоколов в Windows 7.</p></div>
+
+<h2 id="вопросы-безопасности-и-риски-использования">Вопросы безопасности и риски использования</h2>
+
+<p>Включение протокола первой версии несет в себе серьезные риски безопасности, о которых нельзя забывать ни на минуту. Уязвимость <em>EternalBlue</em>, использованная вирусом-шифровальщиком WannaCry, эксплуатировала именно дыры в реализации SMB v1. Именно поэтому Microsoft рекомендует отключать этот компонент везде, где это возможно, и переходить на оборудование, поддерживающее SMB v2 или v3.</p>
+
+<p>Если вы вынуждены использовать этот протокол для работы критически важного старого оборудования, изолируйте такой компьютер от доступа в Интернет. Настройте жесткие правила файрвола, разрешающие SMB-трафик только с конкретных IP-адресов доверенных устройств в локальной сети. Это минимизирует поверхность атаки и защитит данные от внешних угроз.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Никогда не включайте SMB 1.0 на компьютерах, которые напрямую подключены к интернету или используются для обработки конфиденциальных финансовых данных без дополнительной изоляции.</p>
+</blockquote>
+
+<p>Рассмотрите возможность обновления прошивки вашего сетевого хранилища или принтера. Производители часто выпускают обновления, добавляющие поддержку более новых версий протокола, что позволит вам отключить опасный компонент в Windows 7 и повысить общую безопасность инфраструктуры.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Использование SMB 1.0 допустимо только в изолированной локальной сети; наличие выхода в Интернет при активном SMBv1 создает критическую уязвимость системы.</p></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Безопасно ли включать SMB 1.0 в Windows 7 для домашнего использования?</summary>
+<p>Это относительно безопасно только если ваш компьютер находится за роутером с включенным NAT и файрволом, и вы не открываете порты наружу. Однако риск заражения внутри локальной сети от другого зараженного устройства остается, поэтому рекомендуется использовать этот протокол только временно.</p>
+</details>
+
+<details>
+<summary>Почему после включения компонента файлы все равно не копируются?</summary>
+<p>Проблема может быть в правах доступа к самой папке на целевом устройстве или в несовместимости кодировки имен файлов. Попробуйте обращаться к ресурсу по IP-адресу (например, <code>\\192.168.1.50</code>) вместо имени компьютера, чтобы исключить ошибки DNS или NetBIOS.</p>
+</details>
+
+<details>
+<summary>Можно ли полностью удалить SMB 1.0 после обновления оборудования?</summary>
+<p>Да, это даже рекомендуется. Вернитесь в «Включение или отключение компонентов Windows» и снимите галочку с «Поддержка общего доступа к файлам SMB 1.0/CIFS», затем перезагрузите систему. Это закроет потенциальные дыры в безопасности.</p>
+</details>
+
+<details>
+<summary>Влияет ли включение SMB 1.0 на скорость сети?</summary>
+<p>Сам по себе протокол не замедляет сеть, но он менее эффективен при работе с большими файлами по сравнению с SMB 2/3. Если оба устройства поддерживают новые версии, Windows 7 попытается negotiate более быстрый протокол, даже если SMB 1.0 включен.</p>
+</details>
+
+<details>
+<summary>Что делать, если компонент SMB 1.0 отсутствует в списке?</summary>
+<p>В некоторых сборках Windows 7 или после установки определенных обновлений безопасности компонент может быть скрыт. В этом случае поможет использование командной строки с утилитой <strong>Dism</strong> или установка официального обновления KB2696547 от Microsoft, если оно еще доступно для вашей версии системы.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#проверка-текущей-конфигурации-сети">Проверка текущей конфигурации сети</a></li><li><a href="#активация-компонента-smb-10-через-панель-управления">Активация компонента SMB 1.0 через Панель управления</a></li><li><a href="#настройка-через-командную-строку-и-powershell">Настройка через командную строку и PowerShell</a></li><li><a href="#регулировка-параметров-групповой-политики">Регулировка параметров групповой политики</a></li><li><a href="#устранение-типичных-ошибок-подключения">Устранение типичных ошибок подключения</a></li><li><a href="#вопросы-безопасности-и-риски-использования">Вопросы безопасности и риски использования</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-vklyuchaetsya-kompyuter-iru.html" class="related-card">Как включить компьютер IRU: пошаговая инструкция и решение проблем</a></li><li><a href="/a/articles/w/wi/windows-11-golosovoj-vvod-ne-rabotaet-pri-vosproizvedenii-cherez-dinamiki.html" class="related-card">Голосовой ввод Windows 11 и динамики: решение проблемы</a></li><li><a href="/a/articles/k/ka/kak-sdelat-tak-chtoby-prezentaciya-ne-sezzhala-na-drugom-kompyutere-hnzcilsdp.html" class="related-card">Презентация не съезжает: как сохранить шрифты и верстку</a></li><li><a href="/a/articles/z/zh/zhestkij-disk-4-tb-ne-vidit-ves-obem-windows-10.html" class="related-card">Жесткий диск 4 ТБ не видит весь объем: решение проблемы</a></li><li><a href="/a/articles/k/ka/kak-sdelat-svoj-kalendar-na-kompyutere.html" class="related-card">Как сделать свой календарь на компьютере: инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-vklyuchaetsya-kompyuter-iru.html" class="related-bottom-card"><span class="related-bottom-title">Как включить компьютер IRU: пошаговая инструкция и решение проблем</span><span class="related-bottom-desc">Узнайте, как правильно включить компьютер IRU. Подробная инструкция для ноутбуков и ПК, поиск кнопки</span></a><a href="/a/articles/w/wi/windows-11-golosovoj-vvod-ne-rabotaet-pri-vosproizvedenii-cherez-dinamiki.html" class="related-bottom-card"><span class="related-bottom-title">Голосовой ввод Windows 11 и динамики: решение проблемы</span><span class="related-bottom-desc">Почему в Windows 11 голосовой ввод не работает при звуке из динамиков? Полный разбор конфликта аудио</span></a><a href="/a/articles/k/ka/kak-sdelat-tak-chtoby-prezentaciya-ne-sezzhala-na-drugom-kompyutere-hnzcilsdp.html" class="related-bottom-card"><span class="related-bottom-title">Презентация не съезжает: как сохранить шрифты и верстку</span><span class="related-bottom-desc">Презентация съезжает на другом ПК? Узнайте, как вставить шрифты, сохранить PDF и настроить слайды, ч</span></a><a href="/a/articles/z/zh/zhestkij-disk-4-tb-ne-vidit-ves-obem-windows-10.html" class="related-bottom-card"><span class="related-bottom-title">Жесткий диск 4 ТБ не видит весь объем: решение проблемы</span><span class="related-bottom-desc">Почему Windows 10 не видит полный объем диска 4 ТБ? Узнайте, как исправить MBR, GPT и分区 ошибки через</span></a><a href="/a/articles/k/ka/kak-sdelat-svoj-kalendar-na-kompyutere.html" class="related-bottom-card"><span class="related-bottom-title">Как сделать свой календарь на компьютере: инструкция</span><span class="related-bottom-desc">Узнайте, как сделать свой календарь на компьютере. Подробные методы создания в Word, Excel и Google </span></a><a href="/a/articles/k/ka/kak-podklyuchit-naushniki-bloody-g260p-k-kompyuteru.html" class="related-bottom-card"><span class="related-bottom-title">Как подключить наушники Bloody G260P к ПК: полная инструкция</span><span class="related-bottom-desc">Подробный гид по подключению гарнитуры Bloody G260P. Настройка драйверов, устранение шума микрофона </span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

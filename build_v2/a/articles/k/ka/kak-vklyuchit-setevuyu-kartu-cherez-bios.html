@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Как включить сетевую карту через БИОС: пошаговая инструкция — ТехПодсказка</title>
+    <meta name="description" content="Подробный гид по активации LAN-порта в BIOS. Решаем проблемы с сетью, настраиваем PXE Boot и устраняем конфликты оборудования на материнских платах.">
+    <link rel="canonical" href="/a/articles/k/ka/kak-vklyuchit-setevuyu-kartu-cherez-bios.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как включить сетевую карту через БИОС: пошаговая инструкция">
+    <meta property="og:description" content="Подробный гид по активации LAN-порта в BIOS. Решаем проблемы с сетью, настраиваем PXE Boot и устраняем конфликты оборудования на материнских платах.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/mobilnye-os/">Мобильные ОС</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как включить сетевую карту через БИОС: пошаговая инструкция</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Как включить сетевую карту через БИОС: полное руководство по настройке</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#диагностика-и-причины-отключения-сетевого-контроллера">Диагностика и причины отключения сетевого контроллера</a></li><li><a href="#вход-в-biosuefi-и-навигация-по-интерфейсу">Вход в BIOS/UEFI и навигация по интерфейсу</a></li><li><a href="#поиск-раздела-управления-периферией-onboard-devices">Поиск раздела управления периферией (OnBoard Devices)</a></li><li><a href="#активация-сетевого-адаптера-и-настройка-параметров">Активация сетевого адаптера и настройка параметров</a></li><li><a href="#настройка-wake-on-lan-и-энергосбережения">Настройка Wake-on-LAN и энергосбережения</a></li><li><a href="#таблица常见ых-названий-параметров-в-bios-разных-производителей">Таблица常见ых названий параметров в BIOS разных производителей</a></li><li><a href="#устранение-неполадок-и-проверка-результата">Устранение неполадок и проверка результата</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>Ситуация, когда компьютер перестает видеть интернет или локальную сеть, часто ставит пользователей в тупик. Прежде чем искать драйверы в Диспетчере устройств или переустанавливать операционную систему, стоит проверить базовый уровень настройки оборудования. <strong>Сетевая карта</strong> (или интегрированный сетевой контроллер) может быть программно отключена на уровне материнской платы. Это происходит не только из-за действий пользователя, но и вследствие сброса настроек BIOS после замены батарейки или скачка напряжения.</p>
+<p>В современных системах управление периферийными устройствами осуществляется через интерфейс <em>UEFI</em> или классический <em>BIOS</em>. Если контроллер отключен здесь, операционная система просто не обнаружит наличие физического оборудования, и никакие программные методы не помогут. Понимание того, как включить сетевую карту через биос, является фундаментальным навыком для любого специалиста по ремонту ПК или продвинутого пользователя.</p>
+<p>В этой статье мы подробно разберем алгоритм входа в систему ввода-вывода, навигацию по разделам и активацию необходимых параметров. Вы научитесь различать настройки для проводного соединения <em>Ethernet</em> и беспроводных модулей <em>Wi-Fi</em>, а также узнаете, как правильно настроить параметры загрузки для корпоративных сетей.</p>
+
+<h2 id="диагностика-и-причины-отключения-сетевого-контроллера">Диагностика и причины отключения сетевого контроллера</h2>
+<p>Перед внесением изменений в конфигурацию firmware необходимо понять, почему сетевой адаптер мог исчезнуть. Часто причиной становится автоматическое отключение устройства системой энергосбережения или конфликт с другими компонентами после обновления прошивки материнской платы. В некоторых случаях антивирусное ПО или вредоносные программы могут блокировать работу сетевых интерфейсов на низком уровне.</p>
+<p><strong>Интегрированный адаптер</strong> может быть деактивирован принудительно, если в систему была установлена дискретная сетевая карта, и материнская плата автоматически переключилась на неё. Также стоит проверить физическое состояние порта: если индикаторы на разъеме RJ-45 не загораются при подключении кабеля, проблема может крыться именно в настройках BIOS или аппаратной неисправности чипа.</p>
+<p>Для точной диагностики используйте Диспетчер устройств Windows. Если в списке оборудования нет раздела "Сетевые адаптеры" или устройство помечено желтым восклицательным знаком с кодом ошибки 10 или 45, это прямой сигнал к проверке BIOS. Отсутствие устройства в списке "Неизвестные устройства" также указывает на то, что контроллер не инициализируется при старте системы.</p>
+<blockquote>⚠️ Внимание: Если после включения в BIOS сетевая карта не определяется, попробуйте сбросить настройки материнской платы до заводских (Load Optimized Defaults), так как некоторые пользовательские конфигурации могут блокировать работу периферии.</blockquote>
+<p>Важно различать программное отключение в Windows и аппаратное в BIOS. Если в Диспетчере устройств вы видите устройство, но оно работает с ошибками, проблема, скорее всего, в драйверах. Если же устройство полностью отсутствует — без входа в <code>Setup Utility</code> не обойтись.</p>
+
+<h2 id="вход-в-biosuefi-и-навигация-по-интерфейсу">Вход в BIOS/UEFI и навигация по интерфейсу</h2>
+<p>Процесс активации начинается с входа в меню настроек. Для этого необходимо перезагрузить компьютер и нажать специальную клавишу сразу после включения питания. Набор клавиш зависит от производителя материнской платы и модели ноутбука. Наиболее распространенными клавишами являются <code>Delete</code>, <code>F2</code>, <code>F10</code> или <code>Esc</code>.</p>
+<p>В современных системах с <em>UEFI</em> вход может осуществляться прямо из операционной системы Windows 10 или 11. Для этого перейдите в "Параметры" → "Обновление и безопасность" → "Восстановление" и выберите "Перезагрузить сейчас" в разделе особых вариантов загрузки. После перезагрузки выберите: Поиск и устранение неисправностей → Дополнительные параметры → Параметры встроенного ПО UEFI.</p>
+<p>Интерфейсы BIOS могут значительно отличаться. В старых версиях (Award, AMI) используется текстовое меню с синим или серым фоном, управляемое клавиатурой. Новые графические оболочки от <em>ASUS</em>, <em>Gigabyte</em>, <em>MSI</em> поддерживают управление мышью и имеют более интуитивную структуру. Независимо от внешнего вида, логика расположения настроек периферии остается схожей.</p>
+<ul>
+<li>🔍 <strong>Del / F2</strong> — стандартные клавиши для входа на большинстве десктопных ПК.</li>
+<li>🔍 <strong>F10</strong> — часто используется в ноутбуках HP и некоторых стационарных компьютерах.</li>
+<li>🔍 <strong>F1</strong> — характерно для некоторых моделей Lenovo и старых IBM-совместимых систем.</li>
+<li>🔍 <strong>Esc</strong> — может открывать меню загрузки, откуда иногда доступен вход в Setup.</li>
+</ul>
+<p>Если стандартные клавиши не работают, обратите внимание на заставку при включении (POST-экран). Там обычно указывается фраза вроде "Press DEL to enter Setup". В редких случаях, особенно на офисных ноутбуках, вход в расширенные настройки может быть скрыт или требовать ввода пароля администратора.</p>
+
+<h2 id="поиск-раздела-управления-периферией-onboard-devices">Поиск раздела управления периферией (OnBoard Devices)</h2>
+<p>После успешного входа в BIOS необходимо найти раздел, отвечающий за встроенные устройства. Названия вкладок могут варьироваться в зависимости от версии прошивки. Ищите пункты с названиями <code>Integrated Peripherals</code>, <code>Onboard Devices Configuration</code>, <code>Advanced</code> или <code>Chipset</code>. В графических интерфейсах <em>UEFI</em> часто существует отдельный режим "Advanced Mode" (обычно вызывается клавишей F7), где доступны все настройки.</p>
+<p>Внутри выбранного раздела нужно найти подраздел, связанный с сетью. Он может называться <code>OnBoard LAN</code>, <code>LAN Controller</code>, <code>Ethernet Adapter</code> или содержать название чипсета, например, <em>Realtek PCIe GBE Family Controller</em>. Для беспроводных модулей ищите пункты <code>Wi-Fi Controller</code>, <code>Wireless LAN</code> или <code>Bluetooth Device</code>.</p>
+<p>Часто настройки сети вынесены в отдельную группу <code>North Bridge</code> или <code>South Bridge Configuration</code>, особенно на старых материнских платах. Если вы не можете найти нужный параметр, воспользуйтесь поиском по настройкам, если ваш BIOS поддерживает эту функцию (часто вызывается сочетанием Ctrl+F или через иконку лупы).</p>
+<div class="attention-box attention-info"><div><strong>📊 Какой у вас интерфейс BIOS?</strong><ul><li>Классический синий (текстовый)</li><li>Графический UEFI (мышь)</li><li>Не знаю / Не видел</li><li>Только командная строка</li></ul></div></div>
+<p>Будьте внимательны: на некоторых материнских платах настройки LAN и Audio объединены в один блок <code>Super IO Configuration</code>. Отключение одного параметра не должно влиять на другой, но визуально они могут находиться рядом. Убедитесь, что вы изменяете именно параметр, относящийся к <strong>сетевому контроллеру</strong>.</p>
+
+<h2 id="активация-сетевого-адаптера-и-настройка-параметров">Активация сетевого адаптера и настройка параметров</h2>
+<p>Найдя нужный параметр (например, <code>OnBoard LAN Controller</code>), измените его значение. По умолчанию он должен быть установлен в <code>Enabled</code>. Если стоит значение <code>Disabled</code>, переключите его. В некоторых BIOS требуется выбрать конкретный тип протокола или режим работы, например, <code>Auto</code> или <code>Full Duplex</code>, но для базовой активации достаточно простого включения.</p>
+<p>Для пользователей, планирующих использовать компьютер для загрузки операционной системы по сети (актуально для системных администраторов и энтузиастов), важны настройки <strong>PXE Boot</strong>. Параметр <code>LAN Option ROM</code> или <code>PXE Boot to LAN</code> должен быть установлен в <code>Enabled</code>, если требуется загрузка с сетевого сервера. В домашних условиях эту функцию лучше держать выключенной для ускорения старта системы.</p>
+<p>После изменения настроек обязательно сохраните изменения. Обычно для этого используется клавиша <code>F10</code> (Save & Exit) или выбор пункта "Save Changes and Reset" в меню выхода. Компьютер перезагрузится, и изменения вступят в силу. Если настройки не сохранились, проверьте состояние батарейки CMOS на материнской плате.</p>
+<div class="checklist-block"><h4>☑️ Чек-лист активации LAN</h4><label class="check-item"><input type="checkbox"><span>Найти раздел OnBoard Devices</span></label><label class="check-item"><input type="checkbox"><span>Включить OnBoard LAN Controller</span></label><label class="check-item"><input type="checkbox"><span>Проверить статус PXE (по необходимости)</span></label><label class="check-item"><input type="checkbox"><span>Сохранить и выйти (F10)</span></label><label class="check-item"><input type="checkbox"><span>Проверить индикаторы порта</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+<p>В редких случаях, когда в системе установлено несколько сетевых карт (например, встроенная и дополнительная PCI-карта), может потребоваться приоритизация устройств. Убедитесь, что встроенный контроллер не конфликтует с ресурсами других устройств, хотя современные системы <em>Plug-and-Play</em> обычно решают это автоматически.</p>
+
+<h2 id="настройка-wake-on-lan-и-энергосбережения">Настройка Wake-on-LAN и энергосбережения</h2>
+<p>Отдельного внимания заслуживает функция <strong>Wake-on-LAN</strong> (WoL), позволяющая включать компьютер удаленно по сети. Для её работы необходимо не только включить сетевую карту, но и активировать соответствующие параметры питания. В разделе <code>Power Management</code> или <code>APM Configuration</code> найдите пункт <code>Wake on LAN</code>, <code>PME Event Wake Up</code> или <code>Resume by PCI/PCI-E Device</code> и установите значение <code>Enabled</code>.</p>
+<p>Важно понимать, что для корректной работы WoL сетевая карта должна получать питание даже в выключенном состоянии компьютера. Это означает, что блок питания должен поддерживать стандарт ATX, а в настройках Windows в свойствах сетевого адаптера также должно быть разрешено "Включение этого устройства для вывода компьютера из ждущего режима".</p>
+<p>Функции энергосбережения, такие как <em>ErP Ready</em> или <em>EuP 2013</em>, могут блокировать подачу питания на сетевую карту в выключенном состоянии для соответствия экологическим нормам. Если вам нужен Wake-on-LAN, убедитесь, что режим <code>ErP</code> установлен в <code>Disabled</code>.</p>
+<blockquote>⚠️ Внимание: Включение функции Wake-on-LAN может привести к тому, что сетевая карта будет продолжать потреблять электроэнергию, когда компьютер выключен. Убедитесь, что это соответствует вашим требованиям к энергоэффективности.</blockquote>
+<p>Некоторые производители реализуют собственные технологии удаленного управления, которые могут называться иначе. Например, у <em>Intel</em> это может быть связано с технологиями <em>vPro</em> или <em>AMT</em>. В стандартных домашних ПК достаточно базовых настроек PME и Wake on LAN.</p>
+
+<h2 id="таблица常见ых-названий-параметров-в-bios-разных-производителей">Таблица常见ых названий параметров в BIOS разных производителей</h2>
+<p>Разнообразие BIOS велико, и названия одних и тех же функций могут отличаться. Ниже приведена таблица, которая поможет сориентироваться в терминологии различных производителей материнских плат и ноутбуков.</p>
+
+<table>
+<thead>
+<tr>
+<th>Производитель / Тип BIOS</th>
+<th>Название раздела</th>
+<th>Название параметра LAN</th>
+<th>Значение для включения</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AMI BIOS (General)</td>
+<td>Integrated Peripherals</td>
+<td>OnChip LAN Controller</td>
+<td>Enabled</td>
+</tr>
+<tr>
+<td>ASUS UEFI</td>
+<td>Advanced → Onboard Devices</td>
+<td>LAN Controller</td>
+<td>Enabled</td>
+</tr>
+<tr>
+<td>Gigabyte</td>
+<td>Peripherals / Chipset</td>
+<td>Onboard LAN</td>
+<td>Enabled</td>
+</tr>
+<tr>
+<td>MSI</td>
+<td>Settings → Advanced</td>
+<td>Integrated LAN</td>
+<td>Enabled</td>
+</tr>
+<tr>
+<td>Dell / HP Laptops</td>
+<td>Connection / Device Options</td>
+<td>LAN / Ethernet</td>
+<td>On / Checked</td>
+</tr>
+</tbody>
+</table>
+
+<p>Используйте эту таблицу как справочник. Если точного совпадения нет, ищите синонимы. Ключевые слова: <code>LAN</code>, <code>Ethernet</code>, <code>Network</code>, <code>Controller</code>. В ноутбуках бизнес-класса (Dell Latitude, HP EliteBook) настройки могут быть скрыты в разделе <code>System Configuration</code>.</p>
+<details class="faq-item"><summary>Что делать, если параметра LAN нет в списке?</summary><div class="faq-answer"><p>Если вы перепробовали все разделы и не нашли настройки LAN, возможно, ваша материнская плата не имеет встроенного сетевого контроллера (редко для ПК, но бывает в специфических промышленных платах) или контроллер вышел из строя физически. Также параметр может быть скрыт в режиме "Simple Mode" BIOS — переключитесь в "Advanced Mode".</p></div></details>
+<p>В некоторых случаях, особенно после обновления BIOS, настройки могут сброситься, и раздел с периферией может быть переименован или перемещен разработчиками прошивки. Всегда проверяйте актуальную документацию к вашей конкретной модели платы, если стандартные пути не работают.</p>
+
+<h2 id="устранение-неполадок-и-проверка-результата">Устранение неполадок и проверка результата</h2>
+<p>После выхода из BIOS и загрузки операционной системы необходимо убедиться, что изменения применились. Посмотрите на заднюю панель системного блока: рядом с портом RJ-45 должны загореться светодиодные индикаторы (обычно зеленый и желтый/оранжевый). Их наличие свидетельствует о физическом контакте и исправности контроллера.</p>
+<p>В операционной системе откройте Диспетчер устройств (<code>devmgmt.msc</code>). В разделе "Сетевые адаптеры" должен появиться ваш контроллер без знаков предупреждения. Если устройство появилось, но работает неправильно, попробуйте удалить его из списка и нажать "Обновить конфигурацию оборудования".</p>
+<p>Если сетевая карта все равно не определяется, попробуйте выполнить полный сброс настроек BIOS (<code>Load Optimized Defaults</code>). Иногда конфликтующие параметры разгона или таймингов памяти могут блокировать работу периферийных шин, к которым подключен сетевой контроллер.</p>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте командную строку для быстрой проверки: введите "ipconfig". Если вы видите адаптер Ethernet с IP-адресом (не 169.254.x.x), значит, карта включена и работает корректно.</p></div>
+<p>В крайнем случае, если программные методы не помогают, проблема может быть аппаратной. Сетевой контроллер мог сгореть из-за грозы или скачка напряжения. В таком случае единственным решением остается установка дискретной сетевой карты в слот PCI-E или использование внешнего USB-LAN адаптера.</p>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+<details>
+<summary>Можно ли включить сетевую карту, если она физически сгорела?</summary>
+<p>Нет, программная активация в BIOS возможна только для исправного оборудования. Если чип сетевого контроллера вышел из строя, настройки BIOS не помогут, потребуется замена компонента или установка внешней карты.</p>
+</details>
+<details>
+<summary>Почему после включения в BIOS Windows пишет "Устройство не запущено (код 10)"?</summary>
+<p>Это указывает на конфликт драйверов или аппаратный сбой. Попробуйте полностью удалить устройство из Диспетчера устройств, выключить компьютер, отключить питание на 10 секунд, а затем включить снова. Если не поможет — обновите драйверы с сайта производителя.</p>
+</details>
+<details>
+<summary>Влияет ли отключение LAN в BIOS на скорость Wi-Fi?</summary>
+<p>Нет, это независимые модули. Отключение проводного контроллера (<code>OnBoard LAN</code>) никак не повлияет на работу беспроводного адаптера (<code>Wi-Fi</code>), если только они не используют общую шину, что крайне редко вызывает конфликты в современных системах.</p>
+</details>
+<details>
+<summary>Как включить сетевую карту на ноутбуке, если в BIOS нет настроек?</summary>
+<p>На многих ноутбуках настройки периферии скрыты или заблокированы производителем. Попробуйте использовать комбинации функциональных клавиш (например, <code>Fn + F2</code> или специальная кнопка на корпусе) для включения сетевых интерфейсов.</p>
+</details>
+<details>
+<summary>Безопасно ли менять настройки BIOS, если я не опытный пользователь?</summary>
+<p>Изменение одного параметра (включение LAN) безопасно. Однако не меняйте другие неизвестные настройки, особенно связанные с напряжением или частотами. Если система перестанет загружаться, сбросьте BIOS перемычкой или вынув батарейку.</p>
+</details>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Успешная активация сетевой карты в BIOS восстанавливает полный контроль над сетевыми подключениями и часто решает проблемы, которые невозможно исправить программными средствами в Windows.</p></div></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#диагностика-и-причины-отключения-сетевого-контроллера">Диагностика и причины отключения сетевого контроллера</a></li><li><a href="#вход-в-biosuefi-и-навигация-по-интерфейсу">Вход в BIOS/UEFI и навигация по интерфейсу</a></li><li><a href="#поиск-раздела-управления-периферией-onboard-devices">Поиск раздела управления периферией (OnBoard Devices)</a></li><li><a href="#активация-сетевого-адаптера-и-настройка-параметров">Активация сетевого адаптера и настройка параметров</a></li><li><a href="#настройка-wake-on-lan-и-энергосбережения">Настройка Wake-on-LAN и энергосбережения</a></li><li><a href="#таблица常见ых-названий-параметров-в-bios-разных-производителей">Таблица常见ых названий параметров в BIOS разных производителей</a></li><li><a href="#устранение-неполадок-и-проверка-результата">Устранение неполадок и проверка результата</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-ustanovit-na-passport-android-11.html" class="related-card">Как установить Android 11 на Passport: полная инструкция</a></li><li><a href="/a/articles/p/pa/packard-bell-en-tm-98-obnovlenie-biosa.html" class="related-card">Packard Bell EN TM98: обновление BIOS и решение проблем</a></li><li><a href="/a/articles/i/ic/icl-noutbuki-bios-kak-zajti.html" class="related-card">ICL ноутбуки BIOS: как зайти и настроить параметры системы</a></li><li><a href="/a/articles/k/ka/kak-podklyuchit-okko-cherez-sber-prajm-na-telefone-onlajn-besplatno-na.html" class="related-card">Как подключить Okko через СберПрайм: бесплатно на TV и телефоне</a></li><li><a href="/a/articles/k/ka/kak-najti-zaryadku-ot-telefona-doma.html" class="related-card">Как найти зарядку от телефона дома: лучшие лайфхаки</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-ustanovit-na-passport-android-11.html" class="related-bottom-card"><span class="related-bottom-title">Как установить Android 11 на Passport: полная инструкция</span><span class="related-bottom-desc">Подробная инструкция по установке Android 11 на BlackBerry Passport. Разблокировка загрузчика, проши</span></a><a href="/a/articles/p/pa/packard-bell-en-tm-98-obnovlenie-biosa.html" class="related-bottom-card"><span class="related-bottom-title">Packard Bell EN TM98: обновление BIOS и решение проблем</span><span class="related-bottom-desc">Подробная инструкция по обновлению BIOS для ноутбука Packard Bell EN TM98. Скачать прошивку, провери</span></a><a href="/a/articles/i/ic/icl-noutbuki-bios-kak-zajti.html" class="related-bottom-card"><span class="related-bottom-title">ICL ноутбуки BIOS: как зайти и настроить параметры системы</span><span class="related-bottom-desc">Полная инструкция: как войти в BIOS на ноутбуках ICL (КПО). Секретные комбинации клавиш, решение про</span></a><a href="/a/articles/k/ka/kak-podklyuchit-okko-cherez-sber-prajm-na-telefone-onlajn-besplatno-na.html" class="related-bottom-card"><span class="related-bottom-title">Как подключить Okko через СберПрайм: бесплатно на TV и телефоне</span><span class="related-bottom-desc">Полная инструкция: как активировать Okko по подписке СберПрайм бесплатно. Настройка на Smart TV, And</span></a><a href="/a/articles/k/ka/kak-najti-zaryadku-ot-telefona-doma.html" class="related-bottom-card"><span class="related-bottom-title">Как найти зарядку от телефона дома: лучшие лайфхаки</span><span class="related-bottom-desc">Потеряли зарядное устройство? Узнайте, как найти зарядку от телефона дома с помощью простых и эффект</span></a><a href="/a/articles/b/br/brelok-dlya-telefona-kak-pricepit-esli-net-razema.html" class="related-bottom-card"><span class="related-bottom-title">Как прицепить брелок к телефону без разъема: 5 решений</span><span class="related-bottom-desc">Ищете способ закрепить брелок на смартфоне без дырки? Обзор лучших методов: кольца, магниты, чехлы и</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

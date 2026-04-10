@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>IRBIS NB25: Настройка BIOS и сброс пароля — ТехПодсказка</title>
+    <meta name="description" content="Подробная инструкция по входу в BIOS ноутбука IRBIS NB25. Сброс пароля, загрузка с USB и решение проблем с UEFI. Актуальные методы.">
+    <link rel="canonical" href="/a/articles/i/ir/irbis-nb25-nastrojka-bios.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="IRBIS NB25: Настройка BIOS и сброс пароля">
+    <meta property="og:description" content="Подробная инструкция по входу в BIOS ноутбука IRBIS NB25. Сброс пароля, загрузка с USB и решение проблем с UEFI. Актуальные методы.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/mobilnye-os/">Мобильные ОС</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">IRBIS NB25: Настройка BIOS и сброс пароля</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Настройка BIOS на ноутбуке IRBIS NB25: полное руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Работа с низкоуровневыми системами ввода-вывода на бюджетных устройствах часто вызывает вопросы даже у опытных пользователей. Ноутбуки марки <em>IRBIS</em>, в частности модель <em>NB25</em>, базируются на специфических аппаратных платформах, которые требуют особого подхода при конфигурировании. Стандартные методы входа, привычные по стационарным ПК или технике других брендов, здесь могут не сработать с первого раза.</p>
+
+<p>Понимание архитектуры <strong>UEFI</strong> и особенностей загрузчика критически важно для успешной установки операционной системы или диагностики неисправностей. Владельцам устройств на базе процессоров <em>Intel Atom</em> или <em>Celeron</em> необходимо учитывать нюансы работы сенсорного экрана в режиме предзагрузки. Отсутствие физической клавиатуры в некоторых комплектациях также вносит свои коррективы в процесс настройки.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какая у вас основная проблема с BIOS IRBIS?</strong><ul><li>Не могу войти в меню</li><li>Забыл пароль</li><li>Не видит загрузочную флешку</li><li>Нужно сбросить настройки</li></ul></div></div>
+
+<p>В данном руководстве мы разберем все доступные способы доступа к скрытым меню конфигурации. Мы рассмотрим программные методы сброса настроек через операционную систему Windows и аппаратные решения для экстренных случаев. <mark>Ключевым моментом для модели NB25 является использование комбинации клавиш громкости вместе с кнопкой питания, так как стандартная клавиша Del или F2 часто неактивна при старте.</mark></p>
+
+<h2>Особенности архитектуры BIOS на устройствах IRBIS</
+
+<p>Бюджетные ноутбуки, такие как <em>IRBIS NB25</em>, часто построены на платформе <strong>Intel Bay Trail</strong> или аналогичных решениях. Это означает, что классический BIOS здесь заменен на <strong>UEFI</strong> (Unified Extensible Firmware Interface). Данная технология обеспечивает более быструю загрузку и поддержку современных стандартов безопасности, но меняет логику взаимодействия с пользователем.</p>
+
+<p>Интерфейс управления может быть полностью скрыт от пользователя производителем для упрощения эксплуатации устройства. В таких случаях доступ к расширенным настройкам возможен только через специальные скрипты или комбинации, активируемые до загрузки ядра ОС. Важно понимать разницу между режимом Legacy и UEFI, так как <em>NB25</em> по умолчанию ориентирован на работу с современными загрузчиками.</p>
+
+<p>Отсутствие привычного логотипа производителя при старте или его крайне короткое отображение — нормальное явление для этой серии. <strong>Fast Boot</strong> (быстрая загрузка) часто включена по умолчанию, что сокращает время, отведенное на опрос клавиатуры. Именно поэтому тайминг нажатия клавиш становится критическим фактором успеха.</p>
+
+<ul>
+<li>🔍 Использование интерфейса UEFI вместо классического BIOS Legacy.</li>
+<li>⚡ Активированный по умолчанию режим быстрой загрузки, сокращающий время отклика.</li>
+<li>📱 Зависимость от состояния сенсорного экрана и драйверов HID при входе в меню.</li>
+</ul>
+
+<h2>Способы входа в меню настройки BIOS</
+
+<p>Существует несколько проверенных методов активации меню конфигурации на ноутбуке <em>IRBIS NB25</em>. Самый распространенный способ требует полной выключения устройства, а не просто перехода в режим сна. После выключения необходимо зажать определенную комбинацию клавиш и только потом нажать кнопку включения, удерживая их все вместе несколько секунд.</p>
+
+<p>Основная комбинация для входа обычно включает в себя клавишу увеличения громкости (<code>Vol+</code>) и кнопку питания. Нажимать их нужно одновременно и удерживать до появления логотипа или меню выбора действия. Если этот метод не срабатывает, попробуйте использовать внешнюю USB-клавиатуру и стандартную клавишу <code>F2</code> или <code>Delete</code>, хотя вероятность успеха ниже.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка перед входом в BIOS</h4><label class="check-item"><input type="checkbox"><span>Ноутбук полностью выключен (не в спящем режиме)</span></label><label class="check-item"><input type="checkbox"><span>Заряд батареи выше 30%</span></label><label class="check-item"><input type="checkbox"><span>Подключена внешняя клавиатура (если своя не работает)</span></label><label class="check-item"><input type="checkbox"><span>Палец готов к кнопке Vol+</span></label><label class="check-item"><input type="checkbox"><span></span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+
+<p>Иногда вход в настройки возможен непосредственно из операционной системы Windows 10 или 11. Для этого нужно перейти в параметры обновления и восстановления, выбрав вариант загрузки в режиме диагностики. Этот метод наиболее надежен, если клавиатура в режиме предзагрузки работает некорректно или залипает.</p>
+
+<blockquote>⚠️ Внимание: При входе в настройки через программный перезагруз в Windows, не выбирайте пункт "Продолжить", иначе система загрузится в обычном режиме. Необходимо выбрать "Поиск и устранение неисправностей".</blockquote>
+
+<h2>Навигация и основные разделы меню</
+
+<p>После успешного входа вы можете столкнуться с интерфейсом, управление которым осуществляется не только клавиатурой, но и тачскрином. Меню часто разделено на несколько вкладок, таких как <strong>Main</strong>, <strong>Boot</strong>, <strong>Security</strong> и <strong>Save & Exit</strong>. Навигация между пунктами может осуществляться стрелками или касанием экрана, в зависимости от версии прошивки.</p>
+
+<p>В разделе <code>Boot</code> находится приоритет загрузочных устройств. Здесь можно изменить порядок, поставив USB-накопитель или сетевую загрузку первым пунктом. Также здесь часто скрывается настройка <strong>Secure Boot</strong>, которую необходимо отключать для установки альтернативных операциных систем или старых версий Windows.</p>
+
+<p>Раздел <code>Security</code> отвечает за установку паролей на вход в BIOS и на загрузку системы. Будьте осторожны при изменении этих параметров, так как восстановление доступа без пароля на некоторых моделях <em>IRBIS</em> требует разборки устройства. Вкладка <code>Chipset</code> или <code>Advanced</code> может содержать настройки управления питанием процессора и портов USB.</p>
+
+<ul>
+<li>📂 <strong>Main</strong>: Информация о системе, времени и версии прошивки.</li>
+<li>🚀 <strong>Boot</strong>: Управление очередью загрузки и режимом UEFI/Legacy.</li>
+<li>🔒 <strong>Security</strong>: Установка и сброс паролей администратора и пользователя.</li>
+</ul>
+
+<h2>Конфигурация загрузки и установка ОС</
+
+<p>Для установки операционной системы с флешки необходимо правильно подготовить носитель и настроить приоритет в BIOS. Флешка должна быть отформатирована в файловой системе FAT32 для совместимости с режимом UEFI, который использует <em>IRBIS NB25</em>. Если ваш установочный носитель создан в формате NTFS, система может его просто не увидеть.</p>
+
+<p>В меню загрузки (<code>Boot Option #1</code>) следует выбрать ваше USB-устройство. Если в списке нет названия флешки, а только "Windows Boot Manager", попробуйте пересоздать загрузочный носитель с поддержкой UEFI. Иногда требуется отключить функцию <strong>Secure Boot</strong> в разделе безопасности, чтобы разрешить загрузку неподписанных цифровыми ключами Microsoft дистрибутивов.</p>
+
+<details class="faq-item"><summary>Почему BIOS не видит флешку?</summary><div class="faq-answer"><p>Часто проблема кроется в схеме разделов. Для UEFI обязателен стиль разметки GPT. Если флешка размечена как MBR, но отформатирована в FAT32, некоторые реализации BIOS могут игнорировать её. Используйте утилиты вроде Rufus, выбирая целевую систему "UEFI (non CSM)".</!--WIDGET:spoiler</p></div></details>
+
+<p>После выбора загрузочного устройства сохраните изменения, обычно это делается клавишей <code>F10</code> или выбором пункта <code>Save Changes and Exit</code>. Ноутбук перезагрузится, и должен начаться процесс установки ОС. Если этого не происходит, проверьте порт подключения: некоторые порты USB 3.0 могут не поддерживаться на этапе предзагрузки без специальных драйверов.</p>
+
+<blockquote>⚠️ Внимание: Отключение Secure Boot может привести к невозможности загрузки оригинальной Windows, если она была установлена с включенной проверкой подписи. Верните настройку в исходное состояние после установки другой ОС.</blockquote>
+
+<h2>Сброс настроек и паролей BIOS</
+
+<p>Если система работает нестабильно или были внесены ошибочные изменения, рекомендуется выполнить сброс настроек к заводским значениям. В меню BIOS это опция <code>Restore Defaults</code> или <code>Load Optimized Defaults</code>. Это действие вернет все параметры таймингов памяти и частот процессора к безопасным значениям, определенным производителем.</p>
+
+<p>Ситуация с забытым паролем на <em>IRBIS NB25</em> решается сложнее. Программного сброса через меню, естественно, не существует. Единственным эффективным программным методом является извлечение питающей батарейки CMOS, однако в ультрабуках она часто запаяна или труднодоступна. В некоторых случаях помогает разрядка статического электричества: отключите зарядное устройство, выньте батарею (если съемная) и удерживайте кнопку питания 30-40 секунд.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если вы планируете продавать ноутбук, обязательно снимите пароль BIOS. Устройство с заблокированным BIOS теряет до 50% своей рыночной стоимости, так как новый владелец не сможет изменить приоритет загрузки.</p></div>
+
+<p>Для аппаратного сброса пароля на платах <em>Intel Bay Trail</em> иногда работает метод замыкания контактов на материнской плате, но это требует точной схемы конкретного ревизии материнской платы, которая у <em>IRBIS</em> может меняться от партии к партии. Без навыков работы с паяльником и мультиметром лезть внутрь устройства рискованно.</p>
+
+<h2>Решение типичных проблем и ошибок</
+
+<p>Одной из частых проблем является циклическая перезагрузка или зависание на логотипе после изменения настроек. Это может указывать на конфликт режимов работы SATA или несовместимость установленной оперативной памяти (если модель допускает замену). В первую очередь попробуйте сбросить BIOS описанным выше способом.</p>
+
+<p>Если ноутбук <em>NB25</em> не видит жесткий диск в BIOS, проверьте физическое подключение шлейфа. На бюджетных моделях контакты могут окисляться или отходить при падении. Также стоит проверить, не включен ли режим AHCI, если вы пытаетесь запустить очень старую ОС, требующую режим IDE (хотя современные системы работают только с AHCI).</p>
+
+<table>
+<thead>
+<tr>
+<th>Симптом</th>
+<th>Возможная причина</th>
+<th>Метод решения</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Черный экран при включении</td>
+<td>Сбой видеодрайвера или BIOS</td>
+<td>Подключить внешний монитор через HDMI</td>
+</tr>
+<tr>
+<td>Не работает тачскрин в BIOS</td>
+<td>Отсутствие драйверов в UEFI</td>
+<td>Использовать внешнюю USB-мышь</td>
+</tr>
+<tr>
+<td>Ошибка Boot Device Not Found</td>
+<td>Неверный приоритет загрузки</td>
+<td>Изменить порядок в разделе Boot</td>
+</tr>
+<tr>
+<td>Сбивается время и дата</td>
+<td>Разряжена батарея CMOS</td>
+<td>Замена элемента питания на плате</td>
+</tr>
+</tbody>
+</table>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Стабильность работы IRBIS NB25 напрямую зависит от версии прошивки BIOS. Перед серьезными изменениями конфигурации проверьте наличие обновлений на официальном сайте производителя.</p></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Можно ли обновить BIOS на IRBIS NB25 через флешку?</summary>
+<p>Обновление BIOS на данных моделях возможно только если производитель выпустил специальный исполняемый файл для Windows или утилиту для DOS. Прошивка через стандартное меню BIOS с флешки (Flash BIOS) на этих устройствах обычно не предусмотрена. Попытка прошить биос от другой модели приведет к необратимому выходу платы из строя.</p>
+</details>
+
+<details>
+<summary>Почему не работает клавиатура при входе в BIOS?</summary>
+<p>Это распространенная проблема с драйверами HID в режиме UEFI. Попробуйте подключить клавиатуру через USB-хаб или в другой порт. Если у вас модель только с тачскрином, убедитесь, что вы не используете режим совместимости, который может отключать сенсор. Иногда помогает переподключение клавиатуры уже после появления логотипа, но до загрузки меню.</p>
+</details>
+
+<details>
+<summary>Как отключить Secure Boot без входа в BIOS?</summary>
+<p>В некоторых случаях отключить Secure Boot можно через реестр Windows или командную строку с правами администратора, используя утилиту <code> mokutil</code> (для Linux) или специальные скрипты, но на устройствах <em>IRBIS</em> с закрытым bootloader это редко работает. Надежнее всего использовать вход через "Параметры восстановления" Windows 10/11.</p>
+</details>
+
+<details>
+<summary>Что делать, если после сброса BIOS пропал звук?</summary>
+<p>Сброс настроек мог активировать внутренний динамик вместо выхода на наушники или изменить устройство вывода по умолчанию. Проверьте настройки звука в Windows. Если звук пропал полностью, возможно, в BIOS был изменен режим работы аудиокодека, попробуйте обновить драйверы с сайта производителя чипсета.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-otkryt-nastrojki-android-cherez-brauzer.html" class="related-card">Как открыть настройки Android через браузер: ADB и веб-интерфейсы</a></li><li><a href="/a/articles/d/de/depo-vip-c1530-parol-biosa.html" class="related-card">Depo VIP C1530: сброс пароля BIOS и вход в настройки</a></li><li><a href="/a/articles/k/ka/kak-otklyuchit-mnogostranichnyj-rezhim-na-telefone-honor.html" class="related-card">Как отключить многостраничный режим на Honor: инструкция</a></li><li><a href="/a/articles/p/pa/packard-bell-easynote-te11hc-bios-update.html" class="related-card">Packard Bell EasyNote TE11HC BIOS Update: Полная инструкция</a></li><li><a href="/a/articles/k/ka/kak-skanirovat-qr-v-telegramm-na-androide.html" class="related-card">Как сканировать QR в Телеграм на Андроид: полная инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-otkryt-nastrojki-android-cherez-brauzer.html" class="related-bottom-card"><span class="related-bottom-title">Как открыть настройки Android через браузер: ADB и веб-интерфейсы</span><span class="related-bottom-desc">Полная инструкция по удаленному доступу к системе Android через браузер. Методы ADB, Scrcpy, TeamVie</span></a><a href="/a/articles/d/de/depo-vip-c1530-parol-biosa.html" class="related-bottom-card"><span class="related-bottom-title">Depo VIP C1530: сброс пароля BIOS и вход в настройки</span><span class="related-bottom-desc">Инструкция по сбросу пароля BIOS на моноблоке Depo VIP C1530. Методы обхода защиты, джамперы, извлеч</span></a><a href="/a/articles/k/ka/kak-otklyuchit-mnogostranichnyj-rezhim-na-telefone-honor.html" class="related-bottom-card"><span class="related-bottom-title">Как отключить многостраничный режим на Honor: инструкция</span><span class="related-bottom-desc">Полное руководство по отключению многостраничного режима на смартфонах Honor. Настройка рабочего сто</span></a><a href="/a/articles/p/pa/packard-bell-easynote-te11hc-bios-update.html" class="related-bottom-card"><span class="related-bottom-title">Packard Bell EasyNote TE11HC BIOS Update: Полная инструкция</span><span class="related-bottom-desc">Актуальный BIOS для Packard Bell EasyNote TE11HC. Скачать прошивку, узнать версию и безопасно обнови</span></a><a href="/a/articles/k/ka/kak-skanirovat-qr-v-telegramm-na-androide.html" class="related-bottom-card"><span class="related-bottom-title">Как сканировать QR в Телеграм на Андроид: полная инструкция</span><span class="related-bottom-desc">Пошаговое руководство по сканированию QR-кодов в Telegram на Android. Узнайте, где находится встроен</span></a><a href="/a/articles/g/gd/gde-korzina-na-telefone-honor.html" class="related-bottom-card"><span class="related-bottom-title">Где корзина на Хонор: как найти и восстановить удаленное</span><span class="related-bottom-desc">Ищете, где корзина на телефоне Хонор? Подробная инструкция по поиску, настройке и восстановлению фай</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Ant Plugins Service на Android: что это и как работает? — ТехПодсказка</title>
+    <meta name="description" content="Подробный разбор Ant Plugins Service на Android. Узнайте, за что отвечает этот системный компонент, безопасен ли он и можно ли его отключить.">
+    <link rel="canonical" href="/a/articles/a/an/ant-plugins-service-chto-eto-za-programma-na-android.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Ant Plugins Service на Android: что это и как работает?">
+    <meta property="og:description" content="Подробный разбор Ant Plugins Service на Android. Узнайте, за что отвечает этот системный компонент, безопасен ли он и можно ли его отключить.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/mobilnye-os/">Мобильные ОС</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Ant Plugins Service на Android: что это и как работает?</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Ant Plugins Service на Android: назначение, функции и безопасность</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#техническое-назначение-и-функции-компонента">Техническое назначение и функции компонента</a></li><li><a href="#влияние-на-производительность-и-расход-батареи">Влияние на производительность и расход батареи</a></li><li><a href="#безопасность-вирус-или-системный-файл">Безопасность: вирус или системный файл?</a></li><li><a href="#можно-ли-отключить-или-удалить-сервис">Можно ли отключить или удалить сервис?</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Многие владельцы смартфонов Xiaomi, Redmi и POCO периодически сталкиваются с уведомлением в настройках приложений или списке запущенных процессов под названием <strong>Ant Plugins Service</strong>. Возникает закономерный вопрос: что это за программа, зачем она нужна и не является ли она вредоносным ПО? Этот системный компонент часто вызывает подозрения у пользователей, которые внимательно следят за расходом батареи или потреблением трафика.</p>
+
+<p>На самом деле <em>Ant Plugins Service</em> — это легитимный системный процесс, связанный с оболочкой MIUI и встроенным антивирусом от <em>Avast</em> или <em>AVL</em>, который предустановлен на устройствах китайского производителя. Он отвечает за проверку безопасности подключаемых плагинов, сканирование файлов в реальном времени и обеспечение работы различных модулей защиты системы. Без него функционирование встроенного сканера вирусов было бы невозможным.</p>
+
+<p>В этой статье мы детально разберем техническое назначение данного сервиса, проанализируем его влияние на производительность смартфона и ответим на главный вопрос: стоит ли пытаться его отключить. Понимание работы фоновых процессов — ключ к грамотному управлению ресурсами вашего <em>Android</em>-устройства.</p>
+
+<h2 id="техническое-назначение-и-функции-компонента">Техническое назначение и функции компонента</h2>
+
+<p>Сервис <strong>Ant Plugins Service</strong> представляет собой фоновую службу, которая интегрирована глубоко в системные файлы операционной системы. Его основная задача заключается в координации работы плагинов антивирусного движка. Когда вы скачиваете файл из интернета или устанавливаете новое приложение, именно этот процесс инициирует их проверку на наличие угроз. Он действует как посредник между файловой системой и антивирусным ядром.</p>
+
+<p>Кроме того, данный компонент отвечает за обновление антивирусных баз данных. Периодически система связывается с серверами безопасности, чтобы получить информацию о новых вирусах и уязвимостях. <mark>Ant Plugins Service использует порт 80 или 443 для безопасной передачи данных о сигнатурах вирусов, но не передает личные файлы пользователя.</mark> Это критически важный аспект для обеспечения актуальности защиты вашего устройства.</p>
+
+<p>Также сервис мониторит поведение других установленных приложений. Если какая-то программа пытается получить доступ к敏感тельным данным (контакты, SMS, местоположение) без ведома пользователя, <strong>Ant Plugins Service</strong> может заблокировать это действие или отправить уведомление. Он работает в тесной связке с системным процессом <code>SecurityCenter</code>, обеспечивая комплексную защиту.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Попытка удалить системные файлы, связанные с этим сервисом, без root-прав невозможна, а с правами суперпользователя может привести к нестабильной работе оболочки MIUI и потере гарантии.</p>
+</blockquote>
+
+<p>Важно понимать, что этот процесс не является независимым приложением, которое можно просто "выключить" через стандартный интерфейс. Это часть экосистемы безопасности, разработанной производителем смартфона. Отключение может привести к тому, что встроенный антивирус перестанет реагировать на новые угрозы.</p>
+
+<h2 id="влияние-на-производительность-и-расход-батареи">Влияние на производительность и расход батареи</h2>
+
+<p>Один из самых частых вопросов, который задают пользователи: почему <strong>Ant Plugins Service</strong> так сильно расходует заряд батареи? В нормальном режиме работы этот процесс потребляет минимальное количество энергии, активируясь лишь при сканировании новых файлов или обновлении баз. Однако бывают ситуации, когда сервис "зависает" в цикле постоянной проверки, что приводит к нагреву корпуса и быстрому разряду.</p>
+
+<p>Чаще всего повышенное потребление ресурсов наблюдается сразу после крупного обновления системы или установки большого количества приложений. В этот момент <em>Ant Plugins Service</em> проводит глубокое сканирование всей файловой системы. Если вы заметили, что процесс грузит процессор постоянно, это может свидетельствовать о конфликте с другим приложением или повреждении системных файлов.</p>
+
+<p>Рассмотрим основные симптомы некорректной работы сервиса:</p>
+<ul>
+    <li>🔋 Резкое снижение автономности смартфона в режиме ожидания.</li>
+    <li>🔥 Нагрев задней панели устройства даже без активных действий пользователя.</li>
+    <li>⚙️ Замедление работы интерфейса и лаги при запуске приложений.</li>
+    <li>📉 Постоянная активность сети в фоновом режиме.</li>
+</ul>
+
+<p>Если вы столкнулись с подобными проблемами, не стоит сразу паниковать. Часто помогает простая перезагрузка устройства или очистка кэша приложения "Безопасность". В редких случаях требуется сброс настроек до заводских, но это крайняя мера.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Замечали ли вы высокий расход батареи из-за системных процессов?</strong><ul><li>Да, телефон греется</li><li>Иногда разряжается быстрее</li><li>Нет, все работает нормально</li><li>Не слежу за статистикой</li></ul></div></div>
+
+<h2 id="безопасность-вирус-или-системный-файл">Безопасность: вирус или системный файл?</h2>
+
+<p>Многие пользователи, видя неизвестное название процесса, сразу предполагают худшее. Однако <strong>Ant Plugins Service</strong> — это не вирус, а необходимый компонент защиты. Его наличие подтверждается цифровой подписью производителя устройства (<em>Xiaomi Inc.</em>). Вредоносные программы, наоборот, часто маскируются под системные процессы, но они не могут внедриться в защищенный раздел системы без прав root.</p>
+
+<p>Чтобы убедиться в легитимности процесса, можно проверить его свойства в настройках разработчика или через специальные улиты вроде <em>My Android Tools</em>. Оригинальный файл обычно расположен в директории <code>/system/priv-app/SecurityCenter/</code> или смежных системных папках. Если файл находится в пользовательском разделе <code>/data/app/</code>, это повод для беспокойства.</p>
+
+<p>Ниже приведена таблица, сравнивающая нормальное поведение сервиса и признаки заражения:</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Параметр</th>
+            <th>Нормальное состояние</th>
+            <th>Признаки проблемы / Вируса</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Расположение файла</td>
+            <td>Системный раздел (/system)</td>
+            <td>Папка пользователя (/data)</td>
+        </tr>
+        <tr>
+            <td>Расход CPU</td>
+            <td>Кратковременные всплески</td>
+            <td>Постоянная нагрузка 20-50%</td>
+        </tr>
+        <tr>
+            <td>Сетевая активность</td>
+            <td>Периодические обновления</td>
+            <td>Постоянная передача данных</td>
+        </tr>
+        <tr>
+            <td>Права доступа</td>
+            <td>Системные привилегии</td>
+            <td>Запрос подозрительных разрешений</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>Встроенный в MIUI антивирус регулярно проверяет сам себя на целостность. Если система обнаруживает модификации в файлах <strong>Ant Plugins Service</strong>, она может потребовать восстановление исходной версии или перезагрузку.</p>
+
+<h2 id="можно-ли-отключить-или-удалить-сервис">Можно ли отключить или удалить сервис?</h2>
+
+<p>Теоретически, отключить <strong>Ant Plugins Service</strong> можно, но сделать это стандартными средствами системы не получится. Кнопка "Отключить" в меню приложений обычно неактивна (затенена). Это сделано специально, чтобы пользователи случайно не оставили свой смартфон без защиты. Для принудительного отключения требуются более сложные манипуляции.</p>
+
+<p>Существует несколько способов воздействия на этот процесс, ranging от безопасных до радикальных:</p>
+<ul>
+    <li>🛑 Остановка через настройки приложений (временная мера, процесс запустится снова).</li>
+    <li>🔧 Отключение через ADB (требует компьютер и кабель).</li>
+    <li>🔓 Удаление через Root-права (высокий риск поломки системы).</li>
+    <li>⚙️ Отключение антивируса в настройках безопасности (частичное решение).</li>
+</ul>
+
+<p>Наиболее безопасный метод для обычного пользователя — это отключение автоматической проверки в настройках</div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#техническое-назначение-и-функции-компонента">Техническое назначение и функции компонента</a></li><li><a href="#влияние-на-производительность-и-расход-батареи">Влияние на производительность и расход батареи</a></li><li><a href="#безопасность-вирус-или-системный-файл">Безопасность: вирус или системный файл?</a></li><li><a href="#можно-ли-отключить-или-удалить-сервис">Можно ли отключить или удалить сервис?</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/v/v-/v-noutbukah-iru-kalibr-ochen-primitivnyj-bios-kak-ego-pomenyat.html" class="related-card">BIOS ноутбуков IRU: обновление, калибровка и замена ПО</a></li><li><a href="/a/articles/k/ka/kak-udalit-polnostyu-android-auto-c-syaomi-14t.html" class="related-card">Как удалить Android Auto с Xiaomi 14T: Полная инструкция</a></li><li><a href="/a/articles/s/st/stb-sml-482-base-proshit-android.html" class="related-card">STB SML-482 Base: прошивка Android TV Box пошагово</a></li><li><a href="/a/articles/k/ka/kak-sozdat-papku-na-rabochem-stole-android-oppo.html" class="related-card">Как создать папку на рабочем столе OPPO: полная инструкция</a></li><li><a href="/a/articles/k/ka/kak-podklyuchit-ik-naushniki-rendg-range-rover-kak-podklyuchit-k-telefonu.html" class="related-card">Как подключить ИК-наушники к Range Rover: полная инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/v/v-/v-noutbukah-iru-kalibr-ochen-primitivnyj-bios-kak-ego-pomenyat.html" class="related-bottom-card"><span class="related-bottom-title">BIOS ноутбуков IRU: обновление, калибровка и замена ПО</span><span class="related-bottom-desc">Как обновить или заменить BIOS на ноутбуках IRU. Инструкция по прошивке, калибровке контроллеров и у</span></a><a href="/a/articles/k/ka/kak-udalit-polnostyu-android-auto-c-syaomi-14t.html" class="related-bottom-card"><span class="related-bottom-title">Как удалить Android Auto с Xiaomi 14T: Полная инструкция</span><span class="related-bottom-desc">Полный гайд по отключению Android Auto на Xiaomi 14T. Сброс настроек, очистка кэша, использование AD</span></a><a href="/a/articles/s/st/stb-sml-482-base-proshit-android.html" class="related-bottom-card"><span class="related-bottom-title">STB SML-482 Base: прошивка Android TV Box пошагово</span><span class="related-bottom-desc">Полная инструкция: как перепрошить STB SML-482 Base на Android. Скачать ПО, выбрать метод (USB/UART)</span></a><a href="/a/articles/k/ka/kak-sozdat-papku-na-rabochem-stole-android-oppo.html" class="related-bottom-card"><span class="related-bottom-title">Как создать папку на рабочем столе OPPO: полная инструкция</span><span class="related-bottom-desc">Узнайте, как создать папку на рабочем столе Андроид OPPO. Пошаговое руководство по ColorOS, группиро</span></a><a href="/a/articles/k/ka/kak-podklyuchit-ik-naushniki-rendg-range-rover-kak-podklyuchit-k-telefonu.html" class="related-bottom-card"><span class="related-bottom-title">Как подключить ИК-наушники к Range Rover: полная инструкция</span><span class="related-bottom-desc">Подробное руководство по подключению беспроводных ИК-наушников к телефону и мультимедиа Range Rover.</span></a><a href="/a/articles/k/ka/kak-ubrat-reklamu-v-dzene-na-telefone.html" class="related-bottom-card"><span class="related-bottom-title">Как убрать рекламу в Дзене на телефоне: все способы 2026</span><span class="related-bottom-desc">Подробный гид: как отключить рекламу в Яндекс Дзене на Android и iPhone. Настройки, блокировщики, ск</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

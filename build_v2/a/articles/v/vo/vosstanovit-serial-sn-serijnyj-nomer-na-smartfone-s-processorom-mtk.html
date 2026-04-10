@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Как восстановить серийный номер (S/N) на MTK: Инструкция — ТехПодсказка</title>
+    <meta name="description" content="Полное руководство по восстановлению IMEI и Serial Number на смартфонах с процессором MediaTek. Методы MTK Engineering Mode, SP Flash Tool и ADB.">
+    <link rel="canonical" href="/a/articles/v/vo/vosstanovit-serial-sn-serijnyj-nomer-na-smartfone-s-processorom-mtk.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как восстановить серийный номер (S/N) на MTK: Инструкция">
+    <meta property="og:description" content="Полное руководство по восстановлению IMEI и Serial Number на смартфонах с процессором MediaTek. Методы MTK Engineering Mode, SP Flash Tool и ADB.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/nastroika-tv/">Настройка ТВ</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как восстановить серийный номер (S/N) на MTK: Инструкция</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Восстановление серийного номера (S/N) на MTK: Полное руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#диагностика-и-подготовка-рабочего-места">Диагностика и подготовка рабочего места</a></li><li><a href="#метод-первый-инженерное-меню-mtk-engineering-mode">Метод первый: Инженерное меню MTK (Engineering Mode)</a></li><li><a href="#использование-sp-flash-tool-и-scatter-файла">Использование SP Flash Tool и Scatter-файла</a></li><li><a href="#ручная-запись-через-mauimeta-или-sn-write-tool">Ручная запись через MauiMeta или SN Write Tool</a></li><li><a href="#восстановление-через-adb-и-терминал-для-root-пользователей">Восстановление через ADB и терминал (для Root-пользователей)</a></li><li><a href="#частые-ошибки-и-способы-их-устранения">Частые ошибки и способы их устранения</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>Потеря или повреждение <strong>серийного номера</strong> (Serial Number) и IMEI на устройствах с процессорами <em>MediaTek</em> — это критическая проблема, превращающая современный смартфон в "кирпич" без доступа к мобильной сети. Часто это происходит после неудачной перепрошивки, сброса разделов NVRAM или экспериментов с правами суперпользователя. Система Android перестает идентифицировать устройство в сети оператора, а в настройках отображаются нули или строка "Null".</p>
+
+<p>Процесс восстановления требует внимательности, так как работа ведется на низком уровне с системными разделами. Вам понадобятся специальные инструменты, драйверы и, желательно, root-права для полного доступа к файловой системе. Игнорирование шагов инструкции может привести к полной неработоспособности модуля связи, поэтому каждое действие должно быть осознанным.</p>
+
+<p>В этом материале мы разберем проверенные способы возврата уникального идентификатора устройства. Мы рассмотрим как программные методы через инженерное меню, так и более глубокие способы с использованием компьютера и утилиты <em>SP Flash Tool</em>. Понимание структуры разделов памяти поможет вам избежать фатальных ошибок.</p>
+
+<h2 id="диагностика-и-подготовка-рабочего-места">Диагностика и подготовка рабочего места</h2>
+<p>Прежде чем приступать к активным действиям, необходимо убедиться в характере проблемы. Если в разделе <code>Настройки → О телефоне</code> вместо цифр вы видите прочерки или нули, а при наборе кода <code>*#06#</code> IMEI отсутствует, значит, раздел NVRAM поврежден. Это хранилище содержит не только серийные номера, но и калибровочные данные радиомодуля.</p>
+
+<p>Для успешного проведения операции вам потребуется компьютер под управлением Windows, так как большинство драйверов и утилит заточены именно под эту ОС. Также критически важно установить оригинальный USB-кабель, способный передавать данные, а не только заряжать аккумулятор. Дешевые кабели часто становятся причиной таймаута соединения.</p>
+
+<ul>
+<li>📱 Зарядите смартфон минимум до 60-70%, чтобы избежать выключения в критический момент записи данных.</li>
+<li>💻 Установите драйверы <em>MediaTek VCOM USB Driver</em> и <em>ADB/Fastboot drivers</em> на компьютер.</li>
+<li>🔐 Получите Root-права (если они еще не активны) для доступа к системным файлам через терминал.</li>
+<li>📂 Скачайте утилиты: <em>MTK Engineering Mode</em>, <em>SP Flash Tool</em> и <em>MauiMeta</em> или <em>SN Write Tool</em>.</li>
+</ul>
+
+<blockquote>
+<p>⚠️ Внимание: Перед началом любых манипуляций обязательно создайте полный бэкап (NAND backup) текущего состояния устройства через SP Flash Tool. Это единственная возможность вернуться назад, если что-то пойдет не так.</p>
+</blockquote>
+
+<p>Убедитесь, что на устройстве включена отладка по USB. Для этого перейдите в <code>Настройки → О телефоне</code> и семь раз нажмите на номер сборки, чтобы активировать меню разработчика. Затем в появившемся меню <code>Для разработчиков</code> активируйте ползунок <strong>Отладка по USB</strong>.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Сталкивались ли вы с потерей IMEI после прошивки?</strong><ul><li>Да, после кастомной прошивки</li><li>Да, после сброса настроек</li><li>Нет, проблема появилась сама</li><li>Пока только изучаю теорию</li></ul></div></div>
+
+<h2 id="метод-первый-инженерное-меню-mtk-engineering-mode">Метод первый: Инженерное меню MTK (Engineering Mode)</h2>
+<p>Самый простой и безопасный способ, не требующий подключения к компьютеру, — использование встроенного инженерного меню. Этот метод работает, если сам радиомодуль физически исправен, а проблема кроется в программном сбое записи данных. Для запуска приложения можно использовать код <code>*#*#3646633#*#*</code> или установить стороннее приложение <em>MTK Engineering Mode</em> из Play Market.</p>
+
+<p>После входа в меню перейдите на вкладку <strong>Connectivity</strong>, затем выберите <strong>CDS Information</strong>. Здесь нас интересует раздел <em>Radio Information</em>. Если у вас двухсимочный аппарат, выберите <em>Phone1</em> для первой SIM-карты. В открывшемся окне вы увидите набор команд AT, которые отправляются напрямую модему.</p>
+
+<pre><code>AT +EGMR=1,7,"ВАШ_IMEI_1"
+<p>AT +EGMR=1,10,"ВАШ_IMEI_2"</code></pre></p>
+
+<p>Вам необходимо заменить текст в кавычках на ваш реальный IMEI, который обычно указан на коробке или под батареей. Обратите внимание: между командой <code>AT</code> и <code>+EGMR</code> обязательно должен быть пробел. После ввода команды нажмите кнопку <strong>Send AT Command</strong>. Повторите процедуру для второй SIM-карты, используя параметр <code>10</code> вместо <code>7</code>.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если команда не выполняется и возвращает ошибку, попробуйте перезагрузить смартфон в режим полета на 10 секунд, а затем снова включите сеть и повторите попытку.</p></div>
+
+<p>После успешной отправки команд перезагрузите устройство. Проверьте результат, набрав код <code>*#06#</code>. Если цифры появились, проблема решена. Однако этот метод не всегда работает на новых версиях Android (10 и выше), где доступ к AT-командам может быть ограничен производителем.</p>
+
+<ul>
+<li>🔍 Вводите команды внимательно, лишние пробелы или символы приведут к ошибке выполнения.</li>
+<li>🔄 После каждой команды делайте перезагрузку или включайте авиарежим для применения настроек.</li>
+<li>📝 Записывайте свои IMEI заранее, чтобы не искать их в разгар процесса.</li>
+</ul>
+
+<h2 id="использование-sp-flash-tool-и-scatter-файла">Использование SP Flash Tool и Scatter-файла</h2>
+<p>Если инженерное меню недоступно или заблокировано, придется использовать более мощный инструмент — <em>SP Flash Tool</em>. Этот метод подразумевает перепрошивкуเฉพาะ раздела NVRAM или NVDATA. Для работы вам потребуется scatter-файл от вашей конкретной модели смартфона, который можно найти в официальной прошивке или на форумах разработчиков (например, 4PDA).</p>
+
+<p>Запустите SP Flash Tool от имени администратора и загрузите scatter-файл, нажав кнопку <strong>Scatter-loading</strong>. В списке разделов найдите <code>NVRAM</code> или <code>Protect1</code>, <code>Protect2</code>. Снимите галочки со всех разделов, кроме тех, которые содержат данные калибровки и IMEI. Это позволит избежать полной перепрошивки системы и потери личных данных.</p>
+
+<table>
+<thead>
+<tr>
+<th>Раздел</th>
+<th>Описание</th>
+<th>Критичность</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NVRAM</td>
+<td>Хранит IMEI, MAC-адреса Wi-Fi/Bluetooth</td>
+<td>Высокая</td>
+</tr>
+<tr>
+<td>Protect1</td>
+<td>Защищенный раздел с данными калибровки</td>
+<td>Высокая</td>
+</tr>
+<tr>
+<td>Protect2</td>
+<td>Дополнительный защищенный раздел</td>
+<td>Средняя</td>
+</tr>
+<tr>
+<td>System</td>
+<td>Основная операционная система</td>
+<td>Низкая (для этой операции)</td>
+</tr>
+</tbody>
+</table>
+
+<p>Нажмите кнопку <strong>Download</strong> и подключите выключенный смартфон к компьютеру, зажав одну из кнопок громкости (обычно верхнюю). Если драйверы установлены корректно, начнется процесс прошивки выбранных разделов. Успешное завершение обозначается зеленым кругом с галочкой.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Никогда не прошивайте разделы <code>System</code>, <code>Boot</code> или <code>Recovery</code> чужими файлами, если ваша цель — только IMEI. Это может привести к бутлупу (циклической перезагрузке) устройства.</p>
+</blockquote>
+
+<div class="checklist-block"><h4>☑️ Проверка перед прошивкой NVRAM</h4><label class="check-item"><input type="checkbox"><span>Найден Scatter-файл для вашей модели</span></label><label class="check-item"><input type="checkbox"><span>Сняты галочки с системных разделов</span></label><label class="check-item"><input type="checkbox"><span>Батарея заряжена более 50%</span></label><label class="check-item"><input type="checkbox"><span>Установлены драйверы VCOM</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>После прошивки необходимо перезагрузить телефон. В некоторых случаях может потребоваться сброс настроек до заводских (<code>Wipe Data/Factory Reset</code>), чтобы система заново считала обновленные данные из NVRAM. Если IMEI не восстановился, возможно, требуется ручная запись через специализированный софт.</p>
+
+<h2 id="ручная-запись-через-mauimeta-или-sn-write-tool">Ручная запись через MauiMeta или SN Write Tool</h2>
+<p>Для устройств на базе старых версий Android или специфических моделей может потребоваться утилита <em>MauiMeta</em> или <em>SN Write Tool</em>. Эти программы позволяют напрямую взаимодействовать с модемом в режиме мета-режима. Запустите программу и выберите опцию <strong>Reconnect</strong>, затем подключите выключенный телефон, зажав обе кнопки громкости.</p>
+
+<p>В окне программы выберите пункт <strong>IMEI Download</strong> -> <strong>Single IMEI</strong> (или Dual IMEI). В появившиеся поля введите ваши заводские номера. Важно: на некоторых устройствах требуется также ввести MAC-адреса Wi-Fi и Bluetooth, которые можно найти на наклейке под батареей или в документах.</p>
+
+<p>После ввода данных нажмите кнопку <strong>Download to Flash</strong>. Процесс занимает несколько секунд. По завершении программа сообщит об успехе. Отключите устройство и проверьте результат. Этот метод часто является единственным рабочим для телефонов, где раздел NVRAM был полностью затерт.</p>
+
+<ul>
+<li>📡 Убедитесь, что в программе выбран правильный порт COM (можно проверить в Диспетчере устройств).</li>
+<li>🔢 Вводите только цифры, без букв и спецсимволов, если формат не требует иного.</li>
+<li>⏱ Не отключайте кабель до появления сообщения об успешной записи.</li>
+</ul>
+
+<details class="faq-item"><summary>Где взять родные IMEI и MAC-адреса?</summary><div class="faq-answer"><p>Родные данные можно найти на оригинальной коробке устройства, на наклейке под аккумулятором (если он съемный) или в гарантийном талоне. Если коробка утеряна, попробуйте найти фото коробки в облаке или вспомнить, не фотографировали ли вы документы при покупке. Также IMEI иногда сохраняется в аккаунте Google в разделе безопасности устройств.</p></div></details>
+
+<h2 id="восстановление-через-adb-и-терминал-для-root-пользователей">Восстановление через ADB и терминал (для Root-пользователей)</h2>
+<p>Для продвинутых пользователей, имеющих root-права и установленный <em>BusyBox</em>, существует метод прямого редактирования файлов конфигурации. Этот способ требует точности, так как одна ошибка в синтаксисе может нарушить работу модема. Откройте эмулятор терминала на смартфоне или подключитесь через ADB с компьютера.</p>
+
+<p>Введите команду для получения прав суперпользователя: <code>su</code>. Затем необходимо перейти в директорий, где хранятся данные модема. Путь может отличаться в зависимости от модели, но часто это <code>/data/nvdata/WIFI</code> или <code>/persist</code>. Однако прямая правка файлов IMEI в современных версиях Android (начиная с 7.0) затруднена из-за шифрования и защиты разделов.</p>
+
+<pre><code>su
+<p>cd /data/nvdata/md_nvm</p>
+<p># Просмотр содержимого (для опытных)</p>
+<p>ls -l</code></pre></p>
+
+<p>Более безопасный вариант через ADB — использование команды для перезаписи свойств системы, если они не заблокированы производителем. Команда <code>setprop</code> может временно изменить отображаемый номер, но для постоянной записи требуется доступ к NVRAM, что без специнструментов сделать сложно.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Прямое редактирование файлов через терминал эффективно только на старых версиях Android (4.4 - 6.0). На новых системах используйте специализированный софт (MauiMeta).</p></div>
+
+<p>Если вы случайно удалили файл <code>nvdata</code>, восстановление возможно только из резервной копии или перепрошивкой полного дампа NVRAM от точно такой же модели (с одинаковым номером платы). Универсальных файлов NVRAM не существует, так как они содержат уникальные калибровочные данные конкретного радиомодуля.</p>
+
+<h2 id="частые-ошибки-и-способы-их-устранения">Частые ошибки и способы их устранения</h2>
+<p>В процессе восстановления пользователи часто сталкиваются с типичными проблемами. Одна из самых распространенных — ошибка "BROM ERROR" или таймаут при подключении. Это почти всегда указывает на проблему с драйверами или кабелем. Попробуйте другой USB-порт (желательно USB 2.0 сзади системного блока) и оригинальный кабель.</p>
+
+<p>Еще одна проблема — IMEI восстанавливается, но сеть не ловит или постоянно пишет "Нет сети". Это говорит о том, что были утеряны калибровочные данные антенны, которые хранятся в том же разделе NVRAM. В этом случае помогает только поиск и прошивка полного бэкапа NVRAM от идентичного донора (той же модели и ревизии платы).</p>
+
+<ul>
+<li>❌ Ошибка "S_BROM_CMD_STARTCMD_FAIL": Телефон не в том режиме. Переподключите, зажав кнопки громкости.</li>
+<li>❌ Ошибка "STATUS_NVRAM_GET_WIFI_FILE_FAIL": Проблема с правами доступа или отсутствием файла scatter.</li>
+<li>❌ IMEI не сохраняется после перезагрузки: Скорее всего, раздел NVRAM поврежден физически или заблокирован.</li>
+</ul>
+
+<blockquote>
+<p>⚠️ Внимание: Использование чужого IMEI (например, взятого из интернета) является незаконным во многих странах и может привести к блокировке устройства оператором связи. Используйте только свои заводские номера.</p>
+</blockquote>
+
+<p>Если ничего не помогает, возможно, повреждена сама микросхема памяти или радиомодуль. В таком случае программные методы бессильны, и потребуется обращение в сервисный центр для пайки или замены компонентов.</p>
+
+<h2 id="faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</h2>
+<details>
+<summary>Можно ли восстановить IMEI без root-прав?</summary>
+<p>Да, в большинстве случаев root-права не нужны, если вы используете методы через SP Flash Tool или инженерное меню (режим Meta). Эти инструменты работают на уровне загрузчика или модема, куда доступ открыт по умолчанию для сервисного обслуживания.</p>
+</details>
+
+<details>
+<summary>Безопасно ли использовать программы для смены IMEI?</summary>
+<p>Использование таких программ несет риски. Помимо возможности "окирпичить" устройство при ошибке, изменение IMEI на чужой номер может быть расценено как незаконное действие. Всегда используйте только свой оригинальный номер, указанный на коробке.</p>
+</details>
+
+<details>
+<summary>Почему после прошивки пропал серийный номер?</summary>
+<p>Часто это происходит из-за использования "чистой" прошивки без сервисных разделов или ошибки при перепрошивке, когда был выбран пункт "Format All + Download", что стирает весь NVRAM. Всегда делайте бэкап перед такими операциями.</p>
+</details>
+
+<details>
+<summary>Влияет ли разблокированный загрузчик (Unlock Bootloader) на восстановление?</summary>
+<p>Разблокированный загрузчик упрощает доступ к разделам, но на некоторых моделях (например, Xiaomi или Huawei) после блокировки загрузчика обратно доступ к определенным командам AT может быть закрыт. В целом, статус загрузчика важен, но не является критическим препятствием для методов через SP Flash Tool.</p>
+</details>
+
+<details>
+<summary>Что делать, если IMEI восстановился, но Wi-Fi не работает?</summary>
+<p>Это означает, что вы восстановили только часть данных IMEI, но потеряли MAC-адрес Wi-Fi, который также хранится в NVRAM. Необходимо найти полный дамп NVRAM именно для вашей модели и прошить его целиком, либо вручную прописать MAC-адрес через инженерное меню в разделе CDS Information -> Wi-Fi.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#диагностика-и-подготовка-рабочего-места">Диагностика и подготовка рабочего места</a></li><li><a href="#метод-первый-инженерное-меню-mtk-engineering-mode">Метод первый: Инженерное меню MTK (Engineering Mode)</a></li><li><a href="#использование-sp-flash-tool-и-scatter-файла">Использование SP Flash Tool и Scatter-файла</a></li><li><a href="#ручная-запись-через-mauimeta-или-sn-write-tool">Ручная запись через MauiMeta или SN Write Tool</a></li><li><a href="#восстановление-через-adb-и-терминал-для-root-пользователей">Восстановление через ADB и терминал (для Root-пользователей)</a></li><li><a href="#частые-ошибки-и-способы-их-устранения">Частые ошибки и способы их устранения</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/e/es/est-li-poddelki-televizorov-sony.html" class="related-card">Подделки телевизоров Sony: как отличить оригинал</a></li><li><a href="/a/articles/k/ka/kak-na-tizen-smotret-filmy-onlajn-besplatno.html" class="related-card">Как на Tizen смотреть фильмы онлайн бесплатно: полный гид</a></li><li><a href="/a/articles/k/ka/kak-na-televizor-vityaz-so-smart-ustanovit-prilozhenie-vk-video.html" class="related-card">Как установить VK Видео на телевизор Витязь: пошаговая инструкция</a></li><li><a href="/a/articles/k/ka/kak-sdelat-chtoby-lg-channels-ne-zapuskalas-srazu-pri-starte.html" class="related-card">Как отключить автозапуск LG Channels: полное руководство</a></li><li><a href="/a/articles/d/de/dejstvie-zaprescheno-obratites-k-administratoru-family-link-kak-otklyuchit.html" class="related-card">Ошибка Family Link: действие запрещено — как разблокировать</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/e/es/est-li-poddelki-televizorov-sony.html" class="related-bottom-card"><span class="related-bottom-title">Подделки телевизоров Sony: как отличить оригинал</span><span class="related-bottom-desc">Полный гид по выявлению подделок Sony. Проверка серийного номера, анализ матрицы, меню и реальные от</span></a><a href="/a/articles/k/ka/kak-na-tizen-smotret-filmy-onlajn-besplatno.html" class="related-bottom-card"><span class="related-bottom-title">Как на Tizen смотреть фильмы онлайн бесплатно: полный гид</span><span class="related-bottom-desc">Узнайте, как на Tizen смотреть фильмы онлайн бесплатно. Лучшие приложения, способы установки сторонн</span></a><a href="/a/articles/k/ka/kak-na-televizor-vityaz-so-smart-ustanovit-prilozhenie-vk-video.html" class="related-bottom-card"><span class="related-bottom-title">Как установить VK Видео на телевизор Витязь: пошаговая инструкция</span><span class="related-bottom-desc">Узнайте, как на телевизор Витязь со Смарт ТВ установить приложение VK Видео. Инструкция для Android </span></a><a href="/a/articles/k/ka/kak-sdelat-chtoby-lg-channels-ne-zapuskalas-srazu-pri-starte.html" class="related-bottom-card"><span class="related-bottom-title">Как отключить автозапуск LG Channels: полное руководство</span><span class="related-bottom-desc">Узнайте, как убрать раздражающий запуск LG Channels при включении телевизора. Пошаговая инструкция, </span></a><a href="/a/articles/d/de/dejstvie-zaprescheno-obratites-k-administratoru-family-link-kak-otklyuchit.html" class="related-bottom-card"><span class="related-bottom-title">Ошибка Family Link: действие запрещено — как разблокировать</span><span class="related-bottom-desc">Почему Family Link пишет «действие запрещено»? Узнайте, как отключить блокировку, убрать ограничения</span></a><a href="/a/articles/k/ka/kak-ustanovit-na-samsungtizen-torrserverr.html" class="related-bottom-card"><span class="related-bottom-title">Как установить TorrServer на Samsung (Tizen): полная инструкция</span><span class="related-bottom-desc">Пошаговое руководство по установке TorrServer на телевизоры Samsung Tizen. Настройка через HTTP-серв</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

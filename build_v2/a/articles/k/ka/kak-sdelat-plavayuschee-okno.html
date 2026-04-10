@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Как сделать плавающее окно: пошаговая инструкция — ТехПодсказка</title>
+    <meta name="description" content="Подробный гайд: как сделать плавающее окно на Android, iPhone и ПК. Настройка PiP, браузеров и сторонних приложений для удобного многозадачного режима.">
+    <link rel="canonical" href="/a/articles/k/ka/kak-sdelat-plavayuschee-okno.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как сделать плавающее окно: пошаговая инструкция">
+    <meta property="og:description" content="Подробный гайд: как сделать плавающее окно на Android, iPhone и ПК. Настройка PiP, браузеров и сторонних приложений для удобного многозадачного режима.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как сделать плавающее окно: пошаговая инструкция</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Как сделать плавающее окно: полное руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#функция-picture-in-picture-на-android">Функция Picture-in-Picture на Android</a></li><li><a href="#режим-split-view-и-плавающие-окна-на-ios">Режим Split View и плавающие окна на iOS</a></li><li><a href="#плавающие-окна-в-браузерах-на-пк">Плавающие окна в браузерах на ПК</a></li><li><a href="#сторонние-приложения-для-создания-оверлеев">Сторонние приложения для создания оверлеев</a></li><li><a href="#настройка-окон-в-windows-и-macos">Настройка окон в Windows и macOS</a></li><li><a href="#проблемы-совместимости-и-их-решение">Проблемы совместимости и их решение</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Современный ритм жизни диктует свои условия, требуя от пользователя постоянного переключения между задачами. Вы смотрите обучающее видео, но одновременно нужно ответить на сообщение или проверить курс валют. Именно в такие моменты на помощь приходит <strong>плавающее окно</strong>, позволяющее оставить контент на экране поверх других приложений. Эта технология, известная как Picture-in-Picture (PiP), кардинально меняет опыт взаимодействия со смартфоном и компьютером.</p>
+
+<p>Реализация этой функции может различаться в зависимости от операционной системы и версии программного обеспечения. В некоторых случаях она встроена по умолчанию, в других — требует активации скрытых настроек или установки специализированного софта. Понимание принципов работы <em>оверлейных окон</em> поможет вам настроить устройство максимально эффективно для своих нужд.</p>
+
+<p>В этой статье мы разберем не только стандартные методы активации, но и нюансы, о которых редко пишут в официальных мануалах. Вы узнаете, как обойти ограничения некоторых приложений и сделать процесс многозадачности по-настоящему бесшовным. <mark>Ключевым моментом для работы PiP на Android является наличие версии системы 8.0 (Oreo) и выше, хотя некоторые производители внедряли функцию и раньше.</mark></p>
+
+<h2 id="функция-picture-in-picture-на-android">Функция Picture-in-Picture на Android</h2>
+
+<p>Операционная система <em>Android</em> предоставляет нативную поддержку плавающих окон, однако доступность функции напрямую зависит от производителя смартфона и версии оболочки. В чистом <em>Android</em> достаточно просто свернуть поддерживаемое приложение, например YouTube или видеоплеер, и оно автоматически превратится в миниатюрное окно. Пользователь может перетаскивать его в любой угол экрана и изменять размер.</p>
+
+<p>Ситуация осложняется тем, что многие производители, такие как <em>Xiaomi</em>, <em>Samsung</em> или <em>Huawei</em>, внедряют собственные алгоритмы управления окнами. Иногда стандартная функция PiP конфликтует с фирменными оболочками, требуя ручной активации в скрытом меню разработчика. Также стоит учитывать, что некоторые приложения блокируют создание оверлеев в целях безопасности или монетизации.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какая у вас версия Android?</strong><ul><li>Android 10 и ниже</li><li>Android 11-13</li><li>Android 14 и выше</li><li>Использую iOS</li></ul></div></div>
+
+<p>Для принудительного включения режима необходимо перейти в настройки системы. Найдите раздел <code>Приложения</code>, выберите нужный сервис (например, браузер или видеоплеер) и откройте пункт <code>Дополнительно</code>. Именно там скрывается переключатель <strong>Picture-in-Picture</strong>, который может быть деактивирован по умолчанию.</p>
+
+<blockquote>⚠️ Внимание: Активация оверлеев для неизвестных приложений может привести к появлению рекламы на весь экран или сбору данных о ваших действиях в других программах. Доверяйте только проверенным источникам.</blockquote>
+
+<h2 id="режим-split-view-и-плавающие-окна-на-ios">Режим Split View и плавающие окна на iOS</h2>
+
+<p>В экосистеме <em>Apple</em> подход к многозадачности реализован иначе. На iPad функция <strong>Split View</strong> и плавающие окна работают великолепно, позволяя держать открытыми несколько приложений одновременно. На iPhone функционал ограничен: нативный PiP доступен в основном для видеоконтента и FaceTime, а полноценные плавающие приложения работают только на планшетах.</p>
+
+<p>Чтобы активировать плавающее видео на iPhone, запустите воспроизведение в поддерживаемом приложении, например <em>Safari</em> или <em>Apple TV</em>, и свайпните на главный экран. Видео продолжит воспроизводиться в углу. Если этого не происходит, проверьте настройки в разделе <code>Основные</code> -> <code>Обновление контента</code>, где должен быть активирован соответствующий тумблер.</p>
+
+<p>Владельцы iPad могут использовать более продвинутые возможности. Достаточно свайпнуть снизу вверх, чтобы вызвать док-панель, и перетащить иконку второго приложения на экран. Оно откроется в плавающем режиме, который можно масштабировать или закрепить у края дисплея. Это идеальный сценарий для работы с документами и одновременного просмотра видео.</p>
+
+<ul>
+<li>📱 На iPhone плавающее окно доступно только для видео и звонков FaceTime.</li>
+<li>📱 На iPad можно открывать несколько плавающих окон одновременно.</li>
+<li>📱 Для активации часто требуется горизонтальная ориентация устройства.</li>
+<li>📱 Некоторые приложения требуют подписки для работы в фоновом режиме.</li>
+</ul>
+
+<h2 id="плавающие-окна-в-браузерах-на-пк">Плавающие окна в браузерах на ПК</h2>
+
+<p>На персональных компьютерах концепция плавающего окна реализуется через функции браузера или специальные расширения. Большинство современных обозревателей, включая <em>Google Chrome</em>, <em>Mozilla Firefox</em> и <em>Opera</em>, поддерживают режим "картинка в картинке". Это позволяет вынести видеопоток за пределы вкладки и оставить его поверх других окон.</p>
+
+<p>В <em>Google Chrome</em> достаточно кликнуть правой кнопкой мыши по видеоплею дважды. Первый клик откроет стандартное контекстное меню, а второй (при зажатой кнопке) вызовет системное меню, где нужно выбрать <code>Picture in Picture</code>. В <em>Firefox</em> рядом с кнопкой громкости есть специальная иконка, которая сразу активирует этот режим.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте горячие клавиши для быстрого управления: в некоторых браузерах сочетание Ctrl+Shift+P или специальная кнопка в адресной строке мгновенно создают плавающее окно.</p></div>
+
+<p>Если встроенные средства не устраивают, можно воспользоваться расширениями. Они предоставляют более гибкий контроль: возможность изменения прозрачности окна, закрепления его поверх всех остальных программ (Always on Top) и управления громкостью независимо от вкладки. Это особенно полезно для стримеров и тех, кто следит за трансляциями во время работы.</p>
+
+<table>
+<thead>
+<tr>
+<th>Браузер</th>
+<th>Метод активации</th>
+<th>Поддержка прозрачности</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Google Chrome</td>
+<td>Двойной правый клик</td>
+<td>Нет (требует расширения)</td>
+</tr>
+<tr>
+<td>Mozilla Firefox</td>
+<td>Кнопка на плеере</td>
+<td>Нет</td>
+</tr>
+<tr>
+<td>Opera / Yandex</td>
+<td>Кнопка на плеере</td>
+<td>Есть (встроенная)</td>
+</tr>
+<tr>
+<td>Microsoft Edge</td>
+<td>Двойной правый клик</td>
+<td>Нет</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="сторонние-приложения-для-создания-оверлеев">Сторонние приложения для создания оверлеев</h2>
+
+<p>Когда штатных средств недостаточно, на выручку приходят специализированные утилиты. Для Android наиболее популярным решением является приложение <em>Floating Apps</em> или <em>Overlay for Any App</em>. Они создают виртуальный слой поверх системы, в который можно "поместить" любое запущенное приложение, превратив его в плавающий виджет.</p>
+
+<p>Принцип работы таких программ основан на создании копии интерфейса приложения в отдельном окне. Это позволяет, например, открыть второй экземпляр мессенджера или браузера поверх игры. Однако стоит помнить, что такая эмуляция потребляет дополнительные ресурсы процессора и оперативной памяти.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка перед установкой оверлеев</h4><label class="check-item"><input type="checkbox"><span>Проверить разрешения приложения</span></label><label class="check-item"><input type="checkbox"><span>Оценить объем свободной RAM</span></label><label class="check-item"><input type="checkbox"><span>Убедиться в наличииroot-прав (если нужно)</span></label><label class="check-item"><input type="checkbox"><span>Прочитать отзывы о безопасности</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>На ПК аналогом служат программы вроде <em>PowerToys</em> от Microsoft. Модуль <strong>Always on Top</strong> позволяет закрепить любое активное окно поверх остальных простым нажатием сочетания клавиш. Это не создает копию окна, а меняет приоритет отображения текущего, что работает стабильнее и не грузит систему.</p>
+
+<blockquote>⚠️ Внимание: Приложения, использующие оверлеи, часто запрашивают разрешение на "отображение поверх других окон". Внимательно проверяйте, каким именно программам вы даете этот доступ, так как это критическая уязвимость безопасности.</blockquote>
+
+<h2 id="настройка-окон-в-windows-и-macos">Настройка окон в Windows и macOS</h2>
+
+<p>Операционные системы для десктопов также имеют встроенные инструменты для управления окнами, которые часто игнорируются пользователями. В <em>Windows 10/11</em> функция <strong>Snap Assist</strong> позволяет быстро распределять окна по экрану, но для создания真正的 плавающего окна (поверх других) часто требуется сторонний софт или использование видеоплееров с такой функцией.</p>
+
+<p>В <em>macOS</em> ситуация схожая: нативно система отлично управляет тайлингом окон, но режим "поверх всех" (PiP) встроен только в плеер <em>QuickTime</em> и некоторые системные виджеты. Для видео в браузере <em>Safari</em> работает стандартный PiP, который можно вынести в любой угол монитора, и он будет оставаться там даже при переключении на другие рабочие столы (Spaces).</p>
+
+<p>Для продвинутой настройки в Windows можно использовать реестр или групповые политики, но это актуально скорее для корпоративных сред. Обычному пользователю проще установить легковесную утилиту вроде <em>DeskPins</em>, которая добавляет в заголовок любого окна булавку, фиксирующую его сверху.</p>
+
+<details class="faq-item"><summary>Скрытые команды для управления окнами</summary><div class="faq-answer"><p>В Windows можно использовать скрипты AutoHotkey для создания собственных горячих клавиш, которые будут менять размер и позицию окон по заданному алгоритму, создавая сложные рабочие пространства.</p></div></details>
+
+<h2 id="проблемы-совместимости-и-их-решение">Проблемы совместимости и их решение</h2>
+
+<p>Несмотря на популярность технологии, пользователи часто сталкиваются с тем, что плавающее окно не появляется или сразу закрывается. Чаще всего причина кроется в экономии энергии. Система Android aggressively убивает фоновые процессы, считая плавающее окно второстепенным. Необходимо добавить нужное приложение в список исключений батареи.</p>
+
+<p>Другая распространенная проблема — разрешение экрана и плотность пикселей. На некоторых устройствах с нестандартным соотношением сторон видео в PiP может обрезаться или иметь черные полосы. В таких случаях помогает изменение соотношения сторон в настройках разработчика или использование плеера, умеющего масштабировать контент.</p>
+
+<ul>
+<li>🔋 Проверьте настройки энергосбережения и отключите их для медиа-приложений.</li>
+<li>🔋 Убедитесь, что в приложении включена поддержка Picture-in-Picture.</li>
+<li>🔋 Обновите приложение до последней версии через официальный магазин.</li>
+<li>🔋 Перезагрузите устройство, если функция перестала работать внезапно.</li>
+</ul>
+
+<p>Если ничего не помогает, возможно, приложение-источник блокирует эту функцию на программном уровне. Обойти это можно только с помощью модифицированных версий ПО или использования браузеров с встроенным режимом десктопного просмотра, которые иногда обманывают сайт, заставляя думать, что вы на ПК.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Стабильность работы плавающих окон на 90% зависит от настроек энергосбережения вашей операционной системы, а не от самого приложения.</p></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Почему плавающее окно закрывается, когда я открываю камеру?</summary>
+<p>Это ограничение безопасности операционной системы. Android и iOS запрещают одновременный доступ к камере нескольким приложениям и часто закрывают оверлеи, чтобы освободить ресурсы и защитить конфиденциальность пользователя.</p>
+</details>
+
+<details>
+<summary>Можно ли сделать плавающее окно для игры?</summary>
+<p>Нативно — нет, игры обычно работают в полноэкранном режиме и захватывают фокус. Однако существуют специальные лаунчеры и функции "игровых режимов" (Game Tools) в смартфонах <em>Samsung</em> и <em>Xiaomi</em>, которые позволяют запускать мини-окна мессенджеров поверх игры.</p>
+</details>
+
+<details>
+<summary>Влияет ли плавающее окно на расход батареи?</summary>
+<p>Да, влияние есть. Поскольку приложение продолжает работать, декодировать видео и рендерить графику в фоновом режиме, расход энергии увеличивается. Процессор не переходит в режим глубокого сна, пока активно плавающее окно.</p>
+</details>
+
+<details>
+<summary>Как изменить размер плавающего окна, если оно слишком маленькое?</summary>
+<p>Обычно нужно нажать и удерживать палец (или курсор) на границе окна, пока не появятся манипуляторы размера. Если их нет, попробуйте сделать двойное тап по окну — во многих плеерах это переключает режимы масштабирования.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#функция-picture-in-picture-на-android">Функция Picture-in-Picture на Android</a></li><li><a href="#режим-split-view-и-плавающие-окна-на-ios">Режим Split View и плавающие окна на iOS</a></li><li><a href="#плавающие-окна-в-браузерах-на-пк">Плавающие окна в браузерах на ПК</a></li><li><a href="#сторонние-приложения-для-создания-оверлеев">Сторонние приложения для создания оверлеев</a></li><li><a href="#настройка-окон-в-windows-и-macos">Настройка окон в Windows и macOS</a></li><li><a href="#проблемы-совместимости-и-их-решение">Проблемы совместимости и их решение</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/s/sb/sboj-chteniya-edid-displeya-dell-g3.html" class="related-card">Сбой чтения EDID дисплея Dell G3: причины и решение</a></li><li><a href="/a/articles/a/ac/acer-v243hq-gorit-sinim-izobrazheniya-net.html" class="related-card">Acer V243HQ: синий экран без изображения — причины и ремонт</a></li><li><a href="/a/articles/d/dr/drajver-dlya-gembird-wnp-ua-006-versii-501240000.html" class="related-card">Драйвер Gembird WNP-UA-006: установка версии 5.01.24.0000</a></li><li><a href="/a/articles/b/br/breeno-na-russkom-yazyke-kak-sdelat.html" class="related-card">Как сделать Breeno на русском языке: Полная инструкция</a></li><li><a href="/a/articles/k/ka/kak-perejti-na-russkij-yazyk-trikolor.html" class="related-card">Как перейти на русский язык Триколор: полная инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/s/sb/sboj-chteniya-edid-displeya-dell-g3.html" class="related-bottom-card"><span class="related-bottom-title">Сбой чтения EDID дисплея Dell G3: причины и решение</span><span class="related-bottom-desc">Почему возникает сбой чтения EDID на Dell G3? Узнайте, как исправить черный экран, сбросить BIOS и о</span></a><a href="/a/articles/a/ac/acer-v243hq-gorit-sinim-izobrazheniya-net.html" class="related-bottom-card"><span class="related-bottom-title">Acer V243HQ: синий экран без изображения — причины и ремонт</span><span class="related-bottom-desc">Монитор Acer V243HQ горит синим и нет картинки? Полный разбор причин: от кабеля до инвертора. Диагно</span></a><a href="/a/articles/d/dr/drajver-dlya-gembird-wnp-ua-006-versii-501240000.html" class="related-bottom-card"><span class="related-bottom-title">Драйвер Gembird WNP-UA-006: установка версии 5.01.24.0000</span><span class="related-bottom-desc">Подробный гайд по установке драйвера Gembird WNP-UA-006 версии 5.01.24.0000. Решение проблем с Realt</span></a><a href="/a/articles/b/br/breeno-na-russkom-yazyke-kak-sdelat.html" class="related-bottom-card"><span class="related-bottom-title">Как сделать Breeno на русском языке: Полная инструкция</span><span class="related-bottom-desc">Пошаговое руководство по русификации ассистента Breeno на смартфонах OPPO, Realme и OnePlus. Решаем </span></a><a href="/a/articles/k/ka/kak-perejti-na-russkij-yazyk-trikolor.html" class="related-bottom-card"><span class="related-bottom-title">Как перейти на русский язык Триколор: полная инструкция</span><span class="related-bottom-desc">Пошаговая инструкция по смене языка на приемниках Триколор. Решаем проблемы с меню и настройками инт</span></a><a href="/a/articles/k/ka/kak-obnulit-pristavku-bilajn.html" class="related-bottom-card"><span class="related-bottom-title">Как обнулить приставку Билайн: полный сброс настроек и ПО</span><span class="related-bottom-desc">Подробная инструкция, как сделать сброс настроек на приставке Билайн. Решаем проблемы с зависаниями,</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

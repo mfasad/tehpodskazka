@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Настройка локальной аутентификации Windows 10: Полное руководство — ТехПодсказка</title>
+    <meta name="description" content="Подробная инструкция по настройке локальной аутентификации в Windows 10. Управление учетными записями, групповые политики и безопасность системы без облака.">
+    <link rel="canonical" href="/a/articles/w/wi/windows-10-lokalnaya-autentifikaciya-kak-nastraivaetsya.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Настройка локальной аутентификации Windows 10: Полное руководство">
+    <meta property="og:description" content="Подробная инструкция по настройке локальной аутентификации в Windows 10. Управление учетными записями, групповые политики и безопасность системы без облака.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/windows-i-pk/">Windows и ПК</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Настройка локальной аутентификации Windows 10: Полное руководство</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Локальная аутентификация Windows 10: Настройка и управление</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#архитектура-безопасности-и-база-данных-sam">Архитектура безопасности и база данных SAM</a></li><li><a href="#управление-учетными-записями-через-графический-интерфейс">Управление учетными записями через графический интерфейс</a></li><li><a href="#использование-командной-строки-и-powershell-для-администрирования">Использование командной строки и PowerShell для администрирования</a></li><li><a href="#настройка-политик-паролей-и-блокировок-через-gpeditmsc">Настройка политик паролей и блокировок через gpedit.msc</a></li><li><a href="#принудительный-переход-на-локальную-учетную-запись">Принудительный переход на локальную учетную запись</a></li><li><a href="#аудит-событий-входа-и-мониторинг-безопасности">Аудит событий входа и мониторинг безопасности</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>В современных корпоративных и домашних сетях управление доступом к ресурсам операционной системы является фундаментом информационной безопасности. Локальная аутентификация в <strong>Windows 10</strong> представляет собой механизм проверки подлинности пользователя, который опирается исключительно на базу данных, хранящуюся непосредственно на конкретном компьютере, без обращения к внешним контроллерам домена или облачным сервисам Microsoft. Такой подход обеспечивает автономность работы устройства даже при отсутствии сетевого подключения, что критически важно для ноутбуков в поездках или изолированных сегментов сети.</p>
+
+<p>Понимание принципов работы <em>SAM (Security Account Manager)</em> и процессов хеширования паролей позволяет администраторам выстраивать надежную защиту от несанкционированного доступа. В отличие от облачных профилей, где восстановление доступа часто завязано на номер телефона или резервный email, локальный метод требует строгого контроля учетных данных на месте. Именно поэтому грамотная настройка политик паролей и блокировок аккаунта становится обязательным навыком для любого системного администратора.</p>
+
+<p>В данной статье мы детально разберем инструменты управления, доступные в различных редакциях операционной системы, от базовых утилит до продвинутых редакторов групповых политик. Вы узнаете, как принудительно переключить систему на использование только локальных идентификаторов, минуя навязываемые Microsoft аккаунты, и как аудировать попытки входа в систему для выявления подозрительной активности.</p>
+
+<h2 id="архитектура-безопасности-и-база-данных-sam">Архитектура безопасности и база данных SAM</h2>
+<p>Основой локальной аутентификации в Windows 10 является файл базы данных <code>SAM</code>, расположенный в системной директории <code>C:\Windows\System32\config</code>. Этот файл содержит хеши паролей всех локальных пользователей, их членство в группах и права доступа. Операционная система никогда не хранит пароли в открытом виде; вместо этого используется алгоритм <strong>NTLM</strong> или более современный <em>Kerberos</em> (в контексте домена, но с локальными хешами), который преобразует введенную пользоватlемем строку символов в уникальную хеш-сумму.</p>
+
+<p>При попытке входа в систему введенные данные сравниваются с сохраненными хешами. Если хеши совпадают, создается токен безопасности, который наделяет пользователя соответствующими правами. Важно понимать, что прямой доступ к файлу SAM заблокирован пока система работает, что является защитным механизмом от простого копирования базы данных злоумышленниками. Для работы с этими данными требуются специальные утилиты или доступ с правами <strong>SYSTEM</strong>.</p>
+
+<details class="faq-item"><summary>Где физически хранится файл SAM?</summary><div class="faq-answer"><p>Файл SAM находится по пути C:\Windows\System32\config\SAM. Он заблокирован системой во время работы Windows. Для его копирования или анализа необходимо загрузиться с LiveCD или использовать утилиты вроде Volume Shadow Copy Service (VSS).</p></div></details>
+
+<p>Критически важным аспектом является защита от атак перебором. Механизмы безопасности Windows 10 включают в себя функции, которые замедляют процесс проверки пароля после нескольких неудачных попыток. Это делает brute-force атаки крайне неэффективными, если не используются специализированные инструменты для извлечения хешей из памяти или диска.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Прямое редактирование реестра или файла SAM без создания резервной копии может привести к полной неработоспособности системы и невозможности загрузки Windows. Всегда создавайте точки восстановления перед вмешательством в системные файлы безопасности.</p>
+</blockquote>
+
+<h2 id="управление-учетными-записями-через-графический-интерфейс">Управление учетными записями через графический интерфейс</h2>
+<p>Для большинства пользователей и администраторов базовая настройка локальной аутентификации осуществляется через оснастку «Управление компьютером». Этот инструмент предоставляет удобный интерфейс для создания, удаления и модификации параметров учетных записей. Чтобы открыть его, необходимо нажать комбинацию клавиш <code>Win + R</code> и ввести команду <code>compmgmt.msc</code>, после чего перейти в раздел <code>Служебные программы → Локальные пользователи и группы → Пользователи</code>.</p>
+
+<p>Здесь можно изменить имя пользователя, установить новый пароль или запретить его смену. Особое внимание следует уделить флажкам, таким как «Требовать смену пароля при следующем входе в систему» или «Не разрешать смену пароля». Эти настройки позволяют администратору форсировать обновление учетных данных в целях безопасности или, наоборот, зафиксировать их для сервисных аккаунтов.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой метод управления учетными записями вы предпочитаете?</strong><ul><li>Графический интерфейс (lusrmgr.msc):Командная строка (net user):PowerShell:Групповые политики (gpedit.msc)</li></ul></div></div>
+
+<p>Также через графический интерфейс можно управлять членством в группах. Добавление пользователя в группу <strong>Administrators</strong> наделяет его полными правами на управление компьютером, в то время как включение в группу <em>Guests</em> существенно ограничивает возможности, что полезно для временных посетителей. Стандартная группа <code>Users</code> предоставляет баланс между функциональностью и безопасностью для ежедневной работы.</p>
+
+<ul>
+    <li>🔐 Создание нового локального пользователя с уникальным именем и сложным паролем.</li>
+    <li>🚫 Блокировка учетной записи без её удаления для временного ограничения доступа.</li>
+    <li>🔄 Принудительная смена пароля администратором в случае его утраты пользователем.</li>
+    <li>📋 Просмотр свойств группы для анализа текущих прав доступа членов команды.</li>
+</ul>
+
+<h2 id="использование-командной-строки-и-powershell-для-администрирования">Использование командной строки и PowerShell для администрирования</h2>
+<p>Для автоматизации процессов и удаленного управления локальной аутентификацией незаменимыми инструментами являются командная строка (<code>cmd</code>) и PowerShell. Классическая утилита <code>net user</code> позволяет быстро создавать аккаунты и менять пароли. Например, команда <code>net user AdminUser StrongPass123 /add</code> создаст нового пользователя, а <code>net user AdminUser /active:no</code> заблокирует его. Это особенно удобно при написании скриптов развертывания.</p>
+
+<p>Более мощным инструментом является PowerShell с его модулем <em>Microsoft.PowerShell.LocalAccounts</em>. Командлеты вроде <code>New-LocalUser</code>, <code>Set-LocalUser</code> и <code>Remove-LocalUser</code> предоставляют доступ к расширенным свойствам, которые недоступны в классической командной строке. С их помощью можно устанавливать срок действия пароля, описания и даже добавлять пользователей в группы одной командой.</p>
+
+<pre><code>New-LocalUser -Name "ServiceAccount" -Password (ConvertTo-SecureString "ComplexP@ssword" -AsPlainText -Force) -FullName "Служебный аккаунт" -Description "Аккаунт для служебных задач"</code></pre>
+
+<p>Использование PowerShell позволяет не только управлять пользователями, но и аудировать их состояние. С помощью команды <code>Get-LocalUser</code> можно вывести список всех аккаунтов с указанием даты последней смены пароля и статуса активности. Это помогает выявлять забытые или неиспользуемые учетные записи, которые представляют потенциальный риск безопасности.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте псевдонимы в PowerShell, такие как glu (Get-LocalUser), для ускорения ввода команд. Например, команда "glu | Select Name, Enabled" быстро покажет статус всех пользователей.</p></div>
+
+<h2 id="настройка-политик-паролей-и-блокировок-через-gpeditmsc">Настройка политик паролей и блокировок через gpedit.msc</h2>
+<p>В редакциях Windows 10 Pro и Enterprise доступен редактор локальной групповой политики (<code>gpedit.msc</code>), который позволяет тонко настроить правила аутентификации. Перейдя по пути <code>Конфигурация компьютера → Конфигурация Windows → Параметры безопасности → Политики учетных записей → Политика паролей</code>, можно установить требования к сложности паролей. Например, включить правило «Пароль должен соответствовать требованиям сложности», что запретит использование простых комбинаций.</p>
+
+<p>Здесь же настраивается минимальная длина пароля и максимальный срок его действия. Установка значения «Максимальный срок действия пароля» равным 90 дням заставит пользователей регулярно обновлять свои учетные данные, снижая риск компрометации. Также важно настроить «Историю паролей», чтобы запретить использование последних N паролей, что предотвратит циклическую смену паролей на одни и те же.</p>
+
+<p>Отдельного внимания заслуживает раздел «Политика блокировки учетной записи». Настройка параметра «Порог блокировки» позволяет определить количество неудачных попыток входа, после которых аккаунт будет заблокирован на заданное время. Это эффективная защита от подбора паролей, однако требует осторожности, чтобы не заблокировать легитимных пользователей, забывших свой пароль.</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Параметр политики</th>
+            <th>Рекомендуемое значение</th>
+            <th>Влияние на безопасность</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Минимальная длина пароля</td>
+            <td>8-12 символов</td>
+            <td>Увеличивает сложность подбора методом brute-force</td>
+        </tr>
+        <tr>
+            <td>Срок действия пароля</td>
+            <td>60-90 дней</td>
+            <td>Ограничивает время использования украденных данных</td>
+        </tr>
+        <tr>
+            <td>Порог блокировки</td>
+            <td>5 попыток</td>
+            <td>Останавливает автоматизированные атаки перебором</td>
+        </tr>
+        <tr>
+            <td>Длительность блокировки</td>
+            <td>15-30 минут</td>
+            <td>Замедляет скорость повторных попыток атаки</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2 id="принудительный-переход-на-локальную-учетную-запись">Принудительный переход на локальную учетную запись</h2>
+<p>Windows 10 в своих последних версиях активно продвигает использование облачного аккаунта Microsoft, скрывая опцию создания локальной учетной записи при первоначальной настройке (OOBE). Однако для систем, требующих строгой локальной аутентификации, этот шаг часто нежелателен. Существует несколько методов обхода этого ограничения, позволяющих создать чисто локальный профиль.</p>
+
+<p>Один из самых эффективных способов — отключение сети на этапе установки. Если компьютер не имеет доступа к интернету, система автоматически предложит создать локальную учетную запись. Если же сеть подключена, можно использовать команду <code>OOBE\BYPASSNRO</code> в командной строке (вызываемой через <code>Shift+F10</code>), что перезагрузит систему и добавит кнопку «У меня нет интернета».</p>
+
+<div class="checklist-block"><h4>☑️ Чек-лист перехода на локальную запись</h4><label class="check-item"><input type="checkbox"><span>Отключить сетевой кабель или Wi-Fi:Нажать Shift+F10 при установке:Ввести команду OOBE\BYPASSNRO:Создать локального пользователя в появившемся меню</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 1</div></div>
+
+<p>Для уже установленной системы можно выполнить переход через параметры. В меню <code>Параметры → Учетные запислени → Ваши данные</code> необходимо выбрать опцию «Войти вместо этого с локальной учетной записью». Система потребует подтверждения пароля текущего облачного аккаунта, после чего предложит задать имя и пароль для локального профиля. После перезагрузки вход будет осуществляться уже локально.</p>
+
+<blockquote>
+<p>⚠️ Внимание: При переходе с аккаунта Microsoft на локальный перестанут синхронизироваться параметры системы, обои рабочего стола и пароли, сохраненные в браузере Edge. Убедитесь, что у вас есть резервные копии важных данных.</p>
+</blockquote>
+
+<h2 id="аудит-событий-входа-и-мониторинг-безопасности">Аудит событий входа и мониторинг безопасности</h2>
+<p>Эффективное управление безопасностью невозможно без мониторинга событий. В Windows 10 за это отвечает журнал событий (<code>eventvwr.msc</code>). Для отслеживания попыток аутентификации необходимо включить политику аудита. В редакторе групповых политик перейдите в <code>Конфигурация компьютера → Конфигурация Windows → Параметры безопасности → Локальные политики → Политика аудита</code> и включите «Аудит событий входа в систему» для успешных и неудачных попыток.</p>
+
+<p>После включения политики все события будут фиксироваться в журнале <code>Windows Logs → Security</code>. Ключевыми идентификаторами событий (Event ID) являются <strong>4624</strong> (успешный вход) и <strong>4625</strong> (неудачный вход). Анализируя эти коды, администратор может определить время входа, имя пользователя, тип входа (локальный или сетевой) и IP-адрес источника в случае сетевого подключения.</p>
+
+<p>Регулярный анализ логов позволяет выявлять аномалии, такие как множественные неудачные попытки входа в нерабочее время или попытки входа с неизвестных учетных записей. Для автоматизации этого процесса можно использовать PowerShell для фильтрации событий или сторонние SIEM-системы, собирающие логи с множества компьютеров.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Включение аудита событий входа (Event ID 4625) является обязательным шагом для расследования инцидентов безопасности и выявления попыток несанкционированного доступа.</p></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+<details>
+    <summary>Можно ли восстановить локальный пароль Windows 10 без диска сброса?</summary>
+    <p>Без заранее созданного диска сброса пароля или настроенных контрольных вопросов восстановление локального пароля стандартными средствами невозможно из соображений безопасности. Однако существуют сторонние утилиты (например, Ophcrack или Offline NT Password & Registry Editor), которые могут сбросить пароль, но их использование требует физической доступности к устройству и загрузочного носителя.</p>
+</details>
+
+<details>
+    <summary>В чем разница между локальной учетной записью и аккаунтом Microsoft?</summary>
+    <p>Локальная учетная запись хранит данные только на конкретном компьютере и не требует подключения к интернету для входа. Аккаунт Microsoft синхронизирует настройки, файлы OneDrive и покупки между устройствами, но зависит от серверов Microsoft. Локальный аккаунт предпочтителен для серверов и защищенных рабочих мест, где требуется изоляция.</p>
+</details>
+
+<details>
+    <summary>Как узнать, какой тип аутентификации используется сейчас?</summary>
+    <p>Откройте <code>Параметры → Учетные записи → Ваши данные</code>. Если под вашим именем отображается email-адрес, вы используете аккаунт Microsoft. Если указано просто имя пользователя и надпись «Локальная учетная запись», то вход осуществляется локально. Также это можно проверить в командной строке командой <code>whoami /user</code> — SID локальных пользователей обычно начинается с S-1-5-21...-500 или аналогичного префикса домена.</p>
+</details>
+
+<details>
+    <summary>Безопасно ли отключать требование сложности пароля?</summary>
+    <p>Отключать требование сложности пароля (<code>Complexity requirements</code>) категорически не рекомендуется в любой среде, где есть риск физического или сетевого доступа к компьютеру. Простые пароли легко подбираются за секунды. Если сложность мешает пользователям, лучше внедрить использование длинных passphrase-фраз, которые легче запомнить, но которые остаются стойкими к взлому.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#архитектура-безопасности-и-база-данных-sam">Архитектура безопасности и база данных SAM</a></li><li><a href="#управление-учетными-записями-через-графический-интерфейс">Управление учетными записями через графический интерфейс</a></li><li><a href="#использование-командной-строки-и-powershell-для-администрирования">Использование командной строки и PowerShell для администрирования</a></li><li><a href="#настройка-политик-паролей-и-блокировок-через-gpeditmsc">Настройка политик паролей и блокировок через gpedit.msc</a></li><li><a href="#принудительный-переход-на-локальную-учетную-запись">Принудительный переход на локальную учетную запись</a></li><li><a href="#аудит-событий-входа-и-мониторинг-безопасности">Аудит событий входа и мониторинг безопасности</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/a/as/asus-vindovs-uznat-kompyuter-hp-intel-sharik.html" class="related-card">Как узнать характеристики компьютера ASUS: Windows, HP, Intel</a></li><li><a href="/a/articles/w/wi/windows-10-zakryvayutsya-setevye-papki.html" class="related-card">Windows 10 закрываются сетевые папки: решение проблемы</a></li><li><a href="/a/articles/e/er/error-0x80070522-installing-windows.html" class="related-card">Ошибка 0x80070522 при установке Windows: полное руководство</a></li><li><a href="/a/articles/d/di/dinamicheskie-oboi-dlya-windows-11.html" class="related-card">Динамические обои для Windows 11: установка и настройка</a></li><li><a href="/a/articles/o/ot/otklyuchenie-obyazatelnoj-proverki-podpisi-drajverov-v-windows-11.html" class="related-card">Как отключить проверку подписи драйверов в Windows 11: инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/a/as/asus-vindovs-uznat-kompyuter-hp-intel-sharik.html" class="related-bottom-card"><span class="related-bottom-title">Как узнать характеристики компьютера ASUS: Windows, HP, Intel</span><span class="related-bottom-desc">Узнайте, как определить модель, процессор Intel и параметры системы на ноутбуках ASUS, HP и других. </span></a><a href="/a/articles/w/wi/windows-10-zakryvayutsya-setevye-papki.html" class="related-bottom-card"><span class="related-bottom-title">Windows 10 закрываются сетевые папки: решение проблемы</span><span class="related-bottom-desc">Почему в Windows 10 самопроизвольно закрываются сетевые папки? Полный гид по устранению ошибок досту</span></a><a href="/a/articles/e/er/error-0x80070522-installing-windows.html" class="related-bottom-card"><span class="related-bottom-title">Ошибка 0x80070522 при установке Windows: полное руководство</span><span class="related-bottom-desc">Подробный разбор ошибки 0x80070522 при установке Windows. Эффективные методы исправления через реест</span></a><a href="/a/articles/d/di/dinamicheskie-oboi-dlya-windows-11.html" class="related-bottom-card"><span class="related-bottom-title">Динамические обои для Windows 11: установка и настройка</span><span class="related-bottom-desc">Полный гид по установке живых обоев на Windows 11. Обзор лучших программ, влияние на батарею и пошаг</span></a><a href="/a/articles/o/ot/otklyuchenie-obyazatelnoj-proverki-podpisi-drajverov-v-windows-11.html" class="related-bottom-card"><span class="related-bottom-title">Как отключить проверку подписи драйверов в Windows 11: инструкция</span><span class="related-bottom-desc">Полное руководство по отключению проверки подписи драйверов в Windows 11. Решаем проблему с установк</span></a><a href="/a/articles/k/ka/kak-zaryazhat-kompyuter-ot-poverbanka.html" class="related-bottom-card"><span class="related-bottom-title">Как заряжать ноутбук от повербанка: полная инструкция и нюансы</span><span class="related-bottom-desc">Узнайте, как заряжать компьютер от повербанка. Подборка моделей с USB-C, расчет мощности, схемы подк</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

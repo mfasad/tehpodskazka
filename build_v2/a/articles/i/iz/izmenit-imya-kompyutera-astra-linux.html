@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Как изменить имя компьютера в Astra Linux: Полное руководство — ТехПодсказка</title>
+    <meta name="description" content="Подробная инструкция по смене hostname в Astra Linux. Методы через терминал, графический интерфейс Fly и правку системных файлов для корректной работы сети.">
+    <link rel="canonical" href="/a/articles/i/iz/izmenit-imya-kompyutera-astra-linux.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как изменить имя компьютера в Astra Linux: Полное руководство">
+    <meta property="og:description" content="Подробная инструкция по смене hostname в Astra Linux. Методы через терминал, графический интерфейс Fly и правку системных файлов для корректной работы сети.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/windows-i-pk/">Windows и ПК</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как изменить имя компьютера в Astra Linux: Полное руководство</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Как изменить имя компьютера в Astra Linux: пошаговое руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#зачем-нужно-менять-hostname-в-системе">Зачем нужно менять hostname в системе</a></li><li><a href="#подготовка-к-изменению-системных-параметров">Подготовка к изменению системных параметров</a></li><li><a href="#способ-1-использование-утилиты-hostnamectl">Способ 1: Использование утилиты hostnamectl</a></li><li><a href="#способ-2-графический-интерфейс-окружения-fly">Способ 2: Графический интерфейс окружения Fly</a></li><li><a href="#ручное-редактирование-системных-файлов">Ручное редактирование системных файлов</a></li><li><a href="#проверка-результата-и-диагностика-проблем">Проверка результата и диагностика проблем</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Управление сетевыми идентификаторами является базовой, но критически важной задачей для любого системного администратора или продвинутого пользователя операционной системы <strong>Astra Linux</strong>. При первоначальной установке дистрибутива часто присваивается стандартное имя, которое может не соответствовать корпоративным стандартам или персональным предпочтениям владельца устройства. Изменение этого параметра необходимо не только для эстетики, но и для корректного отображения узла в локальной сети, что упрощает навигацию и управление ресурсами.</p>
+
+<p>Процесс переименования может показаться тривиальным, однако в защищенных операционных системах, таких как <em>Astra Linux Special Edition</em>, существуют свои нюансы, связанные с уровнями доступа и конфигурацией служб безопасности. Неправильная смена идентификатора без обновления соответствующих записей в системных файлах может привести к проблемам с авторизацией, работой почтовых сервисов или функционированием межсетевого экрана. Именно поэтому важно понимать не только саму команду, но и контекст, в котором она применяется.</p>
+
+<p>В этой статье мы детально разберем все доступные способы изменения имени хоста: от использования графического окружения рабочего стола Fly до ручного редактирования конфигурационных файлов через терминал. Вы узнаете, какие файлы затрагивает эта операция, как избежать типичных ошибок и почему важно соблюдать синтаксис при вводе новых параметров. Мы также рассмотрим особенности работы с доменными именами в корпоративном сегменте.</p>
+
+<h2 id="зачем-нужно-менять-hostname-в-системе">Зачем нужно менять hostname в системе</h2>
+
+<p>Имя хоста, или <strong>hostname</strong>, служит уникальным идентификатором устройства в сети, позволяя другим компьютерам находить его и обмениваться данными. В среде <em>Astra Linux</em>, особенно в корпоративном секторе, соблюдение единого стандарта именования (например, "dept-finance-01" или "srv-backup-main") является обязательным требованием политик информационной безопасности. Это позволяет быстро идентифицировать устройство при мониторинге трафика, анализе логов или удаленном администрировании, исключая путаницу между одинаковыми машинами.</p>
+
+<p>Кроме того, правильное имя компьютера влияет на работу многих сетевых служб и демонов, которые используют его для генерации отчетов или регистрации в DNS. Если оставить стандартное значение, заданное при установке, в большой инфраструктуре это может создать конфликты IP-адресов или затруднить диагностику сетевых сбоев. <strong>Сетевая идентификация</strong> становится фундаментом для построения отказоустойчивой архитектуры.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Использование спецсимволов, пробелов или кириллицы в имени хоста может привести к некорректной работе сетевых протоколов и скриптов автоматизации. Рекомендуется использовать только латинские буквы, цифры и дефис.</p>
+</blockquote>
+
+<p>Смена имени также требуется при переносе системы на новое оборудование или при интеграции компьютера в уже существующий домен Active Directory или LDAP. В таких случаях имя должно строго соответствовать записи в реестре домена, иначе процедура присоединения завершится ошибкой. Поэтому умение быстро и правильно переименовать узел — это навык, необходимый каждому специалисту по <strong>Linux-системам</strong>.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой метод переименования вы предпочитаете?</strong><ul><li>Через терминал (команды)</li><li>Через графический интерфейс Fly</li><li>Редактированием файлов вручную</li><li>Автоматическими скриптами</li></ul></div></div>
+
+<h2 id="подготовка-к-изменению-системных-параметров">Подготовка к изменению системных параметров</h2>
+
+<p>Прежде чем вносить изменения в конфигурацию системы, необходимо убедиться, что у вас есть необходимые права доступа. В <em>Astra Linux</em> большинство операций, затрагивающих сетевые настройки и системные файлы, требуют привилегий суперпользователя <strong>root</strong>. Если вы работаете в обычной пользовательской сессии, вам потребуется знать пароль администратора или использовать утилиту <code>sudo</code> для выполнения команд.</p>
+
+<p>Также рекомендуется создать резервную копию изменяемых файлов. Хотя процедура переименования достаточно безопасна, случайная ошибка при редактировании системных конфигураций может нарушить сетевую связность. Достаточно скопировать оригинальные файлы в домашнюю директорию или временную папку, чтобы иметь возможность быстро откатить изменения в случае необходимости. Это правило особенно актуально для серверных версий дистрибутива.</p>
+
+<div class="checklist-block"><h4>☑️ Подготовка к переименованию</h4><label class="check-item"><input type="checkbox"><span>Проверить права root</span></label><label class="check-item"><input type="checkbox"><span>Сделать бэкап файлов hosts и hostname</span></label><label class="check-item"><input type="checkbox"><span>Записать текущее имя для справки</span></label><label class="check-item"><input type="checkbox"><span>Убедиться в отсутствии активных сетевых задач</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>Важно заранее придумать новое имя, которое будет соответствовать правилам именования. Оно не должно быть слишком длинным (обычно до 63 символов) и должно начинаться с буквы. Проверка доступности имени в сети также не будет лишней, чтобы избежать конфликтов с уже существующими устройствами. <strong>Планирование имен</strong> помогает избежать хаоса в будущей инфраструктуре.</p>
+
+<h2 id="способ-1-использование-утилиты-hostnamectl">Способ 1: Использование утилиты hostnamectl</h2>
+
+<p>Наиболее современным и предпочтительным методом изменения имени компьютера в современных дистрибутивах Linux, включая <em>Astra Linux</em> версии 1.7 и выше, является использование системной утилиты <code>hostnamectl</code>. Этот инструмент входит в состав systemd и позволяет управлять именем хоста, статическим, временным и красивым (pretty), а также получать полную информацию о системе. Команда работает мгновенно и автоматически обновляет необходимые файлы.</p>
+
+<p>Для выполнения операции откройте терминал и введите команду с правами суперпользователя. Синтаксис прост и интуитивно понятен, что снижает риск ошибки при вводе. После выполнения команды изменения вступают в силу немедленно, без необходимости перезагрузки системы, что является большим плюсом для серверов с высоким uptime.</p>
+
+<pre><code>sudo hostnamectl set-hostname new-server-name</code></pre>
+
+<p>После ввода команды рекомендуется проверить результат, запустив утилиту без аргументов или используя команду <code>hostname</code>. Вы должны увидеть новое имя в выводе. Если система реагирует корректно, можно переходить к проверке сетевой доступности. <strong>Утилита hostnamectl</strong> гарантирует согласованность настроек.</p>
+
+<details class="faq-item"><summary>Что такое "Pretty Hostname"?</summary><div class="faq-answer"><p>Это человеческое название устройства, которое может содержать пробелы и специальные символы. Оно используется для отображения в графических интерфейсах, но не влияет на сетевую идентификацию. Задается командой: hostnamectl set-hostname --pretty "My Astra PC".</p></div></details>
+
+<h2 id="способ-2-графический-интерфейс-окружения-fly">Способ 2: Графический интерфейс окружения Fly</h2>
+
+<p>Для пользователей рабочих станций, которые предпочитают визуальное управление, <strong>Astra Linux</strong> предоставляет удобное графическое окружение Fly. Изменение имени компьютера здесь выполняется через панель настроек, что исключает необходимость запоминания команд. Этот метод идеален для новичков или ситуаций, когда терминал недоступен.</p>
+
+<p>Чтобы изменить имя, необходимо открыть меню "Пуск", перейти в раздел "Настройка" и выбрать пункт "Параметры системы". В открывшемся окне найдите вкладку, отвечающую за общие параметры или сеть (в зависимости от версии интерфейса). Именно здесь располагается поле для редактирования сетевого имени устройства.</p>
+
+<ul>
+<li>🖱️ Откройте главное меню и выберите <code>Настройка → Параметры системы</code>.</li>
+<li>📝 Перейдите на вкладку "Общие" или "Сеть" в зависимости от версии Fly.</li>
+<li>✏️ В поле "Имя компьютера" введите новое значение и нажмите "Применить".</li>
+<li>💾 Система может запросить пароль администратора для подтверждения изменений.</li>
+</ul>
+
+<p>Стоит отметить, что графический интерфейс может потребовать перезагрузки сессии или всей системы для полного применения настроек во всех компонентах. В отличие от командной строки, изменения могут не сразу отразиться в сетевых службах. <strong>Графическая оболочка</strong> удобна, но менее оперативна.</p>
+
+<blockquote>
+<p>⚠️ Внимание: После смены имени через графический интерфейс обязательно проверьте файл /etc/hosts. Иногда GUI обновляет только конфигурацию hostname, забывая про маппинг localhost, что может вызвать задержки при запуске приложений.</p>
+</blockquote>
+
+<h2 id="ручное-редактирование-системных-файлов">Ручное редактирование системных файлов</h2>
+
+<p>В некоторых случаях, например, на минималистичных сборках или при восстановлении системы, может потребоваться ручное редактирование конфигурационных файлов. Основными файлами, хранящими информацию об имени хоста в <em>Astra Linux</em>, являются <code>/etc/hostname</code> и <code>/etc/hosts</code>. Понимание их структуры необходимо каждому администратору.</p>
+
+<p>Файл <code>/etc/hostname</code> содержит статическое имя компьютера. Для его изменения достаточно открыть файл в текстовом редакторе (например, nano или vim) от имени root и заменить старое значение на новое. Важно не добавлять лишних пробелов или символов перевода строки, кроме одного в конце файла.</p>
+
+<pre><code>sudo nano /etc/hostname</code></pre>
+
+<p>Второй критически важный файл — <code>/etc/hosts</code>. Он отвечает за локальное разрешение имен и должен содержать запись, связывающую IP-адрес 127.0.0.1 (localhost) с новым именем хоста. Если этого не сделать, многие сетевые службы могут работать некорректно или выдавать ошибки при старте. В таблице ниже приведены примеры корректных записей.</p>
+
+<table>
+<thead>
+<tr>
+<th>Файл</th>
+<th>Содержимое до изменений</th>
+<th>Содержимое после изменений</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/etc/hostname</td>
+<td>old-pc</td>
+<td>new-server</td>
+</tr>
+<tr>
+<td>/etc/hosts</td>
+<td>127.0.0.1 old-pc localhost</td>
+<td>127.0.0.1 new-server localhost</td>
+</tr>
+<tr>
+<td>/etc/hosts</td>
+<td>127.0.1.1 old-pc</td>
+<td>127.0.1.1 new-server</td>
+</tr>
+</tbody>
+</table>
+
+<p>После редактирования файлов изменения вступят в силу только после перезагрузки системы или перезапуска сетевых служб. <mark>Критически важно сохранить синтаксическую целостность файлов, разделяя IP-адрес и имя пробелом или табуляцией.</mark> Ошибка в одном символе может привести к невозможности загрузки системы в нормальном режиме.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте редактор nano для правки файлов, если вы новичок. Он подсвечивает синтаксис и имеет подсказки по горячим клавишам внизу экрана (Ctrl+O для сохранения, Ctrl+X для выхода).</p></div>
+
+<h2 id="проверка-результата-и-диагностика-проблем">Проверка результата и диагностика проблем</h2>
+
+<p>После выполнения всех процедур по переименованию необходимо убедиться, что изменения применились корректно и система функционирует стабильно. Первичная проверка выполняется командой <code>hostname</code>, которая должна вывести новое имя. Однако этого недостаточно для полной диагностики.</p>
+
+<p>Рекомендуется проверить отображение имени в сетевом окружении. Попробуйте пропинговать новое имя локально, используя команду <code>ping localhost</code> или <code>ping new-hostname</code>. Если пинг проходит успешно и возвращается правильный IP-адрес (обычно 127.0.0.1 или 127.0.1.1), значит, файл <code>/etc/hosts</code> настроен верно. <strong>Диагностика сети</code> — ключевой этап.</p>
+
+<ul>
+<li>🔍 Выполните команду <code>hostnamectl</code> для просмотра полной информации о системе.</li>
+<li>🌐 Проверьте логи системных служб (<code>/var/log/syslog</code>) на предмет ошибок, связанных с именем хоста.</li>
+<li>🔄 Убедитесь, что новые настройки видны другим компьютерам в локальной сети.</li>
+</ul>
+
+<p>Если наблюдаются проблемы, такие как медленный старт приложений или ошибки в логах, еще раз внимательно проверьте файл <code>/etc/hosts</code>. Часто бывает, что пользователи забывают обновить именно эту запись. Также стоит проверить, не осталось ли старых записей в кэше DNS, если компьютер состоит в домене. <strong>Консистентность данных</strong> в файлах гарантирует стабильность.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Успешное переименование подтверждается не только выводом команды hostname, но и корректным разрешением нового имени в IP-адрес через локальный файл hosts.</p></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Нужно ли перезагружать компьютер после смены имени через hostnamectl?</summary>
+<p>В большинстве случаев перезагрузка не требуется, так как утилита <code>hostnamectl</code> применяет изменения динамически. Однако некоторые приложения, которые считывают имя хоста только при старте, могут потребовать перезапуска или полной перезагрузки системы для корректной работы.</p>
+</details>
+
+<details>
+<summary>Можно ли использовать русские буквы в имени компьютера?</summary>
+<p>Технически файл <code>/etc/hostname</code> может содержать любые символы, но стандарты DNS и многие сетевые протоколы поддерживают только латиницу (ASCII). Использование кириллицы может привести к непредсказуемым ошибкам в работе сети, поэтому настоятельно рекомендуется использовать только латинские буквы, цифры и дефисы.</p>
+</details>
+
+<details>
+<summary>Что делать, если я забыл новое имя компьютера?</summary>
+<p>Если вы изменили имя и забыли его, но имеете физический доступ к машине, вы можете загрузиться в режим восстановления или LiveUSB и посмотреть содержимое файла <code>/etc/hostname</code> на диске. Если доступ к системе есть, команда <code>cat /etc/hostname</code> всегда покажет текущее статическое имя.</p>
+</details>
+
+<details>
+<summary>Влияет ли смена hostname на лицензию Astra Linux?</summary>
+<p>Смена имени компьютера сама по себе не влияет на активацию лицензии, если лицензия привязана к аппаратному ключу (USB) или серверу лицензий. Однако если лицензия привязана к конкретному идентификатору хоста (что бывает в некоторых корпоративных конфигурациях), может потребоваться перевыпуск лицензионного файла.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#зачем-нужно-менять-hostname-в-системе">Зачем нужно менять hostname в системе</a></li><li><a href="#подготовка-к-изменению-системных-параметров">Подготовка к изменению системных параметров</a></li><li><a href="#способ-1-использование-утилиты-hostnamectl">Способ 1: Использование утилиты hostnamectl</a></li><li><a href="#способ-2-графический-интерфейс-окружения-fly">Способ 2: Графический интерфейс окружения Fly</a></li><li><a href="#ручное-редактирование-системных-файлов">Ручное редактирование системных файлов</a></li><li><a href="#проверка-результата-и-диагностика-проблем">Проверка результата и диагностика проблем</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-otklyuchit-vstroennyj-antivirus-na-windows-10.html" class="related-card">Как отключить антивирус Windows 10: полное руководство</a></li><li><a href="/a/articles/f/fr/free-driver-dlya-pristavki-podojdyot-ili-net.html" class="related-card">Free Driver для приставки: подойдёт или нет? Полный разбор</a></li><li><a href="/a/articles/w/wi/windows-10-podklyuchit-k-time-capsule-hdd.html" class="related-card">Windows 10 и Time Capsule HDD: полное руководство</a></li><li><a href="/a/articles/k/ka/kak-cherez-provodnik-podklyuchitsya-k-drugomu-kompyuteru.html" class="related-card">Как подключиться к другому ПК через проводник Windows</a></li><li><a href="/a/articles/k/ka/kak-obuchenie-ispolzovaniya-windows-11.html" class="related-card">Обучение Windows 11: полное руководство для новичков</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-otklyuchit-vstroennyj-antivirus-na-windows-10.html" class="related-bottom-card"><span class="related-bottom-title">Как отключить антивирус Windows 10: полное руководство</span><span class="related-bottom-desc">Подробная инструкция по отключению встроенного антивируса Windows 10. Методы через реестр, групповые</span></a><a href="/a/articles/f/fr/free-driver-dlya-pristavki-podojdyot-ili-net.html" class="related-bottom-card"><span class="related-bottom-title">Free Driver для приставки: подойдёт или нет? Полный разбор</span><span class="related-bottom-desc">Стоит ли ставить Free Driver на ТВ-приставку? Разбор рисков, совместимости с Android Box и альтернат</span></a><a href="/a/articles/w/wi/windows-10-podklyuchit-k-time-capsule-hdd.html" class="related-bottom-card"><span class="related-bottom-title">Windows 10 и Time Capsule HDD: полное руководство</span><span class="related-bottom-desc">Как подключить жесткий диск Time Capsule к Windows 10? Настройка SMB, протоколов и доступ к файлам A</span></a><a href="/a/articles/k/ka/kak-cherez-provodnik-podklyuchitsya-k-drugomu-kompyuteru.html" class="related-bottom-card"><span class="related-bottom-title">Как подключиться к другому ПК через проводник Windows</span><span class="related-bottom-desc">Пошаговая инструкция по подключению к удаленному компьютеру через проводник. Настройка сети, общий д</span></a><a href="/a/articles/k/ka/kak-obuchenie-ispolzovaniya-windows-11.html" class="related-bottom-card"><span class="related-bottom-title">Обучение Windows 11: полное руководство для новичков</span><span class="related-bottom-desc">Полное руководство по обучению Windows 11. Разбор интерфейса, настройка безопасности, работа с видже</span></a><a href="/a/articles/k/ka/kak-udalit-dobro-pozhalovat-v-windows-10-pri-vhode-v-sistemu.html" class="related-bottom-card"><span class="related-bottom-title">Как убрать экран приветствия Windows 10: полная инструкция</span><span class="related-bottom-desc">Узнайте, как отключить экран приветствия и ускорить вход в Windows 10. Рабочие методы через реестр, </span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

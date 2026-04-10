@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Как убрать экран приветствия Windows 10: полная инструкция — ТехПодсказка</title>
+    <meta name="description" content="Узнайте, как отключить экран приветствия и ускорить вход в Windows 10. Рабочие методы через реестр, групповые политики и настройки системы.">
+    <link rel="canonical" href="/a/articles/k/ka/kak-udalit-dobro-pozhalovat-v-windows-10-pri-vhode-v-sistemu.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как убрать экран приветствия Windows 10: полная инструкция">
+    <meta property="og:description" content="Узнайте, как отключить экран приветствия и ускорить вход в Windows 10. Рабочие методы через реестр, групповые политики и настройки системы.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/windows-i-pk/">Windows и ПК</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как убрать экран приветствия Windows 10: полная инструкция</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Как удалить экран приветствия Windows 10 при входе в систему</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#базовая-настройка-параметров-учетной-записи">Базовая настройка параметров учетной записи</a></li><li><a href="#использование-редактора-локальной-групповой-политики">Использование редактора локальной групповой политики</a></li><li><a href="#регулировка-через-системный-реестр">Регулировка через системный реестр</a></li><li><a href="#отключение-экрана-блокировки-через-службы">Отключение экрана блокировки через службы</a></li><li><a href="#удаление-фоновых-изображений-и-рекламы">Удаление фоновых изображений и рекламы</a></li><li><a href="#решение-распространенных-проблем">Решение распространенных проблем</a></li><li><a href="#часто-задаваемые-вопросы">Часто задаваемые вопросы</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>Каждый раз, включая компьютер, вы сталкиваетесь с навязчивым экраном, который требует лишнего клика или ввода пароля, прежде чем сможете начать работу. Этот интерфейс, известный как <strong>экран приветствия</strong>, часто содержит ненужную информацию, такую как погода, новости или реклама приложений, что лишь замедляет процесс запуска операционной системы. Для многих пользователей, особенно тех, кто использует ПК в домашних условиях без необходимости разделения учетных записей, этот этап кажется излишним и раздражающим.</p>
+
+<p>К счастью, операционная система <em>Windows 10</em> предоставляет несколько встроенных механизмов для отключения этого элемента. Вы можете не просто пропустить ввод пароля, но и полностью убрать визуальный слой с логотипом и фоновыми изображениями, сделав вход в систему мгновенным. В этой статье мы подробно разберем все доступные способы, от простых настроек в интерфейсе до правки системного реестра.</p>
+
+<p>Прежде чем вносить изменения, важно понимать, что отключение экрана входа может снизить уровень безопасности, если к вашему устройству имеют доступ посторонние лица. <mark>Полное отключение запроса пароля возможно только при наличии одной учетной записи Microsoft или локального пользователя без PIN-кода.</mark> Мы рассмотрим варианты как для домашних редакций, так и для профессиональных версий ОС.</p>
+
+<h2 id="базовая-настройка-параметров-учетной-записи">Базовая настройка параметров учетной записи</h2>
+<p>Самый простой и безопасный способ ускорить вход — это отключение требования ввода пароля через стандартное меню настроек. Этот метод не удаляет сам экран приветствия полностью, но позволяет системе автоматически авторизовать пользователя, если не используется PIN-код. Вам необходимо открыть диалоговое окно выполнения команд, введя комбинацию клавиш <code>Win + R</code>.</p>
+
+<p>В появившемся поле ввода следует набрать команду <code>netplwiz</code> или <code>control userpasswords2</code> и нажать Enter. Откроется окно «Учетные записи пользователей», где на вкладке «Пользователи» нужно найти флажок «Требовать ввод имени пользователя и пароля». Если снять эту галочку, система предложит выбрать пользователя для автоматического входа.</p>
+
+<ul>
+<li>🔑 Убедитесь, что вы знаете пароль от своей учетной записи Microsoft, так как он потребуется для подтверждения действий.</li>
+<li>🚫 Если флажок отсутствует, проверьте настройки входа в меню «Параметры» → «Учетные записи» → «Варианты входа».</li>
+<li>⚙️ Для локальных учетных записей этот метод работает стабильнее, чем для аккаунтов Microsoft с двухфакторной аутентификацией.</li>
+</ul>
+
+<p>Однако, если после снятия галочки при загрузке все равно появляется экран с выбором пользователя или требованием нажать кнопку входа, значит, в системе активированы дополнительные политики безопасности. В таком случае стандартных настроек недостаточно, и потребуется более глубокое вмешательство в конфигурацию <strong>операционной системы</strong>.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой метод входа вы используете чаще всего?</strong><ul><li>Пароль учетной записи Microsoft</li><li>Локальный пароль</li><li>PIN-код</li><li>Отпечаток пальца или лицо (Windows Hello)</li></ul></div></div>
+
+<h2 id="использование-редактора-локальной-групповой-политики">Использование редактора локальной групповой политики</h2>
+<p>Владельцы редакций <em>Windows 10 Pro</em> и <em>Enterprise</em> имеют доступ к мощному инструменту управления системой — редактору локальной групповой политики. Этот интерфейс позволяет детально настроить поведение экрана блокировки и входа, включая запрет на отображение последнего имени пользователя. Для запуска инструмента введите <code>gpedit.msc</code> в строке поиска меню «Пуск».</p>
+
+<p>В открывшемся окне необходимо проследовать по пути: «Конфигурация компьютера» → «Административные шаблоны» → «Компоненты Windows» → «Экран входа». Здесь нас интересует параметр «Не отображать последний вошедший в систему пользователь». Двойной клик по этому пункту откроет окно настройки, где нужно выбрать опцию «Включено».</p>
+
+<p>После применения изменений система перестанет показывать имя последнего пользователя и поле для ввода пароля сразу после загрузки, требуя полного ввода данных каждый раз, что может быть полезно в корпоративной среде, но раздражает дома. Для полного автоматического входа нужно также найти и включить параметр «Включать экран входа при запуске системы» в состояние «Отключено».</p>
+
+<details class="faq-item"><summary>Что делать, если редактор gpedit.msc не запускается?</summary><div class="faq-answer"><p>В домашних версиях Windows (Home) этот компонент отсутствует по умолчанию. Его можно добавить вручную через сторонние скрипты или использовать метод правки реестра, описанный ниже. Попытка запустить отсутствующий файл приведет к ошибке "Не удается найти файл".</p></div></details>
+
+<p>Важно отметить, что изменения в групповых политиках применяются не мгновенно, а после перезагрузки или выполнения команды обновления политик. Для принудительного применения настроек можно открыть командную строку от имени администратора и ввести команду <code>gpupdate /force</code>.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка настроек групповой политики</h4><label class="check-item"><input type="checkbox"><span>Открыть редактор gpedit.msc</span></label><label class="check-item"><input type="checkbox"><span>Перейти в раздел Экран входа</span></label><label class="check-item"><input type="checkbox"><span>Найти параметр отображения последнего пользователя</span></label><label class="check-item"><input type="checkbox"><span>Установить значение Включено</span></label><label class="check-item"><input type="checkbox"><span>Применить изменения и перезагрузиться</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+
+<h2 id="регулировка-через-системный-реестр">Регулировка через системный реестр</h2>
+<p>Для пользователей домашней версии <em>Windows 10 Home</em>, у которых нет доступа к редактору групповых политик, единственным вариантом остается прямое редактирование системного реестра. Это более рискованный метод, требующий внимательности, так как ошибочное изменение ключей может привести к нестабильной работе системы. Перед началом работы настоятельно рекомендуется создать точку восстановления.</p>
+
+<p>Откройте редактор реестра, введя <code>regedit</code> в окне «Выполнить» (<code>Win + R</code>). Вам нужно перейти по пути <code>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System</code>. Если раздела <code>System</code> не существует, его нужно создать вручную. Внутри этого раздела создается новый параметр типа DWORD (32 бита) с именем <code>NoLogonUI</code>.</p>
+
+<p>Значение этого параметра должно быть установлено в <code>1</code>, что принудительно отключает экран приветствия. Однако, чтобы система не требовала ввода пароля, также необходимо настроить автоматический вход, о котором говорилось в первом разделе. Без связки этих двух методов экран может исчезнуть, но запрос credentials останется.</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр реестра</th>
+<th>Тип данных</th>
+<th>Значение для отключения</th>
+<th>Описание эффекта</th>
+</tr>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NoLogonUI</td>
+<td>DWORD (32 бита)</td>
+<td>1</td>
+<td>Скрывает интерфейс экрана входа</td>
+</tr>
+<tr>
+<td>DisableLockScreen</td>
+<td>DWORD (32 бита)</td>
+<td>1</td>
+<td>Отключает экран блокировки</td>
+</tr>
+<tr>
+<td>HideFastUserSwitching</td>
+<td>DWORD (32 бита)</td>
+<td>1</td>
+<td>Скрывает переключение пользователей</td>
+</tr>
+<tr>
+<td>BlockLockScreen</td>
+<td>DWORD (32 бита)</td>
+<td>1</td>
+<td>Полный запрет экрана блокировки</td>
+</tr>
+</tbody>
+</table>
+
+<p>После внесения всех изменений в реестр необходимо перезагрузить компьютер. Если вы допустили ошибку в написании ключа или выбрали неверный тип данных, система может проигнорировать команду или, в худшем случае, потребовать восстановления из резервной копии. Будьте предельно аккуратны при работе с <strong>реестром Windows</strong>.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Неправильное редактирование реестра может привести к невозможности загрузки операционной системы. Всегда создавайте резервную копию реестра или точку восстановления перед внесением изменений.</p>
+</blockquote>
+
+<h2 id="отключение-экрана-блокировки-через-службы">Отключение экрана блокировки через службы</h2>
+<p>Еще одним эффективным способом убрать лишние элементы при старте системы является отключение службы, отвечающей за отображение экрана блокировки. Этот метод особенно полезен, если предыдущие способы не дали желаемого результата или если экран блокировки появляется снова после обновлений системы.</p>
+
+<p>Для доступа к списку служб нажмите <code>Win + R</code> и введите <code>services.msc</code>. В списке найдите службу с названием «Диспетчер задач экраном блокировки» (в английской версии — <em>Lock Screen</em> или схожее название, иногда она маскируется под системные процессы, но чаще всего достаточно отключить автозагрузку приложений экрана блокировки). Однако, более надежный путь — это отключение службы «Служба сенсорной клавиатуры и панели рукописного ввода» (Touch Keyboard and Handwriting Panel Service), если она не используется, так как она часто инициирует появление экрана приветствия.</p>
+
+<p>Дважды кликните по найденной службе, измените тип запуска на «Отключена» и нажмите кнопку «Остановить», если служба активна. Это действие предотвратит запуск компонентов, отвечающих за интерактивный экран приветствия. После этого система будет пытаться сразу перейти к рабочему столу или окну ввода пароля, минуя графические излишества.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если вы не уверены, какую именно службу отключать, лучше используйте метод с групповыми политиками, так как он более безопасен и обратим. Отключение системных служб может повлиять на работу других функций, таких как планшетный режим.</p></div>
+
+<p>Стоит помнить, что обновления Windows могут автоматически возвращать отключенные службы в исходное состояние. Поэтому после крупного обновления системы, известного как <em>Feature Update</em>, процедуру, возможно, придется повторить. Регулярная проверка настроек поможет сохранить желаемый вид системы.</p>
+
+<h2 id="удаление-фоновых-изображений-и-рекламы">Удаление фоновых изображений и рекламы</h2>
+<p>Даже если вам удалось настроить автоматический вход, экран приветствия может продолжать отображать рекламные изображения от <em>Microsoft</em>, известные как «Windows: интересное». Эти картинки потребляют трафик и ресурсы процессора в фоновом режиме. Чтобы избавиться от них, нужно изменить настройки персонализации.</p>
+
+<p>Перейдите в «Параметры» → «Персонализация» → «Экран блокировки». В разделе «Фон» выберите вариант «Фото» или «Сплошной цвет» вместо «Windows: интересное». Это действие отключит загрузку нового контента. Далее прокрутите страницу вниз и найдите переключатель «Получать от Windows интересные факты, советы и много другое на экране блокировки» — его необходимо перевести в положение «Отключено».</p>
+
+<ul>
+<li>🖼️ Замена фона на статическое изображение значительно снижает нагрузку на дисковый ввод-вывод при старте системы.</li>
+<li>📉 Отключение рекламных модулей повышает конфиденциальность, так как данные о местоположении перестают использоваться для подбора контента.</li>
+<li>⚡ Чистый экран блокировки без виджетов загружается быстрее на старых жестких дисках HDD.</li>
+</ul>
+
+<p>Дополнительно можно отключить отображение уведомлений на экране блокировки, чтобы никто не мог увидеть содержимое ваших сообщений до входа в систему. В том же меню настроек найдите пункт «Выбор приложений для подробного статуса» и очистите список, оставив его пустым или выбрав только необходимые системные уведомления.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Комплексное отключение рекламы и фоновых изображений не только ускоряет загрузку, но и делает интерфейс системы чище и приватнее, убирая навязчивый контент от Microsoft.</p></div>
+
+<h2 id="решение-распространенных-проблем">Решение распространенных проблем</h2>
+<p>В процессе оптимизации входа в систему пользователи могут столкнуться с рядом трудностей. Например, после отключения экрана приветствия система может начать загружаться сразу на рабочий стол, игнорируя запрос пароля, даже если вы планировали его оставить. Это часто происходит из-за конфликта настроек <code>netplwiz</code> и реестра.</p>
+
+<p>Если автоматический вход перестал работать, проверьте, не сменился ли ваш пароль от учетной записи Microsoft. При смене пароля в веб-интерфейсе, локальные кэшированные данные могут перестать соответствовать новым требованиям безопасности, и Windows заблокирует автоматическую авторизацию. В этом случае нужно заново пройти процедуру настройки через <code>netplwiz</code>, введя актуальный пароль.</p>
+
+<p>Еще одна проблема — появление черного экрана вместо приветствия. Это может свидетельствовать о повреждении системных файлов или конфликте драйверов видеокарты. В такой ситуации поможет проверка целостности системных файлов через командную строку.</p>
+
+<pre><code>sfc /scannow</code></pre>
+
+<p>Выполнение этой команды займет некоторое время и автоматически попытается восстановить поврежденные компоненты <strong>операционной системы</strong>. Если проблема сохраняется, возможно, стоит вернуть настройки реестра или групповых политик в исходное состояние и проверить систему на наличие вредоносного ПО.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Если после всех манипуляций система перестала загружаться нормально, используйте безопасный режим для отката изменений в реестре или восстановления точки восстановления системы.</p>
+</blockquote>
+
+<h2 id="часто-задаваемые-вопросы">Часто задаваемые вопросы</h2>
+<details>
+<summary>Безопасно ли полностью отключать экран приветствия и ввода пароля?</summary>
+<p>Это безопасно только в том случае, если компьютер находится в защищенном месте, куда нет доступа у посторонних людей. Отключение пароля означает, что любой, кто включит ПК, получит полный доступ ко всем вашим файлам, браузеру с сохраненными паролями и личной информации. Для ноутбуков и общедоступых компьютеров это делать категорически не рекомендуется.</p>
+</details>
+
+<details>
+<summary>Почему настройки сбрасываются после обновления Windows?</summary>
+<p>Крупные обновления Windows 10 часто перезаписывают ключи реестра и параметры групповых политик, возвращая их к значениям по умолчанию ради безопасности. Это штатное поведение системы. После каждого крупного обновления (например, переход с версии 21H2 на 22H2) настройки автоматического входа и экрана блокировки рекомендуется проверять и при необходимости восстанавливать.</p>
+</details>
+
+<details>
+<summary>Можно ли убрать экран приветствия, но оставить запрос PIN-кода?</summary>
+<p>Да, это возможно. Для этого не используйте метод <code>netplwiz</code> для снятия галочки требования пароля. Вместо этого используйте настройки групповых политик или реестра, чтобы убрать только визуальный экран с логотипом и фоновыми картинками, оставив поле для ввода PIN-кода. Это ускорит появление поля ввода, но сохранит защиту устройства.</p>
+</details>
+
+<details>
+<summary>Как вернуть все настройки обратно, если что-то пошло не так?</summary>
+<p>Чтобы вернуть экран приветствия, необходимо выполнить обратные действия: в <code>netplwiz</code> поставить галочку требования пароля, в реестре изменить значение <code>NoLogonUI</code> на <code>0</code> или удалить этот ключ, а в групповых политиках выбрать «Не задано». Также полезно запустить средство устранения неполадок системы.</p>
+</details>
+
+<details>
+<summary>Влияет ли отключение экрана блокировки на производительность старых ПК?</summary>
+<p>Да, на компьютерах с ограниченными ресурсами (малый объем ОЗУ, слабый процессор, старый HDD) отключение анимированных фонов, виджетов и лишних служб экрана блокировки может заметно ускорить время от включения кнопки питания до появления рабочего стола. Система тратит меньше времени на рендеринг графики и загрузку фоновых процессов.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#базовая-настройка-параметров-учетной-записи">Базовая настройка параметров учетной записи</a></li><li><a href="#использование-редактора-локальной-групповой-политики">Использование редактора локальной групповой политики</a></li><li><a href="#регулировка-через-системный-реестр">Регулировка через системный реестр</a></li><li><a href="#отключение-экрана-блокировки-через-службы">Отключение экрана блокировки через службы</a></li><li><a href="#удаление-фоновых-изображений-и-рекламы">Удаление фоновых изображений и рекламы</a></li><li><a href="#решение-распространенных-проблем">Решение распространенных проблем</a></li><li><a href="#часто-задаваемые-вопросы">Часто задаваемые вопросы</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/d/dr/drajvery-ot-win7-na-win10.html" class="related-card">Драйверы от Win7 на Win10: установка и совместимость</a></li><li><a href="/a/articles/h/hd/hd-realtek-audio-driver-windows-10.html" class="related-card">Realtek HD Audio Driver для Windows 10: полная инструкция по установке</a></li><li><a href="/a/articles/k/ka/kak-sbezhat-s-linuksa-na-windows-bez-fleshki.html" class="related-card">Как сбежать с Linux на Windows без флешки: полный гид</a></li><li><a href="/a/articles/k/ka/kak-posmotret-papku-knox-na-kompyutere.html" class="related-card">Как посмотреть папку Knox на компьютере: доступ к данным</a></li><li><a href="/a/articles/e/es/est-li-vozmozhnost-kartinku-na-rabochem-stole-kompyutera-skachat-na-knopochnyj.html" class="related-card">Как скачать картинку с ПК на кнопочный телефон: все способы</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/d/dr/drajvery-ot-win7-na-win10.html" class="related-bottom-card"><span class="related-bottom-title">Драйверы от Win7 на Win10: установка и совместимость</span><span class="related-bottom-desc">Подробная инструкция по установке драйверов Windows 7 на Windows 10. Решение проблем совместимости, </span></a><a href="/a/articles/h/hd/hd-realtek-audio-driver-windows-10.html" class="related-bottom-card"><span class="related-bottom-title">Realtek HD Audio Driver для Windows 10: полная инструкция по установке</span><span class="related-bottom-desc">Как скачать, обновить и настроить Realtek HD Audio Driver в Windows 10. Решение проблем со звуком, у</span></a><a href="/a/articles/k/ka/kak-sbezhat-s-linuksa-na-windows-bez-fleshki.html" class="related-bottom-card"><span class="related-bottom-title">Как сбежать с Linux на Windows без флешки: полный гид</span><span class="related-bottom-desc">Узнайте, как удалить Linux и установить Windows без флешки. Пошаговая инструкция по установке ОС с ж</span></a><a href="/a/articles/k/ka/kak-posmotret-papku-knox-na-kompyutere.html" class="related-bottom-card"><span class="related-bottom-title">Как посмотреть папку Knox на компьютере: доступ к данным</span><span class="related-bottom-desc">Узнайте, как получить доступ к файлам Samsung Knox на ПК. Подробная инструкция по настройке Secure F</span></a><a href="/a/articles/e/es/est-li-vozmozhnost-kartinku-na-rabochem-stole-kompyutera-skachat-na-knopochnyj.html" class="related-bottom-card"><span class="related-bottom-title">Как скачать картинку с ПК на кнопочный телефон: все способы</span><span class="related-bottom-desc">Узнайте, как передать изображение с компьютера на кнопочный телефон через USB, Bluetooth, MMS или об</span></a><a href="/a/articles/t/tw/twin-usb-joystick-drajver-windows-10-skachat.html" class="related-bottom-card"><span class="related-bottom-title">Twin USB Joystick Драйвер Windows 10: Скачать и Установить</span><span class="related-bottom-desc">Где скачать Twin USB Joystick драйвер для Windows 10. Полная инструкция по установке, настройке эмул</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

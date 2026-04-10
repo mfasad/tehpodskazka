@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Защита домашней и общественной сети брандмауэром — ТехПодсказка</title>
+    <meta name="description" content="Как настроить брандмауэр для защиты домашней и общественной сети. Экспертное руководство по настройке правил, сегментации трафика и предотвращению атак.">
+    <link rel="canonical" href="/a/articles/k/ka/kak-zaschitit-obe-seti-domashnyuyu-i-obschestvennuyu-brandmauerom.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Защита домашней и общественной сети брандмауэром">
+    <meta property="og:description" content="Как настроить брандмауэр для защиты домашней и общественной сети. Экспертное руководство по настройке правил, сегментации трафика и предотвращению атак.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/nastroika-tv/">Настройка ТВ</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Защита домашней и общественной сети брандмауэром</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Двойной периметр: как защитить домашнюю и общественную сеть брандмауэром</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#архитектура-угроз-различия-между-домашней-и-общественной-сетью">Архитектура угроз: различия между домашней и общественной сетью</a></li><li><a href="#настройка-брандмауэра-windows-и-macos-для-разных-профилей">Настройка брандмауэра Windows и macOS для разных профилей</a></li><li><a href="#сегментация-домашней-сети-создание-гостевого-периметра">Сегментация домашней сети: создание гостевого периметра</a></li><li><a href="#правила-фильтрации-портов-и-протоколов">Правила фильтрации портов и протоколов</a></li><li><a href="#использование-vpn-в-общественных-сетях">Использование VPN в общественных сетях</a></li><li><a href="#мониторинг-логов-и-реагирование-на-инциденты">Мониторинг логов и реагирование на инциденты</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>В эпоху повсеместного удаленного доступа и интернета вещей границы между личным и публичным цифровым пространством стремительно размываются. Многие пользователи ошибочно полагают, что антивируса достаточно для защиты, однако именно <strong>брандмауэр</strong> (межсетевой экран) является первым и самым важным рубежом обороны. Он контролирует входящий и исходящий трафик, фильтруя пакеты данных на основе предустановленных правил безопасности.</p>
+
+<p>Сложность современной киберугрозы заключается в том, что атака может прийти как из глобальной сети, так и от соседнего устройства в кафе или аэропорту. Настройка защиты требует понимания архитектуры вашей сети, будь то <em>Wi-Fi роутер</em> дома или публичная точка доступа. Игнорирование этих настроек превращает ваши гаджеты в открытую книгу для злоумышленников.</p>
+
+<p>В этой статье мы разберем стратегии построения надежного периметра безопасности. Вы узнаете, как изолировать критически важные устройства и настроить правила фильтрации, которые блокируют подозрительную активность еще до того, как она нанесет ущерб.</p>
+
+<h2 id="архитектура-угроз-различия-между-домашней-и-общественной-сетью">Архитектура угроз: различия между домашней и общественной сетью</h2>
+
+<p>Домашняя сеть традиционно считается доверенной зоной, однако с появлением умных холодильников, камер и дешевых IoT-гаджетов она превратилась в уязвимый периметр. Злоумышленники часто используют слабую защиту <strong>IoT-устройств</strong> как входную точку для атаки на компьютеры и смартфоны. В отличие от корпоративных сегментов, дома пользователи редко меняют заводские пароли и настройки.</p>
+
+<p>Общественные сети представляют собой совершенно иной уровень опасности. Здесь действует принцип нулевого доверия: каждое подключенное устройство теоретически может видеть трафик другого. Использование протоколов без шифрования в таких зонах равносильно передаче паролей в открытом виде. Брандмауэр в режиме "общественная сеть" должен блокировать все входящие соединения по умолчанию.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Никогда не соглашайтесь на обнаружение устройства в общественном Wi-Fi. Это автоматически открывает порты для локального сканирования другими пользователями сети.</p>
+</blockquote>
+
+<p>Ключевым отличием является уровень контроля. Дома вы администратор и можете менять правила <strong>маршрутизации</strong> и VLAN. В общественном месте вы полагаетесь только на программный файрвол вашего устройства, так как изменить настройки чужого роутера невозможно.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Где вы чаще подключаетесь к открытому Wi-Fi?</strong><ul><li>В кафе и ресторанах</li><li>В аэропортах и вокзалах</li><li>В отелях</li><li>Я никогда не подключаюсь к общественным сетям</li></ul></div></div>
+
+<h2 id="настройка-брандмауэра-windows-и-macos-для-разных-профилей">Настройка брандмауэра Windows и macOS для разных профилей</h2>
+
+<p>Операционные системы предоставляют мощные встроенные инструменты фильтрации трафика. В Windows это <em>Брандмауэр Защитника Windows</em>, а в macOS — встроенный сетевой фильтр. Первый шаг — правильное определение профиля сети при подключении. Система должна знать, находится ли она в безопасном окружении или в зоне риска.</p>
+
+<p>Для Windows критически важно вручную переключать тип сети с "Частная" на "Общедоступная". В режиме частной сети разрешается общий доступ к файлам и принтерам, тогда как в общедоступной эти службы блокируются. Проверить текущий статус можно через командную строку, введя команду <code>netsh interface show interface</code>.</p>
+
+<p>В macOS управление осуществляется через раздел безопасности в системных настройках. Здесь можно включить режим "Блокировать все входящие соединения", что превращает компьютер в невидимку для локальной сети, оставляя доступным только необходимый исходящий трафик. Это особенно полезно при работе с конфиденциальными данными.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка настроек файрвола</h4><label class="check-item"><input type="checkbox"><span>Определен профиль сети (Частный/Общий)</span></label><label class="check-item"><input type="checkbox"><span>Входящие соединения заблокированы по умолчанию</span></label><label class="check-item"><input type="checkbox"><span>Общий доступ к файлам отключен в общественных сетях</span></label><label class="check-item"><input type="checkbox"><span>Правила для браузеров настроены корректно</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>Не забывайте, что некоторые приложения могут самостоятельно добавлять исключения. Регулярно проверяйте список разрешенных программ. Наличие неизвестного приложения с доступом к сети — это красный флаг, требующий немедленного вмешательства и удаления подозрительного софта.</p>
+
+<h2 id="сегментация-домашней-сети-создание-гостевого-периметра">Сегментация домашней сети: создание гостевого периметра</h2>
+
+<p>Наиболее эффективной стратегией защиты домашней инфраструктуры является сегментация. Разделение единой сети на логические зоны позволяет ограничить распространение угрозы. Если вирус попадет на умную лампочку, он не сможет перекинуться на ваш ноутбук с банковскими данными, если они находятся в разных сегментах.</p>
+
+<p>Современные роутеры поддерживают функцию гостевой сети (<em>Guest Network</em>). Это не просто способ дать пароль друзьям, а полноценный инструмент изоляции. Все устройства, подключенные к гостевому SSID, получают доступ в интернет, но не видят устройства основной локальной сети. Сюда следует отправлять все IoT-гаджеты и устройства гостей.</p>
+
+<p>Настройка VLAN (виртуальных локальных сетей) — это продвинутый уровень сегментации. Требуя поддержки со стороны оборудования, VLAN позволяет создавать жесткие границы на уровне коммутации. Даже если физическое подключение одно, логически устройства будут разделены, и брандмауэр будет фильтровать трафик между ними согласно строгим правилам.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Убедитесь, что в настройках роутера активирована опция "AP Isolation" или "Client Isolation" для гостевой сети. Без этого устройства внутри гостевого сегмента могут атаковать друг друга.</p>
+</blockquote>
+
+<p>Для реализации сегментации войдите в панель управления роутером, обычно доступную по адресу <code>192.168.0.1</code> или <code>192.168.1.1</code>. Найдите раздел Wireless или Wi-Fi Settings и активируйте создание гостевой сети, задав для нее отдельное имя и пароль.</p>
+
+<details class="faq-item"><summary>Почему IoT-устройства опасны?</summary><div class="faq-answer"><p>Большинство умных устройств (камеры, розетки) работают на урезанных версиях Linux с давно известными уязвимостями. Производители редко выпускают обновления безопасности, делая их легкой добычей для ботнетов. Изоляция таких устройств — единственный способ обезопасить основную сеть.</p></div></details>
+
+<h2 id="правила-фильтрации-портов-и-протоколов">Правила фильтрации портов и протоколов</h2>
+
+<p>Глубокая настройка брандмауэра невозможна без понимания работы портов. Каждый сервис в интернете использует определенный порт: веб-серверы — 80 и 443, почта — 25, удаленный доступ — 3389 или 22. Задача администратора — закрыть все лишние входы и оставить только необходимые.</p>
+
+<p>Правило "запретить все входящие по умолчанию" является золотым стандартом безопасности. Разрешать следует только установленные соединения (Established/Related). Это означает, что если вы запросили веб-страницу, ответ сервера будет пропущен, но любая попытка инициировать соединение извне будет заблокирована.</p>
+
+<p>Особое внимание следует уделить портам удаленного управления. Протоколы <strong>RDP</strong> (Remote Desktop Protocol) и <strong>SSH</strong> часто становятся мишенью для брутфорс-атак. Если вам необходим удаленный доступ, никогда не выставляйте эти порты напрямую в интернет. Используйте VPN или измените стандартный порт на нестандартный, чтобы снизить уровень автоматизированного шума.</p>
+
+<p>Приведем таблицу常见ных портов и рекомендаций по их фильтрации:</p>
+
+<table>
+<thead>
+<tr>
+<th>Порт</th>
+<th>Протокол</th>
+<th>Сервис</th>
+<th>Рекомендация</th>
+</tr>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>21</td>
+<td>TCP</td>
+<td>FTP</td>
+<td>Закрыть (использовать SFTP)</td>
+</tr>
+<tr>
+<td>22</td>
+<td>TCP</td>
+<td>SSH</td>
+<td>Закрыть для WAN, ограничить IP</td>
+</tr>
+<tr>
+<td>80</td>
+<td>TCP</td>
+<td>HTTP</td>
+<td>Перенаправлять на 443</td>
+</tr>
+<tr>
+<td>443</td>
+<td>TCP</td>
+<td>HTTPS</td>
+<td>Открыть для веб-сервисов</td>
+</tr>
+<tr>
+<td>3389</td>
+<td>TCP/UDP</td>
+<td>RDP</td>
+<td>Строго закрыть для WAN</td>
+</tr>
+</tbody>
+</table>
+
+<p>Для проверки открытых портов на своем устройстве можно использовать утилиты сканирования или онлайн-сервисы. Команда <code>netstat -an</code> покажет все активные соединения и прослушиваемые порты на вашем компьютере прямо сейчас.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте правило "Whitelist" (белый список) для критически важных служб. Вместо того чтобы запрещать известные плохие порты, разрешайте только те, которые действительно нужны для работы ваших приложений.</p></div>
+
+<h2 id="использование-vpn-в-общественных-сетях">Использование VPN в общественных сетях</h2>
+
+<p>Когда вы находитесь вне дома, ваш трафик проходит через оборудование, которое вам не принадлежит. Владелец кафе или хакер, подключенный к той же точке доступа, теоретически могут перехватывать данные. Виртуальная частная сеть (<strong>VPN</strong>) создает защищенный туннель, шифруя весь трафик между вашим устройством и сервером провайдера.</p>
+
+<p>При активном VPN-соединении брандмауэр видит лишь зашифрованный поток данных, идущий на один порт. Это скрывает ваши действия от локального администратора сети и защищает от сниффинга пакетов. Для максимальной безопасности выбирайте протоколы <em>WireGuard</em> или <em>OpenVPN</em>, которые зарекомендовали себя как надежные и быстрые.</p>
+
+<p>Важно настроить автоматическое подключение VPN при обнаружении общественной сети. Многие современные клиенты имеют функцию "Kill Switch", которая полностью разрывает интернет-соединение, если VPN-туннель по какой-то причине оборвется. Это предотвращает утечку данных через незащищенный канал.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Бесплатные VPN-сервисы часто зарабатывают на продаже ваших данных или внедрении рекламы. Для защиты критически важной информации используйте только проверенные платные решения или собственный сервер.</p>
+</blockquote>
+
+<p>Корпоративные пользователи обязаны использовать VPN, предоставленный отделом IT. Попытка обойти корпоративные политики безопасности через личный VPN может привести к компрометации внутренней сети компании и дисциплинарному взысканию.</p>
+
+<h2 id="мониторинг-логов-и-реагирование-на-инциденты">Мониторинг логов и реагирование на инциденты</h2>
+
+<p>Настройка брандмауэра — это не разовое действие, а непрерывный процесс. Логи (журналы событий) содержат invaluable информацию о том, кто и когда пытался проникнуть в вашу сеть. Регулярный анализ записей позволяет выявлять новые векторы атак и корректировать правила защиты.</p>
+
+<p>В домашних условиях достаточно периодически проверять логи роутера на предмет множественных попыток входа с внешних IP-адресов. В корпоративной среде или для продвинутых пользователей рекомендуется настройка централизованного сбора логов и использование систем обнаружения вторжений (<strong>IDS</strong>), таких как <em>Snort</em> или <em>Suricata</em>.</p>
+
+<p>Если вы заметили подозрительную активность, например, множество попыток подключения к порту, который должен быть закрыт, немедленно измените правила фильтрации. Также стоит сменить пароли административных панелей и обновить прошивку сетевого оборудования до последней версии.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Регулярное обновление прошивки роутера и антивирусных баз — это 50% успеха в защите сети. Оставшаяся часть зависит от грамотной настройки правил брандмауэра.</p></div>
+
+<p>Автоматизация процесса мониторинга позволяет не держать руку на пульсе 24/7. Настройте уведомления на электронную почту или в мессенджер при критических событиях, таких как блокировка большого объема трафика или попытка доступа к админ-панели.</p>
+
+<details>
+<summary>Как часто нужно проверять логи брандмауэра?</summary>
+<p>Для домашнего использования достаточно еженедельного беглого просмотра. Если вы заметили странное поведение сети (медленный интернет, всплывающая реклама), проверку нужно проводить немедленно. В корпоративной среде мониторинг должен вестись в реальном времени с помощью SIEM-систем.</p>
+</details>
+
+<details>
+<summary>Может ли брандмауэр защитить от вирусов в загруженных файлах?</summary>
+<p>Традиционный сетевой брандмауэр анализирует заголовки пакетов и порты, но не всегда может заглянуть внутрь содержимого файла. Для защиты от вирусов в файлах необходимы межсетевые экраны нового поколения (NGFW) с функцией глубокой инспекции пакетов (DPI) или антивирусное ПО на конечном устройстве.</p>
+</details>
+
+<details>
+<summary>Замедляет ли брандмауэр скорость интернета?</summary>
+<p>Правильно настроенный брандмауэр практически не влияет на скорость. Задержка может возникнуть только при использовании сложных правил фильтрации на слабом оборудовании или при включении функции глубокой инспекции трафика, которая требует значительных вычислительных ресурсов процессора.</p>
+</details>
+
+<details>
+<summary>Нужен ли отдельный аппаратный брандмауэр для дома?</summary>
+<p>Для большинства пользователей достаточно возможностей встроенного файрвола в современном роутере и программных брандмауэров ОС. Отдельное устройство (например, на базе pfSense или Ubiquiti) имеет смысл, если у вас сложная сеть с множеством устройств, серверами или повышенные требования к конфиденциальности данных.</p>
+</details>
+
+<details>
+<summary>Что делать, если я забыл пароль от админки роутера?</summary>
+<p>Если стандартные пароли (admin/admin) не подходят, единственный выход — сброс устройства до заводских настроек. Обычно для этого нужно нажать и удерживать кнопку Reset на корпусе роутера в течение 10-15 секунд. После этого придется заново настроить подключение к интернету и правила безопасности.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#архитектура-угроз-различия-между-домашней-и-общественной-сетью">Архитектура угроз: различия между домашней и общественной сетью</a></li><li><a href="#настройка-брандмауэра-windows-и-macos-для-разных-профилей">Настройка брандмауэра Windows и macOS для разных профилей</a></li><li><a href="#сегментация-домашней-сети-создание-гостевого-периметра">Сегментация домашней сети: создание гостевого периметра</a></li><li><a href="#правила-фильтрации-портов-и-протоколов">Правила фильтрации портов и протоколов</a></li><li><a href="#использование-vpn-в-общественных-сетях">Использование VPN в общественных сетях</a></li><li><a href="#мониторинг-логов-и-реагирование-на-инциденты">Мониторинг логов и реагирование на инциденты</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-skachat-zalu-na-televizor-tcl.html" class="related-card">Как скачать Zala на телевизор TCL: полная инструкция</a></li><li><a href="/a/articles/k/ka/kak-opredelit-skolko-kamer-rabotaet-na-smartfone.html" class="related-card">Как проверить работу всех камер на смартфоне: полный гид</a></li><li><a href="/a/articles/k/ka/kak-uznat-versiyu-tizen-samsung-tv.html" class="related-card">Как узнать версию Tizen на Samsung TV: все способы</a></li><li><a href="/a/articles/d/de/dexp-dv3-t2-pristavka-tv-instrukciya.html" class="related-card">DEXP DV3-T2: инструкция, прошивка, настройка каналов</a></li><li><a href="/a/articles/v/v-/v-televizore-najr-smotret-filmy-besplatno.html" class="related-card">Смотреть фильмы на телевизоре Nayr бесплатно: полный гид</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-skachat-zalu-na-televizor-tcl.html" class="related-bottom-card"><span class="related-bottom-title">Как скачать Zala на телевизор TCL: полная инструкция</span><span class="related-bottom-desc">Узнайте, как установить приложение Zala на Smart TV TCL. Подробное руководство по Android TV, методы</span></a><a href="/a/articles/k/ka/kak-opredelit-skolko-kamer-rabotaet-na-smartfone.html" class="related-bottom-card"><span class="related-bottom-title">Как проверить работу всех камер на смартфоне: полный гид</span><span class="related-bottom-desc">Узнайте, сколько камер реально работает на вашем Android или iPhone. Методы проверки через ADB, тест</span></a><a href="/a/articles/k/ka/kak-uznat-versiyu-tizen-samsung-tv.html" class="related-bottom-card"><span class="related-bottom-title">Как узнать версию Tizen на Samsung TV: все способы</span><span class="related-bottom-desc">Подробная инструкция: как проверить версию Tizen OS на телевизоре Samsung. Узнайте модель, год выпус</span></a><a href="/a/articles/d/de/dexp-dv3-t2-pristavka-tv-instrukciya.html" class="related-bottom-card"><span class="related-bottom-title">DEXP DV3-T2: инструкция, прошивка, настройка каналов</span><span class="related-bottom-desc">Полная инструкция для приставки DEXP DV3-T2: настройка каналов, обновление прошивки, пульт ДУ и устр</span></a><a href="/a/articles/v/v-/v-televizore-najr-smotret-filmy-besplatno.html" class="related-bottom-card"><span class="related-bottom-title">Смотреть фильмы на телевизоре Nayr бесплатно: полный гид</span><span class="related-bottom-desc">Как бесплатно смотреть фильмы на телевизоре Найр. Инструкция по настройке онлайн-кинотеатров, устано</span></a><a href="/a/articles/a/ak/aktualizator-gugl-tv-dlya-televizora-tcl.html" class="related-bottom-card"><span class="related-bottom-title">Актуализатор Гугл ТВ для TCL: Обновление прошивки и Android</span><span class="related-bottom-desc">Как обновить Google TV на TCL? Полная инструкция по поиску актуализатора, ручной установке прошивки </span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

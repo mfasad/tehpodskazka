@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>VirtualBox зависает при установке Windows: решение — ТехПодсказка</title>
+    <meta name="description" content="Oracle VM VirtualBox зависает при установке Windows? Узнайте причины зависания, методы отключения 3D-ускорения и настройки EFI для успешного запуска.">
+    <link rel="canonical" href="/a/articles/o/or/oracle-vm-virtualbox-zavisaet-pri-ustanovke-windows.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="VirtualBox зависает при установке Windows: решение">
+    <meta property="og:description" content="Oracle VM VirtualBox зависает при установке Windows? Узнайте причины зависания, методы отключения 3D-ускорения и настройки EFI для успешного запуска.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/windows-i-pk/">Windows и ПК</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">VirtualBox зависает при установке Windows: решение</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Решение проблемы: VirtualBox зависает при установке Windows</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#конфликты-аппаратного-ускорения-и-графического-контроллера">Конфликты аппаратного ускорения и графического контроллера</a></li><li><a href="#проблемы-с-настройками-процессора-и-виртуализации">Проблемы с настройками процессора и виртуализации</a></li><li><a href="#ошибки-выделения-оперативной-памяти-и-файла-подкачки">Ошибки выделения оперативной памяти и файла подкачки</a></li><li><a href="#настройки-efi-и-порядка-загрузки">Настройки EFI и порядка загрузки</a></li><li><a href="#проблемы-с-образом-установочного-диска-и-контроллерами">Проблемы с образом установочного диска и контроллерами</a></li><li><a href="#влияние-антивирусов-и-стороннего-по">Влияние антивирусов и стороннего ПО</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>Ситуация, когда <strong>Oracle VM VirtualBox</strong> неожиданно замирает в процессе инсталляции операционной системы, знакома многим пользователям виртуальных сред. Экран может превратиться в статичное изображение, курсор исчезает или перестает реагировать на движения, а гостевая машина перестает отвечать на запросы ввода. Это происходит не из-за слабости вашего компьютера, а чаще всего из-за конфликта настроек виртуализации с конкретными версиями BIOS/UEFI или драйверами хост-системы.</p>
+<p>Проблема актуальна как для старых версий <em>Windows 7</em>, так и для современных <em>Windows 10</em> и <em>11</em>. В большинстве случаев сбой возникает на этапе загрузки установщика или сразу после выбора языка, что указывает на ошибки в распределении ресурсов или аппаратном ускорении. Понимание природы этих конфликтов позволяет быстро устранить неполадку без потери данных.</p>
+<p>Далее мы рассмотрим детальные шаги по диагностике и исправлению ошибок, которые приводят к полному зависанию виртуальной машины. Грамотная настройка параметров эмуляции часто решает проблему за несколько минут, возвращая работоспособность среде разработки или тестирования.</p>
+
+<h2 id="конфликты-аппаратного-ускорения-и-графического-контроллера">Конфликты аппаратного ускорения и графического контроллера</h2>
+<p>Наиболее частой причиной, по которой <strong>VirtualBox зависает</strong> во время установки, является некорректная работа 3D-ускорения. Виртуальный графический адаптер пытается использовать ресурсы вашей физической видеокарты, но драйверы хост-системы могут блокировать этот запрос или обрабатывать его с ошибкой. Особенно часто это наблюдается при использовании интегрированной графики <em>Intel HD Graphics</em> или старых моделей <em>NVIDIA</em>.</p>
+<p>Для устранения сбоя необходимо принудительно отключить функцию 3D-ускорения в настройках конкретной виртуальной машины. Найдите раздел <code>Дисплей</code> в меню настроек и снимите галочку с пункта <code>Включить 3D-ускорение</code>. Это заставит виртуальную машину использовать программную отрисовку интерфейса, что значительно стабильнее, хотя и может слегка снизить производительность графического интерфейса.</p>
+<blockquote>
+<p>⚠️ Внимание: После отключения 3D-ускорения интерфейс установки может работать медленнее, но это гарантирует отсутствие артефактов и зависаний на критических этапах загрузки.</p>
+</blockquote>
+<p>Также стоит обратить внимание на объем видеопамяти, выделенный для гостевой ОС. Если ползунок выкручен на максимум, но драйвер видеокарты не поддерживает такое распределение ресурсов в режиме эмуляции, система может зависнуть. Оптимальным значением для установки Windows является диапазон от 128 до 256 МБ.</p>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если отключение 3D-ускорения не помогло, попробуйте сменить графический контроллер в настройках Дисплея на VBoxSVGA или даже VBoxVGA для старых систем.</p></div>
+
+<h2 id="проблемы-с-настройками-процессора-и-виртуализации">Проблемы с настройками процессора и виртуализации</h2>
+<p>Некорректное количество выделенных ядер процессора — еще один триггер для зависаний. Многие пользователи ошибочно полагают, что чем больше ядер отдано виртуальной машине, тем лучше. Однако <strong>Oracle VM</strong> может некорректно планировать потоки, если выделено слишком много ресурсов относительно физического процессора хоста, особенно если активирован режим <em>PAE/NX</em> неправильно.</p>
+<p>Рекомендуется оставлять для гостевой системы не более 50-70% от общего количества доступных логических ядер. Например, если у вашего процессора 4 ядра, виртуальной машине стоит выделить 1 или 2, но не 3 или 4. Перегрузка контроллера прерываний приводит к тому, что виртуальная машина перестает отвечать на системные таймеры и зависает.</p>
+<p>Кроме того, критически важно проверить, включена ли аппаратная виртуализация в BIOS вашего реального компьютера. Технологии <em>Intel VT-x</em> или <em>AMD-V</em> должны быть активны. Без них VirtualBox переходит в режим программной эмуляции, который крайне нестабилен для современных операционных систем и часто приводит к зависанию на логотипе Windows.</p>
+<ul>
+<li>🔹 Проверьте в BIOS/UEFI наличие опций <code>Intel Virtualization Technology</code> или <code>SVM Mode</code> для AMD.</li>
+<li>🔹 Убедитесь, что антивирус или гипервизор Windows (Hyper-V) не блокируют доступ VirtualBox к аппаратуре.</li>
+<li>🔹 В настройках процессора виртуальной машины попробуйте изменить порядок исполнения (Execution Cap) на 100%.</li>
+</ul>
+<div class="attention-box attention-info"><div><strong>📊 Сколько ядер вы выделяете виртуальной машине?</strong><ul><li>1 ядро</li><li>2 ядра</li><li>Все доступные ядра</li><li>Не знаю / Не проверял</li></ul></div></div>
+
+<h2 id="ошибки-выделения-оперативной-памяти-и-файла-подкачки">Ошибки выделения оперативной памяти и файла подкачки</h2>
+<p>Выделение чрезмерного объема оперативной памяти — классическая ошибка, ведущая к нестабильности. Когда <strong>VirtualBox</strong> резервирует память, он фактически изымает её из оборота основной системы. Если хост-система начинает испытывать нехватку ОЗУ, она обращается к файлу подкачки, что резко снижает производительность и может вызвать иллюзию зависания или реальный фриз системы.</p>
+<p>Оптимальным правилом считается выделение не более половины доступной физической памяти, если хост-система работает параллельно. Для установки Windows 10 достаточно 2048 МБ, а для Windows 7 хватит и 1024 МБ. Превышение этих лимитов без необходимости только дестабилизирует работу эмулятора.</p>
+<table>
+<thead>
+<tr>
+<th>Гостевая ОС</th>
+<th>Минимум RAM</th>
+<th>Рекомендуемый RAM</th>
+<th>Максимум без риска</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Windows XP</td>
+<td>256 МБ</td>
+<td>512 МБ</td>
+<td>1024 МБ</td>
+</tr>
+<tr>
+<td>Windows 7</td>
+<td>1024 МБ</td>
+<td>2048 МБ</td>
+<td>4096 МБ</td>
+</tr>
+<tr>
+<td>Windows 10</td>
+<td>2048 МБ</td>
+<td>4096 МБ</td>
+<td>Половина RAM хоста</td>
+</tr>
+<tr>
+<td>Windows 11</td>
+<td>4096 МБ</td>
+<td>8192 МБ</td>
+<td>Половина RAM хоста</td>
+</tr>
+</tbody>
+</table>
+<p>Также стоит учитывать состояние жесткого диска. Если основной диск фрагментирован или переполнен, операции записи в виртуальный файл диска (обычно <code>.vdi</code>) могут занимать слишком много времени, создавая эффект зависания. Дефрагментация хост-диска перед началом установки часто ускоряет процесс.</p>
+
+<h2 id="настройки-efi-и-порядка-загрузки">Настройки EFI и порядка загрузки</h2>
+<p>Современные версии Windows, особенно <em>Windows 11</em>, требуют наличия интерфейса <strong>EFI</strong> вместо устаревшего <em>BIOS</em>. Если в настройках виртуальной машины не включена поддержка EFI, установщик может зависнуть сразу после начала загрузки, пытаясь обратиться к несуществующим таблицам разделов. Однако для старых систем включение EFI, наоборот, вызывает конфликты.</p>
+<p>Для активации EFI необходимо использовать командную строку или скрытые настройки. В графическом интерфейсе новых версий VirtualBox появилась соответствующая галочка в разделе <code>Система → Материнская плата → Тип EFI</code>. Если её нет, потребуется выполнить команду через терминал хост-системы.</p>
+<pre><code>VBoxManage setextradata "Имя_Вашей_ВМ" "VBoxInternal/Devices/efi/0/Config/Enable" 1</code></pre>
+<p>После включения EFI убедитесь, что в разделе <code>Носители</code> образ ISO-диска подключен правильно и стоит первым в порядке загрузки. Иногда VirtualBox зависает, пытаясь загрузиться с сети или флоппи-диска, если приоритеты выставлены неверно.</p>
+<blockquote>
+<p>⚠️ Внимание: Переключение режима EFI на уже установленной системе приведет к тому, что Windows перестанет загружаться. Меняйте этот параметр только перед чистой установкой.</p>
+</blockquote>
+<details class="faq-item"><summary>Как проверить, работает ли EFI?</summary><div class="faq-answer"><p>При загрузке с включенным EFI вместо логотипа VirtualBox вы увидите черный экран с текстом "Booting from EFI..." или логотип UEFI Shell.</p></div></details>
+
+<h2 id="проблемы-с-образом-установочного-диска-и-контроллерами">Проблемы с образом установочного диска и контроллерами</h2>
+<p>Целостность установочного файла — фундамент стабильной работы. Если <strong>ISO-образ</strong> Windows скачан с ошибками или поврежден при записи, процесс установки будет зависать на случайных этапах. Всегда проверяйте контрольные суммы скачанных файлов перед использованием их в виртуальной среде.</p>
+<p>Важным аспектом является выбор типа контроллера накопителя. Для современных систем Windows предпочтительно использовать контроллер <em>SATA</em> или <em>NVMe</em> (если поддерживается версией VirtualBox). Использование эмуляции <em>IDE</em> для систем новее Windows XP часто вызывает проблемы с производительностью дискового ввода-вывода, что воспринимается как зависание.</p>
+<p>Проверьте настройки порта SATA. Убедитесь, что опция <code>Использовать хост-IO</code> (Use Host I/O Cache) активирована. Это позволяет системе кэширования хоста обрабатывать запросы диска более эффективно, предотвращая переполнение буферов виртуальной машины.</p>
+<ul>
+<li>🔹 Переподключите ISO-образ в настройках носителей, выбрав файл заново.</li>
+<li>🔹 Попробуйте создать новую виртуальную машину с нуля, чтобы исключить ошибки конфигурации.</li>
+<li>🔹 Убедитесь, что в настройках контроллера SATA стоит галочка "Включить кэш хоста".</li>
+</ul>
+
+<h2 id="влияние-антивирусов-и-стороннего-по">Влияние антивирусов и стороннего ПО</h2>
+<p>Антивирусное программное обеспечение на хост-машине может агрессивно сканировать активность виртуальной машины, воспринимая её поведение как подозрительное. Особенно часто это происходит при попытке записи системных файлов Windows. Реальное время защиты (Real-time protection) может блокировать потоки данных, вызывая таймаут и зависание <em>VirtualBox</em>.</p>
+<p>Для диагностики попробуйте временно отключить антивирус или добавить папку с виртуальными машинами в исключения. Также конфликты могут вызывать другие программы виртуализации, такие как <em>VMware Workstation</em> или включенный компонент <em>Hyper-V</em> в Windows, которые перехватывают инструкции виртуализации.</p>
+<div class="checklist-block"><h4>☑️ Диагностика конфликтов ПО</h4><label class="check-item"><input type="checkbox"><span>Отключить антивирус на 10 минут</span></label><label class="check-item"><input type="checkbox"><span>Проверить запущенные гипервизоры</span></label><label class="check-item"><input type="checkbox"><span>Закрыть фоновые загрузчики</span></label><label class="check-item"><input type="checkbox"><span>Перезапустить службу VirtualBox</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+<p>Если у вас установлена Windows 10 или 11, убедитесь, что функция "Песочница Windows" (Windows Sandbox) или "Платформа виртуальной машины" не конфликтуют с VirtualBox. В некоторых случаях помогает полное отключение этих компонентов через "Включение или отключение компонентов Windows".</p>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+<details>
+<summary>Почему VirtualBox зависает именно на логотипе Windows?</summary>
+<p>Чаще всего это связано с включенным 3D-ускорением или неправильным режимом EFI. Попробуйте отключить 3D-ускорение в настройках дисплея и проверить, соответствует ли тип прошивки (BIOS/EFI) версии устанавливаемой Windows.</p>
+</details>
+<details>
+<summary>Можно ли запустить Windows 11 в VirtualBox без TPM?</summary>
+<p>Да, можно. В новых версиях VirtualBox (6.x и 7.x) есть встроенная эмуляция TPM 2.0. Если она не включена автоматически, установщик Windows 11 может зависать или выдавать ошибку. Убедитесь, что в настройках системы включена опция эмуляции TPM.</p>
+</details>
+<details>
+<summary>Что делать, если курсор мыши пропал и система не реагирует?</summary>
+<p>Нажмите правую клавишу <code>Ctrl</code> (по умолчанию), чтобы освободить захват мыши. Если это не помогает, попробуйте послать сигнал <code>Ctrl+Alt+Del</code> через меню <code>Ввод</code> в окне виртуальной машины. Если реакция отсутствует, придется завершить процесс через диспетчер задач хоста.</p>
+</details>
+<details>
+<summary>Влияет ли версия VirtualBox на стабильность установки?</summary>
+<p>Безусловно. Старые версии могут не поддерживать новые инструкции процессоров или стандарты UEFI. Всегда используйте актуальную версию <em>Oracle VM VirtualBox</em> и соответствующее дополнение (Extension Pack) для максимальной совместимости.</p>
+</details>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>90% проблем с зависанием решаются отключением 3D-ускорения и корректировкой объема выделенной оперативной памяти.</p></div></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#конфликты-аппаратного-ускорения-и-графического-контроллера">Конфликты аппаратного ускорения и графического контроллера</a></li><li><a href="#проблемы-с-настройками-процессора-и-виртуализации">Проблемы с настройками процессора и виртуализации</a></li><li><a href="#ошибки-выделения-оперативной-памяти-и-файла-подкачки">Ошибки выделения оперативной памяти и файла подкачки</a></li><li><a href="#настройки-efi-и-порядка-загрузки">Настройки EFI и порядка загрузки</a></li><li><a href="#проблемы-с-образом-установочного-диска-и-контроллерами">Проблемы с образом установочного диска и контроллерами</a></li><li><a href="#влияние-антивирусов-и-стороннего-по">Влияние антивирусов и стороннего ПО</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-ustanovit-kalendar-na-rabochij-stol-windows-7.html" class="related-card">Как установить календарь на рабочий стол Windows 7</a></li><li><a href="/a/articles/b/ba/babysitter-kod-ot-kompyutera.html" class="related-card">Код от компьютера для бэбиситтера: как найти и подключить</a></li><li><a href="/a/articles/a/as/asus-vindovs-uznat-kompyuter-hp-intel-sharik.html" class="related-card">Как узнать характеристики компьютера ASUS: Windows, HP, Intel</a></li><li><a href="/a/articles/w/wi/windows-8-schelchki-pri-vosproizvedenii-zvuka.html" class="related-card">Щелчки при воспроизведении звука в Windows 8: устранение за 5 шагов</a></li><li><a href="/a/articles/c/ca/canon-1100d-peredat-kartinku-v-realnom-vremeni-na-kompyuter.html" class="related-card">Canon 1100D: передача видео на ПК в реальном времени</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-ustanovit-kalendar-na-rabochij-stol-windows-7.html" class="related-bottom-card"><span class="related-bottom-title">Как установить календарь на рабочий стол Windows 7</span><span class="related-bottom-desc">Подробная инструкция по установке виджета календаря на рабочий стол Windows 7. Решаем проблему исчез</span></a><a href="/a/articles/b/ba/babysitter-kod-ot-kompyutera.html" class="related-bottom-card"><span class="related-bottom-title">Код от компьютера для бэбиситтера: как найти и подключить</span><span class="related-bottom-desc">Узнайте, что такое код от компьютера в приложении для бэбиситтера. Инструкция по поиску PIN-кода, ус</span></a><a href="/a/articles/a/as/asus-vindovs-uznat-kompyuter-hp-intel-sharik.html" class="related-bottom-card"><span class="related-bottom-title">Как узнать характеристики компьютера ASUS: Windows, HP, Intel</span><span class="related-bottom-desc">Узнайте, как определить модель, процессор Intel и параметры системы на ноутбуках ASUS, HP и других. </span></a><a href="/a/articles/w/wi/windows-8-schelchki-pri-vosproizvedenii-zvuka.html" class="related-bottom-card"><span class="related-bottom-title">Щелчки при воспроизведении звука в Windows 8: устранение за 5 шагов</span><span class="related-bottom-desc">Почему трещит звук в Windows 8? Полный гид по устранению щелчков, треска и прерываний аудио через на</span></a><a href="/a/articles/c/ca/canon-1100d-peredat-kartinku-v-realnom-vremeni-na-kompyuter.html" class="related-bottom-card"><span class="related-bottom-title">Canon 1100D: передача видео на ПК в реальном времени</span><span class="related-bottom-desc">Полная инструкция по стримингу с Canon 1100D на компьютер. Настройка EOS Utility, работа через карту</span></a><a href="/a/articles/q/qt/qts1081b-usb-adapter-driver.html" class="related-bottom-card"><span class="related-bottom-title">QTS1081B USB Driver: Установка и решение проблем</span><span class="related-bottom-desc">Полное руководство по установке драйвера QTS1081B USB. Скачать ПО, настроить адаптер и исправить оши</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

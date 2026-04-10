@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Восстановление Astra Linux через терминал: полное руководство — ТехПодсказка</title>
+    <meta name="description" content="Подробная инструкция по восстановлению Astra Linux с помощью LiveUSB и chroot. Решение проблем с загрузчиком GRUB, сброс пароля и ремонт файловой системы.">
+    <link rel="canonical" href="/a/articles/v/vo/vosstanovlenie-astra-linuks-cherez-terminal.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Восстановление Astra Linux через терминал: полное руководство">
+    <meta property="og:description" content="Подробная инструкция по восстановлению Astra Linux с помощью LiveUSB и chroot. Решение проблем с загрузчиком GRUB, сброс пароля и ремонт файловой системы.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Восстановление Astra Linux через терминал: полное руководство</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Восстановление Astra Linux через терминал: полное руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#подготовка-загрузочного-носителя-и-вход-в-среду-восстановления">Подготовка загрузочного носителя и вход в среду восстановления</a></li><li><a href="#диагностика-дисковой-подсистемы-и-монтирование-разделов">Диагностика дисковой подсистемы и монтирование разделов</a></li><li><a href="#организация-chroot-окружения-для-работы-с-системой">Организация chroot-окружения для работы с системой</a></li><li><a href="#восстановление-загрузчика-grub-и-конфигурации">Восстановление загрузчика GRUB и конфигурации</a></li><li><a href="#ремонт-поврежденных-пакетов-и-файловой-системы">Ремонт поврежденных пакетов и файловой системы</a></li><li><a href="#сброс-пароля-суперпользователя-и-финализация">Сброс пароля суперпользователя и финализация</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Ситуация, когда операционная система <em>Astra Linux</em> перестает загружаться, может застать врасплох даже опытного системного администратора. Экран мигает, появляется сообщение об ошибке ядра или система зависает на этапе инициализации служб, не давая перейти к графическому интерфейсу. В такие моменты графические инструменты диагностики часто недоступны, и единственным надежным способом вернуть работоспособность сервера или рабочей станции остается <strong>командная строка</strong>.</p>
+
+<p>Использование терминала для реанимации ОС предоставляет прямой доступ к файловой системе и системным журналам, позволяя устранить повреждения, которые невозможно исправить штатными средствами. Вам потребуется загрузочный носитель с дистрибутивом <em>Astra Linux</em> или любым другим Live-дистрибутивом на базе Debian, так как архитектура пакетов и структура каталогов должны быть совместимы. Этот метод универсален и подходит как для версии <em>Special Edition</em>, так и для <em>Common Edition</em>.</p>
+
+<p>Прежде чем приступать к активным действиям, необходимо четко понимать причину сбоя, чтобы не усугубить ситуацию некорректными командами. Чаще всего проблемы кроются в поврежденном загрузчике <strong>GRUB</strong>, ошибках в файле конфигурации <code>/etc/fstab</code> или критических сбоях файловой системы после внезапного отключения питания. Мы рассмотрим пошаговый алгоритм действий, который позволит диагностировать и устранить большинство типовых неисправностей.</p>
+
+<h2 id="подготовка-загрузочного-носителя-и-вход-в-среду-восстановления">Подготовка загрузочного носителя и вход в среду восстановления</h2>
+
+<p>Первым шагом является создание загрузочной флешки с образом <em>Astra Linux</em>, соответствующим версии установленной системы, или использование любого LiveCD на базе Debian. После записи образа необходимо настроить BIOS/UEFI компьютера так, чтобы загрузка происходила именно с внешнего носителя, а не с жесткого диска, где расположена поврежденная ОС. Это критически важный этап, так как без доступа к живой системе выполнение восстановительных процедур невозможно.</p>
+
+<p>После загрузки с флешки выберите пункт меню «Запустить Live-режим» или «Try Astra Linux without installing». Откроется графический рабочий стол, но наша цель — терминал. Нажмите комбинацию клавиш <code>Ctrl+Alt+T</code> или найдите эмулятор терминала в меню приложений. В открывшемся окне вы получите права обычного пользователя, однако для системных операций нам потребуется суперпользователь.</p>
+
+<p>Для получения полных прав введите команду <code>sudo -i</code> и подтвердите действие (пароль в Live-режиме часто пустой или указан в документации, например, <code>live</code> или <code>astralinux</code>). Теперь вы находитесь в среде, изолированной от жесткого диска, что позволяет безопасно манипулировать его разделами. Убедитесь, что сеть настроена, если потребуется загрузка дополнительных пакетов, хотя в большинстве случаев базового набора утилит будет достаточно.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Все дальнейшие операции выполняются с правами root. Ошибка в одной букве при вводе команды может привести к безвозвратной потере данных на подключенных дисках. Будьте предельно внимательны при указании имен устройств.</p>
+</blockquote>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой тип сбоя произошел в вашей системе?</strong><ul><li>Не загружается GRUB</li><li>Система виснет при старте</li><li>Забыт пароль root</li><li>Повреждена файловая система</li><li>Другое</li></ul></div></div>
+
+<h2 id="диагностика-дисковой-подсистемы-и-монтирование-разделов">Диагностика дисковой подсистемы и монтирование разделов</h2>
+
+<p>Прежде чем чинить загрузчик или конфигурацию, необходимо убедиться в целостности файловой системы и правильно смонтировать корневой раздел. В терминале выполните команду <code>lsblk</code> или <code>fdisk -l</code>, чтобы увидеть список всех подключенных накопителей и их разделов. Вам нужно идентифицировать раздел, на который установлена <em>Astra Linux</em>, обычно он имеет файловую систему <strong>ext4</strong> и наибольший объем.</p>
+
+<p>Допустим, ваш корневой раздел определился как <code>/dev/sda2</code>, а раздел загрузчика (если он отдельный) — как <code>/dev/sda1</code>. Перед монтированием настоятельно рекомендуется проверить диск на наличие логических ошибок с помощью утилиты <code>fsck</code>. Выполните команду <code>fsck -y /dev/sda2</code>, где <code>-y</code> означает автоматическое исправление всех найденных ошибок. Этот процесс может занять время в зависимости от размера диска.</p>
+
+<p>После проверки необходимо смонтировать корневую файловую систему в каталог, который станет новой точкой входа. Стандартным местом для временного монтирования в <em>Astra Linux</em> и Debian-подобных системах является <code>/mnt</code>. Используйте команду:</p>
+
+<pre><code>mount /dev/sda2 /mnt</code></pre>
+
+<p>Если у вас есть отдельный раздел для <code>/boot</code> или <code>/home</code>, их также следует примонтировать в соответствующие подкаталоги внутри <code>/mnt</code>. Например, <code>mount /dev/sda1 /mnt/boot</code>. Это необходимо для того, чтобы при работе внутри chroot-окружения система видела все свои компоненты корректно.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если вы используете LVM или шифрование LUKS, перед монтированием разделов необходимо активировать тома командой vgchange -ay и раскрыть шифрованные контейнеры через cryptsetup.</p></div>
+
+<h2 id="организация-chroot-окружения-для-работы-с-системой">Организация chroot-окружения для работы с системой</h2>
+
+<p>Просто смонтировать раздел недостаточно, чтобы запустить системные утилиты поврежденной ОС. Нам нужно «подменить» корневую директорию запущенного Live-системы на смонтированный раздел жесткого диска. Этот процесс называется <strong>chroot</strong> (change root). Однако для корректной работы многих скриптов восстановления необходимо, чтобы внутри новой среды были доступны системные каталоги Live-системы, такие как <code>/dev</code>, <code>/proc</code> и <code>/sys</code>.</p>
+
+<p>Выполните последовательность команд для монтирования виртуальных файловых систем. Это обеспечит взаимодействие между ядром Live-системы и файлами восстанавливаемой ОС:</p>
+
+<pre><code>mount --bind /dev /mnt/dev
+<p>mount --bind /proc /mnt/proc</p>
+<p>mount --bind /sys /mnt/sys</p>
+<p>mount --bind /run /mnt/run</code></pre></p>
+
+<p>Теперь можно перейти в окружение установленной системы. Введите команду <code>chroot /mnt /bin/bash</code>. Обратите внимание на изменение приглашения командной строки — оно должно стать таким, каким оно было в вашей основной системе. Вы находитесь «внутри» вашей <em>Astra Linux</em>, хотя физически загружены с флешки.</p>
+
+<details class="faq-item"><summary>Зачем нужно монтировать /run?</summary><div class="faq-answer"><p>Каталог /run содержит данные о запущенных процессах и сокеты. Без его монтирования некоторые современные сервисы, зависящие от systemd, могут отказаться запускаться или корректно обновлять свои состояния внутри chroot-окружения.</p></div></details>
+
+<p>На этом этапе полезно проверить, что сетевые интерфейсы работают, если потребуется доступ к репозиториям. Конфигурация сети в chroot обычно наследуется от хоста, но иногда требуется вручную прописать DNS в файле <code>/etc/resolv.conf</code>, добавив туда строку <code>nameserver 8.8.8.8</code>, если разрешение имен не работает.</p>
+
+<h2 id="восстановление-загрузчика-grub-и-конфигурации">Восстановление загрузчика GRUB и конфигурации</h2>
+
+<p>Одной из самых частых причин невозможности загрузки является повреждение загрузчика <strong>GRUB</strong> или его конфигурационного файла. Находясь в chroot-окружении, первым делом следует перегенерировать файл конфигурации <code>grub.cfg</code>. Для дистрибутивов на базе Debian, к которым относится <em>Astra Linux</em>, используется команда <code>update-grub</code>. Она сканирует диски на наличие установленных ядер и операционных систем, формируя новое меню загрузки.</p>
+
+<p>Если обновление конфигурации не помогло или загрузчик поврежден физически (в загрузочной записи диска), его необходимо переустановить. Команда <code>grub-install</code> запишет необходимые файлы в MBR (для BIOS) или EFI-раздел (для UEFI). Важно правильно указать устройство, а не раздел. Например, для диска <code>/dev/sda</code> команда будет выглядеть так:</p>
+
+<pre><code>grub-install /dev/sda</code></pre>
+
+<p>После установки обязательно снова запустите <code>update-grub</code>, чтобы убедиться, что меню сформировано корректно. В таблице ниже приведены основные команды для работы с загрузчиком и их назначение:</p>
+
+<table>
+<thead>
+<tr>
+<th>Команда</th>
+<th>Описание действия</th>
+<th>Область применения</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>update-grub</code></td>
+<td>Генерация файла конфигурации меню</td>
+<td>После установки нового ядра или ОС</td>
+</tr>
+<tr>
+<td><code>grub-install /dev/sdX</code></td>
+<td>Запись загрузчика на диск</td>
+<td>При повреждении MBR/EFI</td>
+</tr>
+<tr>
+<td><code>dpkg-reconfigure grub-pc</code></td>
+<td>Повторная настройка пакетов GRUB</td>
+<td>При конфликтах версий или настроек</td>
+</tr>
+<tr>
+<td><code>efibootmgr -v</code></td>
+<td>Просмотр записей загрузки UEFI</td>
+<td>Для диагностики EFI-систем</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote>
+<p>⚠️ Внимание: При использовании UEFI-систем команда <code>grub-install</code> может потребовать дополнительных параметров, таких как <code>--target=x86_64-efi</code> и указание пути к EFI-разделу. Убедитесь, что раздел с флагами <code>boot, esp</code> смонтирован в <code>/boot/efi</code>.</p>
+</blockquote>
+
+<div class="checklist-block"><h4>☑️ Чек-лист восстановления GRUB</h4><label class="check-item"><input type="checkbox"><span>Смонтирован корневой раздел</span></label><label class="check-item"><input type="checkbox"><span>Смонтированы псевдо-ФС (dev, proc, sys)</span></label><label class="check-item"><input type="checkbox"><span>Выполнен chroot</span></label><label class="check-item"><input type="checkbox"><span>Запущен grub-install</span></label><label class="check-item"><input type="checkbox"><span>Запущен update-grub</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+
+<h2 id="ремонт-поврежденных-пакетов-и-файловой-системы">Ремонт поврежденных пакетов и файловой системы</h2>
+
+<p>Если система загружается до определенного момента, а затем падает в <strong>emergency mode</strong> или выдает ошибки зависимостей, проблема может крыться в прерванном обновлении или повреждении системных файлов. Находясь в chroot, используйте пакетный менеджер <em>Astra Linux</em> для проверки целостности installed-пакетов. Команда <code>apt update</code> обновит списки репозиториев, а <code>apt upgrade</code> попытается завершить прерванные установки.</p>
+
+<p>Для глубокой диагностики используйте команду <code>dpkg --configure -a</code>, которая попытается настроить все распакованные, но не сконфигурированные пакеты. Если проблема вызвана конкретным обновлением, можно попробовать откатить систему или удалить проблемный пакет. Также стоит проверить журналы ошибок, используя утилиту <code>dmesg</code> или просматривая логи в <code>/var/log/syslog</code> и <code>/var/log/kern.log</code>.</p>
+
+<p>В случае подозрений на физические ошибки диска, которые не были выявлены на начальном этапе, можно запустить более глубокую проверку SMART, если установлена утилита <code>smartmontools</code>. Команда <code>smartctl -a /dev/sda</code> выдаст подробный отчет о состоянии здоровья жесткого диска, включая количество переназначенных секторов и время наработки.</p>
+
+<p>Иногда причиной проблем становятся некорректные записи в файле <code>/etc/fstab</code>, который отвечает за монтирование разделов при старте. Если вы недавно меняли разметку диска или UUID разделов, проверьте этот файл. Строки должны соответствовать актуальным UUID, которые можно узнать командой <code>blkid</code>. Ошибка здесь приведет к тому, что система будет бесконечно ждать монтирования несуществующего раздела.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Использование apt и dpkg внутри chroot позволяет восстановить целостность программной части системы без необходимости полной переустановки, сохраняя пользовательские данные и настройки.</p></div>
+
+<h2 id="сброс-пароля-суперпользователя-и-финализация">Сброс пароля суперпользователя и финализация</h2>
+
+<p>Часто восстановление системы требуется именно для получения доступа, когда пароль утерян. Находясь в chroot-окружении, вы уже обладаете правами root, поэтому смена пароля занимает секунды. Введите команду <code>passwd root</code>, введите новый пароль дважды. Система обновит хеш в файле <code>/etc/shadow</code>, и при следующей загрузке вы сможете войти с новыми данными.</p>
+
+<p>После выполнения всех необходимых операций по ремонту (восстановление GRUB, исправление пакетов, смена пароля) нужно корректно выйти из среды chroot и размонтировать разделы. Выход из chroot осуществляется командой <code>exit</code> или нажатием <code>Ctrl+D</code>. Затем последовательно размонтируйте все примонтированные ранее каталоги в обратном порядке:</p>
+
+<pre><code>umount /mnt/run
+<p>umount /mnt/sys</p>
+<p>umount /mnt/proc</p>
+<p>umount /mnt/dev</p>
+<p>umount /mnt</code></pre></p>
+
+<p>Теперь можно извлечь загрузочную флешку и перезагрузить компьютер командой <code>reboot</code>. Если все шаги были выполнены верно, <em>Astra Linux</em> должна загрузиться штатно. В случае повторения ошибки, вернитесь в Live-режим и внимательно изучите логи, возможно, проблема носит аппаратный характер или требует более специфического вмешательства в конфигурацию ядра.</p>
+
+<details>
+<summary>Что делать, если chroot не запускается с ошибкой exec?</summary>
+<p>Такая ошибка часто возникает при несоответствии архитектуры Live-системы и установленной ОС (например, попытка загрузить 32-битную систему с 64-битного LiveCD) или при отсутствии исполняемого файла bash в целевой системе. Проверьте архитектуру командой <code>uname -m</code> в Live-режиме и сравните с требованиями вашей <em>Astra Linux</em>.</p>
+</details>
+
+<details>
+<summary>Как восстановить доступ, если поврежден файл /etc/passwd?</summary>
+<p>Если файл <code>/etc/passwd</code> поврежден, вход в систему невозможен даже с правильным паролем. В chroot можно скопировать шаблонный файл из <code>/etc/passwd.default</code> (если есть бэкап) или вручную отредактировать его, добавив строку для root: <code>root:x:0:0:root:/root:/bin/bash</code>. Будьте осторожны, синтаксическая ошибка в этом файле блокирует всю систему.</p>
+</details>
+
+<details>
+<summary>Можно ли восстановить данные, если система не загружается совсем?</summary>
+<p>Да, это самый простой сценарий. Загрузившись с LiveUSB, вы можете смонтировать разделы и скопировать важные данные на внешний носитель или в сеть, используя команды <code>cp</code>, <code>rsync</code> или графический файловый менеджер. Главное — не форматировать диски и не записывать на них новую информацию до копирования данных.</p>
+</details>
+
+<details>
+<summary>Нужно ли заново активировать лицензию после восстановления?</summary>
+<p>В большинстве случаев активация <em>Astra Linux</em> (особенно Special Edition с модулями ПБК и АКЗ) привязана к аппаратному обеспечению и не сбрасывается при программном восстановлении загрузчика или файлов. Однако, если вы меняли материнскую плату или проводили глубокую переразметку дисков с изменением идентификаторов, может потребоваться повторная активация через утилиту <code>fly-licensing</code> или ключи активации.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#подготовка-загрузочного-носителя-и-вход-в-среду-восстановления">Подготовка загрузочного носителя и вход в среду восстановления</a></li><li><a href="#диагностика-дисковой-подсистемы-и-монтирование-разделов">Диагностика дисковой подсистемы и монтирование разделов</a></li><li><a href="#организация-chroot-окружения-для-работы-с-системой">Организация chroot-окружения для работы с системой</a></li><li><a href="#восстановление-загрузчика-grub-и-конфигурации">Восстановление загрузчика GRUB и конфигурации</a></li><li><a href="#ремонт-поврежденных-пакетов-и-файловой-системы">Ремонт поврежденных пакетов и файловой системы</a></li><li><a href="#сброс-пароля-суперпользователя-и-финализация">Сброс пароля суперпользователя и финализация</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-postavit-udarenie-v-votsape-nad-bukvoj.html" class="related-card">Как поставить ударение в WhatsApp: полная инструкция</a></li><li><a href="/a/articles/t/te/televzr-pro-klyuch-aktivacii-licenzionnyj-skachat.html" class="related-card">Televzr Pro: ключ активации лицензионный скачать и установить</a></li><li><a href="/a/articles/k/ka/kak-polnostyu-otklyuchit-vstroennyj-schyotchik-shagov-xiaomi.html" class="related-card">Как отключить счетчик шагов Xiaomi: полная инструкция</a></li><li><a href="/a/articles/d/dr/drajver-dlya-yusb-dzhojstika-gejmpad-pod-vin-10.html" class="related-card">Драйвер для USB джойстика на Win 10: установка и настройка</a></li><li><a href="/a/articles/n/no/nox-player-v-rabote-prilozheniya-proizoshel-sboj.html" class="related-card">В Nox Player произошел сбой: как исправить ошибку приложения</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-postavit-udarenie-v-votsape-nad-bukvoj.html" class="related-bottom-card"><span class="related-bottom-title">Как поставить ударение в WhatsApp: полная инструкция</span><span class="related-bottom-desc">Узнайте, как правильно поставить ударение в WhatsApp над буквой. Простые способы для Android, iPhone</span></a><a href="/a/articles/t/te/televzr-pro-klyuch-aktivacii-licenzionnyj-skachat.html" class="related-bottom-card"><span class="related-bottom-title">Televzr Pro: ключ активации лицензионный скачать и установить</span><span class="related-bottom-desc">Где найти ключ активации Televzr Pro? Инструкция по установке лицензии, обзор функций приложения и о</span></a><a href="/a/articles/k/ka/kak-polnostyu-otklyuchit-vstroennyj-schyotchik-shagov-xiaomi.html" class="related-bottom-card"><span class="related-bottom-title">Как отключить счетчик шагов Xiaomi: полная инструкция</span><span class="related-bottom-desc">Узнайте, как полностью отключить встроенный счетчик шагов на Xiaomi. Эффективные методы через настро</span></a><a href="/a/articles/d/dr/drajver-dlya-yusb-dzhojstika-gejmpad-pod-vin-10.html" class="related-bottom-card"><span class="related-bottom-title">Драйвер для USB джойстика на Win 10: установка и настройка</span><span class="related-bottom-desc">Как установить драйвер для USB джойстика или геймпада в Windows 10. Решения для Xbox, PS4, Logitech </span></a><a href="/a/articles/n/no/nox-player-v-rabote-prilozheniya-proizoshel-sboj.html" class="related-bottom-card"><span class="related-bottom-title">В Nox Player произошел сбой: как исправить ошибку приложения</span><span class="related-bottom-desc">Ошибка &#x27;в работе приложения Nox Player произошел сбой&#x27;: пошаговое руководство по устранению. Настрой</span></a><a href="/a/articles/p/po/potplayer-kak-nastroit-epg.html" class="related-bottom-card"><span class="related-bottom-title">PotPlayer и EPG: полная настройка телепрограммы</span><span class="related-bottom-desc">Подробная инструкция по настройке EPG в PotPlayer. Узнайте, как добавить XMLTV, исправить кодировку </span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Как войти в BIOS на HP с Windows 7: загрузка с USB — ТехПодсказка</title>
+    <meta name="description" content="Подробная инструкция по входу в BIOS на HP для Windows 7. Настройка Boot Menu, загрузка с флешки, решение проблем с UEFI и Legacy.">
+    <link rel="canonical" href="/a/articles/k/ka/kak-vojti-v-bios-na-vindovs-7-na-kompyutere-hp-i-sdelat-pervonachalnuyu.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как войти в BIOS на HP с Windows 7: загрузка с USB">
+    <meta property="og:description" content="Подробная инструкция по входу в BIOS на HP для Windows 7. Настройка Boot Menu, загрузка с флешки, решение проблем с UEFI и Legacy.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/mobilnye-os/">Мобильные ОС</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как войти в BIOS на HP с Windows 7: загрузка с USB</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Вход в BIOS HP на Windows 7: полная настройка загрузки с USB</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#клавиши-доступа-к-bios-и-меню-загрузки-на-разных-моделях-hp">Клавиши доступа к BIOS и меню загрузки на разных моделях HP</a></li><li><a href="#алгоритм-входа-через-startup-menu-для-гарантированного-результата">Алгоритм входа через Startup Menu для гарантированного результата</a></li><li><a href="#пошаговая-настройка-приоритета-загрузки-с-usb-накопителя">Пошаговая настройка приоритета загрузки с USB-накопителя</a></li><li><a href="#решение-проблем-с-видимостью-флешки-в-bios-hp">Решение проблем с видимостью флешки в BIOS HP</a></li><li><a href="#особенности-bios-uefi-и-режим-legacy-на-компьютерах-hp">Особенности BIOS UEFI и режим Legacy на компьютерах HP</a></li><li><a href="#сохранение-настроек-и-выход-из-bios-без-ошибок">Сохранение настроек и выход из BIOS без ошибок</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Владельцы компьютеров и ноутбуков марки <em>Hewlett-Packard</em> часто сталкиваются с необходимостью переустановки операционной системы или проведения глубокой диагностики оборудования. В эпоху, когда <strong>Windows 7</strong> все еще используется на множестве рабочих станций, вопрос доступа к базовой системе ввода-вывода остается критически важным. Именно через этот интерфейс происходит управление аппаратными ресурсами до запуска самой операционной системы.</p>
+
+<p>Процесс входа может отличаться в зависимости от конкретной модели устройства и года его выпуска. Некоторые пользователи путают вход в настройки BIOS с обычным меню выбора загрузочного устройства, что приводит к лишним действиям. Понимание различий между <code>BIOS Setup</code> и <code>Boot Menu</code> сэкономит вам время и нервы при работе с компьютером.</p>
+
+<p>В этой статье мы детально разберем все способы доступа к низкоуровневым настройкам на технике HP. Вы узнаете, какие клавиши использовать, как правильно настроить приоритет загрузки и что делать, если стандартные методы не работают. <strong>Грамотная настройка</strong> этих параметров — залог успешной установки системы или восстановления данных.</p>
+
+<h2 id="клавиши-доступа-к-bios-и-меню-загрузки-на-разных-моделях-hp">Клавиши доступа к BIOS и меню загрузки на разных моделях HP</h2>
+
+<p>Компания HP использует несколько стандартных клавиш для входа в системные настройки, однако их комбинации могут варьироваться. Для большинства настольных компьютеров и ноутбуков, выпущенных в период активной поддержки <em>Windows 7</em>, основной клавишей является <code>F10</code>. Именно она открывает полноценное меню настроек, где можно изменить системное время, температуру процессора и порядок загрузки.</p>
+
+<p>Отдельного внимания заслуживает клавиша <code>F9</code>, которая вызывает <strong>Boot Menu</strong>. Это меню позволяет одноразово выбрать устройство для загрузки, например, вашу USB-флешку, без изменения постоянных настроек BIOS. Это особенно удобно, когда нужно быстро запустить LiveCD или установщик системы, не нарушая текущую конфигураацию компьютера.</p>
+
+<ul>
+    <li>🔑 Клавиша <code>F10</code> — прямой вход в настройки BIOS Setup Utility.</li>
+    <li>💾 Клавиша <code>F9</code> — вызов меню выбора загрузочного устройства (Boot Device Options).</li>
+    <li>🛠️ Клавиша <code>Esc</code> — вход в стартовое меню (Startup Menu), откуда доступны все остальные опции.</li>
+    <li>⚙️ Клавиша <code>F2</code> — запуск системной диагностики (System Diagnostics) на некоторых моделях.</li>
+</ul>
+
+<p>На некоторых старых моделях ноутбуков серии <em>Compaq</em> или ранних <em>Pavilion</em> может использоваться клавиша <code>F1</code> или даже комбинация <code>Ctrl + Alt + S</code>. Если стандартные варианты не срабатывают, стоит попробовать нажать клавишу <code>Esc</code> сразу после включения. Это действие гарантированно откроет стартовое меню, где будут расписаны все доступные функциональные клавиши для вашей конкретной модели.</p>
+
+<blockquote>
+<p>⚠️ Внимание: На ноутбуках с клавиатурой, где функциональные клавиши по умолчанию выполняют мультимедийные функции (регулировка громкости, яркости), для входа в BIOS может потребоваться одновременное зажатие клавиши <code>Fn</code>. Попробуйте комбинацию <code>Fn + F10</code>, если одиночное нажатие не дает результата.</p>
+</blockquote>
+
+<p>Скорость реакции на нажатие клавиш также играет роль. В современных системах с быстрой загрузкой окно возможности входа может быть очень коротким. <strong>Многократное нажатие</strong> (пульсация) нужной клавиши сразу после появления логотипа HP значительно повышает шансы на успех, в отличие от удержания кнопки.</p>
+
+<h2 id="алгоритм-входа-через-startup-menu-для-гарантированного-результата">Алгоритм входа через Startup Menu для гарантированного результата</h2>
+
+<p>Наиболее надежным способом попасть в нужное меню на компьютерах HP является использование универсального стартового меню. Этот метод работает практически на всех устройствах, где установлена <strong>Windows 7</strong> или более старые версии ОС. Он исключает необходимость угадывать конкретную функциональную клавишу для вашей модели.</p>
+
+<p>Сразу после нажатия кнопки включения компьютера начинайте быстро и ритмично нажимать клавишу <code>Esc</code>. Не нужно зажимать ее, именно частые нажатия позволят системе зарегистрировать ваш запрос до того, как начнется загрузка операциной системы. На экране должно появиться меню с синим или черным фоном, содержащее список опций.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Как часто вам приходится заходить в BIOS?</strong><ul><li>Раз в год при переустановке</li><li>Только при поломке</li><li>Я системный администратор</li><li>Никогда не захожу</li></ul></div></div>
+
+<p>В открывшемся меню <code>Startup Menu</code> вы увидите пронумерованный или буквенный список действий. Обычно вход в настройки BIOS обозначен как <code>BIOS Setup</code> и соответствует клавише <code>F10</code>. Меню выбора загрузки будет называться <code>Boot Device Options</code> и вызываться клавишей <code>F9</code>. Такая визуализация помогает не запутаться в назначениях клавиш.</p>
+
+<ul>
+    <li>🖥️ Нажмите <code>F10</code> для перехода в <code>BIOS Setup</code> для глубокой настройки.</li>
+    <li>🚀 Нажмите <code>F9</code> для быстрого выбора загрузочной флешки или диска.</li>
+    <li>🔍 Нажмите <code>F2</code> для запуска проверки памяти и жесткого диска.</li>
+    <li>ℹ️ Нажмите <code>F1</code> для просмотра системной информации о модели и версии BIOS.</li>
+</ul>
+
+<p>Использование стартового меню особенно актуально, если клавиатура подключена через USB-хаб или используется беспроводная модель, которая может не успеть инициализироваться в первые секунды включения ПК. В этом случае метод с <code>Esc</code> часто дает системе дополнительное время на опрос периферии.</p>
+
+<h2 id="пошаговая-настройка-приоритета-загрузки-с-usb-накопителя">Пошаговая настройка приоритета загрузки с USB-накопителя</h2>
+
+<p>После успешного входа в BIOS через клавишу <code>F10</code> необходимо найти раздел, отвечающий за порядок загрузки устройств. Интерфейс BIOS на HP может выглядеть по-разному: от классического синего экрана с текстовым меню до более современных графических оболочек. Вам нужно найти вкладку с названием <code>System Configuration</code> или <code>Boot</code>.</p>
+
+<p>Внутри вкладки <code>Boot</code> найдите пункт <code>Boot Order</code> или <code>Boot Priority</code>. Здесь отображается список всех устройств, которые компьютер проверяет на наличие загрузочных записей. По умолчанию первым обычно стоит жесткий диск (<em>Hard Drive</em>) или сетевая загрузка (<em>Network Boot</em>). Ваша задача — переместить USB-устройство в начало списка.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка перед установкой</h4><label class="check-item"><input type="checkbox"><span>Флешка вставлена до включения ПК</span></label><label class="check-item"><input type="checkbox"><span>Образ Windows записан правильно</span></label><label class="check-item"><input type="checkbox"><span>USB-порт исправен</span></label><label class="check-item"><input type="checkbox"><span>В BIOS включен контроллер USB</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>Для изменения порядка используйте клавиши, указанные в подсказке снизу или сбоку экрана (чаще всего это <code>F5</code>/<code>F6</code> или <code>+</code>/<code>-</code>). Выделите строку с названием вашей флешки (может отображаться как <code>USB Hard Disk</code>, <code>Removable Devices</code> или по имени производителя, например, <em>Kingston</em>, <em>SanDisk</em>) и поднимите ее на первую позицию.</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Параметр BIOS</th>
+            <th>Значение по умолчанию</th>
+            <th>Необходимое значение</th>
+            <th>Где найти</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Boot Option #1</td>
+            <td>Hard Drive / OS Boot Manager</td>
+            <td>USB Hard Disk / Ваш накопитель</td>
+            <td>Boot → Boot Order</td>
+        </tr>
+        <tr>
+            <td>Legacy Support</td>
+            <td>Disabled (на новых)</td>
+            <td>Enabled (для старых USB)</td>
+            <td>System Configuration</td>
+        </tr>
+        <tr>
+            <td>Secure Boot</td>
+            <td>Enabled</td>
+            <td>Disabled (для Win 7)</td>
+            <td>Security / Boot Options</td>
+        </tr>
+        <tr>
+            <td>Fast Boot</td>
+            <td>Enabled</td>
+            <td>Disabled (для совместимости)</td>
+            <td>Boot Options</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>После внесения изменений обязательно сохраните настройки. Для этого перейдите на вкладку <code>Exit</code> и выберите пункт <code>Exit Saving Changes</code> или просто нажмите клавишу <code>F10</code> и подтвердите действие, выбрав <code>Yes</code>. Компьютер перезагрузится и, если флешка записана корректно, начнется установка системы.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Если после сохранения настроек компьютер все равно загружает Windows 7 вместо установки с флешки, проверьте, правильно ли записан образ системы. Возможно, файловая система накопителя не читается BIOS в текущем режиме (Legacy/UEFI).</p>
+</blockquote>
+
+<h2 id="решение-проблем-с-видимостью-флешки-в-bios-hp">Решение проблем с видимостью флешки в BIOS HP</h2>
+
+<p>Частой проблемой пользователей <strong>Windows 7</strong> является отсутствие USB-накопителя в списке загрузочных устройств. Это часто связано с режимами работы контроллера USB или форматом разметки диска. В BIOS HP может быть отключена поддержка legacy-устройств, что делает невидимыми флешки, отформатированные в режиме MBR.</p>
+
+<p>Для решения этой проблемы найдите в меню BIOS раздел <code>System Configuration</code> и перейдите в <code>Boot Options</code>. Здесь необходимо найти параметр <code>Legacy Support</code> и переключить его в положение <code>Enabled</code>. Без этого шага компьютер может игнорировать загрузочные секторы старых форматов, которые использует установщик Windows 7.</p>
+
+<details class="faq-item"><summary>Почему флешка не видна в UEFI?</summary><div class="faq-answer"><p>Флешка может быть не видна, если она отформатирована в MBR, а BIOS работает в чистом режиме UEFI. Для UEFI требуется файловая система FAT32 и разметка GPT. Windows 7 лучше ставить в режиме Legacy или включив CSM (Compatibility Support Module).</p></div></details>
+
+<p>Также стоит обратить внимание на порт подключения. Некоторые модели HP позволяют загружаться только с определенных USB-разъемов, обычно расположенных сзади системного блока или помеченных специальным символом. Попробуйте переставить накопитель в порт USB 2.0 (черный), так как драйверы USB 3.0 (синий) могут не активироваться на этапе предзагрузки.</p>
+
+<ul>
+    <li>🔌 Используйте порты USB 2.0 для максимальной совместимости при установке ОС.</li>
+    <li>💿 Убедитесь, что флешка имеет активный загрузочный раздел (Active Partition).</li>
+    <li>⚙️ Проверьте, включен ли параметр <code>USB Boot</code> в разделе безопасности (Security).</li>
+    <li>🔄 Попробуйте другой USB-накопитель, если текущий не определяется вообще.</li>
+</ul>
+
+<p>Если вы используете очень новый компьютер для установки старой системы, возможно, потребуется отключить функцию <strong>Secure Boot</strong>. Хотя для Windows 7 это не всегда критично в режиме Legacy, наличие активных защитных механизмов может блокировать запуск непроверенного загрузчика.</p>
+
+<h2 id="особенности-bios-uefi-и-режим-legacy-на-компьютерах-hp">Особенности BIOS UEFI и режим Legacy на компьютерах HP</h2>
+
+<p>Компьютеры, поставлявшиеся с Windows 7, чаще всего используют классический BIOS или гибридный режим. Однако более новые модели, даже поддерживающие "семерку", могут иметь интерфейс <strong>UEFI</strong> (Unified Extensible Firmware Interface). Понимание разницы между UEFI и Legacy (CSM) необходимо для успешной загрузки.</p>
+
+<p>Режим Legacy эмулирует работу старого BIOS, что идеально подходит для Windows 7, особенно если вы используете диск разметки MBR. UEFI же требует специальной разметки GPT и загрузочного файла <code>efi</code>. Если ваш установочный диск создан для Legacy, а в BIOS включен только UEFI, загрузки не произойдет.</p>
+
+<p>В настройках BIOS HP ищите параметр <code>UEFI Boot Mode</code> или <code>Legacy Boot</code>. Для установки Windows 7 наиболее стабильным вариантом часто является включение <code>Legacy Support</code> и отключение чистого режима UEFI, либо использование смешанного режима, если он доступен. Это позволит системе увидеть загрузчик на флешке без дополнительных конвертаций.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если вы не знаете, в каком режиме записана ваша флешка, попробуйте сначала включить Legacy Support. Если установка не начнется, отключите его и проверьте, поддерживает ли ваш образ загрузку через UEFI.</p></div>
+
+<p>Стоит отметить, что переключение между режимами Legacy и UEFI на уже установленной системе может привести к невозможности загрузки Windows. Поэтому меняйте эти настройки только если вы планируете полную переустановку системы или создание нового раздела.</p>
+
+<h2 id="сохранение-настроек-и-выход-из-bios-без-ошибок">Сохранение настроек и выход из BIOS без ошибок</h2>
+
+<p>После выполнения всех необходимых изменений важно правильно завершить работу с BIOS. Простое выключение компьютера кнопкой питания приведет к потере всех внесенных настроек. Система должна корректно перезагрузиться, зафиксировав новые параметры в энергонезависимой памяти.</p>
+
+<p>Перейдите на вкладку <code>Exit</code> в правом верхнем углу экрана. Выберите опцию <code>Exit Saving Changes</code>. Система спросит подтверждение: <code>Save changes and exit?</code>. Выберите <code>Yes</code> и нажмите <code>Enter</code>. Если вы случайно изменили лишние параметры, можно выбрать <code>Exit Discarding Changes</code>, чтобы выйти без сохранения.</p>
+
+<p>В некоторых случаях, если система не загружается после изменений, BIOS HP может автоматически сбросить настройки или предложить восстановить значения по умолчанию. Не пугайтесь сообщений о <strong>Boot Error</strong>, если флешка была вынута до завершения процесса — просто вставьте её снова и перезагрузитесь.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Если после выхода из BIOS компьютер пишет "No Bootable Device", проверьте, не забыли ли вы вставить загрузочную флешку или диск, либо не сбит ли порядок загрузки обратно на сетевую карту.</p>
+</blockquote>
+
+<p>Успешный выход ознаменуется появлением логотипа HP, за которым последует экран установки Windows или загрузка рабочего стола, если приоритеты были настроены верно. Теперь ваш компьютер готов к установке операционной системы или проведению обслуживающих работ.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Главный секрет успеха — не просто найти нужную клавишу, а правильно согласовать режим BIOS (Legacy/UEFI) с форматом загрузочной флешки.</p></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+    <summary>Что делать, если клавиша F10 не работает на ноутбуке HP?</summary>
+    <p>Попробуйте использовать клавишу <code>Esc</code> сразу после включения, чтобы вызвать стартовое меню, и уже оттуда нажать <code>F10</code>. Также проверьте, не заблокирована ли функциональная клавиша через <code>Fn Lock</code>, и попробуйте комбинацию <code>Fn + F10</code>.</p>
+</details>
+
+<details>
+    <summary>Можно ли войти в BIOS, если Windows 7 уже загружается?</summary>
+    <p>Напрямую из работающей системы войти в BIOS нельзя. Необходимо выполнить перезагрузку. В Windows 7 можно использовать команду <code>shutdown /r /t 0</code> в командной строке для быстрой перезагрузки, чтобы успеть нажать нужную клавишу.</p>
+</details>
+
+<details>
+    <summary>Почему компьютер загружает Windows вместо флешки, хотя она вставлена?</summary>
+    <p>Скорее всего, в BIOS не изменен приоритет загрузки (Boot Order), и жесткий диск стоит выше USB-устройства. Либо флешка не является загрузочной. Зайдите в BIOS через <code>F10</code> и поднимите USB на первое место.</p>
+</details>
+
+<details>
+    <summary>Нужно ли вынимать флешку после установки Windows?</summary>
+    <p>Да, после завершения установки и первой перезагрузки компьютера флешку лучше извлечь. Иначе цикл установки может начаться заново, если в BIOS не изменен порядок загрузки обратно на жесткий диск.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#клавиши-доступа-к-bios-и-меню-загрузки-на-разных-моделях-hp">Клавиши доступа к BIOS и меню загрузки на разных моделях HP</a></li><li><a href="#алгоритм-входа-через-startup-menu-для-гарантированного-результата">Алгоритм входа через Startup Menu для гарантированного результата</a></li><li><a href="#пошаговая-настройка-приоритета-загрузки-с-usb-накопителя">Пошаговая настройка приоритета загрузки с USB-накопителя</a></li><li><a href="#решение-проблем-с-видимостью-флешки-в-bios-hp">Решение проблем с видимостью флешки в BIOS HP</a></li><li><a href="#особенности-bios-uefi-и-режим-legacy-на-компьютерах-hp">Особенности BIOS UEFI и режим Legacy на компьютерах HP</a></li><li><a href="#сохранение-настроек-и-выход-из-bios-без-ошибок">Сохранение настроек и выход из BIOS без ошибок</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/v/vi/virtualka-na-android-top.html" class="related-card">Виртуалка на Андроид топ: Лучшие эмуляторы и ОС 2026</a></li><li><a href="/a/articles/k/ka/kak-vklyuchit-schetchik-trafika-interneta-na-telefone.html" class="related-card">Как включить счетчик трафика на Android и iPhone: Полный гид</a></li><li><a href="/a/articles/k/ka/kak-otklyuchit-shagi-v-telefone-xiaomi-readme-220111-6tg.html" class="related-card">Как отключить шаги в Xiaomi Redmi 10C (2201116TG): Полная инструкция</a></li><li><a href="/a/articles/k/ka/kak-pomenyat-v-telegramme-iks-pechataet-na-drugoe-na-telefone-android.html" class="related-card">Как поменять статус «печатает» в Telegram на Android: Полная инструкция</a></li><li><a href="/a/articles/k/ka/kak-udalit-zavodskoe-radio-s-androida-ts7-4-232.html" class="related-card">Как удалить заводское радио с TS7 4/32: полная инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/v/vi/virtualka-na-android-top.html" class="related-bottom-card"><span class="related-bottom-title">Виртуалка на Андроид топ: Лучшие эмуляторы и ОС 2026</span><span class="related-bottom-desc">Полный обзор: лучшая виртуалка на Андроид. Топ приложений для запуска Windows, Linux и второй ОС на </span></a><a href="/a/articles/k/ka/kak-vklyuchit-schetchik-trafika-interneta-na-telefone.html" class="related-bottom-card"><span class="related-bottom-title">Как включить счетчик трафика на Android и iPhone: Полный гид</span><span class="related-bottom-desc">Узнайте, как включить счетчик трафика интернета на телефоне. Инструкция для Android и iOS, настройка</span></a><a href="/a/articles/k/ka/kak-otklyuchit-shagi-v-telefone-xiaomi-readme-220111-6tg.html" class="related-bottom-card"><span class="related-bottom-title">Как отключить шаги в Xiaomi Redmi 10C (2201116TG): Полная инструкция</span><span class="related-bottom-desc">Подробный гид по отключению шагомера на Xiaomi Redmi 10C. Настройки MIUI, скрытые меню и оптимизация</span></a><a href="/a/articles/k/ka/kak-pomenyat-v-telegramme-iks-pechataet-na-drugoe-na-telefone-android.html" class="related-bottom-card"><span class="related-bottom-title">Как поменять статус «печатает» в Telegram на Android: Полная инструкция</span><span class="related-bottom-desc">Узнайте, как изменить или скрыть статус «печатает» в Телеграм на телефоне Андроид. Настройки приватн</span></a><a href="/a/articles/k/ka/kak-udalit-zavodskoe-radio-s-androida-ts7-4-232.html" class="related-bottom-card"><span class="related-bottom-title">Как удалить заводское радио с TS7 4/32: полная инструкция</span><span class="related-bottom-desc">Пошаговое руководство по отключению штатного FM-приемника на магнитолах TS7 4/32. Решаем проблему фо</span></a><a href="/a/articles/l/lo/lost-light-android-zavisaet-na-21.html" class="related-bottom-card"><span class="related-bottom-title">Lost Light Android зависает на 21%: полное руководство по решению</span><span class="related-bottom-desc">Почему Lost Light зависает на 21% при загрузке на Android? Узнайте причины, способы очистки кэша, на</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

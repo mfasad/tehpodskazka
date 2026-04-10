@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Как установить HDrezka на Android TV: полная инструкция — ТехПодсказка</title>
+    <meta name="description" content="Пошаговое руководство по установке HDrezka на Android TV. Настройка через ADB, установка APK, решение проблем с воспроизведением и кодеками.">
+    <link rel="canonical" href="/a/articles/k/ka/kak-ustanovit-prilozhenie-hdrezka-na-android-tv.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как установить HDrezka на Android TV: полная инструкция">
+    <meta property="og:description" content="Пошаговое руководство по установке HDrezka на Android TV. Настройка через ADB, установка APK, решение проблем с воспроизведением и кодеками.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/nastroika-tv/">Настройка ТВ</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как установить HDrezka на Android TV: полная инструкция</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Установка HDrezka на Android TV: пошаговый гид</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#подготовка-оборудования-и-выбор-версии-приложения">Подготовка оборудования и выбор версии приложения</a></li><li><a href="#метод-установки-через-usb-накопитель">Метод установки через USB-накопитель</a></li><li><a href="#установка-через-сетевое-соединение-и-adb">Установка через сетевое соединение и ADB</a></li><li><a href="#настройка-интерфейса-и-управление-с-пульта">Настройка интерфейса и управление с пульта</a></li><li><a href="#решение-проблем-с-кодеками-и-воспроизведением">Решение проблем с кодеками и воспроизведением</a></li><li><a href="#оптимизация-работы-и-очистка-кэша">Оптимизация работы и очистка кэша</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>Современные телевизоры на базе операционной системы <em>Android TV</em> открывают перед пользователем широкие возможности для мультимедийного контента, однако стандартный набор приложений часто ограничен или содержит множество рекламных вставок. Многие владельцы устройств стремятся расширить функционал своего гаджета, устанавливая сторонние кинотеатры, среди которых особую популярность заслуженно занимает <strong>HDrezka</strong>. Этот сервис предлагает огромную библиотеку фильмов и сериалов в высоком качестве, но его установка на большой экран требует определенных технических знаний.</p>
+
+<p>Процесс инсталляции не всегда проходит гладко, так как приложение изначально разрабатывалось для мобильных устройств и не имеет официальной версии в Google Play Store для телевизоров. Вам придется воспользоваться методом <strong>sideloading</strong>, то есть ручной установкой APK-файла. Это может показаться сложным для новичка, но четкое следование алгоритму действий позволит избежать ошибок и наслаждаться контентом без лишних ограничений.</p>
+
+<p>В этом руководстве мы детально разберем все этапы: от подготовки флеш-накопителя до настройки кодеков для комфортного просмотра. Вы узнаете, как обойти ограничения системы и запустить тяжелые форматы видео на вашем <em>TV-боксе</em> или смарт-телевизоре. Готовьтесь к тому, что придется проявить внимательность, но результат того стоит.</p>
+
+<h2 id="подготовка-оборудования-и-выбор-версии-приложения">Подготовка оборудования и выбор версии приложения</h2>
+<p>Первым шагом является корректный выбор версии программного обеспечения, так как универсального решения для всех экранов не существует. Мобильная версия приложения может некорректно отображаться на телевизоре, требуя постоянного использования пульта в режиме эмуляции мыши, что крайне неудобно. Вам необходимо найти специализированную сборку, помеченную как <strong>Android TV</strong> или имеющую адаптивный интерфейс.</p>
+
+<p>Также стоит убедиться, что ваше устройство имеет достаточный объем свободной памяти. Современные версии плееров занимают значительное пространство, а кэширование видеофайлов требует дополнительных ресурсов. Если на встроенном накопителе мало места, система может работать медленно или вовсе отказаться устанавливать новый софт.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Скачивайте установочные файлы исключительно с официального сайта или проверенных репозиториев, чтобы избежать внедрения вредоносного кода в вашу домашнюю сеть.</p>
+</blockquote>
+
+<p>Для передачи файла на телевизор вам понадобится либо USB-накопитель, либо смартфон с установленным файловым менеджером, поддерживающим передачу по сети. Убедитесь, что оба устройства подключены к одной локальной сети Wi-Fi, если вы планируете использовать беспроводной метод передачи данных.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой у вас тип устройства?</strong><ul><li>Smart TV на Android</li><li>TV-приставка (Box)</li><li>Проектор</li><li>Другое</li></ul></div></div>
+
+<h2 id="метод-установки-через-usb-накопитель">Метод установки через USB-накопитель</h2>
+<p>Наиболее надежным и быстрым способом инсталляции остается использование физического носителя. Этот метод не зависит от скорости вашей Wi-Fi сети и позволяет контролировать процесс на всех этапах. Вам потребуется флеш-ка с файловой системой <strong>FAT32</strong> или <strong>NTFS</strong>, которую ваш телевизор точно распознает без дополнительных драйверов.</p>
+
+<p>Сначала скачайте актуальный APK-файл на компьютер, затем скопируйте его в корневую директорию флеш-накопителя. Не прячьте файл в глубокие папки, чтобы упростить его поиск через телевизионный файловый менеджер. После этого извлеките накопитель и подключите его в USB-порт вашего <em>Android TV</em> устройства.</p>
+
+<p>Далее необходимо открыть файловый менеджер на телевизоре. Если стандартного проводника нет, его также придется предварительно установить из Google Play Store, например, <em>File Commander</em> или <em>X-plore</em>. Найдите свой USB-драйв в списке устройств, перейдите к файлу и нажмите на него для запуска установки.</p>
+
+<div class="checklist-block"><h4>☑️ Контрольный список установки через USB</h4><label class="check-item"><input type="checkbox"><span>Скачать APK на ПК</span></label><label class="check-item"><input type="checkbox"><span>Отформатировать флешку в FAT32</span></label><label class="check-item"><input type="checkbox"><span>Скопировать файл в корень</span></label><label class="check-item"><input type="checkbox"><span>Подключить к ТВ и найти через файловый менеджер</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>Система может выдать предупреждение о блокировке установки из неизвестных источников. Вам нужно будет перейти в настройки безопасности и разрешить установку для конкретного файлового менеджера, который вы используете. Это стандартная процедура защиты <strong>Android OS</strong>, которую не стоит игнорировать.</p>
+
+<h2 id="установка-через-сетевое-соединение-и-adb">Установка через сетевое соединение и ADB</h2>
+<p>Для более продвинутых пользователей, желающих иметь полный контроль над устройством, идеально подойдет метод использования отладочного моста <strong>ADB</strong>. Этот способ позволяет передавать и устанавливать приложения напрямую с компьютера, минуя необходимость в флешках и файловых менеджерах на телевизоре. Вам потребуется включить режим разработчика на телевизоре и активировать отладку по USB.</p>
+
+<p>Чтобы найти IP-адрес вашего телевизора, перейдите в меню настроек, выберите раздел <code>Сеть и Интернет</code>, затем <code>Wi-Fi</code> и нажмите на подключенную сеть. В открывшемся окне будет отображен цифровой адрес, который необходим для подключения. Запишите его, так как он потребуется для команды соединения.</p>
+
+<pre><code>adb connect 192.168.1.XX:5555</code></pre>
+
+<p>После успешного соединения, которое подтвердится сообщением в консоли, можно отправить команду на установку. Путь к файлу может быть локальным на компьютере или ссылаться на прямую загрузку. Этот метод особенно полезен, если интерфейс телевизора работает медленно или пульт имеет ограниченный функционал.</p>
+
+<details class="faq-item"><summary>Что делать, если ADB не видит устройство?</summary><div class="faq-answer"><p>Убедитесь, что антивирус на ПК не блокирует соединение, проверьте, включена ли отладка по USB в меню разработчика, и попробуйте перезагрузить роутер, если устройства находятся в разных подсетях.</p></div></details>
+
+<p>Использование специализированных приложений-помощников, таких как <em>Send Files to TV</em>, также является отличным компромиссом между простотой и функциональностью. Такие программы работают по протоколу <strong>Wi-Fi Direct</strong> или через локальную сеть, позволяя быстро перекинуть APK с телефона на телевизор в пару кликов.</p>
+
+<h2 id="настройка-интерфейса-и-управление-с-пульта">Настройка интерфейса и управление с пульта</h2>
+<p>После успешной установки перед вами встанет задача адаптации управления. Мобильные приложения часто не имеют нативной поддержки навигации с помощью кнопок <code>Вверх</code>, <code>Вниз</code>, <code>Влево</code>, <code>Вправо</code>. В таких случаях интерфейс может стать некликабельным, и вам придется использовать эмуляцию мыши.</p>
+
+<p>Для решения этой проблемы существуют специальные лаунчеры или утилиты, добавляющие курсор мыши на экран. Однако более правильным решением будет поиск модифицированной версии плеера, заточенной под <strong>D-pad navigation</strong>. Такие версии имеют увеличенные элементы интерфейса и логичную структуру меню.</p>
+
+<table>
+<thead>
+<tr>
+<th>Тип управления</th>
+<th>Удобство</th>
+<th>Необходимость доп. ПО</th>
+<th>Рекомендуемый сценарий</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Нативное (D-pad)</td>
+<td>Высокое</td>
+<td>Нет</td>
+<td>Постоянное использование</td>
+</tr>
+<tr>
+<td>Эмуляция мыши</td>
+<td>Низкое</td>
+<td>Да</td>
+<td>Редкая настройка параметров</td>
+</tr>
+<tr>
+<td>Смартфон как пульт</td>
+<td>Среднее</td>
+<td>Да (приложение)</td>
+<td>Ввод текста и поиск</td>
+</tr>
+</tbody>
+</table>
+
+<p>Если вы вынуждены использовать эмуляцию мыши, настройте чувствительность курсора в настройках вспомогательного приложения. Слишком высокая скорость движения курсора сделает невозможным точное попадание по кнопкам воспроизведения или выбору эпизода.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте приложение "TV Remote Control" на смартфоне для эмуляции тачпада — это часто удобнее, чем встроенные функции эмуляции мыши на телевизоре.</p></div>
+
+<h2 id="решение-проблем-с-кодеками-и-воспроизведением">Решение проблем с кодеками и воспроизведением</h2>
+<p>Часто пользователи сталкиваются с ситуацией, когда приложение работает, видео запускается, но звук отсутствует или картинка рассыпается на артефакты. Это свидетельствует о проблемах с <strong>кодеками</strong>. Встроенные в Android TV декодеры могут не поддерживать определенные форматы сжатия аудио или видеопотока, используемые в файлах высокого качества.</p>
+
+<p>В таких случаях рекомендуется изменить настройки вывода звука в самом приложении или в системе телевизора. Попробуйте переключить режим с <em>Pass-through</em> на <strong>PCM</strong>, если у вас нет внешнего ресивера, способного декодировать многоканальный звук. Это часто решает проблему отсутствия аудиодорожки.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Если при воспроизведении тяжелых файлов (4K HDR) видео дергается, попробуйте отключить аппаратное ускорение в настройках плеера или снизить качество потока.</p>
+</blockquote>
+
+<p>Также стоит проверить настройки цветопередачи. Для корректного отображения <strong>HDR</strong> контента необходимо, чтобы кабель HDMI поддерживал нужную пропускную способность, а порт телевизора был активирован в режиме усиленного сигнала. Без этого цвета будут выглядеть блеклыми и washed-out.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Проблемы с воспроизведением в 90% случаев решаются сменой программного декодера внутри приложения или изменением настроек HDMI на телевизоре.</p></div>
+
+<h2 id="оптимизация-работы-и-очистка-кэша">Оптимизация работы и очистка кэша</h2>
+<p>При длительном использовании любое приложение накапливает временные файлы, которые могут замедлять работу системы. Регулярная очистка кэша помогает поддерживать быстродействие интерфейса и предотвращает возникновение ошибок при загрузке превью или постеров. Делать это можно через стандартное меню управления приложениями в настройках Android.</p>
+
+<p>Перейдите в раздел <code>Настройки → Приложения → HDrezka</code> и выберите пункт <strong>Очистить кэш</strong>. Не перепутайте это действие с очисткой данных, так как в последнем случае вы потеряете все свои настройки, историю просмотров и авторизацию в аккаунте.</p>
+
+<p>Если приложение начинает работать нестабильно после обновления системы Android, попробуйте сбросить разрешения. Иногда новые версии ОС требуют повторного подтверждения доступа к хранилищу или сети. Отзовите все разрешения и выдайте их заново при первом запуске.</p>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+<details>
+<summary>Безопасно ли устанавливать HDrezka на телевизор?</summary>
+<p>Использование сторонних APK-файлов всегда несет теоретические риски, однако при скачивании с официального источника вероятность заражения минимальна. Главное — не предоставлять приложению лишних разрешений, например, доступа к контактам или микрофону, если это не требуется для функционала.</p>
+</details>
+
+<details>
+<summary>Почему приложение вылетает сразу после запуска?</summary>
+<p>Чаще всего это связано с несовместимостью версии Android или нехваткой оперативной памяти. Попробуйте закрыть фоновые приложения, очистить кэш или установить более легкую версию плеера, специально оптимизированную для слабых устройств.</p>
+</details>
+
+<details>
+<summary>Можно ли смотреть контент в 4K через это приложение?</summary>
+<p>Да, поддержка <strong>4K</strong> зависит от мощности вашего процессора и версии Android. Если устройство старое, оно может не потянуть декодирование тяжелых кодеков вроде HEVC в высоком разрешении, даже если приложение формально поддерживает эту функцию.</p>
+</details>
+
+<details>
+<summary>Как обновить приложение без переустановки?</summary>
+<p>Автоматическое обновление через Google Play в данном случае работать не будет. Вам придется вручную скачивать новую версию APK и устанавливать её поверх старой, сохранив все данные, или использовать встроенный updater, если он предусмотрен разработчиком.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#подготовка-оборудования-и-выбор-версии-приложения">Подготовка оборудования и выбор версии приложения</a></li><li><a href="#метод-установки-через-usb-накопитель">Метод установки через USB-накопитель</a></li><li><a href="#установка-через-сетевое-соединение-и-adb">Установка через сетевое соединение и ADB</a></li><li><a href="#настройка-интерфейса-и-управление-с-пульта">Настройка интерфейса и управление с пульта</a></li><li><a href="#решение-проблем-с-кодеками-и-воспроизведением">Решение проблем с кодеками и воспроизведением</a></li><li><a href="#оптимизация-работы-и-очистка-кэша">Оптимизация работы и очистка кэша</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-ustanovit-prilozhenie-vink-na-televizor-soni.html" class="related-card">Как установить приложение Wink на телевизор Sony: полная инструкция</a></li><li><a href="/a/articles/k/ka/kak-ustanovit-na-smart-televizor-adguard.html" class="related-card">Как установить AdGuard на Smart TV: полная инструкция</a></li><li><a href="/a/articles/t/tv/tvapi-service-na-televizore-v-prilozhenii-proizoshla-oshibka-kak-ispravit.html" class="related-card">Ошибка tvapi-service на ТВ: как исправить и что это такое</a></li><li><a href="/a/articles/t/tc/tcl-v6b-televizor-polnyj-sbros.html" class="related-card">TCL V6B сброс настроек: как вернуть заводские параметры</a></li><li><a href="/a/articles/k/ka/kak-podklyuchit-telefon-k-saundbar-kolonkam-bez-pulta.html" class="related-card">Как подключить телефон к саундбару без пульта: полное руководство</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-ustanovit-prilozhenie-vink-na-televizor-soni.html" class="related-bottom-card"><span class="related-bottom-title">Как установить приложение Wink на телевизор Sony: полная инструкция</span><span class="related-bottom-desc">Узнайте, как скачать и настроить Wink на ТВ Sony Android и Bravia. Пошаговая установка, решение проб</span></a><a href="/a/articles/k/ka/kak-ustanovit-na-smart-televizor-adguard.html" class="related-bottom-card"><span class="related-bottom-title">Как установить AdGuard на Smart TV: полная инструкция</span><span class="related-bottom-desc">Подробная инструкция по установке AdGuard на телевизоры Samsung, LG, Android. Убираем рекламу в YouT</span></a><a href="/a/articles/t/tv/tvapi-service-na-televizore-v-prilozhenii-proizoshla-oshibka-kak-ispravit.html" class="related-bottom-card"><span class="related-bottom-title">Ошибка tvapi-service на ТВ: как исправить и что это такое</span><span class="related-bottom-desc">Подробный гид по устранению сбоя tvapi-service. Причины ошибки, методы сброса, перепрошивка и восста</span></a><a href="/a/articles/t/tc/tcl-v6b-televizor-polnyj-sbros.html" class="related-bottom-card"><span class="related-bottom-title">TCL V6B сброс настроек: как вернуть заводские параметры</span><span class="related-bottom-desc">Полная инструкция по сбросу телевизора TCL V6B. Узнайте, как сделать Hard Reset, вернуть заводские н</span></a><a href="/a/articles/k/ka/kak-podklyuchit-telefon-k-saundbar-kolonkam-bez-pulta.html" class="related-bottom-card"><span class="related-bottom-title">Как подключить телефон к саундбару без пульта: полное руководство</span><span class="related-bottom-desc">Подробная инструкция по синхронизации смартфона и звуковой панели без ДУ. Bluetooth, HDMI-ARC, Wi-Fi</span></a><a href="/a/articles/k/ka/kak-vklyuchit-bez-pulta-tv-pristavku-max-pro.html" class="related-bottom-card"><span class="related-bottom-title">Как включить ТВ приставку Max Pro без пульта: все способы</span><span class="related-bottom-desc">Подробная инструкция: как включить приставку Max Pro, если потерян пульт. Методы управления через US</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

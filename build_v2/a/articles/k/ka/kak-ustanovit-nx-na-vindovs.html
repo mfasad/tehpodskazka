@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Как установить Nx на Windows: полная инструкция — ТехПодсказка</title>
+    <meta name="description" content="Пошаговое руководство, как установить Nx на Windows. Разбор зависимостей, настройка окружения, решение ошибок и старт первого моно-репозитория.">
+    <link rel="canonical" href="/a/articles/k/ka/kak-ustanovit-nx-na-vindovs.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как установить Nx на Windows: полная инструкция">
+    <meta property="og:description" content="Пошаговое руководство, как установить Nx на Windows. Разбор зависимостей, настройка окружения, решение ошибок и старт первого моно-репозитория.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/soft-i-prilozheniya/">Софт и Приложения</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как установить Nx на Windows: полная инструкция</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Как установить Nx на Windows: полное руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#предварительные-требования-и-подготовка-среды">Предварительные требования и подготовка среды</a></li><li><a href="#установка-глобальных-утилит-и-cli">Установка глобальных утилит и CLI</a></li><li><a href="#создание-нового-монорепозитория">Создание нового монорепозитория</a></li><li><a href="#структура-проекта-и-конфигурационные-файлы">Структура проекта и конфигурационные файлы</a></li><li><a href="#запуск-задач-и-управление-зависимостями">Запуск задач и управление зависимостями</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Современная разработка веб-приложений часто требует управления сложными структурами кода, и именно здесь на сцену выходит <strong>Nx</strong>. Этот инструмент монорепозиториев стал стандартом индустрии благодаря своей способности ускорять сборку, тестирование и развертывание проектов любого масштаба. Для разработчиков, работающих в среде <em>Windows</em>, процесс установки может показаться запутанным из-за особенностей операционной системы и необходимости настройки множества зависимостей.</p>
+
+<p>В отличие от Unix-подобных систем, где многие процессы автоматизированы по умолчанию, на Windows требуется внимательное отношение к путям, версиям Node.js и выбору терминала. Правильная настройка <strong>окружения</strong> критически важна для того, чтобы все скрипты выполнялись корректно, а кэширование работало эффективно. В этой статье мы подробно разберем каждый шаг, необходимый для успешного старта работы с <em>Nx</em> на вашем компьютере.</p>
+
+<p>Мы рассмотрим не только базовую установку, но и тонкости конфигурации, которые часто упускают новички, что приводит к странным ошибкам в будущем. Вы узнаете, как оптимизировать производительность и избежать распространенных ловушек, связанных с файловой системой <em>NTFS</em>. Готовность уделить внимание деталям на старте сэкономит вам часы отладки в дальнейшем.</p>
+
+<h2 id="предварительные-требования-и-подготовка-среды">Предварительные требования и подготовка среды</h2>
+
+<p>Перед тем как запустить первую команду установки, необходимо убедиться, что в вашей системе установлены все базовые компоненты. Фундаментом для работы <strong>Nx</strong> является среда выполнения <em>Node.js</em>, причем желательно использовать LTS-версию (Long Term Support), так как она обеспечивает максимальную стабильность. Проверить наличие Node.js можно, открыв командную строку и введя команду:</p>
+
+<pre><code>node -v</code></pre>
+
+<p>Если версия отображается корректно (например, v18.x.x или v20.x.x), можно двигаться дальше. Однако для Windows крайне важно также наличие <strong>Git</strong>, который необходим для управления версиями и работы с удаленными репозиториями. При установке Git рекомендуется выбрать опцию интеграции с Windows Terminal или PowerShell, чтобы команды были доступны из любого места.</p>
+
+<p>Особое внимание стоит уделить менеджеру пакетов. Хотя <em>npm</em> идет в комплекте с Node.js, многие разработчики предпочитают использовать <strong>Yarn</strong> или <em>pnpm</em> для более быстрой работы с зависимостями в монорепозиториях. Nx отлично работает со всеми тремя, но pnpm часто показывает лучшие результаты по скорости и дисковому пространству благодаря своей архитектуре.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Убедитесь, что в переменных среды Windows (Environment Variables) пути к Node.js и Git прописаны корректно. Частой ошибкой является наличие нескольких версий Node.js, установленных через разные установщики, что вызывает конфликты версий.</p>
+</blockquote>
+
+<p>Также стоит проверить, активирован ли у вас режим разработчика в настройках Windows 10/11. Это разрешает создание символьных ссылок, которые активно используются при работе с монорепозиториями. Без этого режима некоторые операции могут выполняться с ошибками доступа или некорректно.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой пакетный менеджер вы планируете использовать?</strong><ul><li>npm</li><li>Yarn</li><li>pnpm</li><li>Не знаю, выберу по ходу</li></ul></div></div>
+
+<h2 id="установка-глобальных-утилит-и-cli">Установка глобальных утилит и CLI</h2>
+
+<p>После подготовки базового окружения следующим шагом является установка глобального интерфейса командной строки <strong>Nx CLI</strong>. Это позволит вам запускать команды nx из любой директории на вашем компьютере без необходимости каждый раз указывать полный путь. Для установки через npm используйте следующую команду:</p>
+
+<pre><code>npm install -g nx</code></pre>
+
+<p>Если вы предпочитаете <em>Yarn</em>, команда будет выглядеть иначе, но результат будет аналогичным. Глобальная установка удобна для создания новых проектов и выполнения разовых задач, однако в самих проектах Nx полагается на локальную версию, установленную в <code>node_modules</code>. Это гарантирует, что все члены команды работают с одинаковой версией инструмента, независимо от их глобальных настроек.</p>
+
+<p>Важно понимать разницу между <strong>глобальным</strong> и локальным контекстом. Когда вы создаете новый проект, Nx автоматически установит локальную копию себя, которая и будет использоваться для всех последующих операций внутри этой папки. Глобальный CLI служит лишь точкой входа.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если при глобальной установке возникают ошибки прав доступа (EACCES), попробуйте запустить терминал от имени администратора или используйте менеджеры версий Node.js, такие как nvm-windows, которые не требуют прав администатора.</p></div>
+
+<p>Проверить успешность установки можно, просто набрав <code>nx</code> в терминале. Вы должны увидеть справку по доступным командам и текущую версию. Если отображается сообщение об ошибке "command not found" или аналогичное, проверьте переменную PATH в системе.</p>
+
+<h2 id="создание-нового-монорепозитория">Создание нового монорепозитория</h2>
+
+<p>Теперь, когда все инструменты готовы, можно приступить к созданию структуры проекта. Nx предлагает мощный генератор, который автоматически настроит конфигурационные файлы и установит необходимые зависимости. Процесс начинается с команды создания:</p>
+
+<pre><code>npx create-nx-workspace@latest my-org</code></pre>
+
+<p>Здесь <code>my-org</code> — это имя вашей организации или проекта, которое станет корневой папкой. После запуска команды интерактивный мастер задаст несколько вопросов: какой стек технологий вы планируете использовать (React, Angular, Vue, NestJS или просто Node.js), какую систему сборки предпочитаете и нужно ли добавлять примеры приложений.</p>
+
+<p>Выбор <strong>стека технологий</strong> на этом этапе критически важен, так как он определяет набор предустановленных плагинов и конфигураций. Nx автоматически добавит соответствующие линтеры, форматтеры и конфиги для выбранных фреймворков. Это избавляет от необходимости вручную настраивать <em>Webpack</em>, <strong>Babel</strong> или <em>TypeScript</em> с нуля.</p>
+
+<div class="checklist-block"><h4>☑️ Создание воркспейса</h4><label class="check-item"><input type="checkbox"><span>Запустить команду create-nx-workspace:Выбрать пресет (React/Angular/Node):Указать имя репозитория:Дождаться установки зависимостей</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 1</div></div>
+
+<p>В процессе установки может потребоваться подтверждение установки дополнительных пакетов. Соглашайтесь со всеми предложениями, если вы не уверены в обратном, так как стандартный набор оптимизирован для большинства сценариев использования. Файловая структура, которую создаст Nx, будет строго иерархичной, разделяя библиотеки и приложения.</p>
+
+<blockquote>
+<p>⚠️ Внимание: При создании проекта на Windows избегайте использования пробелов и специальных символов в имени папки. Используйте только латиницу, цифры и дефис, чтобы предотвратить ошибки в путях при сборке.</p>
+</blockquote>
+
+<h2 id="структура-проекта-и-конфигурационные-файлы">Структура проекта и конфигурационные файлы</h2>
+
+<p>После завершения генерации вы получите сложную файловую структуру, которая поначалу может напугать новичка. В корне проекта будут находиться ключевые файлы конфигурации: <code>nx.json</code>, <code>workspace.json</code> (или <code>project.json</code> в новых версиях) и <code>tsconfig.base.json</code>. Файл <strong>nx.json</strong> является центральным узлом конфигурации, где определяются глобальные настройки, таргеты и плагины.</p>
+
+<p>Внутри папок <code>apps</code> и <code>libs</code> располагаются соответственно ваши приложения и библиотеки. Такая <strong>сегментация</strong> позволяет четко разделять код, который можно исполнять, и код, предназначенный для повторного использования. Nx отслеживает зависимости между ними, строя граф, который визуализирует связи компонентов.</p>
+
+<table>
+<thead>
+<tr>
+<th>Файл / Папка</th>
+<th>Назначение</th>
+<th>Важность</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nx.json</code></td>
+<td>Глобальная конфигурация Nx, настройки кэша и таргетов</td>
+<td>Критическая</td>
+</tr>
+<tr>
+<td><code>package.json</code></td>
+<td>Зависимости проекта и скрипты запуска</td>
+<td>Критическая</td>
+</tr>
+<tr>
+<td><code>apps/</code></td>
+<td>Директория для исполняемых приложений</td>
+<td>Высокая</td>
+</tr>
+<tr>
+<td><code>libs/</code></td>
+<td>Директория для общих библиотек и утилит</td>
+<td>Высокая</td>
+</tr>
+<tr>
+<td><code>tsconfig.base.json</code></td>
+<td>Базовые настройки TypeScript для всего монорепозитория</td>
+<td>Средняя</td>
+</tr>
+</tbody>
+</table>
+
+<p>Разобраться в графе зависимостей можно с помощью встроенного инструмента визуализации. Запустив команду <code>npx nx graph</code>, вы откроете в браузере интерактивную карту вашего проекта. Это <strong>мощный инструмент</strong> для понимания того, как изменения в одной библиотеке повлияют на другие части системы.</p>
+
+<details class="faq-item"><summary>Зачем нужно разделение на apps и libs?</summary><div class="faq-answer"><p>Разделение позволяет применять стратегии ленивой загрузки (lazy loading) только к приложениям, в то время как библиотеки служат общим кодом. Это уменьшает размер бандлов и ускоряет сборку, так как Nx может пересобирать только затронутые изменениями части.</p></div></details>
+
+<h2 id="запуск-задач-и-управление-зависимостями">Запуск задач и управление зависимостями</h2>
+
+<p>Основная сила Nx заключается в его способности запускать задачи умно, учитывая зависимости между проектами. Вместо того чтобы запускать скрипты в каждом пакете отдельно, вы используете единую команду <code>nx run</code> или сокращенно <code>nx [target] [project]</code>. Например, чтобы запустить приложение <em>my-app</em>, вы пишете:</p>
+
+<pre><code>npx nx serve my-app</code></pre>
+
+<p>Если <code>my-app</code> зависит от библиотеки <code>my-lib</code>, Nx автоматически убедится, что все необходимые шаги выполнены. Более того, при запуске тестов или сборки для всего воркспейса, Nx проанализирует, какие проекты были изменены с последнего коммита, и запустит задачи <strong>только для них</strong>. Это называется "affected logic" и является ключевым для производительности.</p>
+
+<p>Для управления зависимостями между проектами внутри монорепозитория используется файл <code>project.json</code> каждого проекта. Именно там описываются таргеты (targets) такие как <code>build</code>, <code>test</code>, <code>lint</code>. Вы можете переопределять эти таргеты или создавать новые, добавляя свои исполнители (executors).</p>
+
+<blockquote>
+<p>⚠️ Внимание: При запуске задач на Windows через PowerShell иногда возникают проблемы с длинными путями или экранированием символов. Если команда не выполняется, попробуйте использовать Git Bash или Windows Terminal с профилем Command Prompt.</p>
+</blockquote>
+
+<p>Использование <mark>кэширования</mark> включено по умолчанию. Nx сохраняет результаты выполнения задач в папке <code>.nx/cache</code>. Если вы запустите сборку дважды без изменений в коде, второй раз она выполнится мгновенно, взяв результат из кэша. Это особенно заметно на больших проектах.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Nx ускоряет разработку за счет запуска задач только для измененных проектов и их зависимостей, игнорируя unaffected части кодовой базы.</p></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Нужно ли устанавливать Python и Visual Studio Build Tools для Nx на Windows?</summary>
+<p>Да, для некоторых нативных зависимостей (например, <em>node-sass</em> или определенные версии <strong>sharp</strong> для обработки изображений) могут потребоваться инструменты сборки C++. Установите <em>Python 3</em> и пакет "Build Tools for Visual Studio" с компонентом C++, если сталкиваетесь с ошибками при установке пакетов.</p>
+</details>
+
+<details>
+<summary>Почему команда nx graph не открывает браузер?</summary>
+<p>На Windows это может происходить из-за блокировки портов или настроек безопасности. Попробуйте запустить команду с флагом <code>--host=0.0.0.0</code> или вручную откройте ссылку, которая выводится в терминале (обычно http://localhost:4211).</p>
+</details>
+
+<details>
+<summary>Можно ли мигрировать существующий Create React App проект в Nx?</summary>
+<p>Да, Nx предоставляет генераторы для миграции. Однако проще создать новый воркспейс и постепенно переносить код, либо использовать команду <code>nx init</code> в существующем проекте, хотя последний метод требует более тщательной ручной настройки конфигов.</p>
+</details>
+
+<details>
+<summary>Как очистить кэш Nx, если возникли странные ошибки сборки?</summary>
+<p>Для сброса кэша используйте команду <code>npx nx reset</code>. Это удалит папку кэширования и заставит Nx пересчитать все хэши и зависимости заново, что часто решает проблемы с "залипшими" состояниями сборки.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#предварительные-требования-и-подготовка-среды">Предварительные требования и подготовка среды</a></li><li><a href="#установка-глобальных-утилит-и-cli">Установка глобальных утилит и CLI</a></li><li><a href="#создание-нового-монорепозитория">Создание нового монорепозитория</a></li><li><a href="#структура-проекта-и-конфигурационные-файлы">Структура проекта и конфигурационные файлы</a></li><li><a href="#запуск-задач-и-управление-зависимостями">Запуск задач и управление зависимостями</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-udalit-skajrim-vindovs-10.html" class="related-card">Как удалить Скайрим с Windows 10: Полное руководство</a></li><li><a href="/a/articles/v/ve/vesti-fm-prilozhenie-translyaciya-preryvaetsya.html" class="related-card">Вести ФМ: прерывается трансляция. Причины и решения</a></li><li><a href="/a/articles/f/fa/family-link-ne-poluchaetsya-dobavit-vremya-rebenku-bez-koda-prilozhenie.html" class="related-card">Family Link: не добавить время без кода — решение ошибки</a></li><li><a href="/a/articles/v/vl/vlc-media-player-ustanovit-po-umolchaniyu-na-pristavke-uhdy.html" class="related-card">Как установить VLC на приставке UHD TV: полная инструкция</a></li><li><a href="/a/articles/a/ad/adas-dvr-apk-x86.html" class="related-card">ADAS DVR APK x86: Установка на эмулятор и Android TV</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-udalit-skajrim-vindovs-10.html" class="related-bottom-card"><span class="related-bottom-title">Как удалить Скайрим с Windows 10: Полное руководство</span><span class="related-bottom-desc">Подробная инструкция, как удалить Скайрим с Windows 10. Очистка остаточных файлов, реестра и модов. </span></a><a href="/a/articles/v/ve/vesti-fm-prilozhenie-translyaciya-preryvaetsya.html" class="related-bottom-card"><span class="related-bottom-title">Вести ФМ: прерывается трансляция. Причины и решения</span><span class="related-bottom-desc">Почему прерывается трансляция в приложении Вести ФМ? Полный гид по устранению обрывов звука, ошибкам</span></a><a href="/a/articles/f/fa/family-link-ne-poluchaetsya-dobavit-vremya-rebenku-bez-koda-prilozhenie.html" class="related-bottom-card"><span class="related-bottom-title">Family Link: не добавить время без кода — решение ошибки</span><span class="related-bottom-desc">Приложение заблокировано родителем, Family Link не дает добавить время без кода? Узнайте, как восста</span></a><a href="/a/articles/v/vl/vlc-media-player-ustanovit-po-umolchaniyu-na-pristavke-uhdy.html" class="related-bottom-card"><span class="related-bottom-title">Как установить VLC на приставке UHD TV: полная инструкция</span><span class="related-bottom-desc">Подробное руководство по установке и настройке плеера VLC на Android TV Box и Smart TV. Решаем пробл</span></a><a href="/a/articles/a/ad/adas-dvr-apk-x86.html" class="related-bottom-card"><span class="related-bottom-title">ADAS DVR APK x86: Установка на эмулятор и Android TV</span><span class="related-bottom-desc">Полный гайд по запуску ADAS DVR APK x86. Решение проблем совместимости, настройка эмулятора и работа</span></a><a href="/a/articles/a/ad/adas-kak-ustanovit.html" class="related-bottom-card"><span class="related-bottom-title">ADAS: как установить и настроить систему помощи водителю</span><span class="related-bottom-desc">Подробное руководство: как установить ADAS на автомобиль. Калибровка камер, настройка радаров и пров</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Orbot для LG TV: Установка Tor на Smart TV WebOS — ТехПодсказка</title>
+    <meta name="description" content="Подробный гид по использованию Orbot на LG телевизорах. Настройка прокси, обход блокировок и анонимность в сети через роутер или Android TV приставку.">
+    <link rel="canonical" href="/a/articles/o/or/orbot-dlya-tv-lg.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Orbot для LG TV: Установка Tor на Smart TV WebOS">
+    <meta property="og:description" content="Подробный гид по использованию Orbot на LG телевизорах. Настройка прокси, обход блокировок и анонимность в сети через роутер или Android TV приставку.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/nastroika-tv/">Настройка ТВ</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Orbot для LG TV: Установка Tor на Smart TV WebOS</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Orbot для LG TV: Полное руководство по анонимности в сети</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#почему-orbot-не-устанавливается-напрямую-на-webos">Почему Orbot не устанавливается напрямую на WebOS</a></li><li><a href="#альтернативные-методы-подключения-tor-для-lg-телевизора">Альтернативные методы подключения Tor для LG телевизора</a></li><li><a href="#настройка-роутера-для-работы-с-сетью-tor">Настройка роутера для работы с сетью Tor</a></li><li><a href="#использование-android-tv-приставки-с-orbot">Использование Android TV приставки с Orbot</a></li><li><a href="#организация-прокси-соединения-через-пк-или-смартфон">Организация прокси-соединения через ПК или смартфон</a></li><li><a href="#проблемы-скорости-и-качества-контента">Проблемы скорости и качества контента</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Современные <strong>Smart TV</strong> превратились в полноценные мультимедийные центры, однако вопрос цифровой приватности часто остается за бортом внимания пользователей. Владельцы техники <em>LG Electronics</em>, работающей на операционной системе <em>WebOS</em>, нередко задаются вопросом о возможности установки специализированных инструментов защиты трафика, таких как <strong>Orbot</strong>. Этот программный продукт, являющийся мобильным клиентом сети <strong>Tor</strong>, позволяет скрывать IP-адрес и обходить географические ограничения, но его прямая установка на нативную платформу LG невозможна из-за архитектурных ограничений системы.</p>
+
+<p>Тем не менее, существуют проверенные обходные пути, которые позволяют интегрировать функционал <em>Tor</em> в домашнюю медиасистему. Вы можете настроить маршрутизатор для работы через сеть Tor или использовать внешнюю Android-приставку, подключенную к HDMI-порту телевизора. <mark>Прямая установка APK-файлов Orbot на операционную систему WebOS технически невозможна без полной перепрошивки устройства, что ведет к потере гарантии.</mark> Понимание этих ограничений является ключевым этапом перед началом настройки безопасного соединения.</p>
+
+<p>В данном материале мы детально разберем все доступные методы организации анонимного соединения для вашего телевизора. Мы рассмотрим технические нюансы работы прокси-серверов, особенности конфигурации роутеров и преимущества использования внешних устройств. Это позволит вам выбрать оптимальный вариант, который не потребует сложных инженерных манипуляций с "железом" вашего телевизора.</p>
+
+<h2 id="почему-orbot-не-устанавливается-напрямую-на-webos">Почему Orbot не устанавливается напрямую на WebOS</h2>
+
+<p>Операционная система <em>WebOS</em>, разработанная изначально компанией Palm и позже приобретенная <em>LG</em>, имеет закрытую архитектуру, отличную от популярной <strong>Android TV</strong>. В отличие от андроидных платформ, где можно легко установить сторонние приложения через APK-файлы, WebOS использует собственный формат приложений и магазин контента LG Content Store. <strong>Orbot</strong>, будучи приложением для Android, просто не имеет совместимых библиотек для запуска в среде Linux, на которой базируется WebOS.</p>
+
+<p>Попытки найти в официальном магазине LG Content Store аналоги Orbot обречены на провал, так как политика компании в вопросах безопасности и лицензирования строго регламентирует доступный софт. Даже если вы попытесь использовать режим разработчика (<code>Developer Mode</code>), вы столкнетесь с отсутствием необходимых системных разрешений для изменения сетевых настроек на уровне всего устройства. Это сделано производителями для обеспечения стабильности работы системы и предотвращения вирусных атак.</p>
+
+<blockquote>⚠️ Внимание: Попытка модификации системных файлов WebOS для принудительного запуска Android-приложений может привести к необратимому повреждению программной оболочки телевизора ("кирпич") и полной потере доступа к Smart-функциям.</blockquote>
+
+<p>Существует распространенное заблуждение, что наличие порта USB или возможность подключения клавиатуры позволяют устанавливать любой софт. Однако <strong>USB-порты</strong> на телевизорах LG предназначены исключительно для воспроизведения мультимедийного контента и периферийных устройств ввода, а не для расширения функционала операционной системы сторонними исполняемыми файлами. Поэтому поиск способа "просто скачать и запустить" на самом телевизоре является технически некорректным.</p>
+
+<h2 id="альтернативные-методы-подключения-tor-для-lg-телевизора">Альтернативные методы подключения Tor для LG телевизора</h2>
+
+<p>Поскольку прямая установка невозможна, необходимо рассмотреть альтернативные сценарии, позволяющие пустить трафик телевизора через сеть <strong>Tor</strong>. Самый эффективный и безопасный способ — это настройка маршрутизатора. Если ваш роутер поддерживает установку прошивок с открытым исходным кодом, таких как <em>OpenWrt</em> или <em>DD-WRT</em>, вы можете настроить на нем клиент <strong>Tor</strong>. В этом случае все устройства, подключенные к Wi-Fi сети этого роутера, включая ваш <em>LG TV</em>, будут автоматически работать через анонимайзер.</p>
+
+<p>Второй популярный вариант — использование внешней Android TV приставки. Вы покупаете устройство на базе Android (например, от <em>Xiaomi</em>, <em>Nvidia</em> или <em>Chromecast</em> с Google TV), устанавливаете на него <strong>Orbot</strong> из Google Play и подключаете приставку к HDMI-порту телевизора. Это превращает ваш LG в полноценный Android TV с возможностью гибкой настройки прокси и установки любых приложений, включая браузеры с поддержкой Tor.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой метод анонимизации вы планируете использовать?</strong><ul><li>Настройка роутера</li><li>Android приставка</li><li>Прокси на ПК</li><li>Мобильный хот-спот</li></ul></div></div>
+
+<p>Третий, менее стабильный, но возможный метод — создание точки доступа на компьютере или смартфоне с запущенным <strong>Orbot</strong> в режиме моста. Вы подключаете телевизор к этой Wi-Fi сети, и весь его трафик идет через устройство-донор. Однако этот способ имеет существенный недостаток: мобильное устройство или ноутбук должны быть постоянно включены и находиться рядом с роутером, что не всегда удобно для стационарного просмотра контента в высоком разрешении.</p>
+
+<h2 id="настройка-роутера-для-работы-с-сетью-tor">Настройка роутера для работы с сетью Tor</h2>
+
+<p>Реализация этого метода требует наличия роутера с поддержкой сторонних прошивок. Стандартные роутеры, предоставляемые провайдерами, чаще всего не имеют достаточных вычислительных мощностей и программного обеспечения для работы с <strong>Tor</strong>. Вам потребуется совместимое устройство, на которое вы самостоятельно установите прошивку <em>OpenWrt</em>. После установки необходимо через интерфейс <code>LuCI</code> или командную строку установить пакет <code>tor</code> и настроить его как прозрачный прокси.</p>
+
+<p>Процесс настройки включает в себя несколько критически важных этапов. Сначала необходимо перепрошить роутер, затем настроить WAN-соединение, после чего активировать сервис Tor. Важно правильно сконфигурировать правила файрвола (<code>iptables</code> или <code>nftables</code>), чтобы перенаправлять весь исходящий трафик LAN-сети через порт Tor (обычно 9040). Ошибка в настройках может привести к утечке реального IP-адреса или полному отсутствию доступа в сеть.</p>
+
+<div class="checklist-block"><h4>☑️ Чек-лист подготовки роутера</h4><label class="check-item"><input type="checkbox"><span>Проверка совместимости модели роутера</span></label><label class="check-item"><input type="checkbox"><span>Резервное копирование текущей конфигурации</span></label><label class="check-item"><input type="checkbox"><span>Загрузка актуальной версии OpenWrt</span></label><label class="check-item"><input type="checkbox"><span>Настройка прозрачного прокси Tor</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<blockquote>⚠️ Внимание: Неправильная перепрошивка роутера может вывести его из строя. Убедитесь, что модель вашего устройства полностью поддерживается сообществом OpenWrt, прежде чем начинать процедуру.</blockquote>
+
+<p>После успешной настройки роутера, в настройках сети вашего <em>LG TV</em> необходимо выбрать автоматическое получение IP-адреса (<code>DHCP</code>). Телевизор даже не будет "знать", что его трафик шифруется и проходит через несколько узлов по всему миру. Для него это будет обычное подключение к локальной сети. Этот метод обеспечивает最高的 уровень анонимности для всех устройств в доме, но требует серьезных технических знаний.</p>
+
+<h2 id="использование-android-tv-приставки-с-orbot">Использование Android TV приставки с Orbot</h2>
+
+<p>Этот метод является наиболее доступным и гибким для большинства пользователей. Купив приставку на базе Android, вы получаете полноценную ОС, где <strong>Orbot</strong> работает штатно. После подключения приставки к <em>LG TV</em> через HDMI, вам нужно зайти в Google Play Store, найти и установить приложение Orbot. После запуска следуйте инструкциям внутри приложения для подключения к сети Tor.</p>
+
+<p>Особенность работы Orbot на Android TV заключается в возможности выбора режима работы. Вы можете настроить приложение так, чтобы оно проксировало трафик только конкретных программ (например, браузера <em>Tor Browser</em> или медиаплеера <em>VLC</em>), или же пустить весь трафик приставки через сеть. Для этого в настройках Orbot используется функция <strong>VPN Mode</strong>, которая требует подтверждения системных разрешений Android.</p>
+
+<p>Для управления настройками сети на приставке может потребоваться установка файлового менеджера или использование пульта с функцией голосового ввода для быстрого доступа к меню. Также стоит учитывать, что скорость соединения через Tor значительно ниже обычного интернета, поэтому просмотр контента в 4K может быть затруднен. Оптимальным разрешением в таких условиях является <code>1080p</code> или даже <code>720p</code>.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте проводное подключение Ethernet для Android приставки, если это возможно, так как Wi-Fi соединение может быть нестабильным при шифровании трафика через Tor.</p></div>
+
+<h2 id="организация-прокси-соединения-через-пк-или-смартфон">Организация прокси-соединения через ПК или смартфон</h2>
+
+<p>Если покупка роутера или приставки не входит в ваши планы, можно использовать компьютер или смартфон как промежуточное звено. На устройстве с установленным <strong>Orbot</strong> необходимо активировать режим "Tor over LAN" или настроить HTTP/SOCKS прокси. В настройках Wi-Fi на самом <em>LG TV</em> нужно будет указать IP-адрес компьютера/смартфона и порт, который слушает Orbot (по умолчанию часто используется <code>8080</code> или <code>9050</code>).</p>
+
+<p>В операционной системе Windows или macOS это требует ручной настройки параметров сети и общего доступа. На смартфоне (Android/iOS) процесс схож: после запуска Orbot в режиме прокси, вы создаете точку доступа Wi-Fi. Телевизор подключается к этой точке, и в его сетевых настройках прописываются данные прокси-сервера. Это позволяет быстро проверить работу сервисов без глобальных изменений в инфраструктуре сети.</p>
+
+<p>Однако у этого метода есть существенные ограничения. Мобильные операционные системы часто блокируют фоновую работу таких соединений для экономии энергии. Экран смартфона может гаснуть, обрывая соединение, или система может принудительно закрывать процесс Orbot. Поэтому данный способ подходит скорее для разовых действий, чем для постоянного использования телевизора как анонимного медиацентра.</p>
+
+<table>
+<thead>
+<tr>
+<th>Метод</th>
+<th>Сложность</th>
+<th>Стоимость</th>
+<th>Влияние на скорость</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Роутер с OpenWrt</td>
+<td>Высокая</td>
+<td>Средняя (покупка роутера)</td>
+<td>Сильное</td>
+</tr>
+<tr>
+<td>Android приставка</td>
+<td>Низкая</td>
+<td>Средняя (покупка приставки)</td>
+<td>Среднее</td>
+</tr>
+<tr>
+<td>Прокси с ПК/Смартфона</td>
+<td>Средняя</td>
+<td>Бесплатно</td>
+<td>Сильное</td>
+</tr>
+<tr>
+<td>Прямая установка (невозможно)</td>
+<td>Невозможно</td>
+<td>0</td>
+<td>Н/Д</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="проблемы-скорости-и-качества-контента">Проблемы скорости и качества контента</h2>
+
+<p>Использование сети <strong>Tor</strong> всегда сопряжено с компромиссом между анонимностью и скоростью. Трафик проходит минимум через три узла-волонтера по всему миру, что неизбежно увеличивает пинг и снижает пропускную способность канала. Для <em>LG TV</em>, который часто используется для стриминга видео в высоком разрешении, это может стать критическим фактором. Буферизация, снижение качества картинки и долгие загрузки становятся常态.</p>
+
+<p>При настройке стоит учитывать, что некоторые провайдеры могут блокировать или сильно ограничивать входящие соединения, известные как узлы выхода Tor. Это может привести к невозможности подключения к определенным сервисам. В таких случаях помогает использование <strong>мостов</strong> (Bridges) в настройках Orbot, которые маскируют Tor-трафик под обычное HTTPS-соединение, обходя блокировки провайдера.</p>
+
+<details class="faq-item"><summary>Что такое мосты в Tor?</summary><div class="faq-answer"><p>Мосты — это специальные, не публичные узлы сети Tor, которые помогают обойти цензуру в странах, где доступ к основной сети Tor ограничен или заблокирован. Они работают как прокси-серверы, скрывая факт использования Tor от провайдера.</p></div></details>
+
+<p>Для комфортного просмотра рекомендуется выбирать узлы выхода, географически близкие к вашему местоположению, если это позволяет конфигурация. В приложении Orbot есть возможность выбора страны выхода. Также стоит отключить фоновые обновления на телевизоре и других устройствах в сети, чтобы выделить максимальную带宽 для видеопотока.</p>
+
+<h2 id="faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</h2>
+
+<details>
+<summary>Можно ли установить APK файл Orbot прямо на телевизор LG через USB?</summary>
+<p>Нет, это невозможно. Операционная система WebOS не поддерживает формат приложений Android (APK). Архитектура системного ядра и библиотек полностью отличается, поэтому файл просто не запустится или система выдаст ошибку формата.</p>
+</details>
+
+<details>
+<summary>Замедлит ли Orbot работу обычного серфинга в браузере телевизора?</summary>
+<p>Да, если вы настроите роутер или приставку так, чтобы весь трафик шел через Tor. Скорость соединения может упасть в 5-10 раз. Если же Orbot настроен выборочно (только для определенных приложений), то встроенный браузер LG будет работать с обычной скоростью, но без анонимности.</p>
+</details>
+
+<details>
+<summary>Безопасно ли вводить пароли от аккаунтов через телевизор с включенным Tor?</summary>
+<p>Использование сети Tor повышает анонимность, но не гарантирует абсолютную безопасность от фишинга или вредоносного ПО в самом приложении. Ввод чувствительных данных лучше производить на проверенных устройствах (ПК, смартфон) с установленным антивирусом, а не через интерфейсы Smart TV.</p>
+</details>
+
+<details>
+<summary>Нужен ли платный VPN, если есть бесплатный Orbot?</summary>
+<p>Orbot обеспечивает высокую анонимность, но низкую скорость. VPN-сервисы обычно быстрее и удобнее для стриминга, но требуют доверия провайдеру VPN. Выбор зависит от вашей модели угроз: если нужна скорость для кино — лучше платный VPN, если максимальная анонимность — Tor.</p>
+</details>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Orbot на LG TV работает только опосредованно: через настройку роутера, внешнюю Android-приставку или прокси-сервер на другом устройстве.</p></div></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#почему-orbot-не-устанавливается-напрямую-на-webos">Почему Orbot не устанавливается напрямую на WebOS</a></li><li><a href="#альтернативные-методы-подключения-tor-для-lg-телевизора">Альтернативные методы подключения Tor для LG телевизора</a></li><li><a href="#настройка-роутера-для-работы-с-сетью-tor">Настройка роутера для работы с сетью Tor</a></li><li><a href="#использование-android-tv-приставки-с-orbot">Использование Android TV приставки с Orbot</a></li><li><a href="#организация-прокси-соединения-через-пк-или-смартфон">Организация прокси-соединения через ПК или смартфон</a></li><li><a href="#проблемы-скорости-и-качества-контента">Проблемы скорости и качества контента</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/l/lg/lg-le32c530f1w-instrukciya-po-ustanovke-podstavki.html" class="related-card">LG LE32C530F1W: Инструкция по установке подставки</a></li><li><a href="/a/articles/k/ka/kak-otregulirovat-visyachij-bolshoj-televizor-na-stene.html" class="related-card">Регулировка висячего телевизора: как выровнять ТВ на кронштейне</a></li><li><a href="/a/articles/k/ka/kak-mozhno-k-televizoru-podklyuchit-kanal-dom-kino.html" class="related-card">Как подключить канал Дом Кино на телевизоре: 5 способов</a></li><li><a href="/a/articles/k/ka/kak-perevesti-televizor-s-radio-na-televidenie-tarelka-mts.html" class="related-card">Как перевести МТС ТВ с радио на телеканалы: инструкция</a></li><li><a href="/a/articles/n/ne/ne-rabotaet-pult-ot-zaly.html" class="related-card">Не работает пульт от телевизора: причины и ремонт</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/l/lg/lg-le32c530f1w-instrukciya-po-ustanovke-podstavki.html" class="related-bottom-card"><span class="related-bottom-title">LG LE32C530F1W: Инструкция по установке подставки</span><span class="related-bottom-desc">Полная инструкция по сборке и установке подставки на телевизор LG LE32C530F1W. Пошаговое руководство</span></a><a href="/a/articles/k/ka/kak-otregulirovat-visyachij-bolshoj-televizor-na-stene.html" class="related-bottom-card"><span class="related-bottom-title">Регулировка висячего телевизора: как выровнять ТВ на кронштейне</span><span class="related-bottom-desc">Подробная инструкция: как опустить, поднять или выровнять большой телевизор на стене. Выбор кронштей</span></a><a href="/a/articles/k/ka/kak-mozhno-k-televizoru-podklyuchit-kanal-dom-kino.html" class="related-bottom-card"><span class="related-bottom-title">Как подключить канал Дом Кино на телевизоре: 5 способов</span><span class="related-bottom-desc">Полная инструкция: как смотреть Дом Кино на Smart TV, через приставку, антенну или онлайн. Решение п</span></a><a href="/a/articles/k/ka/kak-perevesti-televizor-s-radio-na-televidenie-tarelka-mts.html" class="related-bottom-card"><span class="related-bottom-title">Как перевести МТС ТВ с радио на телеканалы: инструкция</span><span class="related-bottom-desc">Подробная инструкция: как переключить спутниковую антенну МТС с радиоканалов на просмотр телевидения</span></a><a href="/a/articles/n/ne/ne-rabotaet-pult-ot-zaly.html" class="related-bottom-card"><span class="related-bottom-title">Не работает пульт от телевизора: причины и ремонт</span><span class="related-bottom-desc">Почему не работает пульт от телевизора? Полный гид: проверка батареек, ИК-портов, Bluetooth и перепр</span></a><a href="/a/articles/k/ka/kak-podklyuchit-stilus-k-smartfonu.html" class="related-bottom-card"><span class="related-bottom-title">Как подключить стилус к смартфону: полная инструкция</span><span class="related-bottom-desc">Узнайте, как подключить стилус к смартфону Android. Настройка Bluetooth, калибровка экрана, работа с</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

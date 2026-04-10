@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Windows 11 не видит Windows 7 в сети: решение ошибки — ТехПодсказка</title>
+    <meta name="description" content="Полное руководство по устранению проблемы, когда Windows 11 не видит компьютеры с Windows 7 в локальной сети. Настройка SMB, служб и прав доступа.">
+    <link rel="canonical" href="/a/articles/i/is/ispravlenie-oshibki-kompyuter-windows-11-ne-vidit-v-seti-kompyutery-windows-7.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Windows 11 не видит Windows 7 в сети: решение ошибки">
+    <meta property="og:description" content="Полное руководство по устранению проблемы, когда Windows 11 не видит компьютеры с Windows 7 в локальной сети. Настройка SMB, служб и прав доступа.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/windows-i-pk/">Windows и ПК</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Windows 11 не видит Windows 7 в сети: решение ошибки</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Windows 11 не видит Windows 7: полное руководство по устранению ошибки</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#диагностика-базового-подключения-и-профиля-сети">Диагностика базового подключения и профиля сети</a></li><li><a href="#настройка-служб-обнаружения-и-публикации">Настройка служб обнаружения и публикации</a></li><li><a href="#включение-поддержки-протокола-smbv1">Включение поддержки протокола SMBv1</a></li><li><a href="#настройка-параметров-общего-доступа">Настройка параметров общего доступа</a></li><li><a href="#редактирование-групповых-политик-и-реестра">Редактирование групповых политик и реестра</a></li><li><a href="#сравнение-настроек-безопасности-windows-7-и-11">Сравнение настроек безопасности Windows 7 и 11</a></li><li><a href="#дополнительные-методы-устранения-неполадок">Дополнительные методы устранения неполадок</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Ситуация, когда новая операционная система игнорирует более старые устройства в локальной сети, является одной из самых распространенных проблем при модернизации домашней или офисной инфраструктуры. Пользователи часто сталкиваются с тем, что <strong>Windows 11</strong> просто не отображает компьютеры под управлением <em>Windows 7</em> в разделе «Сеть» проводника, хотя физическое соединение кабелем или Wi-Fi установлено корректно. Это вызывает frustration, особенно когда необходимо получить доступ к общим папкам или сетевому принтеру.</p>
+<p>Причина кроется в различиях протоколов безопасности и сетевых служб, которые Microsoft внедряет в новые версии ОС для защиты данных. Старые алгоритмы обнаружения и передачи файлов, такие как <strong>SMBv1</strong>, по умолчанию отключены или полностью удалены в современных сборках из-за уязвимостей. Однако это не означает, что совместимость невозможна — требуется грамотная настройка параметров обеих систем.</p>
+<p>В этом материале мы подробно разберем все этапы диагностики и исправления ошибки, начиная от проверки базовых настроек и заканчивая редактированием реестра и групповых политик. Вы узнаете, как заставить <strong>Windows 11</strong> «увидеть» legacy-устройства без compromising безопасности всей сети.</p>
+
+<h2 id="диагностика-базового-подключения-и-профиля-сети">Диагностика базового подключения и профиля сети</h2>
+<p>Прежде чем приступать к сложным манипуляциям с реестром, необходимо убедиться, что фундаментальные настройки сети выполнены верно на обоих компьютерах. Часто проблема решается простой сменой сетевого профиля с «Общественная» на «Частная», так как в общественном режиме <strong>Windows</strong> скрывает устройство от других участников сети. Проверьте статус сети в параметрах адаптера и убедитесь, что оба компьютера находятся в одной рабочей группе, обычно это <code>WORKGROUP</code>.</p>
+<p>Также стоит проверить видимость устройств через командную строку, используя утилиту <code>ping</code>. Если IP-адрес старого компьютера не пингуется, то问题 кроется на уровне физического соединения или драйверов сетевой карты, а не в настройках общего доступа. Убедитесь, что антивирусное ПО или встроенный брандмауэр не блокируют ICMP-запросы.</p>
+<blockquote>
+<p>⚠️ Внимание: Если вы находитесь в корпоративной сети с доменом, изменение профиля сети или включение обнаружения может нарушить политики безопасности организации. Согласуйте действия с системным администратором.</p>
+</blockquote>
+<p>Для быстрой проверки можно использовать встроенный инструмент диагностики. Нажмите <code>Win + R</code>, введите <code>control</code> и перейдите в центр управления сетями. Убедитесь, что для текущего подключения активирована функция <strong>сетевое обнаружение</strong> и общий доступ к файлам.</p>
+
+<h2 id="настройка-служб-обнаружения-и-публикации">Настройка служб обнаружения и публикации</h2>
+<p>Ключевым моментом в обеспечении видимости между разными версиями ОС является правильная работа фоновых служб. В <em>Windows 11</em> некоторые службы, ответственные за обнаружение старых устройств, могут быть отключены по умолчанию. Вам необходимо открыть диспетчер служб, введя <code>services.msc</code> в окне «Выполнить», и найти службы, связанные с <strong>Function Discovery</strong>.</p>
+<p>Найдите службы с названиями «Функция обнаружения ресурса публикации» и «Функция обнаружения хоста поставщика обнаружения». Для каждой из них необходимо изменить тип запуска на «Автоматический» и запустить их вручную, если они остановлены. Это позволит системе активно заявлять о себе в сети и искать другие компьютеры.</p>
+<div class="checklist-block"><h4>☑️ Проверка служб обнаружения</h4><label class="check-item"><input type="checkbox"><span>Открыть services.msc</span></label><label class="check-item"><input type="checkbox"><span>Найти Function Discovery Resource Publication</span></label><label class="check-item"><input type="checkbox"><span>Установить тип запуска Автоматически</span></label><label class="check-item"><input type="checkbox"><span>Запустить службу</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+<p>После запуска служб рекомендуется перезагрузить компьютер, чтобы изменения вступили в силу. Если после перезагрузки <strong>Windows 11</strong> по-прежнему не видит <em>Windows 7</em>, переходите к настройке протоколов передачи файлов.</p>
+
+<h2 id="включение-поддержки-протокола-smbv1">Включение поддержки протокола SMBv1</h2>
+<p>Самой частой причиной отсутствия видимости является отключенный протокол <strong>SMBv1</strong>, который часто используется в <em>Windows 7</em> для обнаружения компьютеров в списке сети. Хотя Microsoft рекомендует отключать его из соображений безопасности, в гетерогенных сетях без него иногда не обойтись. Для включения перейдите в «Панель управления» → «Программы и компоненты» → «Включение или отключение компонентов Windows».</p>
+<p>В открывшемся списке найдите ветку «Поддержка общего доступа к файлам SMB 1.0/CIFS». Вам потребуется установить галочку напротив пункта «Клиент SMB 1.0/CIFS». Обратите внимание, что включать серверную часть (SMB 1.0 Server) на <strong>Windows 11</strong> крайне не рекомендуется из-за уязвимостей, если только старый компьютер не выступает в роли сервера файлов.</p>
+<blockquote>
+<p>⚠️ Внимание: Протокол SMBv1 имеет известные уязвимости. Включайте его только если другие методы не работают, и убедитесь, что оба компьютера находятся в доверенной локальной сети, изолированной от интернета.</p>
+</blockquote>
+<p>После активации компонента система запросит перезагрузку. Без перезагрузки изменения не применятся, и компьютеры так и останутся невидимыми друг для друга.</p>
+
+<h2 id="настройка-параметров-общего-доступа">Настройка параметров общего доступа</h2>
+<p>Даже при правильных настройках служб и протоколов, параметры общего доступа могут блокировать отображение устройств. Откройте «Панель управления» → «Центр управления сетями и общим доступом» → «Изменить дополнительные параметры общего доступа». Здесь важно проверить настройки для текущего профиля сети (Частная).</p>
+<p>Убедитесь, что включены следующие опции: «Включить сетевое обнаружение», «Включить автоматическую настройку подключаемых к сети устройств» и «Включить общий доступ к файлам и принтерам». Также стоит обратить внимание на раздел «Все сети», где можно включить общий доступ с парольной защитой или отключить его для упрощения доступа.</p>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если вы отключаете парольную защиту, убедитесь, что учетные записи на обоих компьютерах имеют пароли, или используйте гостевой доступ с осторожностью, чтобы не открыть доступ к данным посторонним.</p></div>
+<p>Иногда помогает сброс настроек сети. В <strong>Windows 11</strong> это можно сделать через «Параметры» → «Сеть и Интернет» → «Дополнительные сетевые параметры» → «Сброс сети». Это действие переустановит сетевые адаптеры и вернет настройки к заводским.</p>
+
+<h2 id="редактирование-групповых-политик-и-реестра">Редактирование групповых политик и реестра</h2>
+<p>Если стандартные методы не помогли, возможно, требуются изменения в групповых политиках. Это актуально для версий <em>Windows 11</em> Pro и Enterprise. Откройте редактор локальной групповой политики командой <code>gpedit.msc</code>. Перейдите по пути: Конфигурация компьютера → Административные шаблоны → Сеть → Рабочая станция Lanman.</p>
+<p>Здесь необходимо найти параметр «Включить небезопасные гостевые входы» и перевести его в состояние «Включено». Это позволит системе подключаться к ресурсам, которые не требуют проверки подлинности, что часто встречается в старых конфигурациях <strong>Windows 7</strong>.</p>
+<p>Для пользователей домашней версии <em>Windows</em>, где нет редактора групповых политик, можно внести изменения через реестр. Создайте или измените DWORD-параметр <code>AllowInsecureGuestAuth</code> со значением <code>1</code> в ветке <code>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters</code>.</p>
+<details class="faq-item"><summary>Команда для быстрого внесения изменений в реестр</summary><div class="faq-answer"><p>Вы можете выполнить следующую команду в командной строке от имени администратора: reg add "HKLM\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" /v AllowInsecureGuestAuth /t REG_DWORD /d 1 /f</p></div></details>
+
+<h2 id="сравнение-настроек-безопасности-windows-7-и-11">Сравнение настроек безопасности Windows 7 и 11</h2>
+<p>Понимание различий в подходах к безопасности поможет лучше настроить взаимодействие систем. <strong>Windows 7</strong> полагается на более старые стандарты шифрования и обнаружения, тогда как <em>Windows 11</em> требует современных протоколов. Ниже приведена таблица, сравнивающая ключевые параметры.</p>
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Windows 7 (По умолчанию)</th>
+<th>Windows 11 (По умолчанию)</th>
+<th>Рекомендуемое действие</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Протокол SMB</td>
+<td>SMBv1 включен</td>
+<td>SMBv1 отключен</td>
+<td>Включить клиент SMBv1 на Win 11</td>
+</tr>
+<tr>
+<td>Сетевой профиль</td>
+<td>Частная/Домашняя</td>
+<td>Общественная (часто)</td>
+<td>Переключить на Частную</td>
+</tr>
+<tr>
+<td>Гостевой доступ</td>
+<td>Разрешен легче</td>
+<td>Заблокирован</td>
+<td>Включить небезопасный гостевой вход</td>
+</tr>
+<tr>
+<td>Шифрование NTLM</td>
+<td>NTLMv1/v2</td>
+<td>Только NTLMv2</td>
+<td>Проверить уровень безопасности LAN</td>
+</tr>
+</tbody>
+</table>
+<p>Обратите внимание, что принудительное использование старых протоколов снижает общий уровень безопасности. <mark>Наиболее безопасным решением является обновление Windows 7 до поддерживаемой версии или использование выделенного NAS-сервера с современными протоколами.</mark></p>
+<p>Если после всех настроек проблема сохраняется, попробуйте добавить сетевой диск вручную, используя IP-адрес. В проводнике нажмите «Компьютер» → «Подключить сетевой диск» и введите путь вида <code>\\192.168.1.10\SharedFolder</code>. Это часто обходит проблемы с отображением в списке сети.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой метод оказался наиболее эффективным для вас?</strong><ul><li>Включение SMBv1</li><li>Настройка служб обнаружения</li><li>Изменение групповых политик</li><li>Ручное подключение по IP</li></ul></div></div>
+
+<h2 id="дополнительные-методы-устранения-неполадок">Дополнительные методы устранения неполадок</h2>
+<p>В редких случаях проблема может крыться в драйверах сетевой карты или настройках энергосбережения. Откройте диспетчер устройств, найдите свой сетевой адаптер и в свойствах на вкладке «Управление электропитанием» снимите галочку «Разрешить отключение этого устройства для экономии энергии». Это предотвратит переход карты в спящий режим, что может прерывать соединение.</p>
+<p>Также стоит проверить, не блокирует ли антивирус третьего_party сетевое обнаружение. Попробуйте временно отключить файервол антивируса и проверить видимость компьютеров. Если это поможет, добавьте исключение для локальной сети в настройках защиты.</p>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Комплексный подход, включающий настройку служб, протоколов SMB и политик безопасности, гарантирует решение проблемы в 99% случаев.</p></div>
+<p>Не забывайте, что <strong>Windows 7</strong> больше не получает обновлений безопасности, поэтому ее присутствие в сети несет потенциальные риски. Рекомендуется минимизировать ее взаимодействие с внешним миром и использовать только внутри локального периметра.</p>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+<details>
+<summary>Почему Windows 11 требует включения SMBv1 для работы с Windows 7?</summary>
+<p>Windows 7 использует протокол SMBv1 для функции обнаружения компьютеров в списке сети. Без этого компонента modern-системы не могут корректно отображать старые устройства в сетевом окружении, хотя прямой доступ по IP может работать.</p>
+</details>
+<details>
+<summary>Безопасно ли включать SMBv1 на Windows 11?</summary>
+<p>Включение SMBv1 снижает уровень безопасности, так как протокол имеет известные уязвимости. Делать это безопасно только в полностью изолированной локальной сети, не имеющей выхода в интернет, или если риск взлома извне минимален.</p>
+</details>
+<details>
+<summary>Можно ли получить доступ к файлам Windows 7 без включения SMBv1?</summary>
+<p>Да, часто можно получить доступ, если ввести IP-адрес компьютера с Windows 7 напрямую в адресную строку проводника (например, <code>\\192.168.1.5</code>). Также можно настроить более новые версии протокола SMB на Windows 7, установив соответствующие обновления.</p>
+</details>
+<details>
+<summary>Что делать, если компьютеры видны, но доступ запрещен?</summary>
+<p>Ошибка доступа обычно связана с различием учетных данных. Попрольйтесь войти под пользователем с одинаковым именем и паролем на обоих компьютерах или отключите парольную защиту общего доступа в настройках сети.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#диагностика-базового-подключения-и-профиля-сети">Диагностика базового подключения и профиля сети</a></li><li><a href="#настройка-служб-обнаружения-и-публикации">Настройка служб обнаружения и публикации</a></li><li><a href="#включение-поддержки-протокола-smbv1">Включение поддержки протокола SMBv1</a></li><li><a href="#настройка-параметров-общего-доступа">Настройка параметров общего доступа</a></li><li><a href="#редактирование-групповых-политик-и-реестра">Редактирование групповых политик и реестра</a></li><li><a href="#сравнение-настроек-безопасности-windows-7-и-11">Сравнение настроек безопасности Windows 7 и 11</a></li><li><a href="#дополнительные-методы-устранения-неполадок">Дополнительные методы устранения неполадок</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-podklyuchit-dvd-privod-ot-noutbuka-k-kompyuteru-shema.html" class="related-card">Как подключить DVD привод ноутбука к ПК: схема и инструкция</a></li><li><a href="/a/articles/k/ka/kak-podklyuchit-ender-3-s1-k-kompyuteru.html" class="related-card">Как подключить Creality Ender 3 S1 к ПК: USB, драйверы, Cura</a></li><li><a href="/a/articles/w/wi/windows-hsl-chto-eto.html" class="related-card">Windows HSL: что это, как использовать и исправить ошибки</a></li><li><a href="/a/articles/s/so/sony-vaio-pcg-7164.html" class="related-card">Ноутбук Sony Vaio PCG-7164: характеристики, драйверы и ремонт</a></li><li><a href="/a/articles/k/ka/kak-ustanovit-yutub-vansed-na-kompyuter.html" class="related-card">Как установить YouTube Vanced на ПК: Пошаговая инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-podklyuchit-dvd-privod-ot-noutbuka-k-kompyuteru-shema.html" class="related-bottom-card"><span class="related-bottom-title">Как подключить DVD привод ноутбука к ПК: схема и инструкция</span><span class="related-bottom-desc">Подробная схема подключения DVD привода от ноутбука к компьютеру через SATA или USB. Разбор пинов, п</span></a><a href="/a/articles/k/ka/kak-podklyuchit-ender-3-s1-k-kompyuteru.html" class="related-bottom-card"><span class="related-bottom-title">Как подключить Creality Ender 3 S1 к ПК: USB, драйверы, Cura</span><span class="related-bottom-desc">Полная инструкция: как подключить 3D-принтер Ender 3 S1 к компьютеру. Установка драйверов CH340, нас</span></a><a href="/a/articles/w/wi/windows-hsl-chto-eto.html" class="related-bottom-card"><span class="related-bottom-title">Windows HSL: что это, как использовать и исправить ошибки</span><span class="related-bottom-desc">Узнайте, что такое Windows HSL, как переводить цвета и устранять ошибки отображения в системе.</span></a><a href="/a/articles/s/so/sony-vaio-pcg-7164.html" class="related-bottom-card"><span class="related-bottom-title">Ноутбук Sony Vaio PCG-7164: характеристики, драйверы и ремонт</span><span class="related-bottom-desc">Полный обзор Sony Vaio PCG-7164. Технические характеристики, инструкция по разборке, установка драйв</span></a><a href="/a/articles/k/ka/kak-ustanovit-yutub-vansed-na-kompyuter.html" class="related-bottom-card"><span class="related-bottom-title">Как установить YouTube Vanced на ПК: Пошаговая инструкция</span><span class="related-bottom-desc">Подробный гайд по установке YouTube Vanced на компьютер. Установка через эмулятор, патч APK и альтер</span></a><a href="/a/articles/k/ka/kak-otklyuchit-obnovleniya-vatsap-na-kompyutere.html" class="related-bottom-card"><span class="related-bottom-title">Как отключить обновления WhatsApp на ПК: полная инструкция</span><span class="related-bottom-desc">Узнайте, как остановить автообновление WhatsApp на Windows и Mac. Эффективные методы блокировки чере</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

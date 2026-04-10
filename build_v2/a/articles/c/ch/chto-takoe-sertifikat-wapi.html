@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Сертификат WAPI: что это и зачем он нужен в Wi-Fi — ТехПодсказка</title>
+    <meta name="description" content="Подробный разбор сертификата WAPI: особенности китайского стандарта безопасности, отличие от WPA2, совместимость устройств и настройка.">
+    <link rel="canonical" href="/a/articles/c/ch/chto-takoe-sertifikat-wapi.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Сертификат WAPI: что это и зачем он нужен в Wi-Fi">
+    <meta property="og:description" content="Подробный разбор сертификата WAPI: особенности китайского стандарта безопасности, отличие от WPA2, совместимость устройств и настройка.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Сертификат WAPI: что это и зачем он нужен в Wi-Fi</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Сертификат WAPI: назначение, отличия и настройка безопасности</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#определение-и-происхождение-стандарта-безопасности">Определение и происхождение стандарта безопасности</a></li><li><a href="#ключевые-отличия-от-протоколов-wpa2-и-wpa3">Ключевые отличия от протоколов WPA2 и WPA3</a></li><li><a href="#архитектура-работы-и-механизм-сертификатов">Архитектура работы и механизм сертификатов</a></li><li><a href="#инструкция-по-установке-и-настройке-сертификата">Инструкция по установке и настройке сертификата</a></li><li><a href="#совместимость-оборудования-и-операционных-систем">Совместимость оборудования и операционных систем</a></li><li><a href="#проблемы-безопасности-и-будущее-технологии">Проблемы безопасности и будущее технологии</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>При подключении к беспроводной сети на смартфонах или ноутбуках, особенно привезенных из Китая, пользователи часто сталкиваются с непонятным пунктом в списке доступных протоколов безопасности — <strong>WAPI</strong>. Этот термин вызывает недоумение у тех, кто привык к стандартным WPA2 или WPA3, и часто остается без внимания. Однако за этой аббревиатурой скрывается целая философия построения защищенных сетей, разработанная специально для удовлетворения строгих требований китайского законодательства.</p>
+<p>Понимание того, <em>что такое сертификат WAPI</em>, становится критически важным не только для владельцев китайской техники, но и для сетевых администраторов, работающих с международным оборудованием. В отличие от привычных западных аналогов, данный стандарт использует уникальную систему сертификатов для аутентификации, что кардинально меняет подход к шифрованию трафика. Мы разберем технические детали, чтобы вы могли безошибочно настроить свое оборудование.</p>
+<p>Игнорирование этого протокола может привести к невозможности подключения определенных устройств к корпоративной или домашней сети. Кроме того, знание его особенностей помогает повысить общую цифровую грамотность и понимать, как разные страны подходят к вопросам кибербезопасности. Давайте погрузимся в технические нюансы этого стандарта.</p>
+
+<h2 id="определение-и-происхождение-стандарта-безопасности">Определение и происхождение стандарта безопасности</h2>
+<p><strong>WAPI</strong> (WLAN Authentication and Privacy Infrastructure) представляет собой китайский национальный стандарт безопасности для беспроводных локальных сетей. Он был разработан как альтернатива международному протоколу <em>IEEE 802.11i</em>, который лежит в основе привычных нам WPA и WPA2. Главной целью создания WAPI стало обеспечение суверенитета данных и независимость от иностранных технологий шифрования.</p>
+<p>Разработка велась Китайской стандартизирующей администрацией, и с 2003 года использование этого протокола стало обязательным для всех Wi-Fi устройств, продающихся на территории КНР. Это означает, что любой смартфон, роутер или ноутбук, официально поставляемый в Китай, должен поддерживать данный метод аутентификации на аппаратном или программном уровне.</p>
+<blockquote>⚠️ Внимание: Устройства, выпущенные для рынков Европы и США, могут не иметь встроенной поддержки WAPI, что создает проблемы совместимости при попытке подключить их к китайскому оборудованию.</blockquote>
+<p>Технически протокол базируется на использовании сертификатов цифровой подписи, что делает его архитектуру более сложной, но потенциально более защищенной от определенных типов атак по сравнению с использованием только паролей. Основой криптографии здесь выступает алгоритм <em>SMS4</em> (ныне известный как SM4), который является государственным стандартом шифрования в Китае.</p>
+
+<h2 id="ключевые-отличия-от-протоколов-wpa2-и-wpa3">Ключевые отличия от протоколов WPA2 и WPA3</h2>
+<p>Основное различие кроется в механизме аутентификации. Если в <strong>WPA2</strong> и <strong>WPA3</strong> широко используется метод предварительного ключа (PSK), где все устройства знают общий пароль, то WAPI изначально заточен под инфраструктуру с использованием сертификатов. Это требует наличия сервера аутентификации (ASU) для проверки подлинности каждого подключаемого клиента.</p>
+<p>В то время как западные стандарты эволюционировали от уязвимого WEP к WPA и далее к WPA3, китайский стандарт развивался параллельно, делая ставку на централизованное управление ключами. Это позволяет мгновенно отзывать доступ у конкретного устройства без смены пароля для всей сети, что критически важно для корпоративного сектора и государственных структур.</p>
+<ul>
+<li>🔐 <strong>Метод шифрования:</strong> Используется алгоритм SM4 вместо AES, применяемого в WPA2/3.</li>
+<li>📜 <strong>Аутентификация:</strong> Обязательное использование цифровых сертификатов для обоих сторон (клиента и точки доступа).</li>
+<li>🏛️ <strong>Регулирование:</strong> Контролируется государственными органами КНР, в отличие от международных стандартов IEEE.</li>
+<li>🔄 <strong>Совместимость:</strong> Требует специальной поддержки на уровне драйверов и операционной системы.</li>
+</ul>
+<p>Стоит отметить, что современные устройства часто поддерживают гибридный режим работы. Роутер может одновременно транслировать сети с разными типами защиты, позволяя устройствам выбирать наиболее подходящий протокол. Однако для работы именно через WAPI оба конца соединения должны «понимать» этот язык.</p>
+
+<h2 id="архитектура-работы-и-механизм-сертификатов">Архитектура работы и механизм сертификатов</h2>
+<p>Фундаментом безопасности в этой системе является пара ключей и цифровых сертификатов. В отличие от простой связки «логин-пароль», здесь каждое устройство должно обладать уникальным сертификатом, выпущенным доверенным центром сертификации (CA). Без этого документа подключение к сети невозможно, даже если вы знаете имя сети (SSID).</p>
+<p>Процесс подключения выглядит сложнее, чем привычная авторизация. Когда клиентское устройство пытается соединиться с точкой доступа, начинается обмен сертификатами. Точка доступа проверяет валидность сертификата клиента через сервер аутентификации, а клиент, в свою очередь, проверяет подлинность точки доступа. Это защищает от создания фальшивых точек доступа (Evil Twin), которые часто используются хакерами.</p>
+<blockquote>⚠️ Внимание: Установка сертификатов на каждое устройство вручную может быть трудоемкой задачей для обычного пользователя, поэтому этот метод чаще применяется в организованных сетях.</blockquote>
+<p>Для реализации такой схемы требуется наличие специального программного обеспечения или встроенных модулей в операционной системе. В Windows или Android при выборе типа безопасности WAPI система запросит у вас файл сертификата или доступ к хранилищу ключей. Алгоритм шифрования <mark>SM4</mark> обеспечивает высокую скорость обработки данных при сохранении стойкости к криптоанализу.</p>
+<p>В корпоративной среде это позволяет создавать изолированные сегменты сети, доступ к которым имеют только авторизованные сотрудники с установленными сертификатами на корпоративных ноутбуках. Гостевые устройства без сертификата просто не увидят сеть или не смогут пройти этап рукопожатия.</p>
+
+<h2 id="инструкция-по-установке-и-настройке-сертификата">Инструкция по установке и настройке сертификата</h2>
+<p>Если вы столкнулись с необходимостью подключить устройство к сети WAPI, вам потребуется получить соответствующий сертификат у администратора сети. Процесс настройки разительно отличается от ввода простого пароля в Wi-Fi настройках. Вам понадобится файл сертификата (обычно с расширением .cer, .pfx или .p12) и пароль для его активации.</p>
+<p>На операционной системе Android процесс часто выглядит следующим образом: перейдите в <code>Настройки → Wi-Fi → Дополнительно → Установка сертификата</code>. После выбора файла система попросит ввести пароль и присвоить имя сертификату. Только после этой процедуры в списке доступных сетей может появиться опция выбора WAPI.</p>
+<div class="checklist-block"><h4>☑️ Подготовка к настройке WAPI</h4><label class="check-item"><input type="checkbox"><span>Получить файл сертификата у администратора</span></label><label class="check-item"><input type="checkbox"><span>Узнать пароль для активации сертификата</span></label><label class="check-item"><input type="checkbox"><span>Убедиться в поддержке протокола устройством</span></label><label class="check-item"><input type="checkbox"><span>Зарезервировать статический IP при необходимости</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>Для Windows установка происходит через оснастку управления сертификатами. Необходимо импортировать файл в раздел «Доверенные корневые центры сертификации» и «Личные». После этого в свойствах беспроводного адаптера в разделе безопасности можно будет выбрать тип шифрования.</p>
+<ul>
+<li>📂 <strong>Импорт:</strong> Откройте файл сертификата и следуйте инструкциям мастера импорта.</li>
+<li>🔑 <strong>Ключи:</strong> Убедитесь, что закрытый ключ помечен как экспортируемый, если планируете перенос.</li>
+<li>📶 <strong>Конфигурация:</strong> В настройках сети выберите WAPI-PSK или WAPI-CERT в зависимости от типа аутентификации.</li>
+</ul>
+<p>Часто пользователи сталкиваются с тем, что после установки сертификата сеть все равно не подключается. Это может быть связано с истекшим сроком действия сертификата или несоответствием времени на устройстве и сервере. Синхронизация времени — важный, но часто забываемый шаг.</p>
+<blockquote>⚠️ Внимание: Никогда не устанавливайте сертификаты из непроверенных источников, так как это может дать злоумышленнику полный контроль над вашим сетевым трафиком.</blockquote>
+
+<h2 id="совместимость-оборудования-и-операционных-систем">Совместимость оборудования и операционных систем</h2>
+<p>Вопрос совместимости остается самым острым для пользователей за пределами Китая. Глобальные версии операционных систем, таких как iOS, Android или Windows, могут иметь обрезанный функционал, связанный с WAPI, из-за патентных ограничений или отсутствия спроса. Например, iPhone, купленный в Европе, может физически не иметь модуля для работы с этим протоколом.</p>
+<p>Ситуация с Android более разнообразна. Многие производители (Huawei, Xiaomi, Oppo) в своих глобальных прошивках оставляют поддержку WAPI, но скрывают её или активируют только при выборе региона «Китай». В то же время, устройства Samsung или Google Pixel могут полностью игнорировать запросы на подключение через этот протокол.</p>
+<div class="attention-box attention-info"><div><strong>📊 Сталкивались ли вы с проблемами подключения китайской техники?</strong><ul><li>Да, не работал Wi-Fi</li><li>Были проблемы с сертификатами</li><li>Все работало сразу</li><li>Не покупал китайскую технику</li></ul></div></div>
+
+<p>Роутеры также делятся на два лагеря. Глобальные модели от TP-Link или Asus, продающиеся в СНГ, часто лишены возможности работать в режиме WAPI. Китайские версии того же оборудования имеют эту функцию «из коробки». При покупке оборудования важно проверять спецификацию на наличие поддержки стандарта <em>GB 15629.11</em>.</p>
+<p>Для корпоративных клиентов существуют специальные шлюзы и контроллеры, которые могут транслировать сеть с поддержкой WAPI для китайских гостей, одновременно раздавая WPA3 для остальных. Это требует более сложной настройки VLAN и политик безопасности.</p>
+<p>Ниже приведена таблица, демонстрирующая примерную совместимость популярных платформ:</p>
+<table>
+<thead>
+<tr>
+<th>Платформа / Устройство</th>
+<th>Поддержка WAPI</th>
+<th>Требуется сертификат</th>
+<th>Регион покупки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Android (Китайская версия)</td>
+<td>Полная</td>
+<td>Да (для WAPI-CERT)</td>
+<td>Китай</td>
+</tr>
+<tr>
+<td>Android (Global ROM)</td>
+<td>Частичная / Скрытая</td>
+<td>Зависит от вендора</td>
+<td>Глобальный</td>
+</tr>
+<tr>
+<td>iOS (iPhone)</td>
+<td>Отсутствует</td>
+<td>Нет</td>
+<td>Все регионы</td>
+</tr>
+<tr>
+<td>Windows 10/11</td>
+<td>Зависит от драйвера</td>
+<td>Да</td>
+<td>Все регионы</td>
+</tr>
+<tr>
+<td>Роутеры (Global)</td>
+<td>Редко</td>
+<td>Нет</td>
+<td>Европа/США</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="проблемы-безопасности-и-будущее-технологии">Проблемы безопасности и будущее технологии</h2>
+<p>Несмотря на высокую криптостойкость алгоритма SM4, сам протокол WAPI подвергался критике со стороны международного сообщества. Основные опасения вызывала закрытость исходного кода и потенциальное наличие бэкдоров для государственных органов Китая. Однако независимые исследования не выявили критических уязвимостей в самом алгоритме шифрования.</p>
+<p>С развитием стандарта <strong>WPA3</strong>, который引入了 усиленную защиту от перебора паролей и шифрование даже в открытых сетях, актуальность WAPI для массового пользователя снижается. WPA3 решает многие проблемы, которые изначально призван был решать китайский стандарт, но делает это открытым и международно признанным способом.</p>
+<details class="faq-item"><summary>Почему WAPI не стал мировым стандартом?</summary><div class="faq-answer"><p>Основной причиной стало политическое сопротивление и лоббирование интересов западных компаний-разработчиков Wi-Fi. Кроме того, необходимость сложной инфраструктуры сертификатов отпугнула малый бизнес, привыкший к простоте WPA-PSK.</p></div></details>
+
+<p>Тем не менее, внутри Китая и в странах, активно сотрудничающих с КНР в рамках проекта «Цифровой шелковый путь», использование WAPI будет только расти. Экспорт китайского оборудования (камер наблюдения, IoT-устройств, дронов) диктует свои правила игры. Понимание принципов работы этого протокола становится навыком, необходимым для IT-специалистов, работающих с международными проектами.</p>
+<p>В будущем возможно появление гибридных решений, где WAPI будет использоваться как дополнительный, усиленный уровень защиты для критически важных данных, пока обычный трафик идет через стандартные каналы. Технологии не стоят на месте, и конвергенция стандартов — лишь вопрос времени.</p>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>При покупке умной техники из Китая (роботы-пылесосы, камеры) сразу проверяйте требования к Wi-Fi. Если устройство требует WAPI, а ваш роутер не поддерживает, придется искать альтернативу или перепрошивать оборудование.</p></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+<details>
+<summary>Можно ли отключить WAPI на роутере, если он мешает работе?</summary>
+<p>Да, в настройках беспроводного режима (<code>Wireless Settings</code>) обычно можно выбрать тип безопасности. Если вы не используете устройства, требующие этот протокол, лучше выбрать WPA2/WPA3 Personal для максимальной совместимости.</p>
+</details>
+<details>
+<summary>Безопасно ли использовать WAPI в домашней сети?</summary>
+<p>С технической точки зрения он безопасен и даже надежнее старых версий WPA. Однако сложности с настройкой сертификатов для каждого гостя делают его неудобным для домашнего использования, где важна простота подключения.</p>
+</details>
+<details>
+<summary>Поч мой телефон пишет "WAPI сертификат не найден"?</summary>
+<p>Это означает, что сеть требует аутентификации по сертификату, но в памяти вашего устройства нет нужного файла. Вам нужно получить его у администратора сети или переключиться на сеть с типом защиты WPA2-PSK.</p>
+</details>
+<details>
+<summary>Влияет ли WAPI на скорость интернета?</summary>
+<p>Сам по себе протокол не режет скорость. Однако накладные расходы на проверку сертификатов и более сложные вычисления шифрования могут минимально увеличить пинг, что заметно только в очень нагруженных сетях.</p>
+</details>
+<details>
+<summary>Нужен ли WAPI для обычных китайских смартфонов?</summary>
+<p>Нет, современные китайские смартфоны (Xiaomi, Huawei, Honor) отлично работают с обычным WPA2/WPA3 за пределами Китая. WAPI активируется автоматически только при обнаружении совместимой точки доступа или при выборе региона Китай.</p>
+</details>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>WAPI — это мощный, но нишевый инструмент безопасности, актуальный в первую очередь для работы в китайском сегменте интернета и с специализированным оборудованием КНР.</p></div></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#определение-и-происхождение-стандарта-безопасности">Определение и происхождение стандарта безопасности</a></li><li><a href="#ключевые-отличия-от-протоколов-wpa2-и-wpa3">Ключевые отличия от протоколов WPA2 и WPA3</a></li><li><a href="#архитектура-работы-и-механизм-сертификатов">Архитектура работы и механизм сертификатов</a></li><li><a href="#инструкция-по-установке-и-настройке-сертификата">Инструкция по установке и настройке сертификата</a></li><li><a href="#совместимость-оборудования-и-операционных-систем">Совместимость оборудования и операционных систем</a></li><li><a href="#проблемы-безопасности-и-будущее-технологии">Проблемы безопасности и будущее технологии</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/n/ni/nitro-znachok-na-klaviature.html" class="related-card">Nitro значок на клавиатуре: как включить и настроить</a></li><li><a href="/a/articles/p/pr/prilozheniya-dlya-hentaya.html" class="related-card">Приложения для хентая: Топ-10 лучших программ для Android и iOS</a></li><li><a href="/a/articles/k/ka/kak-otklyuchit-zaschitu-pri-aktivacii-vindovs.html" class="related-card">Как отключить защиту при активации Windows: методы</a></li><li><a href="/a/articles/p/pl/please-wait-for-the-system-to-start-haier.html" class="related-card">Haier: Please wait for the system to start – решение ошибки</a></li><li><a href="/a/articles/k/ka/kak-otklyuchit-t9-na-vivo.html" class="related-card">Как отключить Т9 на Vivo: полная инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/n/ni/nitro-znachok-na-klaviature.html" class="related-bottom-card"><span class="related-bottom-title">Nitro значок на клавиатуре: как включить и настроить</span><span class="related-bottom-desc">Узнайте, как активировать Nitro значок на клавиатуре, настроить подсветку и устранить неполадки в иг</span></a><a href="/a/articles/p/pr/prilozheniya-dlya-hentaya.html" class="related-bottom-card"><span class="related-bottom-title">Приложения для хентая: Топ-10 лучших программ для Android и iOS</span><span class="related-bottom-desc">Обзор лучших приложений для хентая на Андроид и iPhone. Рейтинг безопасных читалок, стриминговых сер</span></a><a href="/a/articles/k/ka/kak-otklyuchit-zaschitu-pri-aktivacii-vindovs.html" class="related-bottom-card"><span class="related-bottom-title">Как отключить защиту при активации Windows: методы</span><span class="related-bottom-desc">Узнайте, как безопасно отключить антивирус или брандмауэр для активации Windows. Полная инструкция п</span></a><a href="/a/articles/p/pl/please-wait-for-the-system-to-start-haier.html" class="related-bottom-card"><span class="related-bottom-title">Haier: Please wait for the system to start – решение ошибки</span><span class="related-bottom-desc">Почему телевизор Haier висит на &#x27;please wait for the system to start&#x27;? Полный гид по устранению зави</span></a><a href="/a/articles/k/ka/kak-otklyuchit-t9-na-vivo.html" class="related-bottom-card"><span class="related-bottom-title">Как отключить Т9 на Vivo: полная инструкция</span><span class="related-bottom-desc">Подробное руководство, как выключить предиктивный набор Т9 на смартфонах Vivo. Настройки клавиатуры,</span></a><a href="/a/articles/a/al/all-pw-svdhkvdl34-girlx-vid-6-4.html" class="related-bottom-card"><span class="related-bottom-title">Расшифровка пароля svd$hkvdl34## и код girlx vid 6-4</span><span class="related-bottom-desc">Полный разбор кода girlx vid 6-4 и пароля svd$hkvdl34##. Инструкция по доступу к скрытым файлам, нас</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

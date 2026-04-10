@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Настройка USB-клавиатуры на плате B85M-B33: BIOS и ОС — ТехПодсказка</title>
+    <meta name="description" content="Полное руководство по настройке USB-клавиатуры на материнской плате ASRock B85M-B33. Решения проблем в BIOS, Windows и Linux.">
+    <link rel="canonical" href="/a/articles/s/se/settings-b85m-b33-usb-klaviatura.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Настройка USB-клавиатуры на плате B85M-B33: BIOS и ОС">
+    <meta property="og:description" content="Полное руководство по настройке USB-клавиатуры на материнской плате ASRock B85M-B33. Решения проблем в BIOS, Windows и Linux.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/noutbuki-i-zhelezo/">Ноутбуки и Железо</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Настройка USB-клавиатуры на плате B85M-B33: BIOS и ОС</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Настройка USB-клавиатуры для ASRock B85M-B33</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#диагностика-портов-и-выбор-правильного-разъема">Диагностика портов и выбор правильного разъема</a></li><li><a href="#базовая-настройка-biosuefi-для-периферии">Базовая настройка BIOS/UEFI для периферии</a></li><li><a href="#расширенные-параметры-контроллера-usb">Расширенные параметры контроллера USB</a></li><li><a href="#оптимизация-работы-в-среде-windows">Оптимизация работы в среде Windows</a></li><li><a href="#специфика-работы-с-linux-и-macos">Специфика работы с Linux и macOS</a></li><li><a href="#решение-распространенных-проблем-и-конфликтов">Решение распространенных проблем и конфликтов</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>Владельцы компьютеров, собранных на базе материнской платы <em>ASRock B85M-B33</em>, часто сталкиваются с необходимостью тонкой настройки периферийных устройств. Эта модель, построенная на чипсете Intel B85, поддерживает процессоры 4-го поколения, но её интерфейс UEFI и управление портами требуют правильного подхода. Особенно это касается USB-клавиатур, которые могут некорректно работать в BIOS или иметь задержку ввода в операционной системе.</p>
+
+<p>Проблема часто кроется не в физической неисправности, а в программных конфликтах или устаревших настройках контроллера. <strong>Legacy USB Support</strong> — это первый параметр, на который стоит обратить внимание при диагностике. Без его активации клавиатура может просто не определяться до загрузки драйверов Windows.</p>
+
+<p>В этой статье мы детально разберем все этапы настройки, от входа в BIOS до правки реестра. Вы узнаете, как устранить задержки ввода и почему некоторые порты работают быстрее других. Грамотная конфигурация позволит использовать все возможности вашей периферии без лишних затрат.</p>
+
+<h2 id="диагностика-портов-и-выбор-правильного-разъема">Диагностика портов и выбор правильного разъема</h2>
+<p>Первым шагом всегда должна быть физическая проверка подключения. Материнская плата <em>ASRock B85M-B33</em> оснащена портами разных стандартов, и их расположение влияет на стабильность работы. Задняя панель содержит как черные разъемы USB 2.0, так и синие USB 3.0, каждый из которых обрабатывается своим контроллером.</p>
+
+<p>Часто пользователи подключают клавиатуру в синий порт USB 3.0, ожидая лучшей производительности, но сталкиваются с проблемами совместимости в старых BIOS. <strong>Контроллер xHCI</strong> может не инициализироваться до полной загрузки ОС, из-за чего ввод становится невозможным в меню настройки. Для максимальной совместимости на этапе настройки BIOS предпочтительнее использовать черные порты.</p>
+
+<p>Также стоит обратить внимание на состояние самих разъемов. Окисление контактов или расшатывание гнезда может приводить к периодическим отключениям устройства. Если клавиатура работает через USB-хаб, попробуйте подключить её напрямую к материнской плате, чтобы исключить нехватку питания.</p>
+
+<ul>
+<li>🔌 Используйте черные порты USB 2.0 для подключения клавиатуры во время настройки BIOS.</li>
+<li>⚡ Избегайте использования длинных USB-удлинителей, которые могут снижать качество сигнала.</li>
+<li>🔍 Проверьте клавиатуру на другом компьютере, чтобы исключить её аппаратную неисправность.</li>
+</ul>
+
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> Не подключайте и не отключайте USB-устройства во время обновления прошивки BIOS, это может привести к необратимому повреждению микрокода платы.</p>
+</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если у вас беспроводная клавиатура с USB-приемником, попробуйте использовать USB-удлинитель, чтобы вынести приемник ближе к устройству — это улучшит стабильность соединения.</p></div>
+
+<h2 id="базовая-настройка-biosuefi-для-периферии">Базовая настройка BIOS/UEFI для периферии</h2>
+<p>Для доступа к настройкам необходимо войти в интерфейс UEFI сразу после включения компьютера. На плате <em>B85M-B33</em> за это отвечает клавиша <code>F2</code> или <code>Del</code>. Если стандартная клавиатура не реагирует, попробуйте использовать порт USB 2.0 или временно подключите старую клавиатуру с разъемом PS/2 через переходник.</p>
+
+<p>После входа в меню перейдите в раздел <code>Advanced</code>, а затем выберите подраздел <code>USB Configuration</code>. Здесь находятся ключевые параметры, управляющие работой всех USB-устройств на уровне железа. Именно здесь решается большинство проблем с невидимостью клавиатуры.</p>
+
+<p>Критически важным параметром является <strong>Legacy USB Support</strong>. Он должен быть установлен в значение <code>Enabled</code> или <code>Auto</code>. Эта функция эмулирует стандартную клавиатуру, позволяя системе распознавать её даже до загрузки драйверов операционной системы. Без этого пункта работа в BIOS будет невозможна.</p>
+
+<div class="checklist-block"><h4>☑️ Настройка BIOS для клавиатуры</h4><label class="check-item"><input type="checkbox"><span>Войти в BIOS по F2 или Del:Перейти в Advanced -> USB Configuration:Включить Legacy USB Support:Сохранить настройки через F10</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 1</div></div>
+
+<h2 id="расширенные-параметры-контроллера-usb">Расширенные параметры контроллера USB</h2>
+<p>В том же разделе конфигурации USB можно найти более глубокие настройки, такие как <strong>xHCI Mode</strong> и <strong>xHCI Hand-off</strong>. Параметр xHCI Mode отвечает за режим работы контроллера USB 3.0. Для старых операционных систем, таких как Windows XP или 7 без обновлений, рекомендуется устанавливать значение <code>Smart Auto</code> или <code>Disabled</code>, чтобы избежать конфликтов драйверов.</p>
+
+<p>Опция <strong>xHCI Hand-off</strong> позволяет операционной системе полностью接管 управление контроллером USB 3.0. Если у вас современная ОС (Windows 10/11, Linux последних версий), этот параметр лучше включить (<code>Enabled</code>). Это снизит нагрузку на процессор и улучшит отзывчивость периферии.</p>
+
+<p>Также стоит проверить наличие опции <code>USB Keyboard/Remote Wakeup</code>. Если вы планируете будить компьютер нажатием кнопки на клавиатуре, эта функция должна быть активна. Однако в некоторых случаях она может вызывать самопроизвольное включение ПК, поэтому тестируйте её аккуратно.</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр BIOS</th>
+<th>Рекомендуемое значение</th>
+<th>Влияние на систему</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Legacy USB Support</td>
+<td>Enabled</td>
+<td>Работа клавиатуры в BIOS и DOS</td>
+</tr>
+<tr>
+<td>xHCI Mode</td>
+<td>Smart Auto</td>
+<td>Совместимость с USB 3.0 и старыми ОС</td>
+</tr>
+<tr>
+<td>xHCI Hand-off</td>
+<td>Enabled</td>
+<td>Передача управления драйверам ОС</td>
+</tr>
+<tr>
+<td>USB Keyboard Wakeup</td>
+<td>Disabled/Enabled</td>
+<td>Включение ПК с клавиатуры</td>
+</tr>
+</tbody>
+</table>
+
+<details class="faq-item"><summary>Что такое EHCI и XHCI?</summary><div class="faq-answer"><p>EHCI (Enhanced Host Controller Interface) — это спецификация для USB 2.0, обеспечивающая высокую скорость передачи данных. XHCI (Extensible Host Controller Interface) — это современный стандарт, объединяющий поддержку USB 1.x, 2.0 и 3.0 в одном контроллере, что снижает задержки и энергопотребление.</p></div></details>
+
+<h2 id="оптимизация-работы-в-среде-windows">Оптимизация работы в среде Windows</h2>
+<p>После успешной загрузки операционной системы настройки могут потребовать коррекции уже на уровне Windows. Часто система по умолчанию включает режим энергосбережения для USB-портов, что приводит к кратковременным отключениям клавиатуры. Это проявляется как "замирание" курсора или задержка появления символов.</p>
+
+<p>Для устранения этой проблемы откройте <strong>Диспетчер устройств</strong> через меню "Пуск" или командой <code>devmgmt.msc</code>. Найдите раздел "Контроллеры USB", раскройте его и найдите пункты "Корневой USB-концентратор". В свойствах каждого из них на вкладке "Управление электропитанием" снимите галочку с пункта "Разрешить отключение этого устройства для экономии энергии".</p>
+
+<p>Еще одним важным аспектом является частота опроса порта. Стандартное значение для USB составляет 125 Гц, но некоторые игровые клавиатуры могут требовать более высоких показателей. Проверьте наличие фирменного ПО от производителя клавиатуры, которое позволяет изменить этот параметр программно.</p>
+
+<ul>
+<li>🚀 Отключение экономии энергии устраняет микро-фризы при вводе текста.</li>
+<li>⚙️ Обновление драйверов чипсета Intel B85 может улучшить стабильность USB-портов.</li>
+<li>🧹 Очистка реестра от старых записей о USB-устройствах помогает при частых ошибках подключения.</li>
+</ul>
+
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> Изменение параметров реестра или драйверов контроллера USB может привести к неработоспособности всех USB-портов до перезагрузки или сброса BIOS.</p>
+</blockquote>
+
+<h2 id="специфика-работы-с-linux-и-macos">Специфика работы с Linux и macOS</h2>
+<p>Если вы используете материнскую плату <em>B85M-B33</em> с операционными системами на базе Linux, настройка может потребовать правки конфигурационных файлов. Дистрибутивы вроде Ubuntu или Fedora обычно отлично справляются с USB 3.0, но могут конфликтовать с режимом энергосбережения контроллера.</p>
+
+<p>Для решения проблем с задержками ввода (input lag) в Linux часто применяют параметр ядра <code>usbcore.autosuspend=-1</code>. Его можно прописать в файле конфигурации GRUB. Это запретит системе автоматически переводить USB-порты в спящий режим, что особенно актуально для беспроводных клавиатур.</p>
+
+<p>В macOS, устанавливаемой на эту платформу через Hackintosh-методы, критически важен правильный выбор SMBIOS и инъекция USB-карты. Без корректной маппинга портов (<code>USB Map</code>) клавиатура может работать только в портах до 15-го номера или не работать вовсе.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какая операционная система у вас установлена?</strong><ul><li>Windows 10/11:Linux (Ubuntu/Arch/etc):macOS (Hackintosh):Другая</li></ul></div></div>
+
+<h2 id="решение-распространенных-проблем-и-конфликтов">Решение распространенных проблем и конфликтов</h2>
+<p>Одной из частых проблем на чипсете B85 является конфликт между USB 3.0 и беспроводными сетевыми адаптерами или мышками, работающими на частоте 2.4 Гц. Интерференция сигналов может вызывать потерю пакетов данных, что ощущается как рывки курсора или пропуск нажатий клавиш.</p>
+
+<p>Для минимизации помех старайтесь не подключать USB 3.0 устройства (флешки, внешние диски) в порты, расположенные непосредственно рядом с приемником беспроводной клавиатуры. Использование USB-удлинителя для приемника клавиатуры помогает физически разнести источники помех.</p>
+
+<p>Если клавиатура перестает отвечать после выхода из спящего режима, проблема может крыться в драйверах управления питанием. Попробуйте обновить BIOS материнской платы до последней версии, так как производители часто выпускают патчи, улучшающие совместимость с периферией.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Стабильная работа USB-клавиатуры на B85M-B33 достигается комбинацией правильного физического подключения (USB 2.0 порт), включения Legacy Support в BIOS и отключения энергосбережения в ОС.</p></div>
+
+<details>
+<summary>Почему клавиатура не работает в BIOS, но работает в Windows?</summary>
+<p>Скорее всего, в BIOS отключена функция <strong>Legacy USB Support</strong>. Windows загружает свои драйверы и управляет клавиатурой независимо от настроек BIOS, поэтому в системе всё работает. Зайдите в BIOS и включите поддержку устаревших устройств.</p>
+</details>
+
+<details>
+<summary>Как сбросить настройки USB контроллера на ASRock B85M-B33?</summary>
+<p>Войдите в BIOS, перейдите в раздел <code>Tool</code> или <code>Exit</code> и выберите пункт <code>Load UEFI Default Settings</code>. Также можно физически сбросить BIOS, замкнув контакты CLR_CMOS на выключенной плате или вынув батарейку на 5 минут.</p>
+</details>
+
+<details>
+<summary>Можно ли использовать клавиатуру USB 3.0 на этой плате?</summary>
+<p>Да, материнская плата <em>B85M-B33</em> имеет нативные порты USB 3.0. Однако для клавиатур скорость USB 3.0 не требуется, и использование портов USB 2.0 часто обеспечивает лучшую совместимость на уровне BIOS.</p>
+</details>
+
+<details>
+<summary>Что делать, если залипли клавиши после настройки?</summary>
+<p>Проверьте, не включена ли функция "Filter Keys" в Windows. Также попробуйте переподключить клавиатуру в другой порт. Если проблема сохраняется, проверьте клавиатуру на другом ПК, чтобы исключить механическое загрязнение контактов.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#диагностика-портов-и-выбор-правильного-разъема">Диагностика портов и выбор правильного разъема</a></li><li><a href="#базовая-настройка-biosuefi-для-периферии">Базовая настройка BIOS/UEFI для периферии</a></li><li><a href="#расширенные-параметры-контроллера-usb">Расширенные параметры контроллера USB</a></li><li><a href="#оптимизация-работы-в-среде-windows">Оптимизация работы в среде Windows</a></li><li><a href="#специфика-работы-с-linux-и-macos">Специфика работы с Linux и macOS</a></li><li><a href="#решение-распространенных-проблем-и-конфликтов">Решение распространенных проблем и конфликтов</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/l/le/lenovo-yoga-370-shema.html" class="related-card">Lenovo Yoga 370 схема: ремонт материнской платы</a></li><li><a href="/a/articles/e/es/esli-noutbuk-razmerom-38sm-na-26sm-skolko-on-dyujmov.html" class="related-card">Ноутбук 38 на 26 см: сколько это дюймов? Точный расчет</a></li><li><a href="/a/articles/a/aj/ajfon-net-predlozheniya-podelitsya-v-coodisk.html" class="related-card">Нет предложения поделиться в Coodisk на iPhone: решение проблемы</a></li><li><a href="/a/articles/a/as/asus-n73s-bang-olufsen-ice-power.html" class="related-card">ASUS N73S Bang &amp; Olufsen IcePower: Обзор звука и драйверы</a></li><li><a href="/a/articles/k/ka/kak-podklyuchit-tachpad-na-noutbuke-irbis.html" class="related-card">Как подключить тачпад на ноутбуке Irbis: полная инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/l/le/lenovo-yoga-370-shema.html" class="related-bottom-card"><span class="related-bottom-title">Lenovo Yoga 370 схема: ремонт материнской платы</span><span class="related-bottom-desc">Подробная схема Lenovo Yoga 370: точки замеров, распиновка, BIOS, ремонт цепи питания и запуски. Ана</span></a><a href="/a/articles/e/es/esli-noutbuk-razmerom-38sm-na-26sm-skolko-on-dyujmov.html" class="related-bottom-card"><span class="related-bottom-title">Ноутбук 38 на 26 см: сколько это дюймов? Точный расчет</span><span class="related-bottom-desc">Узнайте, как перевести размеры ноутбука 38х26 см в дюймы. Подробная инструкция по вычислению диагона</span></a><a href="/a/articles/a/aj/ajfon-net-predlozheniya-podelitsya-v-coodisk.html" class="related-bottom-card"><span class="related-bottom-title">Нет предложения поделиться в Coodisk на iPhone: решение проблемы</span><span class="related-bottom-desc">Узнайте, почему на iPhone нет предложения поделиться в приложении Coodisk. Полный гайд по настройке </span></a><a href="/a/articles/a/as/asus-n73s-bang-olufsen-ice-power.html" class="related-bottom-card"><span class="related-bottom-title">ASUS N73S Bang &amp; Olufsen IcePower: Обзор звука и драйверы</span><span class="related-bottom-desc">Подробный анализ аудиосистемы ASUS N73S с Bang &amp; Olufsen IcePower. Настройка звука, поиск драйверов </span></a><a href="/a/articles/k/ka/kak-podklyuchit-tachpad-na-noutbuke-irbis.html" class="related-bottom-card"><span class="related-bottom-title">Как подключить тачпад на ноутбуке Irbis: полная инструкция</span><span class="related-bottom-desc">Подробное руководство по активации тачпада Irbis. Решения для Windows 10/11: горячие клавиши, драйве</span></a><a href="/a/articles/k/ka/kak-igrat-iz-neigrovogo-noutbuka.html" class="related-bottom-card"><span class="related-bottom-title">Как играть из неигрового ноутбука: секреты оптимизации и облачного гейминга</span><span class="related-bottom-desc">Узнайте, как запустить современные игры на слабом ноутбуке. Облачный гейминг, оптимизация Windows и </span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Как узнать на каком диске Windows 10: 5 способов проверки — ТехПодсказка</title>
+    <meta name="description" content="Узнайте, на каком физическом диске или разделе установлена Windows 10. Пошаговые инструкции с использованием командной строки, PowerShell и управления дисками.">
+    <link rel="canonical" href="/a/articles/k/ka/kak-uznat-na-kakom-diske-ustanovlena-operacionnaya-sistema-vindovs-10.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как узнать на каком диске Windows 10: 5 способов проверки">
+    <meta property="og:description" content="Узнайте, на каком физическом диске или разделе установлена Windows 10. Пошаговые инструкции с использованием командной строки, PowerShell и управления дисками.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/windows-i-pk/">Windows и ПК</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как узнать на каком диске Windows 10: 5 способов проверки</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Как определить диск с операционной системой Windows 10</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#использование-утилиты-управление-дисками">Использование утилиты «Управление дисками»</a></li><li><a href="#проверка-через-командную-строку-cmd">Проверка через командную строку CMD</a></li><li><a href="#определение-системного-диска-через-powershell">Определение системного диска через PowerShell</a></li><li><a href="#анализ-через-сведения-о-системе">Анализ через «Сведения о системе»</a></li><li><a href="#использование-сторонних-утилит-и-реестра">Использование сторонних утилит и реестра</a></li><li><a href="#нюансы-работы-с-raid-и-несколькими-дисками">Нюансы работы с RAID и несколькими дисками</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Многие пользователи сталкиваются с необходимостью точно идентифицировать накопитель, на котором resides операционная система. Это может потребоваться при планировании очистки места, установке второй ОС или попытке исправить ошибки загрузчика. В современных компьютерах часто установлено несколько накопителей разных типов: быстрые <em>NVMe SSD</em>, классические <em>SATA SSD</em> и объемные <em>HDD</em>. Путаница в буквах разделов и физических устройствах — частая причина случайного форматирования не того диска.</p>
+
+<p>Операционная система <strong>Windows 10</strong> предоставляет множество встроенных инструментов для диагностики хранилища данных. Не нужно скачивать сторонний софт, чтобы получить исчерпывающую информацию о структуре дисков. Понимание разницы между <em>физическим диском</em> и <em>логическим разделом</em> является ключевым моментом для безопасного управления файловой системой. Далее мы рассмотрим все актуальные методы определения системного накопителя.</p>
+
+<h2 id="использование-утилиты-управление-дисками">Использование утилиты «Управление дисками»</h2>
+
+<p>Самым визуально понятным способом является использование встроенной оснастки <code>diskmgmt.msc</code>. Этот интерфейс показывает карту всех подключенных накопителей и их разделов в графическом виде. Здесь сразу видно, какой физический диск (Диск 0, Диск 1) содержит раздел с пометкой «Загрузка, страница подкачки, файл подкачки, активный раздел». Именно эта комбинация статусов указывает на системный том.</p>
+
+<p>Для запуска утилиты нажмите комбинацию клавиш <code>Win + R</code> и введите команду <code>diskmgmt.msc</code>. В открывшемся окне обратите внимание на нижнюю часть интерфейса, где представлены графические отображения дисков. Системный раздел обычно обозначен буквой <strong>C:</strong>, но полагаться только на букву опасно, так как ее можно изменить или присвоить другому диску.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>В окне «Управление дисками» системный раздел часто имеет меньший объем (100-500 МБ) и помечен как EFI или «Зарезервировано системой», он находится на том же физическом диске, что и основной раздел Windows.</p></div>
+
+<p>Важно различать понятия <em>раздела</em> и <em>физического устройства</em>. В списке сверху вы видите «Том», а снизу — «Диск». Если ваш Windows установлен на Диск 0, то все разделы, находящиеся в графической полосе над надписью «Диск 0», физически расположены на одном устройстве. Это критически важно знать перед удалением разделов.</p>
+
+<ul>
+<li>🔍 Нажмите правой кнопкой мыши на раздел с Windows и выберите «Свойства», чтобы увидеть детали.</li>
+<li>💾 Обратите внимание на номер диска в левой части нижней панели (например, Диск 1).</li>
+<li>⚙️ Используйте меню «Действие» → «Повторить сканирование дисков», если новый накопитель не отображается.</li>
+</ul>
+
+<blockquote>⚠️ Внимание: Никогда не удаляйте разделы с пометкой «Зарезервировано системой» или «EFI», даже если они занимают мало места. Их удаление сделает <strong>Windows 10</strong> незагрузочной.</blockquote>
+
+<h2 id="проверка-через-командную-строку-cmd">Проверка через командную строку CMD</h2>
+
+<p>Для пользователей, предпочитающих текстовый интерфейс или работающих удаленно, идеальным решением станет командная строка. Утилита <code>diskpart</code> предоставляет детализированный доступ к конфигурации хранилища. Запускать консоль необходимо от имени администратора, чтобы получить полные права на чтение конфигурации оборудования.</p>
+
+<p>Введите команду <code>cmd</code> в поиске, нажмите правой кнопкой на «Командная строка» и выберите «Запуск от имени администратора». Далее введите <code>diskpart</code> и нажмите Enter. После появления приглашения <code>DISKPART></code> введите команду <code>list volume</code>. Вы увидите список всех томов. Найдите том с буквой <strong>C</strong> (или той, где установлена ОС). Запомните его номер (Volume ###).</p>
+
+<pre><code>DISKPART> list volume
+<p>DISKPART> select volume C</p>
+<p>DISKPART> detail volume</code></pre></p>
+
+<p>Команда <code>detail volume</code> покажет подробную информацию, включая путь к устройству. Однако, чтобы узнать именно физический диск, лучше использовать команду <code>list disk</code> после выбора соответствующего тома, хотя в стандартном режиме diskpart не всегда явно связывает том и диск без дополнительных манипуляций. Более простой способ в CMD — использование команды <code>wmic</code>.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка через CMD</h4><label class="check-item"><input type="checkbox"><span>Открыть CMD от администратора:Ввести diskpart:Ввести list volume:Найти системный том:Ввести exit</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 1</div></div>
+
+<p>Использование <strong>WMIC</strong> (Windows Management Instrumentation Command-line) позволяет получить ответ одним запросом. Введите команду <code>wmic os get Caption, InstallDate, LastBootUpTime</code> для общей информации, но для дисков лучше подойдет запрос к классу <code>Win32_DiskPartition</code>. Это дает технически точные данные о нумерации разделов на физических носителях.</p>
+
+<h2 id="определение-системного-диска-через-powershell">Определение системного диска через PowerShell</h2>
+
+<p>Современный инструмент <em>PowerShell</em> предлагает более мощные возможности фильтрации данных по сравнению с классической командной строкой. Здесь можно получить информацию в структурированном виде, используя объектно-ориентированный подход. Это особенно полезно, если вам нужно быстро выяснить не только букву, но и модель диска, его серийный номер и тип медиа.</p>
+
+<p>Откройте PowerShell от имени администратора. Для получения информации о том, на каком физическом диске находится раздел C, можно использовать следующую цепочку команд. Она связывает логические диски, разделы и физические диски в единую цепочку данных.</p>
+
+<pre><code>Get-Partition | Where-Object DriveLetter -eq "C" | Get-Disk</code></pre>
+
+<p>Выполнение этой команды мгновенно выдаст объект <strong>Disk</strong>, соответствующий системному разделу. Вы увидите номер диска (<code>Number</code>), его модель (<code>Model</code> и размер (<code>Size</code>). Это самый быстрый способ понять, является ли ваш системный диск внешним USB-накопителем, встроенным SSD или виртуальным RAID-массивом.</p>
+
+<details class="faq-item"><summary>Расширенный скрипт для PowerShell</summary><div class="faq-answer"><p>Если вам нужно сохранить отчет, используйте команду: Get-Partition | Where-Object DriveLetter -eq "C" | Get-Disk | Export-Csv -Path "C:\disk_info.csv" -NoTypeInformation. Это создаст файл с подробностями о диске.</p></div></details>
+
+<p>Также в PowerShell удобно проверять тип файловой системы и состояние здоровья через команду <code>Get-PhysicalDisk</code>. Это позволяет сразу оценить, не является ли диск, на котором стоит Windows, «умирающим» или имеющим критические ошибки SMART. Комбинация данных о разделе и физическом состоянии диска дает полную картину.</p>
+
+<ul>
+<li>🚀 PowerShell работает быстрее и предоставляет больше деталей, чем diskpart.</li>
+<li>📂 Команды можно комбинировать в скрипты для автоматического сбора информации с множества ПК.</li>
+<li>📊 Вывод можно форматировать в таблицу, список или JSON для дальнейшей обработки.</li>
+</ul>
+
+<h2 id="анализ-через-сведения-о-системе">Анализ через «Сведения о системе»</h2>
+
+<p>Графический интерфейс под названием «Сведения о системе» (<code>msinfo32</code>) агрегирует данные обо всех компонентах компьютера. Это удобный способ получить информацию без ввода команд, особенно для тех, кто не уверен в синтаксисе консольных утилит. Здесь данные представлены в виде дерева каталогов.</p>
+
+<p>Нажмите <code>Win + R</code>, введите <code>msinfo32</code> и нажмите Enter. Перейдите по пути: <code>Компоненты</code> → <code>Запоминающие устройства</code> → <code>Диски</code>. В правой панели отобразится список всех физических дисков. Однако, чтобы понять, где именно Windows, нужно сверить модель диска с данными из «Моего компьютера» или использовать поиск по тексту в окне (Ctrl+F), введя букву раздела, хотя прямой связи «Раздел C = Диск 0» здесь в явном виде может не быть без анализа размеров.</p>
+
+<p>Более полезная вкладка находится в разделе <code>Средство диагностики</code> → <code>Загрузка</code>. Здесь четко указано: «Текущий загрузочный журнал» и «Текущая операционная система». Путь к файлу <code>osloader</code> укажет на букву раздела. Сопоставив эту букву с моделью диска в предыдущем разделе, можно сделать точный вывод.</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Где найти в msinfo32</th>
+<th>Значение для системного диска</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Модель диска</td>
+<td>Компоненты → Запоминающие устройства → Диски</td>
+<td>Например, Samsung SSD 970 EVO</td>
+</tr>
+<tr>
+<td>Размер</td>
+<td>Там же, поле «Раздел»</td>
+<td>Совпадает с объемом диска C</td>
+</tr>
+<tr>
+<td>Файловая система</td>
+<td>Там же</td>
+<td>NTFS</td>
+</tr>
+<tr>
+<td>Имя устройства</td>
+<td>Там же</td>
+<td>\\.\PHYSICALDRIVE0</td>
+</tr>
+</tbody>
+</table>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой тип диска у вас установлен как системный?</strong><ul><li>NVMe SSD:Обычный SATA SSD:Жесткий диск HDD:Я не знаю</li></ul></div></div>
+
+<p>Использование <code>msinfo32</code> особенно эффективно, когда нужно собрать полный отчет о конфигурации ПК для техподдержки. Вы можете сохранить отчет в текстовый файл и проанализировать его в удобном редакторе. Это исключает ошибки, связанные с быстрым просмотром мигающего курсора в консоли.</p>
+
+<h2 id="использование-сторонних-утилит-и-реестра">Использование сторонних утилит и реестра</h2>
+
+<p>Хотя встроенных средств достаточно, некоторые пользователи предпочитают специализированный софт вроде <em>AIDA64</em>, <em>HWInfo</em> или <em>Speccy</em>. Эти программы визуализируют связь между разделами и физическими устройствами в виде понятных диаграмм. В разделе «Хранение данных» (Storage) они часто подсвечивают активный загрузочный раздел цветом или иконкой.</p>
+
+<p>Для продвинутых пользователей доступен доступ к реестру Windows. Ключ <code>HKEY_LOCAL_MACHINE\SYSTEM\MountedDevices</code> содержит маппинг букв дисков на их физические идентификаторы. Однако редактирование или даже просмотр этого раздела требует осторожности. Ошибка в интерпретации шестнадцатеричных данных может привести к неверным выводам.</p>
+
+<blockquote>⚠️ Внимание: Работа с реестром требует максимальной внимательности. Не вносите изменения в раздел <code>MountedDevices</code> вручную, если вы не знаете точного синтаксиса идентификаторов, иначе система может перестать видеть диски после перезагрузки.</blockquote>
+
+<p>Сторонние менеджеры разделов, такие как <em>AOMEI Partition Assistant</em> или <em>MiniTool Partition Wizard</em>, также четко показывают, какой диск является загрузочным. Обычно рядом с буквой раздела стоит значок флажка или надпись «System». Это упрощает навигацию, особенно на сложных конфигурациях с RAID-массивами или динамическими дисками.</p>
+
+<ul>
+<li>💻 Сторонний софт часто показывает температуру диска, что полезно для диагностики.</li>
+<li>📈 Визуализация помогает быстрее понять структуру LVM или RAID.</li>
+<li>🛡️ Некоторые программы умеют проверять поверхность диска на наличие битых секторов.</li>
+</ul>
+
+<p>Если вы используете виртуальные машины или сложную схему шифрования (например, <em>BitLocker</em> или <em>Veracrypt</em>), стандартные средства могут показывать только зашифрованный контейнер. В этом случае сторонние утилиты могут дать больше контекстной информации о физическом носителе, скрывающемся за слоем шифрования.</p>
+
+<h2 id="нюансы-работы-с-raid-и-несколькими-дисками">Нюансы работы с RAID и несколькими дисками</h2>
+
+<p>В системах с несколькими дисками или RAID-массивами ситуация усложняется. Операционная система может видеть RAID-массив как один логический диск, хотя физически данных может быть несколько. В диспетчере устройств (<code>devmgmt.msc</code>) в разделе «Контроллеры запоминающих устройств» можно увидеть, какой контроллер управляет системным диском.</p>
+
+<p>Если у вас настроен <strong>RAID 0</strong> или <strong>RAID 1</strong>, то удаление любого из физических дисков, входящих в массив, приведет к потере данных или неработоспособности системы. Поэтому вопрос «на каком диске Windows» здесь трансформируется в «какие физические диски входят в массив». Для ответа на него лучше использовать утилиты производителя материнской платы или контроллера RAID.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>В конфигурациях RAID системный том распределен по нескольким физическим устройствам, поэтому понятие «один диск» становится условным — важна целостность всего массива.</p></div>
+
+<p>При установке новой Windows на компьютер с несколькими дисками часто возникает путаница. Установщик может присвоить букву <strong>C:</strong> не тому разделу, который вы планируете сделать системным, если другие диски были подключены в момент установки. Всегда проверяйте размер и метку тома перед форматированием.</p>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Может ли системный раздел находиться на диске D?</summary>
+<p>Технически да, буква диска — это лишь логическое обозначение. Однако по умолчанию и согласно стандартам <strong>Windows 10</strong>, системный раздел при чистой установке всегда получает букву C. Если вы видите Windows на D, скорее всего, буква C занята другим разделом (например, восстановления) или была изменена вручную пользователем.</p>
+</details>
+
+<details>
+<summary>Как узнать, SSD у меня или HDD, если названий нет?</summary>
+<p>Используйте команду в PowerShell: <code>Get-PhysicalDisk | Select-Object FriendlyName, MediaType</code>. В столбце <code>MediaType</code> будет указано <em>SSD</em> или <em>HDD</em>. Также скорость отклика в «Управлении дисками» или тесты скорости помогут различить типы накопителей.</p>
+</details>
+
+<details>
+<summary>Что будет, если отключить диск, на котором стоит загрузчик, но не сама Windows?</summary>
+<p>Система не запустится. Часто файлы загрузчика (<em>EFI</em> или <em>Boot</em> раздел) находятся на отдельном маленьком разделе, который может быть на том же физическом диске, что и Windows, или на другом, если конфигурация сложная. Без этого раздела <strong>BIOS/UEFI</strong> не сможет найти путь к ядру ОС.</p>
+</details>
+
+<details>
+<summary>Почему в «Моем компьютере» два диска C?</summary>
+<p>Это невозможно в рамках одной операционной системы. Скорее всего, один из объектов — это сетевой диск, виртуальный привод или смонный образ ISO, который система временно определила как локальное хранилище. Проверьте путь к диску: сетевые ресурсы имеют путь вида <code>\\server\share</code>.</p>
+</details>
+
+<details>
+<summary>Как перенести Windows на другой диск без переустановки?</summary>
+<p>Для этого требуются специальные программы клонирования дисков (например, Macrium Reflect или Acronis). Простое копирование файлов не перенесет загрузочные записи и скрытые разделы восстановления, что сделает систему неработоспособной на новом месте.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#использование-утилиты-управление-дисками">Использование утилиты «Управление дисками»</a></li><li><a href="#проверка-через-командную-строку-cmd">Проверка через командную строку CMD</a></li><li><a href="#определение-системного-диска-через-powershell">Определение системного диска через PowerShell</a></li><li><a href="#анализ-через-сведения-о-системе">Анализ через «Сведения о системе»</a></li><li><a href="#использование-сторонних-утилит-и-реестра">Использование сторонних утилит и реестра</a></li><li><a href="#нюансы-работы-с-raid-и-несколькими-дисками">Нюансы работы с RAID и несколькими дисками</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/a/an/anycast-m4-plus-kak-podklyuchit-noutbuk-windows-11.html" class="related-card">Anycast M4 Plus и ноутбук Windows 11: полное руководство</a></li><li><a href="/a/articles/k/ka/kak-ispolzovat-mini-pci-express-v-noutbuke.html" class="related-card">Как использовать Mini PCI Express в ноутбуке: полная инструкция</a></li><li><a href="/a/articles/k/ka/kak-otklyuchit-vvod-setevyh-uchetnyh-dannyh-v-windows-11.html" class="related-card">Как отключить ввод сетевых учетных данных в Windows 11: 5 методов</a></li><li><a href="/a/articles/w/wi/windows-10-podklyuchit-k-time-capsule-hdd.html" class="related-card">Windows 10 и Time Capsule HDD: полное руководство</a></li><li><a href="/a/articles/i/iz/izmenit-imya-kompyutera-astra-linux.html" class="related-card">Как изменить имя компьютера в Astra Linux: Полное руководство</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/a/an/anycast-m4-plus-kak-podklyuchit-noutbuk-windows-11.html" class="related-bottom-card"><span class="related-bottom-title">Anycast M4 Plus и ноутбук Windows 11: полное руководство</span><span class="related-bottom-desc">Подробная инструкция по подключению Anycast M4 Plus к ноутбуку на Windows 11. Настройка Miracast, HD</span></a><a href="/a/articles/k/ka/kak-ispolzovat-mini-pci-express-v-noutbuke.html" class="related-bottom-card"><span class="related-bottom-title">Как использовать Mini PCI Express в ноутбуке: полная инструкция</span><span class="related-bottom-desc">Подробный гид по установке и настройке модулей Mini PCI Express. Узнайте, как подключить Wi-Fi, 4G/L</span></a><a href="/a/articles/k/ka/kak-otklyuchit-vvod-setevyh-uchetnyh-dannyh-v-windows-11.html" class="related-bottom-card"><span class="related-bottom-title">Как отключить ввод сетевых учетных данных в Windows 11: 5 методов</span><span class="related-bottom-desc">Убираем постоянный запрос пароля при входе в Windows 11. Настройка локального аккаунта, групповых по</span></a><a href="/a/articles/w/wi/windows-10-podklyuchit-k-time-capsule-hdd.html" class="related-bottom-card"><span class="related-bottom-title">Windows 10 и Time Capsule HDD: полное руководство</span><span class="related-bottom-desc">Как подключить жесткий диск Time Capsule к Windows 10? Настройка SMB, протоколов и доступ к файлам A</span></a><a href="/a/articles/i/iz/izmenit-imya-kompyutera-astra-linux.html" class="related-bottom-card"><span class="related-bottom-title">Как изменить имя компьютера в Astra Linux: Полное руководство</span><span class="related-bottom-desc">Подробная инструкция по смене hostname в Astra Linux. Методы через терминал, графический интерфейс F</span></a><a href="/a/articles/d/dv/dvd-privod-kompyutera-ne-vyezzhaet-lotok.html" class="related-bottom-card"><span class="related-bottom-title">Не выезжает лоток DVD: причины и решение проблемы</span><span class="related-bottom-desc">ДВД привод не открывает лоток? Разбираем механические и программные причины поломки. Эффективные мет</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

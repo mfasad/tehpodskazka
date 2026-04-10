@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>UEFI и два монитора: как настроить вывод изображения — ТехПодсказка</title>
+    <meta name="description" content="Подробная инструкция по настройке вывода изображения с двух мониторов в UEFI/BIOS. Решение проблем с черным экраном и выбором приоритетного дисплея.">
+    <link rel="canonical" href="/a/articles/u/ue/uefi-kak-vyvesti-izobrazhenie-s-dvuh-monitorov.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="UEFI и два монитора: как настроить вывод изображения">
+    <meta property="og:description" content="Подробная инструкция по настройке вывода изображения с двух мониторов в UEFI/BIOS. Решение проблем с черным экраном и выбором приоритетного дисплея.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">UEFI и два монитора: как настроить вывод изображения</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Настройка вывода изображения с двух мониторов в UEFI BIOS</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#принципы-работы-видеоподсистемы-uefi-при-загрузке">Принципы работы видеоподсистемы UEFI при загрузке</a></li><li><a href="#определение-приоритетного-видеовыхода-в-bios-setup">Определение приоритетного видеовыхода в BIOS Setup</a></li><li><a href="#конфликты-между-csm-и-uefi-native-режимом">Конфликты между CSM и UEFI Native режимом</a></li><li><a href="#настройка-многомониторных-конфигураций-для-разных-вендоров">Настройка многомониторных конфигураций для разных вендоров</a></li><li><a href="#проблемы-с-черным-экраном-и-их-решение">Проблемы с черным экраном и их решение</a></li><li><a href="#использование-специализированных-утилит-и-модификаций">Использование специализированных утилит и модификаций</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Многие пользователи сталкиваются с ситуацией, когда после установки второй видеокарты или подключения дополнительного монитора система перестает выводить изображение на привычный экран во время загрузки. Вместо рабочего стола перед глазами остается черный экран, хотя компьютер, судя по звукам кулеров, работает. Это классическая проблема инициализации видеовыходов на уровне <strong>UEFI</strong>, когда прошивка материнской платы или видеокарты неверно определяет приоритетное устройство вывода.</p>
+
+<p>Современные системы <em>Unified Extensible Firmware Interface</em> обладают сложной логикой определения активных портов, которая часто конфликтует с ожиданиями пользователя. Особенно актуален вопрос для тех, кто использует связку интегрированной графики <em>Intel HD/UHD</em> или <em>AMD Radeon</em> с дискретной картой, либо эксплуатирует серверные решения с несколькими GPU. Понимание принципов работы <code>CSM</code> (Compatibility Support Module) и режима <code>UEFI Native</code> является ключом к решению.</p>
+
+<p>В этой статье мы детально разберем механизмы распределения видеопотока на этапе предзагрузки, рассмотрим настройки BIOS для принудительного выбора основного дисплея и предложим решения для случаев, когда система "слепнет" при подключении второго монитора. Вы узнаете, как правильно настроить <strong>Boot Display Device</strong> и почему стандартные кабели могут не работать в определенных режимах совместимости.</p>
+
+<h2 id="принципы-работы-видеоподсистемы-uefi-при-загрузке">Принципы работы видеоподсистемы UEFI при загрузке</h2>
+
+<p>Процесс инициализации видеовыхода начинается задолго до появления логотипа операционной системы. На этапе <strong>POST</strong> (Power-On Self-Test) firmware опрашивает все доступные контроллеры и пытается найти активное соединение. В отличие от Windows, где драйверы управляют каждым пикселем, UEFI полагается на базовые протоколы <code>GOP</code> (Graphics Output Protocol) или устаревший <code>VGA BIOS</code>.</p>
+
+<p>Если в системе установлено несколько графических адаптеров, приоритет отдается тому, чей <strong>Option ROM</strong> загрузился первым. Часто это приводит к ситуации, когда изображение появляется на мониторе, подключенном к вторичной карте, в то время как основной экран остается черным. Это особенно характерно для материнских плат с поддержкой мульти-GPU конфигураций или при использовании карт расширения.</p>
+
+<blockquote>
+<p>⚠️ Внимание: В некоторых случаях при подключении второго монитора через адаптеры (например, HDMI-to-VGA) система UEFI может не распознать его как загрузочное устройство, считывая только EDID-данные без поддержки GOP. Это приводит к тому, что BIOS игнорирует этот порт полностью.</p>
+</blockquote>
+
+<p>Важно различать режимы работы видеоядра. В режиме <em>Legacy</em> используется прерывание <code>INT 10h</code>, которое имеет ограничения по разрешению и количеству поддерживаемых мониторов. Современные системы в режиме <strong>UEFI Native</strong> способны поддерживать высокие разрешения и, теоретически, вывод изображения на несколько экранов, если это реализовано производителем firmware.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если вы используете карту захвата или специализированный контроллер, отключите его в BIOS или физически извлеките на время настройки основного видеовыхода, чтобы избежать конфликтов прерываний.</p></div>
+
+<h2 id="определение-приоритетного-видеовыхода-в-bios-setup">Определение приоритетного видеовыхода в BIOS Setup</h2>
+
+<p>Первым шагом в решении проблемы является ручное указание системе, какой именно порт считать основным. Для этого необходимо попасть в настройки BIOS, что само по себе может быть затруднено, если изображение выводится не на тот монитор. В таком случае попробуйте отключить все мониторы, кроме одного, войти в BIOS, а затем, не выключая ПК, подключить второй экран (если поддерживается hot-plug) или изменить настройки blindly.</p>
+
+<p>Искомые настройки обычно находятся в разделах <code>Advanced</code>, <code>Chipset</code> или <code>Boot</code>. Параметр может называться по-разному в зависимости от вендора: <em>Initiate Graphic Adapter</em>, <em>Primary Display</em>, <code>IGD Multi-Monitor</code> или <strong>Primary Graphics Adapter</strong>. Значение <code>Auto</code> часто работает некорректно, поэтому рекомендуется выбрать конкретный порт: <code>PEG</code> (PCI Express Graphics), <code>PCI</code> или <code>IGFX</code> (Integrated Graphics).</p>
+
+<ul>
+<li>🔹 <strong>IGFX</strong> — принудительный запуск с интегрированного видеоядра процессора, даже если установлена дискретная карта.</li>
+<li>🔹 <strong>PEG/PCIe</strong> — приоритет отдается видеокарте, установленной в первом слоте PCI Express x16.</li>
+<li>🔹 <strong>PCI</strong> — используется для старых карт расширения или специализированных контроллеров.</li>
+<li>🔹 <strong>Auto</strong> — система сама выбирает устройство, чей Option ROM загрузился первым (часто приводит к ошибкам).</li>
+</ul>
+
+<p>Для активации одновременной работы встроенной и дискретной графики необходимо найти опцию <code>iGPU Multi-Monitor</code> или <strong>Integrated Graphics</strong> и установить значение <code>Enabled</code>. Без этого шага подключение второго монитора к разъемам материнской платы при наличии дискретной карты будет бесполезным — порт будет физически отключен на уровне чипсета.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой у вас основной сценарий использования двух мониторов?</strong><ul><li>Работа с кодом/текстом</li><li>Монтаж видео/Графика</li><li>Трейдинг/Мониторинг</li><li>Игры на одном, стрим на втором</li><li>Просто для красоты</li></ul></div></div>
+
+<h2 id="конфликты-между-csm-и-uefi-native-режимом">Конфликты между CSM и UEFI Native режимом</h2>
+
+<p>Одной из самых распространенных причин невозможности вывода изображения на два монитора в BIOS является конфликт режимов загрузки. <strong>CSM</strong> (Compatibility Support Module) эмулирует среду Legacy BIOS, что необходимо для старых операционных систем и видеокарт без поддержки UEFI GOP. Однако включение CSM часто ограничивает функционал видеоподсистемы, блокируя вывод на второй монитор или снижая разрешение до 640x480.</p>
+
+<p>Если ваша видеокарта и монитор поддерживают современный стандарт, рекомендуется переключиться в режим <code>UEFI Only</code>. В этом режиме отключается эмуляция legacy-прерываний, и управление видеовыходами берет на себя протокол <code>GOP</code>. Это позволяет использовать разрешения выше Full HD уже на этапе загрузки и корректно обрабатывать多个 мониторов, если firmware материнской платы это поддерживает.</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр настройки</th>
+<th>Режим CSM (Legacy)</th>
+<th>Режим UEFI Native</th>
+<th>Рекомендация</th>
+</tr>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Поддержка старых GPU</td>
+<td>Полная</td>
+<td>Отсутствует</td>
+<td>Включать только для старых карт</td>
+</tr>
+<tr>
+<td>Разрешение в BIOS</td>
+<td>Низкое (часто 1024x768)</td>
+<td>Нативное монитора</td>
+<td>Предпочтительно UEFI</td>
+</tr>
+<tr>
+<td>Время загрузки</td>
+<td>Дольше (опрос устройств)</td>
+<td>Быстрее</td>
+<td>Оптимизация скорости</td>
+</tr>
+<tr>
+<td>Мульти-монитор в BIOS</td>
+<td>Часто не работает</td>
+<td>Возможно (зависит от платы)</td>
+<td>Критично для задачи</td>
+</tr>
+</tbody>
+</table>
+
+<p>При переходе на <strong>UEFI Native</strong> убедитесь, что ваш загрузочный диск отформатирован в таблице разделов <code>GPT</code>, а не <code>MBR</code>. В противном случае система не сможет загрузить операционную систему после смены настроек видеорежима, и придется возвращать настройки обратно или переустанавливать ОС.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Отключение CSM на системах с видеокартами старше 2013 года выпуска или с модифицированными BIOS (например, майнинговые прошивки) может привести к полному отсутствию изображения ("черный экран"). В этом случае потребуется сброс CMOS перемычкой.</p>
+</blockquote>
+
+<div class="checklist-block"><h4>☑️ Проверка совместимости режимов</h4><label class="check-item"><input type="checkbox"><span>Убедиться в поддержке GOP видеокартой:Проверить тип разметки диска (GPT/MBR):Отключить Secure Boot (при необходимости):Сохранить резервную копию настроек BIOS</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 1</div></div>
+
+<h2 id="настройка-многомониторных-конфигураций-для-разных-вендоров">Настройка многомониторных конфигураций для разных вендоров</h2>
+
+<p>Интерфейсы BIOS от разных производителей сильно отличаются не только визуально, но и логикой группировки параметров. Чтобы найти нужную настройку, иногда приходится проявить изобретательность, так как терминология может быть запутанной. Ниже приведены пути к ключевым настройкам для популярных производителей материнских плат.</p>
+
+<p>На платах <em>ASUS</em> искомые параметры часто скрыты в разделе <code>Advanced Mode</code> -> <code>System Agent (SA) Configuration</code> -> <code>Graphics Configuration</code>. Здесь нужно найти <code>Initiate Graphic Adapter</code> и выбрать <code>PEG</code> или <code>IGFX</code>. Для активации второго выхода используется опция <code>iGPU Multi-Monitor</code>, которую следует перевести в <code>Enable</code>. На некоторых моделях серверных плат ASUS эта функция называется <strong>Multi-Monitor Support</strong>.</p>
+
+<p>В BIOS от <em>Gigabyte</em> и <em>MSI</em> логика схожая, но названия могут варьироваться. Ищите раздел <code>Peripherals</code> или <code>Chipset</code>. Параметр <code>Internal Graphics</code> должен быть установлен в <code>Enabled</code> или <code>Auto</code>, а <code>Initial Display Output</code> должен указывать на нужную шину. В некоторых версиях <em>AMI BIOS</em> встречается опция <code>VGA Share Memory Size</code>, увеличение которой может помочь при работе с несколькими дисплеями на интегрированной графике.</p>
+
+<details class="faq-item"><summary>Секреты скрытых меню BIOS</summary><div class="faq-answer"><p>В некоторых случаях для отображения расширенных настроек видеоподсистемы требуется активировать скрытое меню. Попробуйте нажать комбинацию Ctrl+F1 или Fn+F9 находясь в главном меню BIOS. Также иногда помогает переключение языка интерфейса на английский, так как переводы могут скрывать важные технические детали.</p></div></details>
+
+<p>Стоит отметить, что на ноутбуках с гибридной графикой (<em>NVIDIA Optimus</em> или <em>AMD Switchable Graphics</em>) управление выводами полностью отдано драйверам операционной системы. В BIOS таких устройств редко можно найти настройки переключения первичного адаптера, так как экран ноутбука жестко привязан к интегрированному контроллеру, а внешний порт может коммутироваться динамически.</p>
+
+<h2 id="проблемы-с-черным-экраном-и-их-решение">Проблемы с черным экраном и их решение</h2>
+
+<p>Ситуация, когда при подключении второго монитора гаснет первый или оба экрана остаются черными, часто связана с handshake-протоколом <strong>HDCP</strong> или некорректным определением EDID. Система может "зависать" на этапе опроса второго устройства, ожидая ответа, который не поступает. Это особенно характерно для дешевых кабелей и переходников.</p>
+
+<p>Для диагностики попробуйте изменить порядок подключения. Включите компьютер с одним монитором, дождитесь загрузки, и только затем подключите второй кабель. Если изображение появится, значит проблема в таймаутах POST. В BIOS можно попробовать увеличить параметр <code>POST Delay Time</code> или <strong>Wait for 'F1' If Error</strong>, дав системе больше времени на стабилизацию видеосигнала.</p>
+
+<p>Еще одной причиной может быть ограничение мощности блока питания или нестабильность линий PCIe. Если при подключении второй карты или монитора система ведет себя нестабильно, проверьте напряжения в разделе <code>Hardware Monitor</code>. Также помогает обновление <strong>BIOS Firmware</strong> до последней версии, так как производители часто исправляют ошибки совместимости с новыми моделями мониторов.</p>
+
+<ul>
+<li>🔹 Проверьте целостность кабелей и попробуйте заменить их на сертифицированные версии.</li>
+<li>🔹 Сбросьте настройки BIOS в дефолтное состояние через опцию <code>Load Optimized Defaults</code>.</li>
+<li>🔹 Обновите микрокод процессора и видеокарты через официальные утилиты.</li>
+<li>🔹 Убедитесь, что разрешение и частота обновления не превышают возможности кабеля (особенно актуально для 4K @ 60Hz).</li>
+</ul>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если черный экран появляется только при наличии двух мониторов, проблема почти наверняка кроется в конфликте режимов синхронизации или нехватке пропускной способности шины, а не в физической поломке.</p></div>
+
+<h2 id="использование-специализированных-утилит-и-модификаций">Использование специализированных утилит и модификаций</h2>
+
+<p>В сложных случаях, когда стандартные настройки BIOS не помогают, энтузиасты прибегают к модификации Option ROM видеокарт или использованию утилит командной строки. Однако это путь для опытных пользователей, так как ошибка может привести к невозможности загрузки системы. Одним из инструментов является утилита <code>uefi-shell</code>, позволяющая управлять устройствами на низком уровне.</p>
+
+<p>Существуют также программные решения для перенастройки приоритетов вывода уже внутри операционной системы, которые могут сохранять конфигурацию и пытаться применять ее при каждой загрузке. Однако они не влияют на этап POST. Для серверов часто используется технология <em>Intel vPro</em> или <strong>IPMI</strong>, позволяющая видеть видеовыход удаленно независимо от состояния локальных мониторов.</p>
+
+<p>В заключение стоит сказать, что идеальная работа двух мониторов в UEFI — это результат согласованности firmware, железа и кабелей. Если один из элементов выпадает из общей картины (например, монитор не передает корректный EDID), система может вести себя непредсказуемо. В таких случаях иногда проще физически отключить второй монитор на время загрузки, если он не требуется в BIOS.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Модификация BIOS видеокарты (прошивка модифицированного Option ROM) для поддержки мульти-мониторного вывода в UEFI может привести к необратимому выходу оборудования из строя ("окирпичиванию"). Делайте это только если у вас есть возможность восстановить карту программатором.</p>
+</blockquote>
+
+<details class="faq-item"><summary>Можно ли запустить BIOS на втором мониторе без настроек?</summary><div class="faq-answer"><p>В редких случаях, если первый порт поврежден или не определяется, UEFI может автоматически переключиться на второй порт. Однако рассчитывать на это не стоит, так как логика fallback-механизмов у разных производителей реализована хаотично и часто зависит от версии микрокода.</p></div></details>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Почему второй монитор не определяется в BIOS, хотя в Windows работает?</summary>
+<p>Скорее всего, в BIOS отключена поддержка многомониторного режима для интегрированной графики или установлен приоритет только на один порт (PEG/PCIe). В Windows за это отвечают драйверы, которые могут активировать порты, игнорируемые firmware. Проверьте настройки <code>iGPU Multi-Monitor</code>.</p>
+</details>
+
+<details>
+<summary>Можно ли вывести изображение BIOS сразу на два монитора?</summary>
+<p>Стандартный UEFI/BIOS обычно выводит изображение только на один, приоритетный монитор. Вывод на два экрана одновременно на этапе POST возможен только если это специально реализовано производителем материнской платы (функция <code>Clone</code> или <code>Duplicate</code> в BIOS), что встречается редко.</p>
+</details>
+
+<details>
+<summary>Как сбросить настройки видео, если пропало изображение после экспериментов?</summary>
+<p>Необходимо выполнить сброс CMOS. Для этого выключите компьютер, отключите питание, найдите на материнской плате батарейку CR2032, выньте ее на 5-10 минут или замкните контакты <code>CLR_CMOS</code> металлическим предметом. Это вернет все настройки, включая видеовыход, к заводским.</p>
+</details>
+
+<details>
+<summary>Влияет ли тип кабеля (HDMI, DisplayPort, DVI) на определение монитора в UEFI?</summary>
+<p>Да, влияет. Протокол <code>GOP</code> лучше всего работает с цифровыми интерфейсами HDMI и DisplayPort. Аналоговые подключения (VGA) через переходники часто не определяются на этапе загрузки, так как UEFI может не иметь драйверов для конвертации сигнала или считывания EDID через переходник.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#принципы-работы-видеоподсистемы-uefi-при-загрузке">Принципы работы видеоподсистемы UEFI при загрузке</a></li><li><a href="#определение-приоритетного-видеовыхода-в-bios-setup">Определение приоритетного видеовыхода в BIOS Setup</a></li><li><a href="#конфликты-между-csm-и-uefi-native-режимом">Конфликты между CSM и UEFI Native режимом</a></li><li><a href="#настройка-многомониторных-конфигураций-для-разных-вендоров">Настройка многомониторных конфигураций для разных вендоров</a></li><li><a href="#проблемы-с-черным-экраном-и-их-решение">Проблемы с черным экраном и их решение</a></li><li><a href="#использование-специализированных-утилит-и-модификаций">Использование специализированных утилит и модификаций</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/q/q-/q-c-passed-chasy-kak-nastroit.html" class="related-card">Q c PASSED часы: как настроить и расшифровать статус</a></li><li><a href="/a/articles/m/my/mybook-live-ne-viden-v-domashnej-seti.html" class="related-card">MyBook Live не виден в сети: причины и решение</a></li><li><a href="/a/articles/b/ba/base-ark-chto-eto.html" class="related-card">Base Ark: что это за блок в ARK Survival Evolved</a></li><li><a href="/a/articles/e/ek/ekran-13-dyujmov-v-santimetrah.html" class="related-card">Экран 13 дюймов в сантиметрах: точный расчет диагонали и размеров</a></li><li><a href="/a/articles/p/pd/pdanet-speed-low.html" class="related-card">PdaNet скорость низкая: как исправить и ускорить</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/q/q-/q-c-passed-chasy-kak-nastroit.html" class="related-bottom-card"><span class="related-bottom-title">Q c PASSED часы: как настроить и расшифровать статус</span><span class="related-bottom-desc">Полная инструкция по настройке умных часов Q с статусом PASSED. Разбор меню, сопряжение, коды ошибок</span></a><a href="/a/articles/m/my/mybook-live-ne-viden-v-domashnej-seti.html" class="related-bottom-card"><span class="related-bottom-title">MyBook Live не виден в сети: причины и решение</span><span class="related-bottom-desc">MyBook Live не виден в домашней сети? Разбираем причины сбоя, настройки роутера, прошивку и способы </span></a><a href="/a/articles/b/ba/base-ark-chto-eto.html" class="related-bottom-card"><span class="related-bottom-title">Base Ark: что это за блок в ARK Survival Evolved</span><span class="related-bottom-desc">Узнайте, что такое Base Ark и как использовать базовые блоки для строительства. Полное руководство п</span></a><a href="/a/articles/e/ek/ekran-13-dyujmov-v-santimetrah.html" class="related-bottom-card"><span class="related-bottom-title">Экран 13 дюймов в сантиметрах: точный расчет диагонали и размеров</span><span class="related-bottom-desc">Узнайте размеры экрана 13 дюймов в сантиметрах. Подробный расчет диагонали, ширины, высоты и площади</span></a><a href="/a/articles/p/pd/pdanet-speed-low.html" class="related-bottom-card"><span class="related-bottom-title">PdaNet скорость низкая: как исправить и ускорить</span><span class="related-bottom-desc">PdaNet работает медленно? Узнайте причины низкой скорости USB-модема и способы решения проблем с дра</span></a><a href="/a/articles/k/ka/kak-otkatit-obnovlenie-google-pay.html" class="related-bottom-card"><span class="related-bottom-title">Как откатить Google Pay: инструкции по возврату версии</span><span class="related-bottom-desc">Узнайте, как откатить обновление Google Pay, если приложение работает некорректно. Инструкция по очи</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

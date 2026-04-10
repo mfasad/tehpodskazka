@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>MX Player по сети: вход, логин и пароль SMB/NFS — ТехПодсказка</title>
+    <meta name="description" content="Инструкция по настройке MX Player для воспроизведения видео по локальной сети. Как ввести логин и пароль SMB, устранить ошибки подключения и настроить DLNA.">
+    <link rel="canonical" href="/a/articles/m/mx/mx-player-po-seti-login-parol.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="MX Player по сети: вход, логин и пароль SMB/NFS">
+    <meta property="og:description" content="Инструкция по настройке MX Player для воспроизведения видео по локальной сети. Как ввести логин и пароль SMB, устранить ошибки подключения и настроить DLNA.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/akkaunty-i-bezopasnost/">Аккаунты и Безопасность</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">MX Player по сети: вход, логин и пароль SMB/NFS</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Настройка MX Player для работы по сети: логин, пароль и протоколы</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#протоколы-сетевого-обмена-smb-против-nfs-в-mx-player">Протоколы сетевого обмена: SMB против NFS в MX Player</a></li><li><a href="#пошаговая-инструкция-добавление-сетевого-ресурса">Пошаговая инструкция: добавление сетевого ресурса</a></li><li><a href="#нюансы-ввода-логина-и-пароля-в-разных-версиях-android">Нюансы ввода логина и пароля в разных версиях Android</a></li><li><a href="#решение-распространенных-ошибок-авторизации">Решение распространенных ошибок авторизации</a></li><li><a href="#альтернативные-методы-dlna-и-создание-медиасервера">Альтернативные методы: DLNA и создание медиасервера</a></li><li><a href="#оптимизация-буфера-и-производительности-сети">Оптимизация буфера и производительности сети</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Мультимедийный проигрыватель <em>MX Player</em> давно зарекомендовал себя как один из самых мощных инструментов для воспроизведения видеофайлов на платформе Android. Его способность декодировать практически любые форматы контейнеров и кодеков делает его незаменимым для владельцев телевизоров на Android TV и планшетов. Однако одной из ключевых функций, которая превращает устройство в полноценный медиацентр, является возможность воспроизведения контента, хранящегося на удаленных серверах или компьютерах в локальной сети.</p>
+
+<p>Многие пользователи сталкиваются с трудностями при попытке подключиться к расшаренным папкам Windows или NAS-хранилищам. Часто проблема кроется в неправильной интерпретации запроса авторизации или неверном выборе сетевого протокола. Понимание того, как правильно ввести <strong>логин и пароль</strong> в MX Player, позволяет избавиться от ошибок доступа и наслаждаться фильмами в высоком разрешении без предварительного копирования на флеш-накопитель.</p>
+
+<p>В этой статье мы подробно разберем механику подключения через SMB и NFS, уделив особое внимание нюансам ввода учетных данных. Вы узнаете, почему старые версии протокола SMB могут быть заблокированы современными системами безопасности и как обойти ограничения гостевого доступа. Грамотная настройка сетевых путей откроет доступ к вашей медиатеке в несколько кликов.</p>
+
+<h2 id="протоколы-сетевого-обмена-smb-против-nfs-в-mx-player">Протоколы сетевого обмена: SMB против NFS в MX Player</h2>
+
+<p>Прежде чем переходить к вводу учетных данных, необходимо определиться с протоколом передачи данных. <em>MX Player</em> поддерживает несколько стандартов, но основными являются <strong>SMB (Server Message Block)</strong> и <strong>NFS (Network File System)</strong>. Выбор правильного протокола напрямую влияет на стабильность соединения и, что критически важно, на механизм авторизации. SMB является нативным протоколом для операционных систем семейства Windows, тогда как NFS чаще используется в Linux-среде и на специализированных сетевых хранилищах.</p>
+
+<p>При использовании протокола <strong>SMB</strong> система требует строгой аутентификации, если на целевом компьютере не включен гостевой доступ. Именно здесь пользователи чаще всего сталкиваются с запросом на ввод логина и пароля. Важно понимать, что современные версии Windows (10 и 11) по умолчанию отключают поддержку устаревшей версии SMBv1 из соображений безопасности, требуя использования <strong>SMBv2</strong> или <strong>SMBv3</strong>. Если ваш роутер или NAS поддерживает только старый протокол, могут возникнуть конфликты, которые решаются только изменением настроек безопасности Windows или обновлением firmware сетевого устройства.</p>
+
+<p>Протокол <strong>NFS</strong> работает иначе: он часто полагается на IP-адреса для авторизации, а не на пары логин-пароль, хотя настройка прав доступа возможна и через них. Для домашнего пользователя, желающего просто открыть видео с компьютера, NFS может быть быстрее, но сложнее в первоначальной настройке прав доступа к папкам. В контексте вопроса о вводе пароля, SMB остается наиболее релевантным и распространенным сценарием, требующим внимательного отношения к регистрационным данным.</p>
+
+<ul>
+<li>🔒 <strong>SMB</strong> — идеален для сетей с компьютерами под управлением Windows, требует точного ввода имени пользователя и пароля учетной записи.</li>
+<li>🐧 <strong>NFS</strong> — предпочтителен для Linux-серверов и NAS, часто работает без пароля при правильной настройке IP-фильтров.</li>
+<li>📡 <strong>DLNA/UPnP</strong> — протокол потоковой передачи, который обычно не требует ввода пароля для просмотра, но ограничивает возможности управления файлами.</li>
+</ul>
+
+<blockquote>
+<p>⚠️ Внимание: При подключении через SMB убедитесь, что на компьютере-сервере в настройках сети выбран профиль «Частная сеть». Если стоит профиль «Общественная», Windows может блокировать входящие подключения, и MX Player просто не увидит устройство, даже если вы правильно введете логин.</p>
+</blockquote>
+
+<p>Разница в скорости и стабильности между протоколами может быть существенной при воспроизведении тяжелых 4K-файлов с высоким битрейтом. Если вы замечаете подергивания изображения или рассинхронизацию звука, попробуйте переключиться с SMB на NFS или наоборот, если ваше оборудование это позволяет. Иногда проблема не в скорости сети, а в эффективности обработки сетевых пакетов конкретным протоколом внутри приложения-плеера.</p>
+
+<h2 id="пошаговая-инструкция-добавление-сетевого-ресурса">Пошаговая инструкция: добавление сетевого ресурса</h2>
+
+<p>Процесс добавления сетевого хранилища в <em>MX Player</em> начинается с открытия бокового меню или раздела «Сеть» в главном интерфейсе приложения. Интерфейс может незначительно отличаться в зависимости от версии прошивки вашего телевизора или планшета, но логика действий остается единой. Вам необходимо найти кнопку добавления нового соединения, которая часто обозначается символом «плюс» или надписью «Новое сетевое хранилище».</p>
+
+<p>После выбора типа подключения (обычно <strong>SMB</strong>) откроется форма для ввода параметров. Здесь требуется указать IP-адрес компьютера в локальной сети. Узнать его можно на самом компьютере, вызвав командную строку и введя команду <code>ipconfig</code>, или посмотрев свойства подключения в настройках роутера. Важно вводить адрес в формате <code>192.168.x.x</code>, так как доменные имена могут не разрешаться без дополнительной настройки DNS.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка перед подключением</h4><label class="check-item"><input type="checkbox"><span>Компьютер и ТВ в одной Wi-Fi сети</span></label><label class="check-item"><input type="checkbox"><span>Включено сетевое обнаружение</span></label><label class="check-item"><input type="checkbox"><span>Известен IP-адрес компьютера</span></label><label class="check-item"><input type="checkbox"><span>Задан пароль на учетную запись Windows</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>Когда адрес введен, система попытается соединиться. Если на папке стоит защита, появится окно авторизации. В поле «Имя пользователя» (Login) часто достаточно ввести имя вашей учетной записи Windows. Однако, если у вас используется учетная запись Microsoft (с привязкой email), имя пользователя может отличаться от того, что вы видите на экране приветствия. В таком случае лучше создать локального пользователя с простым именем и паролем специально для доступа к медиафайлам.</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Описание</th>
+<th>Пример значения</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Протокол</td>
+<td>Тип сетевого соединения</td>
+<td>SMB / NFS</td>
+</tr>
+<tr>
+<td>Хост (Host)</td>
+<td>IP-адрес сервера</td>
+<td>192.168.1.55</td>
+</tr>
+<tr>
+<td>Порт</td>
+<td>Сетевой порт соединения</td>
+<td>445 (SMB)</td>
+</tr>
+<tr>
+<td>Путь</td>
+<td>Имя расшаренной папки</td>
+<td>/Movies</td>
+</tr>
+</tbody>
+</table>
+
+<p>Особое внимание стоит уделить регистру символов при вводе имени пользователя и пароля. Система безопасности Windows чувствительна к регистру, и ошибка в одной букве приведет к отказу в доступе. Если вы используете сложный пароль, рекомендуется сначала ввести его в заметках на телефоне, скопировать и вставить в поле ввода, чтобы исключить опечатки, особенно при использовании пульта дистанционного управления.</p>
+
+<h2 id="нюансы-ввода-логина-и-пароля-в-разных-версиях-android">Нюансы ввода логина и пароля в разных версиях Android</h2>
+
+<p>Интерфейс ввода учетных данных в <em>MX Player</em> может вести себя по-разному в зависимости от версии операционной системы Android и самой оболочки Smart TV. На некоторых устройствах поле для ввода пароля может скрываться или некорректно отображать клавиатуру. В таких случаях полезно знать, что иногда требуется переключить тип ввода с цифрового на полный алфавитно-цифровой, нажав соответствующую иконку на экранной клавиатуре.</p>
+
+<p>В последних версиях Android TV (начиная с 9.0 и выше) усилились требования к безопасности сетевых соединений. Если вы пытаетесь подключиться к старому NAS-устройству или компьютеру с Windows 7, система может блокировать соединение из-за использования устаревших алгоритмов шифрования. В этом случае даже правильный логин и пароль не помогут, пока вы не разрешите использование устаревших протоколов в настройках самого плеера или не обновите серверную часть.</p>
+
+<details class="faq-item"><summary>Скрытые настройки SMB в MX Player</summary><div class="faq-answer"><p>В некоторых сборках MX Player доступен скрытый режим отладки сети. Для его активации нужно многократно нажать на версию приложения в настройках «О программе». Это может открыть дополнительные опции кодировки символов (Codepage), что критично, если имена ваших файлов или папок содержат кириллицу и отображаются кракозябрами.</p></div></details>
+
+<p>Частой проблемой является использование специальных символов в пароле. Символы вроде <code>#</code>, <code>&</code>, <code>%</code> или пробелы могут интерпретироваться системой ввода Android как управляющие команды или просто игнорироваться. Если вход не выполняется, попробуйте временно сменить пароль на комбинацию только из букв и цифр, чтобы исключить этот фактор. Также стоит проверить, не стоит ли у вас включенная двухфакторная authentication на учетной записи Microsoft — для локального доступа по сети она не работает, нужен именно пароль от учетной записи.</p>
+
+<p>Если вы используете гостевой доступ без пароля, в поле логина часто нужно вводить <code>Guest</code>, а поле пароля оставлять пустым. Однако, как упоминалось ранее, современные политики безопасности Windows 10/11 по умолчанию запрещают небезопасный гостевой вход. В таком случае система будет бесконечно запрашивать пароль, даже если вы ничего не вводите. Единственное решение — изменить групповые политики Windows или создать конкретного пользователя.</p>
+
+<h2 id="решение-распространенных-ошибок-авторизации">Решение распространенных ошибок авторизации</h2>
+
+<p>Ситуация, когда <em>MX Player</em> выдает ошибку «Неверный логин или пароль» при seemingly правильных данных, встречается очень часто. Первая и самая распространенная причина — блокировка со стороны антивируса или брандмауэра Windows. Даже если вы ввели все верно, защитное ПО может посчитать попытку подключения извне подозрительной и silently отбросить пакет авторизации.</p>
+
+<p>Второй важный аспект — это версия протокола SMB. Как уже упоминалось, Windows отключила SMBv1. Если ваш роутер или старый медиаплеер пытается соединиться именно через него, соединения не будет. В <em>MX Player</em> в настройках сети (часто скрытых в разделе «Конфигурация» -> «Сеть») можно попробовать принудительно выбрать версию протокола, если такая опция доступна в вашей сборке приложения.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 С какой ошибкой подключения вы сталкиваетесь чаще всего?</strong><ul><li>Неверный пароль</li><li>Устройство не найдено</li><li>Файлы не открываются</li><li>Тормозит видео при воспроизведении</li></ul></div></div>
+
+<p>Также стоит обратить внимание на тип учетной записи. Если вход в Windows осуществляется через PIN-код, это не значит, что пароль тоже цифровой или отсутствует. Для сетевого доступа (SMB) всегда используется именно текстовый пароль учетной записи, а не PIN-код для входа в систему. Многие пользователи совершают ошибку, вводя свой PIN-код в поле пароля, что естественно приводит к отказу доступа.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Никогда не используйте учетную запись Administrator с пустым паролем для сетевых шар. Это огромная дыра в безопасности. Создайте отдельного пользователя с ограниченными правами (только чтение) специально для медиасервера.</p>
+</blockquote>
+
+<p>Если ничего не помогает, попробуйте использовать IP-адрес вместо имени компьютера в поле хоста. Resolution имен (DNS) в локальных сетях иногда работает нестабильно, особенно если роутер не обновляет DHCP-таблицы. Прямое обращение по IP-адресу минует этот этап и часто решает проблему «невидимости» или отказа в соединении.</p>
+
+<h2 id="альтернативные-методы-dlna-и-создание-медиасервера">Альтернативные методы: DLNA и создание медиасервера</h2>
+
+<p>Если возня с логинами, паролями и протоколами SMB кажется слишком сложной, существует более простой, хотя и менее функциональный способ — использование технологии <strong>DLNA</strong>. В этом случае вам не нужно вводить никаких паролей в <em>MX Player</em>. Компьютер или NAS просто транслируют список доступных файлов, а плеер их воспроизводит. Для этого достаточно включить «Потоковую передачу мультимедиа» в настройках Windows Media Player или использовать специализированный софт.</p>
+
+<p>Однако у DLNA есть существенные ограничения: вы не можете управлять файловой структурой так гибко, как в SMB, часто отсутствуют субтитры (или их нужно подгружать отдельно), и нет поддержки некоторых аудиоформатов. Тем не менее, для быстрого просмотра фото или видео с телефона на телевизор этот метод подходит идеально и не требует никакой авторизации.</p>
+
+<p>Для продвинутых пользователей рекомендуется развернуть полноценный медиасервер, например, <em>Plex</em> или <em>Jellyfin</em>. Эти системы имеют свои собственные приложения-клиенты, которые часто работают стабильнее встроенного сетевого модуля MX Player. Они берут на себя транскодирование видео на лету, если устройство не тянет формат, и имеют красивый интерфейс с постерами и описанием фильмов.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте статический IP-адрес для вашего компьютера или NAS. Если роутер выдаст устройству новый IP после перезагрузки, все сохраненные пути в MX Player перестанут работать, и придется настраивать подключение заново.</p></div>
+
+<p>Тем не менее, прямой доступ через SMB остается «золотым стандартом» для тех, кто хочет получить максимальное качество картинки без потери деталей при транскодировании и иметь полный контроль над файловой системой. Правильно настроенный SMB-доступ позволяет MX Player работать как с локальной папкой, открывая файлы мгновенно.</p>
+
+<h2 id="оптимизация-буфера-и-производительности-сети">Оптимизация буфера и производительности сети</h2>
+
+<p>Даже при правильном вводе логина и пароля, воспроизведение по сети может страдать от буферизации. <em>MX Player</em> позволяет настроить размер сетевого буфера. Если ваше соединение нестабильно, увеличение буфера поможет сгладить рывки. Найти эту опцию можно в настройках плеера, в разделе «Декодер» или «Сеть», где параметр может называться «Network Buffer Size».</p>
+
+<p>Также важную роль играет частота Wi-Fi. Для потокового видео высокого разрешения (особенно 4K HDR) использование диапазона <strong>5 ГГц</strong> является практически обязательным. Диапазон 2.4 ГГц часто бывает перегружен соседскими сетями и не обеспечивает достаточной пропускной способности для тяжелых файлов, что может восприниматься пользователем как ошибка доступа или торможение интерфейса.</p>
+
+<p>Не забывайте, что сам роутер является узким местом. Дешевые модели могут не справляться с одновременной загрузкой торрентов и потоковой передачей видео на телевизор. Если видео постоянно останавливается на загрузке буфера, проверьте загрузку канала. В идеале для медиасервера использовать проводное соединение Ethernet, которое гарантирует стабильную скорость и отсутствие помех.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Стабильность воспроизведения по сети зависит не только от правильности введенного пароля, но и от физической инфраструктуры: качества кабеля, диапазона Wi-Fi и мощности роутера.</p></div>
+
+<p>В заключение стоит отметить, что настройка сетевого доступа — это процесс, требующий внимательности к деталям. Один неверный символ в пароле или неправильный выбор протокола могут сделать подключение невозможным. Однако,once настроенное correctly, соединение по SMB предоставляет unparalleled доступ ко всей вашей коллекции медиафайлов прямо с большого экрана.</p>
+
+<details>
+<summary>Почему MX Player не принимает пароль от учетной записи Microsoft?</summary>
+<p>При использовании локальной учетной записи Microsoft для входа в Windows 10/11, сет</div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#протоколы-сетевого-обмена-smb-против-nfs-в-mx-player">Протоколы сетевого обмена: SMB против NFS в MX Player</a></li><li><a href="#пошаговая-инструкция-добавление-сетевого-ресурса">Пошаговая инструкция: добавление сетевого ресурса</a></li><li><a href="#нюансы-ввода-логина-и-пароля-в-разных-версиях-android">Нюансы ввода логина и пароля в разных версиях Android</a></li><li><a href="#решение-распространенных-ошибок-авторизации">Решение распространенных ошибок авторизации</a></li><li><a href="#альтернативные-методы-dlna-и-создание-медиасервера">Альтернативные методы: DLNA и создание медиасервера</a></li><li><a href="#оптимизация-буфера-и-производительности-сети">Оптимизация буфера и производительности сети</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/b/bl/blaupunkt-43un265t-sbros-nastroek.html" class="related-card">Blaupunkt 43UN265T сброс настроек: полная инструкция</a></li><li><a href="/a/articles/m/ma/mac-adres-wlan-nedostupen.html" class="related-card">MAC адрес WLAN недоступен: причины и решение ошибки на Windows</a></li><li><a href="/a/articles/o/op/oppo-a5-pro-skaner-qr-kod.html" class="related-card">Oppo A5 Pro: как сканировать QR-коды и настроить сканер</a></li><li><a href="/a/articles/t/to/toshiba-55c350-ne-vhodit-v-akkaunt.html" class="related-card">Toshiba 55C350 не входит в аккаунт: решение ошибки входа</a></li><li><a href="/a/articles/s/sm/sml-5050-sbrosit-nastrojki.html" class="related-card">Как сбросить настройки SML-5050: полный сброс и прошивка</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/b/bl/blaupunkt-43un265t-sbros-nastroek.html" class="related-bottom-card"><span class="related-bottom-title">Blaupunkt 43UN265T сброс настроек: полная инструкция</span><span class="related-bottom-desc">Как выполнить сброс настроек на телевизоре Blaupunkt 43UN265T. Полный сброс, через меню, кнопками и </span></a><a href="/a/articles/m/ma/mac-adres-wlan-nedostupen.html" class="related-bottom-card"><span class="related-bottom-title">MAC адрес WLAN недоступен: причины и решение ошибки на Windows</span><span class="related-bottom-desc">Почему в диспетчере устройств отсутствует MAC адрес WLAN? Полный гид по устранению ошибки с драйвера</span></a><a href="/a/articles/o/op/oppo-a5-pro-skaner-qr-kod.html" class="related-bottom-card"><span class="related-bottom-title">Oppo A5 Pro: как сканировать QR-коды и настроить сканер</span><span class="related-bottom-desc">Полная инструкция по сканированию QR-кодов на Oppo A5 Pro. Настройка встроенного сканера, решение пр</span></a><a href="/a/articles/t/to/toshiba-55c350-ne-vhodit-v-akkaunt.html" class="related-bottom-card"><span class="related-bottom-title">Toshiba 55C350 не входит в аккаунт: решение ошибки входа</span><span class="related-bottom-desc">Toshiba 55C350 не входит в аккаунт Google или Amazon? Полный гид по устранению ошибок, сбросу DNS и </span></a><a href="/a/articles/s/sm/sml-5050-sbrosit-nastrojki.html" class="related-bottom-card"><span class="related-bottom-title">Как сбросить настройки SML-5050: полный сброс и прошивка</span><span class="related-bottom-desc">Подробная инструкция по сбросу настроек SML-5050. Методы через меню, Recovery Mode и перепрошивка. Р</span></a><a href="/a/articles/v/vo/vosstanovlenie-logina-i-parolya-ot-pristavki-wink.html" class="related-bottom-card"><span class="related-bottom-title">Как восстановить логин и пароль Wink: полная инструкция</span><span class="related-bottom-desc">Пошаговое руководство по восстановлению доступа к Wink. Что делать, если забыли пароль, как сбросить</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>

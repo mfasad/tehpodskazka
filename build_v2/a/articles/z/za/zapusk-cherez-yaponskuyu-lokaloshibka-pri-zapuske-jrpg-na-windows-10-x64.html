@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
+    <title>Ошибка запуска JRPG на Windows 10: исправляем японскую локаль — ТехПодсказка</title>
+    <meta name="description" content="Как запустить JRPG на Windows 10 x64? Решаем ошибки кодировки, вылеты и проблемы с AppLocale через Locale Emulator.">
+    <link rel="canonical" href="/a/articles/z/za/zapusk-cherez-yaponskuyu-lokaloshibka-pri-zapuske-jrpg-na-windows-10-x64.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Ошибка запуска JRPG на Windows 10: исправляем японскую локаль">
+    <meta property="og:description" content="Как запустить JRPG на Windows 10 x64? Решаем ошибки кодировки, вылеты и проблемы с AppLocale через Locale Emulator.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/a/static/css/style.css?v=1775721968">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: -100px; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: bottom 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+    }
+    .cookie-popup.visible { bottom: 0; }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/a/" class="logo">
+                <span class="logo-icon">🔧</span>
+                <span>ТехПодсказка</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/a/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="nav-link">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="nav-link">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="nav-link">🖥️ Ноутбуки и Железо</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/a/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/a/category/mobilnye-os/" class="dropdown-item">📱 Мобильные ОС</a>
+<a href="/a/category/windows-i-pk/" class="dropdown-item">💻 Windows и ПК</a>
+<a href="/a/category/noutbuki-i-zhelezo/" class="dropdown-item">🖥️ Ноутбуки и Железо</a>
+<a href="/a/category/striming-i-kino/" class="dropdown-item">🎬 Стриминг и Кино</a>
+<a href="/a/category/svyaz-i-operatory/" class="dropdown-item">📡 Связь и Операторы</a>
+<a href="/a/category/soft-i-prilozheniya/" class="dropdown-item">📲 Софт и Приложения</a>
+<a href="/a/category/audio-i-gadzhety/" class="dropdown-item">🎧 Аудио и Гаджеты</a>
+<a href="/a/category/akkaunty-i-bezopasnost/" class="dropdown-item">🔒 Аккаунты и Безопасность</a>
+<a href="/a/category/igry-i-razvlecheniya/" class="dropdown-item">🎮 Игры и Развлечения</a>
+<a href="/a/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/a/">Главная</a><span class="breadcrumb-sep">›</span><a href="/a/category/windows-i-pk/">Windows и ПК</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Ошибка запуска JRPG на Windows 10: исправляем японскую локаль</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Запуск японских JRPG на Windows 10 x64: решение проблем с локалью</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#почему-старые-jrpg-не-работают-на-windows-10-x64">Почему старые JRPG не работают на Windows 10 x64</a></li><li><a href="#проблемы-стандартного-applocale-и-переход-на-locale-emulator">Проблемы стандартного AppLocale и переход на Locale Emulator</a></li><li><a href="#пошаговая-инструкция-настройка-locale-emulator">Пошаговая инструкция: настройка Locale Emulator</a></li><li><a href="#решение-специфических-ошибок-и-проблем-с-кодировкой">Решение специфических ошибок и проблем с кодировкой</a></li><li><a href="#альтернативные-методы-от-совместимости-до-виртуальных-машин">Альтернативные методы: от совместимости до виртуальных машин</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/a/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Попытка запустить классическую японскую ролевую игру, созданную в эпоху Windows XP или даже 98, на современной <strong>Windows 10 x64</strong> часто заканчивается появлением загадочных символов вместо текста или полным отказом приложения открываться. Это не баг системы и не поврежденный файл установки, а фундаментальный конфликт кодировек, который требует правильного подхода к эмуляции региональных настроек. Старые движки, такие как <em>RPG Maker</em> или специфические движки <em>Kogado</em>, жестко завязаны на системную локаль, и игнорирование этого факта приводит к краху процесса инициализации.</p>
+
+<p>Современные операционные системы используют <strong>Unicode (UTF-16)</strong> для отображения текста, тогда как legacy-софт времен расцвета жанра JRPG полагался на однобайтовые кодировки вроде <em>Shift_JIS</em>. Когда вы запускаете такую игру на русской или английской версии Windows, система пытается интерпретировать байты текста через призму текущей локали (например, <code>Windows-1251</code>), что превращает диалоги героев в нечитаемую кашу из вопросительных знаков и странных символов. Более того, некоторые программы имеют встроенную проверку региона и просто отказываются стартовать, если видят, что они находятся не в Японии.</p>
+
+<p>К счастью, существует отработанный годами алгоритм действий, позволяющий обойти эти ограничения без необходимости переустанавливать операционную систему или создавать виртуальную машину. Вам не нужно быть программистом, чтобы разобраться в тонкостях работы <strong>Locale Emulator</strong> или понять, почему стандартный <em>AppLocale</em> больше не работает на 64-битных системах. Правильная настройка окружения вернет вам возможность наслаждаться сюжетом и геймплеем, для которых создавались эти шедевры.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Никогда не меняйте системную локаль всей Windows через панель управления ради одной игры. Это действие может привести к некорректному отображению имен файлов в других программах и нарушению работы системных служб, зависящих от кодировки.</p>
+</blockquote>
+
+<h2 id="почему-старые-jrpg-не-работают-на-windows-10-x64">Почему старые JRPG не работают на Windows 10 x64</h2>
+
+<p>Основная причина конфликтов кроется в архитектуре обработки текста. Когда разработчики из Японии создавали свои проекты 20 лет назад, они использовали <strong>Shift_JIS</strong> — кодировку, разработанную специально для японского языка. В ней каждый символ занимает определенное количество байт, и порядок этих байтов критически важен. Современная Windows по умолчанию использует <em>UTF-16</em>, где структура хранения данных принципиально иная, что приводит к рассинхронизации при чтении игровых скриптов.</p>
+
+<p>Кроме того, многие старые исполняемые файлы содержат проверку региональных настроек BIOS или системы. Если игра видит, что системная локаль установлена, например, на "Россия" или "США", она может посчитать среду выполнения неподдерживаемой и завершить процесс еще до появления окна. Это особенно характерно для продуктов компаний вроде <em>Koei</em>, <em>Glory</em> или ранних игр от <em>Square Enix</em>, которые не планировали международный релиз.</p>
+
+<ul>
+<li>🇯🇵 <strong>Кодировка Shift_JIS:</strong> Старые игры используют её для хранения текста, и без эмуляции японской локали система не может правильно декодировать символы.</li>
+<li>🛑 <strong>Блокировка по региону:</strong> Некоторые исполняемые файлы (.exe) содержат проверки, запрещающие запуск вне японского региона.</li>
+<li>📉 <strong>Несовместимость библиотек:</strong> Отсутствие старых системных DLL или их замена новыми версиями в Windows 10 может вызывать ошибки_missing_entry_point.</li>
+</ul>
+
+<p>Еще одним фактором является путь к файлам. Если игра установлена в папку, название которой содержит кириллические символы или спецсимволы, старый движок может просто не найти свои ресурсы. <strong>Абсолютные пути</strong> в коде таких программ часто жестко заданы или неправильно обрабатываются современными файловыми менеджерами при наличии нелатинских символов. Поэтому даже при правильной локали игра может выдать ошибку "File not found".</p>
+
+<blockquote>
+<p>⚠️ Внимание: Попытка запустить 16-битные игры (часто встречающиеся среди очень старых JRPG для DOS или Windows 95) на Windows 10 x64 невозможна стандартными средствами, так как 64-битные системы полностью лишены поддержки 16-битного кода.</p>
+</blockquote>
+
+<h2 id="проблемы-стандартного-applocale-и-переход-на-locale-emulator">Проблемы стандартного AppLocale и переход на Locale Emulator</h2>
+
+<p>Долгое время золотым стандартом решения проблем с кодировкой считалась утилита <em>Microsoft AppLocale</em>, выпущенная самой Microsoft. Однако этот инструмент был разработан для 32-битных систем (<em>Windows XP/2000</em>) и содержит критические баги при работе на <strong>Windows 10 x64</strong>. Использование оригинального AppLocale может привести к повреждению системных шрифтов или созданию временных файлов, которые не удаляются после закрытия программы, засоряя реестр.</p>
+
+<p>Современной и безопасной альтернативой является проект с открытым исходным кодом под названием <strong>Locale Emulator</strong> (часто аббревиатура LE). Это легковесное приложение, которое внедряется в контекстное меню Проводника и позволяет запускать любой исполняемый файл с виртуально измененными региональными настройками. В отличие от предшественника, LE корректно работает на 64-битных архитектурах и не требует перезагрузки системы.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой метод вы пробовали для запуска старых игр?</strong><ul><li>AppLocale от Microsoft</li><li>Locale Emulator (LE)</li><li>Смена языка системы</li><li>Виртуальная машина с XP</li></ul></div></div>
+
+<p>Установка <em>Locale Emulator</em> проста, но требует внимательности при выборе компонентов. При инсталляции важно убедиться, что вы устанавливаете версию, совместимую с вашей архитектурой ОС (обычно это <code>x64</code>). После установки в контекстном меню файлов появится новый пункт, позволяющий выбрать профиль "Japanese" или создать свой собственный с конкретными настройками кодировки и часового пояса.</p>
+
+<ul>
+<li>🚀 <strong>Безопасность:</strong> LE не вносит изменений в системный реестр глобально, работая только в контексте запущенного процесса.</li>
+<li>⚙️ <strong>Гибкость:</strong> Возможность настраивать не только локаль, но и часовой пояс, что важно для игр с зависимостью от времени.</li>
+<li>🔄 <strong>Контекстное меню:</strong> Запуск игры происходит в один клик через правую кнопку мыши, что ускоряет процесс тестирования.</li>
+</ul>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если после установки Locale Emulator пункт в меню не появился, попробуйте запустить файл LEInstaller.exe от имени администратора и выбрать "Install" или "Re-install".</p></div>
+
+<h2 id="пошаговая-инструкция-настройка-locale-emulator">Пошаговая инструкция: настройка Locale Emulator</h2>
+
+<p>Для успешного запуска игры необходимо правильно сконфигурировать среду. Сначала скачайте актуальную версию <strong>Locale Emulator</strong> с официального репозитория (обычно это GitHub). Распакуйте архив в любую папку, найдите файл <code>LEInstaller.exe</code>, нажмите на него правой кнопкой мыши и выберите "Запуск от имени администратора". В открывшемся окне нажмите кнопку <code>Install</code> (или <code>Re-install</code>), чтобы интегрировать утилиту в систему.</p>
+
+<p>После установки перейдите в папку с игрой. Найдите основной исполняемый файл (обычно <code>.exe</code>, иногда <code>.bat</code>). Нажмите на него правой кнопкой мыши, выберите в меню <code>Locale Emulator</code>, затем <code>Run in Japanese (Admin)</code>. Выбор режима <strong>Admin</strong> критически важен, так как многие старые игры требуют повышенных привилегий для записи файлов сохранения или настройки графики. Если игра запустится с "кракозябрами", попробуйте вариант без прав администратора, но это редкость.</p>
+
+<div class="checklist-block"><h4>☑️ Чек-лист запуска JRPG</h4><label class="check-item"><input type="checkbox"><span>Скачан и установлен Locale Emulator (x64):Игра распакована в папку с путями только на латинице:Запуск произведен через контекстное меню LE (Admin):Установлены необходимые DirectX и Visual C++ Redistributables</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 1</div></div>
+
+<p>В некоторых случаях стандартного профиля "Japanese" может быть недостаточно. <strong>Locale Emulator</strong> позволяет создавать кастомные профили. Нажмите <code>Locale Emulator -> Settings</code>, создайте новый профиль, укажите кодировку <code>Japanese (Shift_JIS)</code> и, если игра требует, измените часовой пояс на <code>Tokyo</code>. Это особенно актуально для игр, где сюжет завязан на реальном времени или датах, и рассинхронизация часов может блокировать прогресс.</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Рекомендуемое значение</th>
+<th>Для чего нужно</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>System Locale</td>
+<td>Japanese (Japan)</td>
+<td>Основная кодировка для текста интерфейса</td>
+</tr>
+<tr>
+<td>Code Page</td>
+<td>932 (Shift_JIS)</td>
+<td>Декодирование байтов текста в игре</td>
+</tr>
+<tr>
+<td>Time Zone</td>
+<td>Tokyo (GMT+9)</td>
+<td>Для игр с таймерами событий</td>
+</tr>
+<tr>
+<td>Admin Rights</td>
+<td>Yes (Run as Admin)</td>
+<td>Доступ к реестру и файлам сохранения</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="решение-специфических-ошибок-и-проблем-с-кодировкой">Решение специфических ошибок и проблем с кодировкой</h2>
+
+<p>Даже при использовании эмулятора могут возникать специфические ошибки. Часто встречается ситуация, когда текст отображается, но шрифты выглядят "битыми" или слишком мелкими. Это связано с тем, что в системе отсутствуют японские шрифты, которые ожидает увидеть игра. Вам необходимо зайти в <code>Параметры</code> -> <code>Время и язык</code> -> <code>Язык</code> и добавить японский язык, а также в разделе "Административные параметры языка" установить галочку <strong>Бета-версия: Использовать Unicode UTF-8</strong> (хотя для старых игр это иногда, наоборот, нужно отключить, проверяйте экспериментально).</p>
+
+<p>Другая распространенная проблема — ошибки, связанные с отсутствием библиотек <strong>DirectX 9.0c</strong> или <em>Visual C++ Redistributable</em> старых версий (2005, 2008, 2010). Современные Windows 10/11 поставляются с новыми версиями, но старые игры не умеют работать с ними из-за различий в именах функций. Решение одно: скачать и установить полный пакет <em>DirectX End-User Runtimes</em> и все версии Visual C++ (x86 и x64), даже если у вас 64-битная система, так как старые игры — 32-битные.</p>
+
+<details class="faq-item"><summary>Что делать, если игра вылетает сразу после заставки?</summary><div class="faq-answer"><p>Часто причина кроется в несовместимости разрешения экрана или цветовой глубины. Попробуйте запустить игру в режиме совместимости (Properties -> Compatibility) с Windows XP SP3 и установить разрешение 640x480 или 800x600, а также режим 16-битного цвета.</p></div></details>
+
+<p>Если игра требует наличия диска в приводе, а физического диска или привода нет, можно использовать эмуляторы приводов, такие как <em>Daemon Tools Lite</em> или <em>Alcohol 120%</em>. Создайте образ диска (если у вас есть оригинал) или найдите готовый образ в формате <code>.iso</code> или <code>.mdf</code>, смонтируйте его и убедитесь, что буква виртуального привода совпадает с той, которую ожидает игра (иногда помогает переименование буквы привода в управлении дисками).</p>
+
+<ul>
+<li>📦 <strong>Отсутствие DLL:</strong> Ошибки вида "msvcp71.dll missing" лечатся установкой старых пакетов Visual C++.</li>
+<li>🎨 <strong>Проблемы со шрифтами:</strong> Установка японского языкового пакета Windows решает проблему "квадратиков" вместо букв.</li>
+<li>💿 <strong>Защита от копирования:</strong> Использование эмуляторов CD/DVD приводов необходимо для игр с проверкой диска (SafeDisc, SecuROM).</li>
+</ul>
+
+<blockquote>
+<p>⚠️ Внимание: При установке языковых пакетов и библиотек всегда перезагружайте компьютер. Без перезагрузки изменения в системных переменных и реестре могут не примениться корректно, что приведет к сохранению ошибок.</p>
+</blockquote>
+
+<h2 id="альтернативные-методы-от-совместимости-до-виртуальных-машин">Альтернативные методы: от совместимости до виртуальных машин</h2>
+
+<p>Если <strong>Locale Emulator</strong> не помог, можно попробовать встроенный режим совместимости Windows. Нажмите правой кнопкой на ярлык игры, выберите <code>Свойства</code> -> <code>Совместимость</code>. Попробуйте запустить программу в режиме <em>Windows XP (Service Pack 3)</em> или <em>Windows 98/Me</em>. Также стоит поэкспериментировать с галочкой "Запустить в режиме 256 цветов" или "Запустить в разрешении 640x480", так как старые движки часто не умеют работать с современными десктопами высокого разрешения.</p>
+
+<p>Для совсем сложных случаев, когда игра написана под специфическое железо или требует старых версий <em>DirectDraw</em>, спасением станет виртуальная машина. Программы вроде <em>VirtualBox</em> или <em>VMware Player</em> позволяют развернуть внутри Windows 10 полноценную копию <strong>Windows XP</strong> или даже <em>Windows 98</em>. Это гарантированно запустит любую JRPG, но потребует больше ресурсов компьютера (ОЗУ, место на диске) и настройки проброса USB-портов для геймпадов.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Виртуальная машина — это "тяжелая артиллерия", которая дает 100% совместимость, но требует отдельной лицензии на ОС и значительных ресурсов системы, поэтому используйте её только если другие методы не помогли.</p></div>
+
+<p>Существуют также специализированные патчи-переводчики и фиксы от сообщества (например, проекты на базе <em>Hook</em> или <em>Texture Modding</em>), которые не только переводят игру, но и исправляют исполняемый файл для работы на современных системах. Поиск таких патчей по названию игры на форумах вроде <em>Romhacking.net</em> или <em>VNDB</em> может сэкономить часы настройки.</p>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Безопасно ли менять системную локаль через панель управления для одной игры?</summary>
+<p>Нет, это плохая практика. Глобальная смена локали (Non-Unicode program language) затрагивает всю систему и может привести к тому, что другие программы начнут неправильно отображать filenames или текст. Используйте только эмуляторы вроде Locale Emulator, которые меняют настройки только для конкретного процесса.</p>
+</details>
+
+<details>
+<summary>Почему игра запускается, но вместо текста знаки вопроса (????)?</summary>
+<p>Это означает, что кодировка подобрана неверно или в системе отсутствуют необходимые шрифты. Убедитесь, что в Locale Emulator выбрана кодировка <strong>Japanese (Shift_JIS)</strong>, а также установлен японский языковой пакет в самой Windows 10.</p>
+</details>
+
+<details>
+<summary>Можно ли запустить 16-битную игру из Windows 95 на Windows 10 x64?</summary>
+<p>Нативно — нет, 64-битные Windows не поддерживают 16-битный код. Вам потребуется эмулятор DOS (например, <em>DOSBox</em>) или виртуальная машина с 32-битной операционной системой (Windows XP/98).</p>
+</details>
+
+<details>
+<summary>Где взять японский язык для Windows 10, если его нет в списке?</summary>
+<p>Зайдите в Параметры -> Время и язык -> Язык -> Добавить язык. Найдите "Japanese" (日本語) и установите его. Также проверьте раздел "Административные параметры языка", чтобы убедиться, что файлы поддержки установлены корректно.</p>
+</details>
+
+<details>
+<summary>Игра требует диск, но у меня нет привода. Что делать?</summary>
+<p>Вам нужно создать образ диска (ISO) из вашей лицензии или найти его, установить программу-эмулятор приводов (Daemon Tools, Alcohol 120%) и смонтировать образ. Для игры это будет выглядеть как вставленный физический диск.</p>
+</details></div>
+                    <!--#include virtual="/a/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/a/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/a/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#почему-старые-jrpg-не-работают-на-windows-10-x64">Почему старые JRPG не работают на Windows 10 x64</a></li><li><a href="#проблемы-стандартного-applocale-и-переход-на-locale-emulator">Проблемы стандартного AppLocale и переход на Locale Emulator</a></li><li><a href="#пошаговая-инструкция-настройка-locale-emulator">Пошаговая инструкция: настройка Locale Emulator</a></li><li><a href="#решение-специфических-ошибок-и-проблем-с-кодировкой">Решение специфических ошибок и проблем с кодировкой</a></li><li><a href="#альтернативные-методы-от-совместимости-до-виртуальных-машин">Альтернативные методы: от совместимости до виртуальных машин</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/a/articles/k/ka/kak-podklyuchit-noutbuk-k-wifi-po-qr-kodu-windows-7.html" class="related-card">Как подключить ноутбук к WiFi по QR коду в Windows 7</a></li><li><a href="/a/articles/x/xp/xp-pen-artist-12-2nd-gen-driver-na-androjd.html" class="related-card">Xp-Pen Artist 12 2nd Gen Driver на Android: Установка и Настройка</a></li><li><a href="/a/articles/k/ka/kak-sdelat-tak-chtoby-prezentaciya-ne-sezzhala-na-drugom-kompyutere-hnzcilsdp.html" class="related-card">Презентация не съезжает: как сохранить шрифты и верстку</a></li><li><a href="/a/articles/w/wi/windows-2000-online-web.html" class="related-card">Windows 2000 Online Web: Запуск в браузере и эмуляция</a></li><li><a href="/a/articles/a/as/astra-linux-live-ryadom-s-win10-na-noutbuke.html" class="related-card">Astra Linux Live рядом с Win10 на ноутбуке: полная инструкция</a></li></ul></nav><!--#include virtual="/a/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/a/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/a/articles/k/ka/kak-podklyuchit-noutbuk-k-wifi-po-qr-kodu-windows-7.html" class="related-bottom-card"><span class="related-bottom-title">Как подключить ноутбук к WiFi по QR коду в Windows 7</span><span class="related-bottom-desc">Узнайте, можно ли подключить ноутбук к WiFi через QR-код в Windows 7. Подробный разбор ограничений О</span></a><a href="/a/articles/x/xp/xp-pen-artist-12-2nd-gen-driver-na-androjd.html" class="related-bottom-card"><span class="related-bottom-title">Xp-Pen Artist 12 2nd Gen Driver на Android: Установка и Настройка</span><span class="related-bottom-desc">Подробная инструкция по подключению планшета Xp-Pen Artist 12 2nd Gen к Android. Установка драйверов</span></a><a href="/a/articles/k/ka/kak-sdelat-tak-chtoby-prezentaciya-ne-sezzhala-na-drugom-kompyutere-hnzcilsdp.html" class="related-bottom-card"><span class="related-bottom-title">Презентация не съезжает: как сохранить шрифты и верстку</span><span class="related-bottom-desc">Презентация съезжает на другом ПК? Узнайте, как вставить шрифты, сохранить PDF и настроить слайды, ч</span></a><a href="/a/articles/w/wi/windows-2000-online-web.html" class="related-bottom-card"><span class="related-bottom-title">Windows 2000 Online Web: Запуск в браузере и эмуляция</span><span class="related-bottom-desc">Полный гид по запуску Windows 2000 в веб-браузере. Обзор эмуляторов, настройка сети, работа с файлам</span></a><a href="/a/articles/a/as/astra-linux-live-ryadom-s-win10-na-noutbuke.html" class="related-bottom-card"><span class="related-bottom-title">Astra Linux Live рядом с Win10 на ноутбуке: полная инструкция</span><span class="related-bottom-desc">Как запустить Astra Linux в режиме Live рядом с Windows 10 на ноутбуке. Пошаговая настройка двойной </span></a><a href="/a/articles/b/bo/bootcamp-voznikla-problema-pri-chtenie-iso-fajla-windows-10.html" class="related-bottom-card"><span class="related-bottom-title">BootCamp не видит образ Windows 10: решение ошибки ISO</span><span class="related-bottom-desc">Возникла проблема при чтении файла ISO Windows 10 в BootCamp? Узнайте причины сбоя, способы исправле</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/a/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🔧 ТехПодсказка</div>
+                    <p class="footer-about"></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/a/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/a/category/mobilnye-os/">📱 Мобильные ОС</a></li>
+<li><a href="/a/category/windows-i-pk/">💻 Windows и ПК</a></li>
+<li><a href="/a/category/noutbuki-i-zhelezo/">🖥️ Ноутбуки и Железо</a></li>
+<li><a href="/a/category/striming-i-kino/">🎬 Стриминг и Кино</a></li>
+<li><a href="/a/category/svyaz-i-operatory/">📡 Связь и Операторы</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/a/">Главная</a></li>
+                        <li><a href="/a/about.html">О проекте</a></li>
+                        <li><a href="/a/categories.html">Все разделы</a></li>
+                        <li><a href="/a/contact.html">Контакты</a></li>
+                        <li><a href="/a/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/a/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/a/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/a/static/js/inject.js" defer></script>
+</body>
+</html>
