@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🔧</text></svg>">
     <title>Bootice v.1.3.4: полное руководство по восстановлению загрузчика — ТехПодсказка</title>
     <meta name="description" content="Подробный разбор работы утилиты Bootice 1.3.4 для восстановления загрузчика Windows. Инструкция по редактированию MBR, PBR и управлению загрузочными секторами.">
-    <link rel="canonical" href="https://tehpodskazka.ru/bootice-v134-vosstanovlenie-zagruzchika-kak-rabotaet.html">
+    <link rel="canonical" href="/bootice-v134-vosstanovlenie-zagruzchika-kak-rabotaet.html">
     <meta property="og:type" content="article">
     <meta property="og:title" content="Bootice v.1.3.4: полное руководство по восстановлению загрузчика">
     <meta property="og:description" content="Подробный разбор работы утилиты Bootice 1.3.4 для восстановления загрузчика Windows. Инструкция по редактированию MBR, PBR и управлению загрузочными секторами.">
@@ -13,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/style.css?v=1775819457">
     <style>
     .site-footer-premium {
         margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
@@ -46,8 +47,52 @@
         .cookie-inner { flex-direction: column; text-align: center; }
     }
 </style>
+    
+    <!--#include virtual="/ssi/head.html" -->
 </head>
 <body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
     <header class="site-header">
         <div class="container header-inner">
             <a href="/" class="logo">
@@ -56,12 +101,24 @@
             </a>
             <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
             <nav class="main-nav" id="mainNav">
-                <a href="/category/televizory/" class="nav-link">📺 Настройка ТВ</a>
-<a href="/category/android/" class="nav-link">📱 Android-устройства</a>
-<a href="/category/prilozheniya/" class="nav-link">📲 Приложения</a>
-<a href="/category/windows/" class="nav-link">💻 Windows и ПК</a>
-<a href="/category/pristavki/" class="nav-link">🔌 Приставки</a>
-<a href="/category/internet/" class="nav-link">🌐 WiFi и Интернет</a>
+                <a href="/category/nastroika-tv/" class="nav-link">📺 Настройка ТВ</a>
+<a href="/category/tv-pristavki/" class="nav-link">📡 ТВ-приставки</a>
+<a href="/category/smartfony-android/" class="nav-link">🤖 Смартфоны Android</a>
+<a href="/category/apple-ustroystva/" class="nav-link">🍎 Apple устройства</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/nastroika-tv/" class="dropdown-item">📺 Настройка ТВ</a>
+<a href="/category/tv-pristavki/" class="dropdown-item">📡 ТВ-приставки</a>
+<a href="/category/smartfony-android/" class="dropdown-item">🤖 Смартфоны Android</a>
+<a href="/category/apple-ustroystva/" class="dropdown-item">🍎 Apple устройства</a>
+<a href="/category/noutbuki-pk/" class="dropdown-item">💻 Ноутбуки и ПК</a>
+<a href="/category/audio-i-geyming/" class="dropdown-item">🎮 Аудио и Гейминг</a>
+<a href="/category/prilozheniya-servisy/" class="dropdown-item">📱 Приложения и Сервисы</a>
+<a href="/category/set-i-internet/" class="dropdown-item">🌐 Сеть и Интернет</a>
+<a href="/category/remont-i-zhelezo/" class="dropdown-item">🔧 Ремонт и Железо</a>
+<a href="/category/bezopasnost-akkaunty/" class="dropdown-item">🔒 Безопасность аккаунтов</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
             </nav>
         </div>
     </header>
@@ -74,8 +131,10 @@
         <div class="container">
             <div class="article-layout">
                 <article class="article-main">
+                    
                     <h1>Bootice v.1.3.4: как работает восстановление загрузчика и управление секторами</h1>
                     <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#архитектура-и-назначение-утилиты-bootice">Архитектура и назначение утилиты Bootice</a></li><li><a href="#интерфейс-и-основные-функции-версии-134">Интерфейс и основные функции версии 1.3.4</a></li><li><a href="#процесс-восстановления-загрузчика-windows">Процесс восстановления загрузчика Windows</a></li><li><a href="#работа-с-таблицами-разделов-mbr-и-gpt">Работа с таблицами разделов MBR и GPT</a></li><li><a href="#управление-загрузчиком-uefi-и-разделом-esp">Управление загрузчиком UEFI и разделом ESP</a></li><li><a href="#резервное-копирование-и-восстановление-данных">Резервное копирование и восстановление данных</a></li><li><a href="#частые-ошибки-и-способы-их-устранения">Частые ошибки и способы их устранения</a></li><li><a href="#заключительные-рекомендации-по-безопасности">Заключительные рекомендации по безопасности</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
                     <div class="article-body">
 
 <p>Сбой загрузочного сектора — одна из самых критичных проблем, с которой сталкиваются пользователи при настройке или восстановлении операционных систем. Когда система перестает загружаться, выдает ошибку <code>BOOTMGR is missing</code> или зависает на логотипе BIOS, часто требуется вмешательство на уровне низкоуровневых структур диска. Именно здесь на помощь приходит утилита <em>Bootice</em>, которая позволяет вручную редактировать загрузочные записи, не прибегая к сложным средам восстановления.</p>
@@ -110,7 +169,7 @@
 
 <div class="checklist-block"><h4>☑️ Проверка перед восстановлением</h4><label class="check-item"><input type="checkbox"><span>Выбрать правильный физический диск</span></label><label class="check-item"><input type="checkbox"><span>Создать резервную копию MBR</span></label><label class="check-item"><input type="checkbox"><span>Проверить активный флаг</span></label><label class="check-item"><input type="checkbox"><span>Убедиться в наличии свободного места на диске</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
 
-<!--WIDGET:poll:Какая у вас файловая система на системном диске?:NTFS|FAT32|exFAT|Не знаю</p></div></details>
+
 
 <h2 id="работа-с-таблицами-разделов-mbr-и-gpt">Работа с таблицами разделов MBR и GPT</h2>
 <p>Утилита <em>Bootice</em> позволяет не только восстанавливать загрузчик, но и конвертировать таблицы разделов. Это актуально при переходе с BIOS на UEFI или наоборот. Вкладка <code>Physical Disk</code> содержит инструменты для просмотра и редактирования таблицы разделов. Вы можете видеть размеры разделов, их типы и смещения в секторах. Изменение этих параметров требует предельной осторожности.</p>
@@ -194,7 +253,7 @@
 
 <p>Регулярная проверка целостности загрузочных записей может предотвратить многие проблемы. Вы можете периодически делать резервные копии MBR и PBR, чтобы иметь возможность быстрого восстановления. Это особенно актуально для серверов и рабочих станций, где время простоя недопустимо.</p>
 
-<!--WIDGET:spoiler:Как проверить целостность загрузчика?
+
 <p>Вы можете использовать команду bcdedit в командной строке с правами администратора, чтобы просмотреть текущую конфигурацию загрузчика. Также утилита Bootice позволяет просматривать содержимое MBR и сравнивать его с эталонным.--></p>
 
 <h2 id="faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</h2>
@@ -218,41 +277,45 @@
 <summary>Как восстановить загрузчик, если Windows не запускается вообще?</summary>
 <p>Вам потребуется загрузочная флешка с Windows или LiveCD. Загрузитесь с нее, запустите командную строку и используйте утилиту Bootice, скопировав ее на флешку заранее, либо используйте встроенные средства восстановления.</p>
 </details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
 
                 </article>
-                <aside class="article-sidebar"><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#архитектура-и-назначение-утилиты-bootice">Архитектура и назначение утилиты Bootice</a></li><li><a href="#интерфейс-и-основные-функции-версии-134">Интерфейс и основные функции версии 1.3.4</a></li><li><a href="#процесс-восстановления-загрузчика-windows">Процесс восстановления загрузчика Windows</a></li><li><a href="#работа-с-таблицами-разделов-mbr-и-gpt">Работа с таблицами разделов MBR и GPT</a></li><li><a href="#управление-загрузчиком-uefi-и-разделом-esp">Управление загрузчиком UEFI и разделом ESP</a></li><li><a href="#резервное-копирование-и-восстановление-данных">Резервное копирование и восстановление данных</a></li><li><a href="#частые-ошибки-и-способы-их-устранения">Частые ошибки и способы их устранения</a></li><li><a href="#заключительные-рекомендации-по-безопасности">Заключительные рекомендации по безопасности</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></nav><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/arunit-chto-takoe.html" class="related-card">Что такое Arunit: разбор технологии и сфер применения</a></li><li><a href="/frazy-dlya-ajfona-pri-zaryadke-smeshnye.html" class="related-card">Смешные фразы для iPhone при зарядке: идеи, настройки и юмор</a></li><li><a href="/kak-v-vacape-posmotret-avatarku-neizvestnogo-nomera.html" class="related-card">Как посмотреть аватарку в WhatsApp не сохраняя номер: 5 рабочих методов</a></li><li><a href="/kak-sbrosit-roditelskij-parol-zala.html" class="related-card">Как сбросить родительский пароль Zala: 5 рабочих способов</a></li><li><a href="/9d-steklo-kak-kleit.html" class="related-card">Как правильно наклеить 9D стекло на телефон: пошаговая инструкция</a></li></ul></nav></aside>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#архитектура-и-назначение-утилиты-bootice">Архитектура и назначение утилиты Bootice</a></li><li><a href="#интерфейс-и-основные-функции-версии-134">Интерфейс и основные функции версии 1.3.4</a></li><li><a href="#процесс-восстановления-загрузчика-windows">Процесс восстановления загрузчика Windows</a></li><li><a href="#работа-с-таблицами-разделов-mbr-и-gpt">Работа с таблицами разделов MBR и GPT</a></li><li><a href="#управление-загрузчиком-uefi-и-разделом-esp">Управление загрузчиком UEFI и разделом ESP</a></li><li><a href="#резервное-копирование-и-восстановление-данных">Резервное копирование и восстановление данных</a></li><li><a href="#частые-ошибки-и-способы-их-устранения">Частые ошибки и способы их устранения</a></li><li><a href="#заключительные-рекомендации-по-безопасности">Заключительные рекомендации по безопасности</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/kak-sdelat-chto-by-prihodilo-sms-posle-vostanovleniya-simkarty.html" class="related-card">Как настроить СМС при восстановлении SIM-карты: полное руководство</a></li><li><a href="/kak-otkryt-papki-na-telefone.html" class="related-card">Как открыть папки на телефоне: Полное руководство для Android и iOS</a></li><li><a href="/hi-vhix-43u169msy-kak-proshit.html" class="related-card">Прошивка Hi VHIX-43U169MSY: полная инструкция по обновлению</a></li><li><a href="/sata-1-2-3.html" class="related-card">SATA 1, 2 и 3: В чем разница, скорость и совместимость дисков</a></li><li><a href="/gpeditmsc-srazu-zakryvaetsya.html" class="related-card">gpedit.msc сразу закрывается: 5 рабочих способов восстановления</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
             </div>
         </div>
     </main>
 
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
     <section class="related-bottom">
         <div class="container">
             <h2 class="related-bottom-heading">📖 Читайте также</h2>
-            <div class="related-bottom-grid"><a href="/arunit-chto-takoe.html" class="related-bottom-card"><span class="related-bottom-title">Что такое Arunit: разбор технологии и сфер применения</span><span class="related-bottom-desc">Узнайте, что такое Arunit, как работает эта технология и где применяется. Полный гайд по особенностя</span></a><a href="/frazy-dlya-ajfona-pri-zaryadke-smeshnye.html" class="related-bottom-card"><span class="related-bottom-title">Смешные фразы для iPhone при зарядке: идеи, настройки и юмор</span><span class="related-bottom-desc">Ищете забавные фразы для iPhone при зарядке? Узнайте, как настроить уведомления, какие надписи выбра</span></a><a href="/kak-v-vacape-posmotret-avatarku-neizvestnogo-nomera.html" class="related-bottom-card"><span class="related-bottom-title">Как посмотреть аватарку в WhatsApp не сохраняя номер: 5 рабочих методов</span><span class="related-bottom-desc">Узнайте, как увидеть фото профиля незнакомого номера в WhatsApp. Проверенные способы обхода настроек</span></a><a href="/kak-sbrosit-roditelskij-parol-zala.html" class="related-bottom-card"><span class="related-bottom-title">Как сбросить родительский пароль Zala: 5 рабочих способов</span><span class="related-bottom-desc">Полная инструкция по сбросу родительского контроля на приставке Zala. Проверенные методы: код, меню,</span></a><a href="/9d-steklo-kak-kleit.html" class="related-bottom-card"><span class="related-bottom-title">Как правильно наклеить 9D стекло на телефон: пошаговая инструкция</span><span class="related-bottom-desc">Пошаговый гайд по установке 9D защитного стекла. Устранение пузырей, выбор клея, совместимость с чех</span></a><a href="/dobavit-ustrojstvo-na-kinopab.html" class="related-bottom-card"><span class="related-bottom-title">Как добавить устройство на Кинопаб: полная инструкция по привязке</span><span class="related-bottom-desc">Пошаговое руководство по добавлению устройств в сервис Кинопаб. Настройка Smart TV, смартфонов и ТВ-</span></a></div>
+            <div class="related-bottom-grid"><a href="/kak-sdelat-chto-by-prihodilo-sms-posle-vostanovleniya-simkarty.html" class="related-bottom-card"><span class="related-bottom-title">Как настроить СМС при восстановлении SIM-карты: полное руководство</span><span class="related-bottom-desc">Пошаговая инструкция: как получить СМС-уведомление о восстановлении SIM. Защита от кражи, настройка </span></a><a href="/kak-otkryt-papki-na-telefone.html" class="related-bottom-card"><span class="related-bottom-title">Как открыть папки на телефоне: Полное руководство для Android и iOS</span><span class="related-bottom-desc">Пошаговая инструкция по управлению файлами на смартфоне. Узнайте, как открыть папки на Android и iPh</span></a><a href="/hi-vhix-43u169msy-kak-proshit.html" class="related-bottom-card"><span class="related-bottom-title">Прошивка Hi VHIX-43U169MSY: полная инструкция по обновлению</span><span class="related-bottom-desc">Пошаговое руководство по прошивке телевизора Hi VHIX-43U169MSY. Способы обновления через USB и интер</span></a><a href="/sata-1-2-3.html" class="related-bottom-card"><span class="related-bottom-title">SATA 1, 2 и 3: В чем разница, скорость и совместимость дисков</span><span class="related-bottom-desc">Полный разбор интерфейсов SATA 1.0, 2.0 и 3.0. Сравнение скоростей передачи данных, физическая совме</span></a><a href="/gpeditmsc-srazu-zakryvaetsya.html" class="related-bottom-card"><span class="related-bottom-title">gpedit.msc сразу закрывается: 5 рабочих способов восстановления</span><span class="related-bottom-desc">Локальная групповая политика не открывается? Узнайте, почему gpedit.msc закрывается и как исправить </span></a><a href="/gde-chyornyj-spisok-v-telefone-huavej-nahoditsya.html" class="related-bottom-card"><span class="related-bottom-title">Где находится черный список на телефонах Huawei: Полная инструкция</span><span class="related-bottom-desc">Ищете черный список на Huawei? Узнайте, как найти, настроить и очистить список заблокированных номер</span></a></div>
         </div>
     </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
 
     <footer class="site-footer-premium">
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-col">
                     <div class="footer-brand">🔧 ТехПодсказка</div>
-                    <p class="footer-about">Быстрые решения технических проблем: ТВ, Android, Windows, приложения</p>
+                    <p class="footer-about"></p>
                 </div>
                 <div class="footer-col">
                     <h4>Разделы</h4>
-                    <ul><li><a href="/category/televizory/">📺 Настройка ТВ</a></li>
-<li><a href="/category/android/">📱 Android-устройства</a></li>
-<li><a href="/category/prilozheniya/">📲 Приложения</a></li>
-<li><a href="/category/windows/">💻 Windows и ПК</a></li>
-<li><a href="/category/pristavki/">🔌 Приставки</a></li>
-<li><a href="/category/internet/">🌐 WiFi и Интернет</a></li></ul>
+                    <ul><li><a href="/category/nastroika-tv/">📺 Настройка ТВ</a></li>
+<li><a href="/category/tv-pristavki/">📡 ТВ-приставки</a></li>
+<li><a href="/category/smartfony-android/">🤖 Смартфоны Android</a></li>
+<li><a href="/category/apple-ustroystva/">🍎 Apple устройства</a></li>
+<li><a href="/category/noutbuki-pk/">💻 Ноутбуки и ПК</a></li>
+<li><a href="/category/audio-i-geyming/">🎮 Аудио и Гейминг</a></li></ul>
                 </div>
                 <div class="footer-col">
                     <h4>Информация</h4>
                     <ul>
                         <li><a href="/">Главная</a></li>
                         <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
                         <li><a href="/contact.html">Контакты</a></li>
                         <li><a href="/privacy.html">Конфиденциальность</a></li>
                         <li><a href="/sitemap.xml">Карта сайта</a></li>
@@ -261,6 +324,15 @@
             </div>
             <div class="footer-bottom">
                 <p>© 2026 ТехПодсказка. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
             </div>
         </div>
     </footer>
@@ -272,17 +344,19 @@
     </div>
     <script src="/static/js/main.js"></script>
     <script>
-        (function() {
-            const popup = document.getElementById('cookie-consent');
-            const btn = document.getElementById('cookie-accept');
-            if (popup && btn && !localStorage.getItem('cookie-accepted')) {
-                popup.classList.add('visible');
-                btn.onclick = () => {
-                    localStorage.setItem('cookie-accepted', 'true');
-                    popup.classList.remove('visible');
-                };
-            }
-        })();
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
     </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
 </body>
 </html>

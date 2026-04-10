@@ -76,48 +76,88 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ============================================================
-    //  SIDEBAR SEARCH (article pages)
+    //  SIDEBAR SEARCH — chunked index (scales to 1M articles)
     // ============================================================
     (function() {
         var input = document.getElementById('globalSearchInput');
         var dd = document.getElementById('globalSearchDropdown');
         if (!input || !dd) return;
 
-        var searchData = null;
+        var chunkCache = {};  // prefix → parsed array
         var activeIdx = -1;
         var debounceTimer = null;
 
-        function loadIndex(cb) {
-            if (searchData) return cb(searchData);
-            fetch('/static/js/search-index.json')
-                .then(function(r) { return r.arrayBuffer(); })
-                .then(function(buf) {
-                    var text = new TextDecoder('utf-8').decode(buf);
-                    var data = JSON.parse(text);
-                    searchData = data.map(function(item) {
+        // Russian → Latin transliteration (matches Python slugify)
+        var TR = {
+            'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'yo',
+            'ж':'zh','з':'z','и':'i','й':'j','к':'k','л':'l','м':'m',
+            'н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u',
+            'ф':'f','х':'h','ц':'c','ч':'ch','ш':'sh','щ':'shch',
+            'ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya'
+        };
+
+        function transliterate(text) {
+            var result = '';
+            for (var i = 0; i < text.length; i++) {
+                var ch = text[i].toLowerCase();
+                result += (TR[ch] !== undefined) ? TR[ch] : ch;
+            }
+            return result;
+        }
+
+        function getPrefix(query) {
+            var lat = transliterate(query.trim());
+            // Convert spaces to dashes (like slugify)
+            lat = lat.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '').replace(/-+/g, '-');
+            // Deep-split: kak-X, gde-X → 5-char prefix
+            if (lat.match(/^(kak|gde)-./)) {
+                return lat.substring(0, 5);
+            }
+            // Regular: 2-char prefix (strip dashes)
+            var clean = lat.replace(/-/g, '');
+            return clean.length >= 2 ? clean.substring(0, 2) : clean;
+        }
+
+        function loadChunk(prefix, cb) {
+            if (chunkCache[prefix]) return cb(chunkCache[prefix]);
+            fetch('/static/js/search-chunks/' + prefix + '.json')
+                .then(function(r) {
+                    if (!r.ok) { cb([]); return; }
+                    return r.json();
+                })
+                .then(function(data) {
+                    if (!data) { cb([]); return; }
+                    chunkCache[prefix] = data.map(function(item) {
                         var title = (item.t || '').normalize('NFC');
                         return {
                             s: item.s,
                             t: title,
                             i: item.i || '📄',
+                            c: item.c || '',
                             tl: title.toLowerCase(),
                             sl: (item.s || '').toLowerCase()
                         };
                     });
-                    cb(searchData);
+                    cb(chunkCache[prefix]);
                 })
-                .catch(function(err) {
-                    console.error('Search index error:', err);
-                    dd.innerHTML = '<div class="sd-empty">Ошибка загрузки</div>';
-                    dd.style.display = 'block';
-                });
+                .catch(function() { cb([]); });
         }
 
         function doSearch() {
             var q = input.value.normalize('NFC').toLowerCase().trim();
             if (q.length < 2) { dd.style.display = 'none'; activeIdx = -1; return; }
 
-            loadIndex(function(data) {
+            var prefix = getPrefix(q);
+            if (!prefix || prefix.length < 2) {
+                dd.innerHTML = '<div class="sd-empty">Введите 2+ символа</div>';
+                dd.style.display = 'block';
+                return;
+            }
+
+            dd.innerHTML = '<div class="sd-empty">⏳ Загрузка...</div>';
+            dd.style.display = 'block';
+
+            loadChunk(prefix, function(data) {
                 var words = q.split(/\s+/);
                 var results = data.filter(function(item) {
                     return words.every(function(w) {
@@ -129,7 +169,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     dd.innerHTML = '<div class="sd-empty">🔍 Ничего не найдено</div>';
                 } else {
                     dd.innerHTML = results.map(function(item) {
-                        return '<a href="/' + item.s + '.html" class="sd-item">' +
+                        var url = item.c
+                            ? '/' + item.c + '/' + item.s + '.html'
+                            : '/' + item.s + '.html';
+                        return '<a href="' + url + '" class="sd-item">' +
                             '<div class="sd-icon">' + item.i + '</div>' +
                             '<div class="sd-title">' + item.t + '</div>' +
                             '</a>';
@@ -149,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         input.addEventListener('input', function() {
             clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(doSearch, 150);
+            debounceTimer = setTimeout(doSearch, 200);
         });
 
         input.addEventListener('focus', function() {
