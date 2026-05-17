@@ -4,7 +4,8 @@
   s.src = 'https://mc.yandex.ru/metrika/tag.js';
   s.async = true;
   s.onload = function(){
-    ym(108292530, 'init', {
+    if (typeof window.ym !== 'function') return;
+    window.ym(108292530, 'init', {
       clickmap: true,
       trackLinks: true,
       accurateTrackBounce: true,
