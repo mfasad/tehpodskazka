@@ -14,28 +14,40 @@
   document.head.appendChild(s);
 })();
 
-// VideoRoll — ad block after article body
-(function(){
-  var body = document.querySelector('.article-body');
-  if (!body) return;
+// Market-Place sticker for tehpodskazka.vercel.app
+(function () {
+  var MPSU_SCRIPT_SRC = 'https://statika.mpsuadv.ru/scripts/11320.js';
+  var STICKER_ID = 40392;
 
-  var wrap = document.createElement('div');
-  wrap.style.cssText = 'text-align:center;margin:16px 0 24px;overflow:hidden;';
+  function loadMpsuScript() {
+    if (document.querySelector('script[src="' + MPSU_SCRIPT_SRC + '"]')) return;
 
-  var ad = document.createElement('div');
-  ad.id = 'vid_vpaut_div';
-  ad.setAttribute('vid_vpaut_pl', '40562');
-  ad.style.cssText = 'display:inline-block;width:600px;height:320px;max-width:100%;';
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = MPSU_SCRIPT_SRC;
+    document.head.appendChild(script);
+  }
 
-  wrap.appendChild(ad);
-  body.parentNode.insertBefore(wrap, body.nextSibling);
+  function initSticker() {
+    if (!document.body) return;
+    if (document.getElementById('mp_custom_' + STICKER_ID)) return;
 
-  var vs = document.createElement('script');
-  vs.src = 'https://videoroll.net/js/vid_vpaut_script.js';
-  vs.async = true;
-  document.head.appendChild(vs);
+    loadMpsuScript();
+
+    var block = document.createElement('div');
+    block.id = 'mp_custom_' + STICKER_ID;
+    document.body.appendChild(block);
+
+    window.mpsuStart = window.mpsuStart || [];
+    window.mpsuStart.push(STICKER_ID);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSticker);
+  } else {
+    initSticker();
+  }
 })();
-
 // Market-Place / MPSU ads for tehpodskazka.vercel.app
 // Articles only: horizontal after 1st and 5th paragraphs, sidebar vertical
 (function () {
