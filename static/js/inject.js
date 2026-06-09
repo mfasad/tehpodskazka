@@ -51,22 +51,17 @@
     initSticker();
   }
 })();
+
 // Market-Place / MPSU ads for tehpodskazka.vercel.app
-// Articles only: horizontal after 1st and 5th paragraphs, sidebar vertical
+// Articles only: horizontal after 1st, 5th, and 9th paragraphs, corner sticker
 (function () {
   var MPSU_SCRIPT_SRC = 'https://statika.mpsuadv.ru/scripts/11320.js';
-  var HORIZONTAL_1_ID = 38993;
-  var HORIZONTAL_2_ID = 38994;
-  var VERTICAL_ID = 38995;
 
   function isArticlePage() {
     if (!document.body) return false;
-
-    var bodyClass = document.body.classList;
-    if (bodyClass.contains('home') || bodyClass.contains('is-home')) return false;
-    if (bodyClass.contains('category') || bodyClass.contains('is-category')) return false;
-    if (bodyClass.contains('archive') || bodyClass.contains('is-archive')) return false;
-
+    if (document.body.classList.contains('home')) return false;
+    if (document.body.classList.contains('category')) return false;
+    if (document.body.classList.contains('archive')) return false;
     return !!document.querySelector('article, .article-body');
   }
 
@@ -76,7 +71,6 @@
 
   function loadMpsuScript() {
     if (document.querySelector('script[src="' + MPSU_SCRIPT_SRC + '"]')) return;
-
     var script = document.createElement('script');
     script.async = true;
     script.src = MPSU_SCRIPT_SRC;
@@ -90,49 +84,40 @@
 
   function createWidget(widgetId) {
     if (document.getElementById('mp_custom_' + widgetId)) return null;
-
     var block = document.createElement('div');
     block.id = 'mp_custom_' + widgetId;
     return block;
   }
 
   function insertAfterParagraph(widgetId, paragraphNumber) {
-    var article = getArticleRoot();
-    var paragraphs = article ? article.querySelectorAll('p') : [];
-
-    if (paragraphs.length < paragraphNumber) return;
-
+    var root = getArticleRoot();
+    if (!root) return;
+    var paragraphs = root.querySelectorAll('p');
+    var target = paragraphs[paragraphNumber - 1];
+    if (!target || !target.parentNode) return;
     var block = createWidget(widgetId);
     if (!block) return;
-
-    paragraphs[paragraphNumber - 1].insertAdjacentElement('afterend', block);
+    target.parentNode.insertBefore(block, target.nextSibling);
     startWidget(widgetId);
   }
 
-  function insertSidebarWidget(widgetId) {
-    var sidebar = document.querySelector('aside, .sidebar, [class*="sidebar"], [id*="sidebar"]');
-    if (!sidebar) return;
-
+  function appendFloating(widgetId) {
     var block = createWidget(widgetId);
     if (!block) return;
-
-    sidebar.appendChild(block);
+    document.body.appendChild(block);
     startWidget(widgetId);
   }
 
-  function initAds() {
+  function initMpsuAds() {
     if (!isArticlePage()) return;
-
     loadMpsuScript();
-
-    insertAfterParagraph(HORIZONTAL_1_ID, 1);
-    insertAfterParagraph(HORIZONTAL_2_ID, 5);
-    insertSidebarWidget(VERTICAL_ID);
+    // Rotator Static ZBT tehpodskazka.vercel.app горизонтальный 3 №40462
+    insertAfterParagraph(40462, 9);
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAds);
+    document.addEventListener('DOMContentLoaded', initMpsuAds);
   } else {
-    initAds();
+    initMpsuAds();
   }
 })();
