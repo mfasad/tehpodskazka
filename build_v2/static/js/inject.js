@@ -16,6 +16,25 @@
     return document.querySelector('article') || document.querySelector('.article-body');
   }
 
+  function isUnsafeAdParent(node, root) {
+    while (node && node !== root && node !== document.body) {
+      if (node.matches && node.matches('ol, ul, li, blockquote, table, thead, tbody, tr, td, th, figure, figcaption, aside, details, summary, pre, code')) return true;
+      if (node.matches && node.matches('.important, .note, .warning, .alert, .callout, .highlight, .tip, .info, .notice, .attention, .danger, .success, .faq, .steps, .pros-cons, .toc, .contents')) return true;
+      if (node.className && typeof node.className === 'string' && /(important|note|warning|alert|callout|highlight|tip|info|notice|attention|danger|success|faq|steps|pros-cons|toc|contents)/i.test(node.className)) return true;
+      node = node.parentElement;
+    }
+    return false;
+  }
+
+  function getSafeParagraphs(root) {
+    if (!root) return [];
+    return Array.prototype.filter.call(root.querySelectorAll('p'), function (paragraph) {
+      if (!paragraph || !paragraph.parentElement) return false;
+      if (isUnsafeAdParent(paragraph.parentElement, root)) return false;
+      return paragraph.textContent && paragraph.textContent.replace(/\s+/g, '').length >= 40;
+    });
+  }
+
   function loadMpsuScript() {
     var existingScript = document.querySelector('script[src="' + MPSU_SCRIPT_SRC + '"]');
     if (existingScript) return;
@@ -40,7 +59,7 @@
   function insertAfterParagraph(widgetId, paragraphNumber) {
     var root = getArticleRoot();
     if (!root) return;
-    var paragraphs = root.querySelectorAll('p');
+    var paragraphs = getSafeParagraphs(root);
     var target = paragraphs[paragraphNumber - 1];
     if (!target || !target.parentNode) return;
     var block = createWidget(widgetId);
