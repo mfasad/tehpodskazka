@@ -1,54 +1,4 @@
-// Yandex.Metrika — counter 108292530
-(function(){
-  var s = document.createElement('script');
-  s.src = 'https://mc.yandex.ru/metrika/tag.js';
-  s.async = true;
-  s.onload = function(){
-    ym(108292530, 'init', {
-      clickmap: true,
-      trackLinks: true,
-      accurateTrackBounce: true,
-      webvisor: true
-    });
-  };
-  document.head.appendChild(s);
-})();
-
-// Market-Place sticker for tehpodskazka.vercel.app
-(function () {
-  var MPSU_SCRIPT_SRC = 'https://statika.mpsuadv.ru/scripts/11320.js';
-  var STICKER_ID = 40392;
-
-  function loadMpsuScript() {
-    if (document.querySelector('script[src="' + MPSU_SCRIPT_SRC + '"]')) return;
-
-    var script = document.createElement('script');
-    script.async = true;
-    script.src = MPSU_SCRIPT_SRC;
-    document.head.appendChild(script);
-  }
-
-  function initSticker() {
-    if (!document.body) return;
-    if (document.getElementById('mp_custom_' + STICKER_ID)) return;
-
-    loadMpsuScript();
-
-    var block = document.createElement('div');
-    block.id = 'mp_custom_' + STICKER_ID;
-    document.body.appendChild(block);
-
-    window.mpsuStart = window.mpsuStart || [];
-    window.mpsuStart.push(STICKER_ID);
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initSticker);
-  } else {
-    initSticker();
-  }
-})();
-
+// ============================================================
 // Market-Place / MPSU ads for tehpodskazka.vercel.app
 // Articles only: horizontal after 1st, 5th, and 9th paragraphs, corner sticker
 (function () {
@@ -67,7 +17,8 @@
   }
 
   function loadMpsuScript() {
-    if (document.querySelector('script[src="' + MPSU_SCRIPT_SRC + '"]')) return;
+    var existingScript = document.querySelector('script[src="' + MPSU_SCRIPT_SRC + '"]');
+    if (existingScript) return;
     var script = document.createElement('script');
     script.async = true;
     script.src = MPSU_SCRIPT_SRC;
@@ -108,8 +59,14 @@
   function initMpsuAds() {
     if (!isArticlePage()) return;
     loadMpsuScript();
-    // Rotator Static ZBT tehpodskazka.vercel.app горизонтальный 3 №40462
+    // Rotator Static ZBT tehpodskazka.vercel.app horizontal 1 ?38993
+    insertAfterParagraph(38993, 1);
+    // Rotator Static ZBT tehpodskazka.vercel.app horizontal 2 ?38994
+    insertAfterParagraph(38994, 5);
+    // Rotator Static ZBT tehpodskazka.vercel.app horizontal 3 ?40462
     insertAfterParagraph(40462, 9);
+    // Rotator Recom V tehpodskazka.vercel.app corner sticker ?40392
+    appendFloating(40392);
   }
 
   if (document.readyState === 'loading') {
@@ -118,3 +75,20 @@
     initMpsuAds();
   }
 })();
+
+// Yandex.Metrika — counter 108292530
+(function(){
+  var s = document.createElement('script');
+  s.src = 'https://mc.yandex.ru/metrika/tag.js';
+  s.async = true;
+  s.onload = function(){
+    ym(108292530, 'init', {
+      clickmap: true,
+      trackLinks: true,
+      accurateTrackBounce: true,
+      webvisor: true
+    });
+  };
+  document.head.appendChild(s);
+})();
+
